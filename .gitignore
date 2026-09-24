@@ -1,0 +1,17 @@
+videos/
+data/shots/
+data/download_log.txt
+data/verify_result.json
+data/download_fail.json
+data/crest_picks_debug.json
+data/crest_page_imgs_debug.json
+data/review.txt
+data/impact_review.txt
+assets/crests/_contact.html
+__pycache__/
+*.pyc
+.mimosa/
+.zcode/
+.zcodeignore
+__pycache__/
+*.pyc

@@ -1,0 +1,1253 @@
+{
+ "scope": [
+  "中超联赛",
+  "中甲联赛",
+  "中乙联赛"
+ ],
+ "type_labels": {
+  "denied_goal": "漏判进球（应有效）",
+  "opp_goal_should_disallow": "对方进球应无效",
+  "missed_penalty": "漏判点球（机会）",
+  "wrong_penalty_against": "错判点球",
+  "missed_red_opponent": "漏判对方红牌",
+  "wrong_red_self": "错判本队红牌",
+  "missed_yellow_opponent": "漏判对方黄牌",
+  "wrong_yellow_self": "错判本队黄牌",
+  "wrong_foul_called_self": "错判犯规",
+  "wrong_offside_self": "误判越位"
+ },
+ "swing": {
+  "denied_goal": 1,
+  "opp_goal_should_disallow": -1
+ },
+ "team_normalize": {
+  "河南酒祖杜康": "河南俱乐部",
+  "河南队": "河南俱乐部",
+  "陕西联合月亮泊": "陕西联合",
+  "广西平果国晶": "广西平果",
+  "浙江俱乐部": "浙江俱乐部绿城"
+ },
+ "match_notes": {
+  "中超|23|浙江俱乐部绿城|天津津门虎": "第23轮调赛，实际比赛日期早于原轮次",
+  "中甲|1|深圳青年人|佛山南狮": "评估文写第1轮，赛程记录为第2轮（3月16日），为同一场首次交锋"
+ },
+ "impacts": {
+  "1": {
+   "league": "中超联赛",
+   "round": 1,
+   "home": "上海申花",
+   "away": "长春亚泰",
+   "issue": 1,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "长春亚泰",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "上海申花4号踩踏守门员小腿属严重犯规，回看后仅出示黄牌"
+    }
+   ]
+  },
+  "4": {
+   "league": "中超联赛",
+   "round": 2,
+   "home": "成都蓉城",
+   "away": "天津津门虎",
+   "issue": 2,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "蓉城8号踩踏未达严重犯规程度，红牌错误、应黄牌"
+    }
+   ]
+  },
+  "5": {
+   "league": "中超联赛",
+   "round": 2,
+   "home": "成都蓉城",
+   "away": "天津津门虎",
+   "issue": 2,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "天津津门虎",
+     "type": "wrong_foul_called_self",
+     "swing": 0,
+     "note": "评议组认定双方均不犯规，津门虎4号被错判犯规"
+    }
+   ]
+  },
+  "6": {
+   "league": "中甲联赛",
+   "round": 1,
+   "home": "南通支云",
+   "away": "上海嘉定汇龙",
+   "issue": 3,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "上海嘉定汇龙",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "南通支云33号手球（手臂不自然扩大）漏判，应判点球"
+    }
+   ]
+  },
+  "9": {
+   "league": "中甲联赛",
+   "round": 1,
+   "home": "深圳青年人",
+   "away": "佛山南狮",
+   "issue": 3,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "佛山南狮",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "深圳青年人26号拉扯破坏明显进球得分机会，应判点球"
+    },
+    {
+     "team": "佛山南狮",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "同一犯规符合DOGSO，应出示红牌"
+    }
+   ]
+  },
+  "10": {
+   "league": "中甲联赛",
+   "round": 1,
+   "home": "南京城市",
+   "away": "大连鲲城",
+   "issue": 3,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "大连鲲城26号腾空飞铲蹬踹属严重犯规，仅出示黄牌"
+    }
+   ]
+  },
+  "14": {
+   "league": "中乙联赛",
+   "round": 1,
+   "home": "北京理工",
+   "away": "无锡吴钩",
+   "issue": 4,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "北京理工",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "无锡吴钩防守犯规漏判，应判点球"
+    }
+   ]
+  },
+  "16": {
+   "league": "中甲联赛",
+   "round": 2,
+   "home": "南通支云",
+   "away": "石家庄功夫",
+   "issue": 5,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南通支云",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "石家庄功夫36号拉扯犯规结束在罚球区内，应判点球"
+    },
+    {
+     "team": "南通支云",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "该拉扯破坏明显进球得分机会，应出示红牌"
+    }
+   ]
+  },
+  "20": {
+   "league": "中甲联赛",
+   "round": 2,
+   "home": "佛山南狮",
+   "away": "苏州东吴",
+   "issue": 5,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "佛山南狮",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "苏州东吴26号手臂不自然扩大触球，应判点球"
+    }
+   ]
+  },
+  "22": {
+   "league": "中乙联赛",
+   "round": 2,
+   "home": "广东铭途",
+   "away": "成都蓉城B队",
+   "issue": 5,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广东铭途",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "成都蓉城B队进球前争抢犯规漏判，进球应无效"
+    }
+   ]
+  },
+  "25": {
+   "league": "中超联赛",
+   "round": 4,
+   "home": "长春亚泰",
+   "away": "武汉三镇",
+   "issue": 6,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "长春亚泰4号推搡破坏明显进球得分机会，应判点球"
+    },
+    {
+     "team": "武汉三镇",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "同一犯规符合DOGSO，应出示红牌"
+    }
+   ]
+  },
+  "27": {
+   "league": "中超联赛",
+   "round": 4,
+   "home": "长春亚泰",
+   "away": "武汉三镇",
+   "issue": 6,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "长春亚泰9号有意不合理挥臂，漏判犯规和黄牌"
+    }
+   ]
+  },
+  "29": {
+   "league": "中超联赛",
+   "round": 4,
+   "home": "上海申花",
+   "away": "云南玉昆",
+   "issue": 6,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "云南玉昆",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "上海申花23号铲球后接触腿部属鲁莽犯规，漏判犯规和黄牌"
+    }
+   ]
+  },
+  "36": {
+   "league": "中甲联赛",
+   "round": 4,
+   "home": "南京城市",
+   "away": "上海嘉定汇龙",
+   "issue": 7,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "上海嘉定汇龙",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "南京城市4号踩到其脚部，应判点球"
+    }
+   ]
+  },
+  "40": {
+   "league": "中乙联赛",
+   "round": 4,
+   "home": "广西恒宸",
+   "away": "成都蓉城B队",
+   "issue": 7,
+   "case_no": 8,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城B队",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "广西恒宸33号拉扯致失去控球权，应判点球"
+    }
+   ]
+  },
+  "48": {
+   "league": "中超联赛",
+   "round": 7,
+   "home": "青岛西海岸",
+   "away": "山东泰山",
+   "issue": 9,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "山东泰山",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "青岛西海岸56号鞋钉踩踏小腿跟腱属严重犯规，回看后仍仅黄牌"
+    }
+   ]
+  },
+  "49": {
+   "league": "中超联赛",
+   "round": 9,
+   "home": "深圳新鹏城",
+   "away": "大连英博",
+   "issue": 9,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连英博",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "深圳新鹏城27号挥臂属鲁莽犯规，漏判犯规和黄牌"
+    }
+   ]
+  },
+  "51": {
+   "league": "中甲联赛",
+   "round": 5,
+   "home": "南通支云",
+   "away": "重庆铜梁龙",
+   "issue": 9,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南通支云",
+     "type": "wrong_offside_self",
+     "swing": 0,
+     "note": "越位误判致进攻被终止；其后守门员犯规发生在比赛停止后，进球不予讨论认定"
+    }
+   ]
+  },
+  "54": {
+   "league": "中甲联赛",
+   "round": 6,
+   "home": "大连鲲城",
+   "away": "南通支云",
+   "issue": 9,
+   "case_no": 10,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南通支云",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "大连鲲城17号推搡头顶球队员，犯规漏判，其后进球应无效"
+    }
+   ]
+  },
+  "55": {
+   "league": "中甲联赛",
+   "round": 6,
+   "home": "定南赣联",
+   "away": "广西平果",
+   "issue": 9,
+   "case_no": 11,
+   "match_note": "",
+   "items": [
+    {
+     "team": "定南赣联",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "广西平果7号拉扯破坏有希望的进攻，漏判犯规和黄牌"
+    }
+   ]
+  },
+  "61": {
+   "league": "中甲联赛",
+   "round": 7,
+   "home": "辽宁铁人",
+   "away": "陕西联合",
+   "issue": 10,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "陕西联合",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "33号头球进球被误判越位，进球应有效"
+    }
+   ]
+  },
+  "62": {
+   "league": "中乙联赛",
+   "round": 7,
+   "home": "广东铭途",
+   "away": "广西恒宸",
+   "issue": 10,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广东铭途",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "广西恒宸7号轻微接触后夸大倒地，点球错误"
+    },
+    {
+     "team": "广东铭途",
+     "type": "wrong_yellow_self",
+     "swing": 0,
+     "note": "铭途5号不应被出示黄牌"
+    }
+   ]
+  },
+  "64": {
+   "league": "中乙联赛",
+   "round": 7,
+   "home": "贵州筑城竞技",
+   "away": "广州蒲公英",
+   "issue": 10,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广州蒲公英",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "贵州筑城竞技17号从背后冲撞，应判点球"
+    },
+    {
+     "team": "广州蒲公英",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "该冲撞属鲁莽犯规，应出示黄牌"
+    }
+   ]
+  },
+  "66": {
+   "league": "中超联赛",
+   "round": 11,
+   "home": "梅州客家",
+   "away": "上海申花",
+   "issue": 11,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "梅州客家",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "上海申花27号越位位置干扰对方队员，进球应无效"
+    }
+   ]
+  },
+  "69": {
+   "league": "中乙联赛",
+   "round": 8,
+   "home": "温州俱乐部",
+   "away": "广东铭途",
+   "issue": 11,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广东铭途",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "守门员出击铲球先触球无犯规，点球错误"
+    }
+   ]
+  },
+  "70": {
+   "league": "中乙联赛",
+   "round": 9,
+   "home": "成都蓉城B队",
+   "away": "贵州筑城竞技",
+   "issue": 11,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城B队",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "贵州筑城竞技49号鞋底蹬踹头颈部属严重犯规，仅黄牌"
+    }
+   ]
+  },
+  "72": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "大连鲲城",
+   "away": "深圳青年人",
+   "issue": 12,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "深圳青年人",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "大连鲲城24号拉扯犯规，应判点球"
+    }
+   ]
+  },
+  "73": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "大连鲲城",
+   "away": "深圳青年人",
+   "issue": 12,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "深圳青年人",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "大连鲲城24号拉扯+绊摔，应判点球"
+    }
+   ]
+  },
+  "77": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "定南赣联",
+   "away": "辽宁铁人",
+   "issue": 12,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "辽宁铁人",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "定南赣联3号拉扯破坏明显进球得分机会，应判点球"
+    },
+    {
+     "team": "辽宁铁人",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "该犯规符合DOGSO标准，应出示红牌"
+    }
+   ]
+  },
+  "79": {
+   "league": "中乙联赛",
+   "round": 10,
+   "home": "武汉三镇B队",
+   "away": "赣州瑞狮",
+   "issue": 12,
+   "case_no": 9,
+   "match_note": "",
+   "items": [
+    {
+     "team": "赣州瑞狮",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "守门员出击扑到球且无附加动作，点球错误"
+    },
+    {
+     "team": "赣州瑞狮",
+     "type": "wrong_yellow_self",
+     "swing": 0,
+     "note": "守门员不应被出示黄牌"
+    }
+   ]
+  },
+  "82": {
+   "league": "中甲联赛",
+   "round": 11,
+   "home": "南京城市",
+   "away": "广东广州豹",
+   "issue": 13,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "10号进球被误判越位，进球应有效"
+    }
+   ]
+  },
+  "83": {
+   "league": "中甲联赛",
+   "round": 11,
+   "home": "南通支云",
+   "away": "定南赣联",
+   "issue": 13,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南通支云",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "双方正常争抢均不犯规，点球错误"
+    }
+   ]
+  },
+  "85": {
+   "league": "中超联赛",
+   "round": 14,
+   "home": "浙江俱乐部绿城",
+   "away": "上海海港",
+   "issue": 14,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "浙江俱乐部绿城",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "VAR对比赛恢复前事件错误介入，进球应有效"
+    }
+   ]
+  },
+  "96": {
+   "league": "中超联赛",
+   "round": 14,
+   "home": "武汉三镇",
+   "away": "青岛海牛",
+   "issue": 14,
+   "case_no": 12,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "青岛海牛7号鞋钉蹬踹跟腱属严重犯规，未出示红黄牌"
+    }
+   ]
+  },
+  "99": {
+   "league": "中甲联赛",
+   "round": 13,
+   "home": "南通支云",
+   "away": "辽宁铁人",
+   "issue": 15,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "辽宁铁人",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "南通支云队员手臂向球移动触球，应判点球"
+    }
+   ]
+  },
+  "101": {
+   "league": "中甲联赛",
+   "round": 13,
+   "home": "延边龙鼎",
+   "away": "广西平果",
+   "issue": 15,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西平果",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "延边龙鼎33号铲抢过分力量属严重犯规，仅黄牌"
+    }
+   ]
+  },
+  "112": {
+   "league": "中甲联赛",
+   "round": 14,
+   "home": "苏州东吴",
+   "away": "重庆铜梁龙",
+   "issue": 16,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "苏州东吴",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "重庆铜梁龙8号越位位置干扰守门员，进球应无效"
+    }
+   ]
+  },
+  "126": {
+   "league": "中乙联赛",
+   "round": 19,
+   "home": "山东泰山B队",
+   "away": "杭州临平吴越",
+   "issue": 18,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "山东泰山B队",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "犯规地点在罚球区外，应判直接任意球而非点球"
+    }
+   ]
+  },
+  "128": {
+   "league": "中乙联赛",
+   "round": 19,
+   "home": "山东泰山B队",
+   "away": "杭州临平吴越",
+   "issue": 18,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "杭州临平吴越",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "山东泰山B队49号越位位置回接射门，进球应无效"
+    }
+   ]
+  },
+  "135": {
+   "league": "中乙联赛",
+   "round": 20,
+   "home": "兰州陇原竞技",
+   "away": "山西崇德荣海",
+   "issue": 19,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "兰州陇原竞技",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "山西崇德荣海36号手球漏判，应判点球"
+    }
+   ]
+  },
+  "136": {
+   "league": "中乙联赛",
+   "round": 20,
+   "home": "无锡吴钩",
+   "away": "长春喜都",
+   "issue": 19,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "无锡吴钩",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "长春喜都29号持续环抱拉扯，应判点球"
+    }
+   ]
+  },
+  "141": {
+   "league": "中甲联赛",
+   "round": 18,
+   "home": "南通支云",
+   "away": "南京城市",
+   "issue": 20,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "进球前攻方正常争抢不犯规，进球应有效"
+    }
+   ]
+  },
+  "142": {
+   "league": "中甲联赛",
+   "round": 18,
+   "home": "南通支云",
+   "away": "南京城市",
+   "issue": 20,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "南通支云10号企图击打属暴力行为，无论是否击中均应红牌"
+    },
+    {
+     "team": "南通支云",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "南京城市19号犯规应以非体育行为黄牌警告"
+    }
+   ]
+  },
+  "145": {
+   "league": "中乙联赛",
+   "round": 21,
+   "home": "湖北青年星",
+   "away": "江西庐山",
+   "issue": 20,
+   "case_no": 8,
+   "match_note": "",
+   "items": [
+    {
+     "team": "湖北青年星",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "接触属可接受程度，对方借助接触主动倒地，点球错误"
+    }
+   ]
+  },
+  "146": {
+   "league": "中乙联赛",
+   "round": 21,
+   "home": "赣州瑞狮",
+   "away": "武汉三镇B队",
+   "issue": 20,
+   "case_no": 9,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇B队",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "守门员率先触球后被鲁莽犯规，进球应无效"
+    },
+    {
+     "team": "武汉三镇B队",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "赣州瑞狮59号争抢动作属鲁莽犯规，应黄牌"
+    }
+   ]
+  },
+  "147": {
+   "league": "中乙联赛",
+   "round": 21,
+   "home": "赣州瑞狮",
+   "away": "武汉三镇B队",
+   "issue": 20,
+   "case_no": 10,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇B队",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "赣州瑞狮守门员出击未触球且犯规，应判点球"
+    },
+    {
+     "team": "武汉三镇B队",
+     "type": "wrong_foul_called_self",
+     "swing": 0,
+     "note": "本队队员正常争抢被错判犯规"
+    }
+   ]
+  },
+  "150": {
+   "league": "中超联赛",
+   "round": 19,
+   "home": "青岛西海岸",
+   "away": "河南俱乐部",
+   "issue": 21,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "河南俱乐部",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "青岛西海岸6号草率踢人犯规，应判点球"
+    }
+   ]
+  },
+  "160": {
+   "league": "中甲联赛",
+   "round": 19,
+   "home": "延边龙鼎",
+   "away": "石家庄功夫",
+   "issue": 21,
+   "case_no": 11,
+   "match_note": "",
+   "items": [
+    {
+     "team": "延边龙鼎",
+     "type": "wrong_offside_self",
+     "swing": 0,
+     "note": "38号被误判越位、进攻被终止；鸣哨停止后的进球不予认定"
+    }
+   ]
+  },
+  "162": {
+   "league": "中乙联赛",
+   "round": 22,
+   "home": "山西崇德荣海",
+   "away": "海门珂缔缘",
+   "issue": 21,
+   "case_no": 13,
+   "match_note": "",
+   "items": [
+    {
+     "team": "海门珂缔缘",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "守方先触球并成功处理，不犯规，点球错误"
+    }
+   ]
+  },
+  "163": {
+   "league": "中超联赛",
+   "round": 20,
+   "home": "天津津门虎",
+   "away": "青岛西海岸",
+   "issue": 22,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "天津津门虎",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "进球前正常争抢不犯规，VAR错误介入致进球被取消"
+    }
+   ]
+  },
+  "168": {
+   "league": "中甲联赛",
+   "round": 21,
+   "home": "广西平果",
+   "away": "定南赣联",
+   "issue": 23,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "定南赣联",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "广西平果43号故意冲撞属鲁莽犯规，漏判犯规和黄牌"
+    }
+   ]
+  },
+  "171": {
+   "league": "中超联赛",
+   "round": 22,
+   "home": "长春亚泰",
+   "away": "深圳新鹏城",
+   "issue": 24,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "深圳新鹏城",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "长春亚泰2号争顶时手臂限制+身体压制，犯规在先，进球应无效"
+    }
+   ]
+  },
+  "174": {
+   "league": "中超联赛",
+   "round": 23,
+   "home": "浙江俱乐部绿城",
+   "away": "天津津门虎",
+   "issue": 24,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "天津津门虎",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "浙江俱乐部20号手臂击打头部属严重犯规，无牌（第23轮调赛）"
+    }
+   ]
+  },
+  "179": {
+   "league": "中超联赛",
+   "round": 23,
+   "home": "武汉三镇",
+   "away": "上海申花",
+   "issue": 25,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "上海申花10号鞋钉直腿蹬踏属严重犯规，回看后仍仅黄牌"
+    }
+   ]
+  },
+  "181": {
+   "league": "中乙联赛",
+   "round": 24,
+   "home": "昆明城星",
+   "away": "山西崇德荣海",
+   "issue": 25,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "昆明城星",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "应掌握有利使进球有效，进球被误判无效"
+    },
+    {
+     "team": "山西崇德荣海",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "按修正流程守门员应黄牌警告而非红牌"
+    }
+   ]
+  },
+  "185": {
+   "league": "中超联赛",
+   "round": 24,
+   "home": "大连英博",
+   "away": "深圳新鹏城",
+   "issue": 26,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "深圳新鹏城",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "手臂处于合理位置且为近距离意外来球，不构成手球，点球错误"
+    }
+   ]
+  },
+  "188": {
+   "league": "中甲联赛",
+   "round": 22,
+   "home": "广东广州豹",
+   "away": "石家庄功夫",
+   "issue": 26,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "石家庄功夫",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "广州豹7号比赛停止时头撞对方属暴力行为，应红牌（第27期补充认定）"
+    },
+    {
+     "team": "广东广州豹",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "石家庄功夫14号疑似挑衅/还击，至少应黄牌警告"
+    }
+   ]
+  },
+  "190": {
+   "league": "中甲联赛",
+   "round": 22,
+   "home": "南通支云",
+   "away": "苏州东吴",
+   "issue": 26,
+   "case_no": 9,
+   "match_note": "",
+   "items": [
+    {
+     "team": "苏州东吴",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "南通支云20号越位位置触球，进球应无效"
+    }
+   ]
+  },
+  "196": {
+   "league": "中甲联赛",
+   "round": 24,
+   "home": "南通支云",
+   "away": "陕西联合",
+   "issue": 28,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "陕西联合",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "南通支云15号无球状态挥拳击打属暴力行为，仅黄牌"
+    }
+   ]
+  },
+  "197": {
+   "league": "中甲联赛",
+   "round": 24,
+   "home": "佛山南狮",
+   "away": "广西平果",
+   "issue": 28,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西平果",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "佛山南狮25号抬脚触对方头部属严重犯规，仅黄牌"
+    }
+   ]
+  },
+  "199": {
+   "league": "中甲联赛",
+   "round": 24,
+   "home": "苏州东吴",
+   "away": "南京城市",
+   "issue": 28,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "接触力度轻微属非体育行为，红牌错误、应黄牌"
+    }
+   ]
+  },
+  "205": {
+   "league": "中超联赛",
+   "round": 23,
+   "home": "大连英博",
+   "away": "青岛西海岸",
+   "issue": 29,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连英博",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "青岛西海岸36号拉扯犯规，应判点球"
+    }
+   ]
+  },
+  "206": {
+   "league": "中甲联赛",
+   "round": 25,
+   "home": "陕西联合",
+   "away": "上海嘉定汇龙",
+   "issue": 29,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "上海嘉定汇龙",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "陕西联合35号手球漏判，应判点球"
+    }
+   ]
+  },
+  "210": {
+   "league": "中乙联赛",
+   "round": 28,
+   "home": "杭州临平吴越",
+   "away": "广东铭途",
+   "issue": 30,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广东铭途",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "杭州临平吴越队员跳向对方属草率犯规，应判点球"
+    }
+   ]
+  },
+  "222": {
+   "league": "中超联赛",
+   "round": 29,
+   "home": "成都蓉城",
+   "away": "河南俱乐部",
+   "issue": 32,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "对方手球应掌握有利使进球有效；因鸣哨在先无法改判进球"
+    }
+   ]
+  },
+  "223": {
+   "league": "中超联赛",
+   "round": 29,
+   "home": "成都蓉城",
+   "away": "河南俱乐部",
+   "issue": 32,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "河南俱乐部11号手球漏判，应判点球"
+    }
+   ]
+  },
+  "225": {
+   "league": "中甲联赛",
+   "round": 29,
+   "home": "广西平果",
+   "away": "上海嘉定汇龙",
+   "issue": 32,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "上海嘉定汇龙",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "9号挥臂不构成暴力行为，红牌错误、应黄牌"
+    },
+    {
+     "team": "上海嘉定汇龙",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "广西平果5号持续拉扯抱摔，应黄牌警告"
+    }
+   ]
+  }
+ }
+}

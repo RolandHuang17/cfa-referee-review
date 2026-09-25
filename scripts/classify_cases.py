@@ -1,22 +1,26 @@
 # -*- coding: utf-8 -*-
-"""人工复核与教学分类：合并到 cases.json
+"""人工复核与教学分类（双赛季）：合并到 cases-{season}.json
+用法: python classify_cases.py 2024|2025
 每条: seq -> (类别, 标签列表, 裁判判定, VAR判定)
 类别:
-  handball        手球犯规
-  offside         越位
-  penalty_area    罚球区内判罚（点球）
-  freekick_foul   罚球区外一般犯规
+  handball        手球犯规          offside         越位
+  penalty_area    罚球区内判罚（点球）  freekick_foul   罚球区外一般犯规
   spa_tactical    战术犯规与SPA（破坏有希望的进攻）
   dogso           破坏明显进球得分机会（DOGSO）
   sfp_vc          严重犯规与暴力行为（红牌尺度）
-  simulation      假摔与欺骗行为
-  goal_decision   进球判定与有利条款
+  simulation      假摔与欺骗行为      goal_decision   进球判定与有利条款
   other_program   程序与其他
 裁判判定: wrong(认定错漏判) / correct(支持原判) / pending(不予认定)
-VAR判定: correct / wrong / none(未涉及) / (unknown不应残留)
+VAR判定: correct / wrong / none(未涉及)
 """
 
-CLS = {
+# 2024赛季分类表（160条，人工逐条复核）
+import sys  # noqa: E402
+from pathlib import Path  # noqa: E402
+
+from classify_cls_2024 import CLS_2024  # noqa: E402
+
+CLS_2025 = {
     # 期01
     1: ("sfp_vc", ["红牌", "严重犯规", "踩踏", "VAR介入正确"], "wrong", "correct"),
     2: ("sfp_vc", ["红牌", "严重犯规", "VAR介入正确"], "correct", "correct"),
@@ -295,21 +299,39 @@ VERDICT_NAMES = {"wrong": "错漏判", "correct": "支持原判", "pending": "�
 VAR_NAMES = {"correct": "VAR正确", "wrong": "VAR错误", "none": "未涉及"}
 
 
+def fix_comp_2024(c):
+    """2024早期文章用'中超第3轮'式写法，comp为空时从对阵信息归一"""
+    if c.get("comp"):
+        return c["comp"]
+    mi = c.get("match_info", "")
+    for k, v in (("中超", "中超联赛"), ("中甲", "中甲联赛"), ("中乙", "中乙联赛"),
+                 ("女超", "女超联赛"), ("女甲", "女甲联赛"), ("足协杯", "中国足协杯"),
+                 ("三大球", "三大球运动会"), ("运动会", "全运会")):
+        if k in mi:
+            return v
+    return ""
+
+
 def main():
     import json
-    from pathlib import Path
     from collections import Counter
 
+    season = sys.argv[1] if len(sys.argv) > 1 else "2025"
     root = Path(__file__).resolve().parent.parent
-    path = root / "data" / "cases.json"
+    path = root / "data" / f"cases-{season}.json"
     data = json.loads(path.read_text(encoding="utf-8"))
     cases = data["cases"]
-    assert len(CLS) == len(cases), f"分类条目{len(CLS)} != 判例{len(cases)}"
-    missing = [c["seq"] for c in cases if c["seq"] not in CLS]
+    table = CLS_2025 if season == "2025" else CLS_2024
+    assert len(table) == len(cases), f"分类条目{len(table)} != 判例{len(cases)}"
+    missing = [c["seq"] for c in cases if c["seq"] not in table]
     assert not missing, f"缺少分类: {missing}"
 
     for c in cases:
-        cat, tags, rv, vv = CLS[c["seq"]]
+        if season == "2024":
+            c["comp"] = fix_comp_2024(c)
+            if not c["comp"] and c["issue"] == 1:
+                c["comp"] = "中超联赛"  # 第1期3条判例均出自中超第2轮
+        cat, tags, rv, vv = table[c["seq"]]
         c["category"] = cat
         c["category_name"] = CATEGORY_NAMES[cat]
         c["tags"] = tags
@@ -319,12 +341,12 @@ def main():
         c["var_verdict_name"] = VAR_NAMES[vv]
         c.pop("need_manual", None)
 
-    # 第27期判例2拆分校正：fix_issue27_merge 已把合并的补充认定拆走，
-    # CLS 按原合并形态将其标为 wrong，此处恢复拆分后的真实判定（无锡吴钩越位申诉→支持原判）
-    c195 = next(c for c in cases if c["seq"] == 195)
-    c195.update(referee_verdict="correct", referee_verdict_name="支持原判",
-                var_verdict="none", var_verdict_name="未涉及",
-                category="offside", category_name="越位", tags=["证据不足"])
+    if season == "2025":
+        # 第27期判例2拆分校正（fix_issue27_merge 已拆分结构；CLS 按原合并形态标注）
+        c195 = next(c for c in cases if c["seq"] == 195)
+        c195.update(referee_verdict="correct", referee_verdict_name="支持原判",
+                    var_verdict="none", var_verdict_name="未涉及",
+                    category="offside", category_name="越位", tags=["证据不足"])
 
     # 每期核对
     print(f"{'期':>3} {'判例':>4} {'标题认定':>6} {'复核错误':>6}  差异说明")

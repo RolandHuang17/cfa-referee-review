@@ -1,59 +1,87 @@
 # -*- coding: utf-8 -*-
-"""解析32期HTML -> data/cases.json（判例结构化 + 视频映射 + 自动结论归类 + 标题交叉校验）"""
+"""解析评议文章HTML -> 结构化判例数据（双赛季）
+用法: python parse_issues.py 2024|2025
+输出: data/cases-{season}.json
+视频文件命名: videos/{season}/i{期数}c{判例}-{序号}.mp4
+"""
 import json
 import re
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-RAW = ROOT / "data" / "issues_raw"
-OUT = ROOT / "data" / "cases.json"
 
 CN_NUM = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7,
           "八": 8, "九": 9, "十": 10}
 ISSUE_URL = {
-    1: "https://www.thecfa.cn/zyls1/20250227/35667.html",
-    2: "https://www.thecfa.cn/zyls1/20250305/35703.html",
-    3: "https://www.thecfa.cn/zyls1/20250319/35769.html",
-    4: "https://www.thecfa.cn/zyls1/20250328/35803.html",
-    5: "https://www.thecfa.cn/zyls1/20250402/35819.html",
-    6: "https://www.thecfa.cn/zyls1/20250409/35844.html",
-    7: "https://www.thecfa.cn/zyls1/20250416/35868.html",
-    8: "https://www.thecfa.cn/zyls1/20250423/35901.html",
-    9: "https://www.thecfa.cn/zyls1/20250501/35914.html",
-    10: "https://www.thecfa.cn/zyls1/20250507/36449.html",
-    11: "https://www.thecfa.cn/zyls1/20250514/36471.html",
-    12: "https://www.thecfa.cn/zyls1/20250521/36493.html",
-    13: "https://www.thecfa.cn/zyls1/20250604/36545.html",
-    14: "https://www.thecfa.cn/zyls1/20250618/36597.html",
-    15: "https://www.thecfa.cn/zyls1/20250625/36616.html",
-    16: "https://www.thecfa.cn/zyls1/20250703/36647.html",
-    17: "https://www.thecfa.cn/zyls1/20250709/36668.html",
-    18: "https://www.thecfa.cn/zyls1/20250718/36707.html",
-    19: "https://www.thecfa.cn/zyls1/20250724/36722.html",
-    20: "https://www.thecfa.cn/zyls1/20250730/36757.html",
-    21: "https://www.thecfa.cn/zyls1/20250806/36774.html",
-    22: "https://www.thecfa.cn/zyls1/20250813/36785.html",
-    23: "https://www.thecfa.cn/zyls1/20250820/36819.html",
-    24: "https://www.thecfa.cn/cppy/20250827/36854.html",
-    25: "https://www.thecfa.cn/cppy/20250903/36876.html",
-    26: "https://www.thecfa.cn/cppy/20250917/36917.html",
-    27: "https://www.thecfa.cn/cppy/20250924/36927.html",
-    28: "https://www.thecfa.cn/cppy/20251001/36955.html",
-    29: "https://www.thecfa.cn/cppy/20251008/36962.html",
-    30: "https://www.thecfa.cn/cppy/20251022/37010.html",
-    31: "https://www.thecfa.cn/cppy/20251029/37036.html",
-    32: "https://www.thecfa.cn/cppy/20251105/37055.html",
+    "2025": {
+        1: "https://www.thecfa.cn/zyls1/20250227/35667.html",
+        2: "https://www.thecfa.cn/zyls1/20250305/35703.html",
+        3: "https://www.thecfa.cn/zyls1/20250319/35769.html",
+        4: "https://www.thecfa.cn/zyls1/20250328/35803.html",
+        5: "https://www.thecfa.cn/zyls1/20250402/35819.html",
+        6: "https://www.thecfa.cn/zyls1/20250409/35844.html",
+        7: "https://www.thecfa.cn/zyls1/20250416/35868.html",
+        8: "https://www.thecfa.cn/zyls1/20250423/35901.html",
+        9: "https://www.thecfa.cn/zyls1/20250501/35914.html",
+        10: "https://www.thecfa.cn/zyls1/20250507/36449.html",
+        11: "https://www.thecfa.cn/zyls1/20250514/36471.html",
+        12: "https://www.thecfa.cn/zyls1/20250521/36493.html",
+        13: "https://www.thecfa.cn/zyls1/20250604/36545.html",
+        14: "https://www.thecfa.cn/zyls1/20250618/36597.html",
+        15: "https://www.thecfa.cn/zyls1/20250625/36616.html",
+        16: "https://www.thecfa.cn/zyls1/20250703/36647.html",
+        17: "https://www.thecfa.cn/zyls1/20250709/36668.html",
+        18: "https://www.thecfa.cn/zyls1/20250718/36707.html",
+        19: "https://www.thecfa.cn/zyls1/20250724/36722.html",
+        20: "https://www.thecfa.cn/zyls1/20250730/36757.html",
+        21: "https://www.thecfa.cn/zyls1/20250806/36774.html",
+        22: "https://www.thecfa.cn/zyls1/20250813/36785.html",
+        23: "https://www.thecfa.cn/zyls1/20250820/36819.html",
+        24: "https://www.thecfa.cn/cppy/20250827/36854.html",
+        25: "https://www.thecfa.cn/cppy/20250903/36876.html",
+        26: "https://www.thecfa.cn/cppy/20250917/36917.html",
+        27: "https://www.thecfa.cn/cppy/20250924/36927.html",
+        28: "https://www.thecfa.cn/cppy/20251001/36955.html",
+        29: "https://www.thecfa.cn/cppy/20251008/36962.html",
+        30: "https://www.thecfa.cn/cppy/20251022/37010.html",
+        31: "https://www.thecfa.cn/cppy/20251029/37036.html",
+        32: "https://www.thecfa.cn/cppy/20251105/37055.html",
+    },
+    "2024": {
+        1: "https://www.thecfa.cn/zyls1/20240311/33847.html",
+        2: "https://www.thecfa.cn/zyls1/20240403/34026.html",
+        3: "https://www.thecfa.cn/zyls1/20240417/34203.html",
+        4: "https://www.thecfa.cn/zyls1/20240424/34242.html",
+        5: "https://www.thecfa.cn/zyls1/20240430/34273.html",
+        6: "https://www.thecfa.cn/zyls1/20240504/34283.html",
+        7: "https://www.thecfa.cn/zyls1/20240508/34347.html",
+        8: "https://www.thecfa.cn/zyls1/20240515/34422.html",
+        9: "https://www.thecfa.cn/zyls1/20240529/34512.html",
+        10: "https://www.thecfa.cn/zyls1/20240612/34609.html",
+        11: "https://www.thecfa.cn/zyls1/20240619/34632.html",
+        12: "https://www.thecfa.cn/zyls1/20240703/34717.html",
+        13: "https://www.thecfa.cn/zyls1/20240710/34755.html",
+        14: "https://www.thecfa.cn/zyls1/20240717/34776.html",
+        15: "https://www.thecfa.cn/zyls1/20240725/34794.html",
+        16: "https://www.thecfa.cn/zyls1/20240731/34836.html",
+        17: "https://www.thecfa.cn/zyls1/20240807/34876.html",
+        18: "https://www.thecfa.cn/zyls1/20240821/34955.html",
+        19: "https://www.thecfa.cn/zyls1/20240829/34973.html",
+        20: "https://www.thecfa.cn/20240904/35000.html",
+        21: "https://www.thecfa.cn/zyls1/20240912/35042.html",
+        22: "https://www.thecfa.cn/zyls1/20240919/35054.html",
+        23: "https://www.thecfa.cn/zyls1/20240925/35077.html",
+        24: "https://www.thecfa.cn/zyls1/20241009/35116.html",
+        25: "https://www.thecfa.cn/zyls1/20241023/35228.html",
+        26: "https://www.thecfa.cn/zyls1/20241030/35271.html",
+        27: "https://www.thecfa.cn/zyls1/20241130/35387.html",
+    },
 }
 
 COMP_KEYWORDS = ["中超联赛", "中甲联赛", "中乙联赛", "中国足协杯", "足协杯",
                  "全国运动会", "全运会", "女超联赛", "女甲联赛", "女乙联赛",
                  "中冠联赛", "U21联赛", "U19联赛", "U17联赛", "锦标赛",
-                 "青少年联赛", "超级杯",
-                 # 兜底：不带"联赛"字样的写法（"中超第7轮"等）
-                 "中超", "中甲", "中乙", "女超", "女甲", "运动会"]
-# 关键词命中后归一为标准赛事名
-COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
-              "女超": "女超联赛", "女甲": "女甲联赛", "运动会": "全运会"}
+                 "青少年联赛", "超级杯"]
 
 
 def cn2int(s: str) -> int:
@@ -77,7 +105,6 @@ def clean(text: str) -> str:
 
 
 def extract_content(html: str) -> str:
-    """取 news_right_list div 内部HTML（文章正文区，到 news_sidebar 为止）"""
     a = html.find('<div class="news_right_list">')
     if a < 0:
         return ""
@@ -86,11 +113,10 @@ def extract_content(html: str) -> str:
 
 
 def split_paragraphs(content_html: str):
-    """按 <p ...>...</p> 切分，返回 [(text, [video_urls])]"""
     paras = []
     for m in re.finditer(r"<p[^>]*>(.*?)</p>", content_html, re.S):
         inner = m.group(1)
-        vids = re.findall(r'(?:<video|<source)[^>]+src="(https://videooss\.thecfa\.cn[^"]+)"', inner)
+        vids = re.findall(r'(?:<video|<source)[^>]+src="(https?://videooss\.thecfa\.cn[^"]+)"', inner)
         vids = list(dict.fromkeys(vids))
         text = clean(inner)
         paras.append((text, vids))
@@ -98,11 +124,9 @@ def split_paragraphs(content_html: str):
 
 
 def parse_case_head(text: str):
-    """判例描述段 -> (match_info, comp, round, home, away, minute)"""
     head = text.split("。")[0]
     head = re.sub(r"^判例[一二三四五六七八九十百]+[：:]", "", head).strip()
     comp = next((k for k in COMP_KEYWORDS if k in head), "")
-    comp = COMP_ALIAS.get(comp, comp)
     rnd = ""
     m = re.search(r"第[0-9一二三四五六七八九十百]+轮", head)
     if m:
@@ -111,11 +135,15 @@ def parse_case_head(text: str):
     m = re.search(r"([^，,。\s]+?)\s*(?:VS|vs|Vs)\s*([^，,。\s]+)", head)
     if m:
         home, away = m.group(1), m.group(2)
+        # 剥离黏在队名前的赛事前缀（2024早期文章"中超第5轮山东泰山VS河南"无逗号）
+        home = re.sub(r"^(?:中超|中甲|中乙|女超|女甲)(?:联赛)?第[0-9一二三四五六七八九十百]+轮", "", home)
+        away = re.sub(r"^(?:中超|中甲|中乙|女超|女甲)(?:联赛)?第[0-9一二三四五六七八九十百]+轮", "", away)
     else:
-        # 兜底：无VS时找"甲-乙"式对阵（首段可能整段无句号，取最后一个匹配）
-        pairs = re.findall(r"([\u4e00-\u9fa5A-Za-z0-9]{2,20})-([\u4e00-\u9fa5A-Za-z0-9]{2,20})", head)
-        if pairs:
-            home, away = pairs[-1]
+        seg = head.split("，")[-1].strip()
+        if seg.count("-") == 1:
+            m2 = re.match(r"^([^\-，。]{2,20})-([^\-，。]{2,20})$", seg)
+            if m2:
+                home, away = m2.group(1), m2.group(2)
     minute = ""
     m = re.search(r"比赛第\s*(\d+)\s*分钟", text)
     if m:
@@ -124,14 +152,12 @@ def parse_case_head(text: str):
 
 
 def strip_var_parts(text: str) -> str:
-    """去掉VAR相关分句，便于判断裁判员本身的判定"""
     text = re.sub(r"(?:VAR|视频助理裁判)[^。；;]*", "", text)
     text = re.sub(r"(?:未|不)?介入[^。；;]*", "", text)
     return text
 
 
 def classify(conc: str):
-    """返回 (referee_verdict, var_verdict, need_manual)"""
     var = "none"
     if re.search(r"VAR|视频助理裁判", conc):
         if re.search(r"(?:介入|未介入|不介入)(?:错误)", conc):
@@ -139,7 +165,7 @@ def classify(conc: str):
         elif re.search(r"(?:介入|不介入)(?:正确|恰当|无误)", conc):
             var = "correct"
         else:
-            var = "unknown"  # 提及VAR但未明说对错
+            var = "unknown"
     if re.search(r"不予认定|无法判断|无法认定", conc):
         return "pending", var, var == "unknown"
     body = strip_var_parts(conc)
@@ -150,17 +176,16 @@ def classify(conc: str):
     if correct and not wrong:
         return "correct", var, False
     if wrong and correct:
-        # 复合表述，如“错判红牌漏判黄牌”仍属错误；先自动归wrong，人工复核
         return "wrong", var, True
     return "unclear", var, True
 
 
-def main():
-    issues = []
-    cases = []
-    seq = 0
-    for n in range(1, 33):
-        f = RAW / f"issue_{n:02d}.html"
+def parse_season(season: str):
+    raw = ROOT / "data" / "issues_raw" / season
+    urls = ISSUE_URL[season]
+    issues, cases, seq = [], [], 0
+    for n in sorted(urls):
+        f = raw / f"issue_{n:02d}.html"
         html = f.read_text(encoding="utf-8")
         title_m = re.search(r"<title>(.*?)</title>", html, re.S)
         title = clean(title_m.group(1)).split("-中国足球协会")[0] if title_m else ""
@@ -170,17 +195,12 @@ def main():
             expect = int(tm.group(1))
         content = extract_content(html)
         paras = split_paragraphs(content)
-        # 综述 = 首个判例段之前的文本段
-        summary = []
-        cur = None
-        orphan_vids = []
+        summary, cur = [], None
         for text, vids in paras:
             cm = re.match(r"^判例([一二三四五六七八九十百]+)[：:]", text)
             if cm:
-                cur = {
-                    "issue": n, "no": cn2int(cm.group(1)), "desc": text,
-                    "appeal": "", "conclusion": "", "videos": [],
-                }
+                cur = {"issue": n, "no": cn2int(cm.group(1)), "desc": text,
+                       "appeal": "", "conclusion": "", "videos": []}
                 seq += 1
                 cur["seq"] = seq
                 cases.append(cur)
@@ -188,7 +208,6 @@ def main():
             if cur is None:
                 if text and "扫码" not in text and "分享至" not in text:
                     summary.append(text)
-                orphan_vids += vids
                 continue
             if "申诉意见认为" in text or "申诉意见如下" in text:
                 cur["appeal"] += (("\n" if cur["appeal"] else "") + text)
@@ -198,49 +217,52 @@ def main():
                 continue
             if re.search(r"评议组|对于此判例", text) or cur["conclusion"]:
                 cur["conclusion"] += (("\n" if cur["conclusion"] else "") + text)
-                continue
-            # 其他正文段落并入结论区
-            cur["conclusion"] += (("\n" if cur["conclusion"] else "") + text)
-        # 结尾套路段剔除
         for c in cases:
             if c["issue"] != n:
                 continue
-            c["conclusion"] = re.sub(
-                r"中国足协将继续秉持.*$", "", c["conclusion"], flags=re.S).strip()
-            c["match_info"], c["comp"], c["round"], c["home"], c["away"], c["minute"] = \
-                parse_case_head(c["desc"])
+            c["conclusion"] = re.sub(r"中国足协将继续秉持.*$", "", c["conclusion"], flags=re.S).strip()
+            head, comp, rnd, home, away, minute = parse_case_head(c["desc"])
+            c.update(match_info=head, comp=comp, round=rnd, home=home, away=away, minute=minute)
             c["referee_verdict"], c["var_verdict"], c["need_manual"] = classify(
                 c["desc"] + "\n" + c["appeal"] + "\n" + c["conclusion"])
-        wrong_n = sum(1 for c in cases if c["issue"] == n and c["referee_verdict"] == "wrong")
         issues.append({
-            "no": n, "title": title, "url": ISSUE_URL[n],
-            "date": re.search(r"/(\d{8})/", ISSUE_URL[n]).group(1),
+            "no": n, "title": title, "url": urls[n],
+            "date": re.search(r"/(\d{8})/", urls[n]).group(1),
             "summary": "\n".join(summary).strip(),
-            "expected_wrong": expect, "parsed_wrong": wrong_n,
+            "expected_wrong": expect,
+            "parsed_wrong": sum(1 for c in cases if c["issue"] == n and c["referee_verdict"] == "wrong"),
             "video_count": sum(len(c["videos"]) for c in cases if c["issue"] == n),
         })
-    # 视频本地文件名
+    # 视频URL去重（官方HTML重复2次）+ https归一 + 本地命名
+    seen = {}
     for c in cases:
-        for k, v in enumerate(c["videos"], 1):
-            c.setdefault("video_files", []).append(f"i{c['issue']:02d}c{c['no']:02d}-{k}.mp4")
-        c["video_urls"] = c.pop("videos")
-    data = {"issues": issues, "cases": cases}
-    OUT.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+        c["video_urls"] = [u.replace("http://", "https://") for u in c["videos"]]
+        c["video_files"] = []
+        for k, u in enumerate(c["video_urls"], 1):
+            if u not in seen:
+                seen[u] = f"{season}/i{c['issue']:02d}c{c['no']:02d}-{k}.mp4"
+            c["video_files"].append(seen[u])
+        del c["videos"]
+    return {"season": season, "issues": issues, "cases": cases}
 
+
+def main():
+    import sys
+    season = sys.argv[1] if len(sys.argv) > 1 else "2025"
+    data = parse_season(season)
+    out = ROOT / "data" / f"cases-{season}.json"
+    out.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    cases = data["cases"]
     print(f"共 {len(cases)} 判例")
     print(f"{'期':>3} {'判例':>4} {'视频':>4} {'标题认定':>6} {'解析错误':>6}  校验")
-    for it in issues:
+    for it in data["issues"]:
         nc = sum(1 for c in cases if c["issue"] == it["no"])
+        nv = sum(len(c["video_urls"]) for c in cases if c["issue"] == it["no"])
         ok = "OK" if it["expected_wrong"] == it["parsed_wrong"] else "<<<不一致"
-        print(f"{it['no']:>3} {nc:>4} {it['video_count']:>4} {it['expected_wrong']:>8} "
-              f"{it['parsed_wrong']:>8}  {ok}")
-    manual = [c for c in cases if c["need_manual"]]
-    print(f"\n需人工复核结论: {len(manual)} 条")
-    novid = [c for c in cases if not c["video_urls"]]
-    print(f"无视频判例: {len(novid)} 条 -> {[(c['issue'], c['no']) for c in novid]}")
-    from collections import Counter
-    print("裁判判定分布:", Counter(c["referee_verdict"] for c in cases))
-    print("VAR判定分布:", Counter(c["var_verdict"] for c in cases))
+        print(f"{it['no']:>3} {nc:>4} {nv:>4} {it['expected_wrong']:>8} {it['parsed_wrong']:>8}  {ok}")
+    manual = [c["seq"] for c in cases if c.get("need_manual")]
+    novid = [c["seq"] for c in cases if not c["video_urls"]]
+    print(f"需人工复核: {len(manual)} | 无视频判例: {novid or '无'}")
 
 
 if __name__ == "__main__":

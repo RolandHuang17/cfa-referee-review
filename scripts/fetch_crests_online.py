@@ -22,13 +22,40 @@ NOISE = re.compile(r"flag|kit|stadium|map|icon|commons|wikimedia|nike|adidas|bal
 
 def api(params):
     query = "&".join(f"{k}={S.safe_urlencode(v)}" for k, v in params.items())
-    status, text = S.fetch_text(f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=0)
+    status, text = S.fetch_text(f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=2)
     if status != 200 or not text.startswith("{"):
         raise RuntimeError(f"Wikipedia API {status}")
     return json.loads(text)
 
 
+def score_image(title, team):
+    if NOISE.search(title) or not PREFER.search(title):
+        return None
+    score = 4 if re.search(r"logo|crest|队徽", title, re.I) else 2
+    if team[:2] in title:
+        score += 2
+    return score
+
+
+def own_article_images(team):
+    """仅取本队词条(精确标题)的图片，保证队徽来源即本俱乐部。"""
+    data = api({"action": "query", "format": "json", "prop": "images", "imlimit": "200",
+                "titles": team + "足球俱乐部"})
+    for pid, page in data.get("query", {}).get("pages", {}).items():
+        if pid == "-1":
+            return []
+        return [image.get("title", "") for image in page.get("images", [])]
+    return []
+
+
 def candidate(team):
+    # 优先且仅用本队词条图片：跨页面混选曾让名队队徽(如北京国安)覆盖目标队
+    article = team + "足球俱乐部"
+    for title in own_article_images(team):
+        score = score_image(title, team)
+        if score:
+            return (score, title, article)
+    # 本队词条无队徽时才回退搜索池，且图片标题必须含队名，杜绝跨俱乐部误配
     data = api({"action": "query", "format": "json", "prop": "images", "imlimit": "200",
                 "generator": "search", "gsrlimit": "5", "gsrsearch": team + " 足球俱乐部"})
     pages = sorted(data.get("query", {}).get("pages", {}).values(), key=lambda x: x.get("index", 999))
@@ -36,12 +63,11 @@ def candidate(team):
     for page in pages:
         for image in page.get("images", []):
             title = image.get("title", "")
-            if NOISE.search(title) or not PREFER.search(title):
+            if team[:2] not in title:
                 continue
-            score = 4 if re.search(r"logo|crest|队徽", title, re.I) else 2
-            if team[:2] in title:
-                score += 1
-            choices.append((score, title, page.get("title", "")))
+            score = score_image(title, team)
+            if score:
+                choices.append((score, title, page.get("title", "")))
     if not choices:
         return None
     return sorted(choices, reverse=True)[0]

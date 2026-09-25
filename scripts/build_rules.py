@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-"""从官方繁体PDF构建简体版竞赛规则内容 -> data/laws.json
-流程: 按页提取 -> 清洗页眉页脚 -> 繁转简(OpenCC) -> 术语对照 -> 按节切分 -> 渲染HTML片段
+"""从官方繁体PDF构建简体版竞赛规则内容 -> data/laws.json + rules.html
+流程: dict模式按阅读顺序提取行(y/x排序) -> 过滤页码页脚 -> 行分类(小节标题/列表/脚注/图表页)
+      -> 段落重构状态机(断行合并、一句一段、列表缩进、段距判断) -> OpenCC繁转简 -> 术语对照 -> HTML
 依赖(仅构建时): pip install pymupdf opencc-python-reimplemented
 """
 import json
@@ -14,10 +15,11 @@ ROOT = Path(__file__).resolve().parent.parent
 PDF = ROOT / "data" / "laws_raw" / "lotg-202627-tc-single.pdf"
 OUT = ROOT / "data" / "laws.json"
 RULES_HTML = ROOT / "rules.html"
+IMG_DIR = ROOT / "assets" / "rules"
 
 CC = opencc.OpenCC("t2s")
 
-# 足球术语对照（在OpenCC之后按键长降序替换）：港式/台式用语 -> 中国足协简体用语
+# 足球术语对照（在OpenCC之前应用；键为繁体原文形态，值为规范简体）
 GLOSSARY = {
     "足球球例": "足球竞赛规则",
     "競賽規則": "竞赛规程",
@@ -68,7 +70,6 @@ CN_NUM = {1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七",
           8: "八", 9: "九", 10: "十", 11: "十一", 12: "十二", 13: "十三",
           14: "十四", 15: "十五", 16: "十六", 17: "十七"}
 
-# 节定义: (id, 标题, 起页, 止页)（1-based，含端点；止页为下一节起始前）
 FRONT = [
     ("intro", "引言", 11, 16),
     ("overview", "规则概述·须知事项及修订", 17, 27),
@@ -82,8 +83,9 @@ BACK = [
     ("guide", "比赛官员实用指引", 211, 236),
 ]
 
-HEADER_RE = re.compile(r"^\d{0,3}\s*2026/27\s*足球球例.*$|^球例\d{1,2}$|^\d{1,3}$")
-NOISE_RE = re.compile(r"編輯修改有下劃線|www\.theifab\.com|^$")
+# 图形/信号页（人工核定）：球门尺寸、有利信号、红黄牌信号、助理裁判员信号、
+# 进球判定、点球区违例、角球反弹、裁判位置图、词汇图等 —— 渲染为图片而非文本
+DIAGRAM_PAGES = {51, 79, 80, 88, 89, 90, 104, 115, 142, 146, 201, 207, 211, 214, 215}
 
 
 def convert(text: str) -> str:
@@ -93,16 +95,178 @@ def convert(text: str) -> str:
     return CC.convert(text)
 
 
-def clean_page(page) -> str:
-    lines = []
-    for raw in page.get_text("text").split("\n"):
-        ln = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", raw).strip()
-        if not ln or HEADER_RE.match(ln) or NOISE_RE.search(ln):
+def page_lines(page):
+    """按阅读顺序(y,x)返回行: [{text,x0,bold,size,y0}]；过滤页码/页眉页脚/空行/大字章题"""
+    d = page.get_text("dict")
+    rows = []
+    for block in d.get("blocks", []):
+        if block.get("type") != 0:
             continue
-        if re.fullmatch(r"\d{1,3}", ln):  # 纯页码
+        for ln in block.get("lines", []):
+            spans = [sp for sp in ln.get("spans", []) if sp.get("text", "").strip()]
+            if not spans:
+                continue
+            text = "".join(sp.get("text", "") for sp in spans)
+            x0 = min(sp["bbox"][0] for sp in spans)
+            y0 = ln["bbox"][1]
+            size = max(sp.get("size", 0) for sp in spans)
+            bold = any(sp.get("flags", 0) & 16 for sp in spans)
+            rows.append({"text": text, "x0": x0, "y0": y0, "size": size, "bold": bold})
+    rows.sort(key=lambda r: (round(r["y0"], 1), r["x0"]))
+    out = []
+    for r in rows:
+        t = re.sub(r"[\x00-\x08\x0b\x0c\x0e-\x1f]", "", r["text"]).strip()
+        if not t:
             continue
-        lines.append(ln)
-    return "\n".join(lines)
+        if re.fullmatch(r"\d{1,3}", t):  # 页码
+            continue
+        if "足球球例" in t and ("|" in t or r["y0"] > 540):  # 页眉/页脚
+            continue
+        if r["size"] >= 25:  # 章大标题（33pt）
+            continue
+        r["text"] = t
+        out.append(r)
+    return out
+
+
+def classify(line):
+    t = line["text"]
+    if t.startswith("*"):
+        return "fn"
+    if t[0] in "•·▪":
+        return "bullet"
+    if line["bold"] and line["x0"] < 60 and re.match(r"^\d{1,2}[.、]", t):
+        return "h3"
+    return "plain"
+
+
+class Flow:
+    """段落重构状态机：断行合并、一句一段、列表缩进(x0几何判定)、段距判断"""
+    CONNECTORS = "及或与和，、：；"
+
+    def __init__(self):
+        self.out, self.p = [], []
+        self.in_ul = False
+        self.li = None            # 开放列表项的内容片段（后续行并入）
+        self.li_cls = ""
+        self.li_plain = ""
+        self.last_bullet_x0 = None
+        self.prev_y = None
+        self.new_page = True
+
+    def close_li(self):
+        if self.li is not None:
+            self.out.append(f"<li{self.li_cls}>" + "".join(self.li) + "</li>")
+            self.li = None
+            self.li_plain = ""
+
+    def close_ul(self):
+        if self.in_ul:
+            self.close_li()
+            self.out.append("</ul>")
+            self.in_ul = False
+
+    def flush_p(self):
+        self.close_ul()
+        if self.p:
+            self.out.append("<p>" + "".join(self.p) + "</p>")
+            self.p = []
+
+    def add_img(self, pno):
+        self.close_ul(); self.flush_p()
+        self.out.append(f'<figure class="pg"><img src="assets/rules/p{pno}.png" '
+                        f'alt="图示" loading="lazy"></figure>')
+        self.prev_y = None
+        self.new_page = True
+
+    def _li_text(self):
+        return self.li_plain.rstrip()
+
+    def add_line(self, cls, html, plain, x0, y0, level=1):
+        gap_break = (not self.new_page and self.prev_y is not None
+                     and y0 is not None and y0 - self.prev_y > 19)
+        if cls == "h3":
+            self.close_ul(); self.flush_p()
+            self.out.append(f"<h3>{html}</h3>")
+        elif cls == "fn":
+            self.close_ul(); self.flush_p()
+            self.out.append(f'<p class="fn">{html}</p>')
+        elif cls == "bullet":
+            self.flush_p()
+            if not self.in_ul:
+                self.out.append("<ul>")
+                self.in_ul = True
+            else:
+                self.close_li()
+            self.li = [html]      # 内容缓冲：close_li 时统一发射
+            self.li_plain = html
+            self.li_cls = ' class="l2"' if level >= 2 else ""
+            self.last_bullet_x0 = x0
+        else:  # plain
+            if self.in_ul and self.li is not None:
+                buf = self._li_text()
+                if plain.strip() in ("及", "或", "与", "和"):
+                    self.li.append(html)             # 连接词独行：属于当前列表项
+                elif x0 is not None and self.last_bullet_x0 and x0 >= self.last_bullet_x0 + 4:
+                    self.li.append(html)             # 缩进≥项目文字：列表项续行
+                elif buf[-1:] in "。？！":
+                    self.close_ul(); self.flush_p()
+                    self.p.append(html)
+                    if plain[-1:] in "。？！：":
+                        self.flush_p()
+                elif gap_break:
+                    self.close_ul(); self.flush_p()  # 段距=列表结束
+                    self.p.append(html)
+                    if plain[-1:] in "。？！：":
+                        self.flush_p()
+                else:
+                    self.li.append(html)             # 不完整句子：续行
+            else:
+                if self.p and self.p[-1].rstrip()[-1:] in "。？！：":
+                    self.flush_p()
+                self.p.append(html)
+                if plain[-1:] in "。？！：":
+                    self.flush_p()
+        self.prev_y = y0
+        self.new_page = False
+
+    def finish(self):
+        self.close_ul(); self.flush_p()
+
+    def html(self):
+        self.finish()
+        return "\n".join(self.out)
+
+
+def build_section_html(doc, page_nums, diagrams):
+    flow = Flow()
+    prev_page = None
+    for pno in page_nums:
+        if pno in diagrams:
+            flow.add_img(pno)
+            prev_page = pno
+            continue
+        lines = page_lines(doc[pno - 1])
+        # 页内bullet按x0分级（每+10pt约一层）
+        bullet_x = sorted({round(l["x0"], 1) for l in lines if classify(l) == "bullet"})
+        for line in lines:
+            line["page"] = pno
+            cls = classify(line)
+            flow.new_page = (prev_page is not None and pno != prev_page)
+            if cls == "h3":
+                flow.add_line("h3", convert(line["text"]), "", line["x0"], line["y0"], 1)
+            elif cls == "fn":
+                flow.add_line("fn", convert(line["text"]), "", line["x0"], line["y0"], 1)
+            elif cls == "bullet":
+                t = convert(re.sub(r"^[•·▪]\s*", "", line["text"]))
+                lvl = next((k for k, x in enumerate(bullet_x, 1)
+                            if abs(line["x0"] - x) < 3), 1)
+                flow.add_line("bullet", t, "", line["x0"], line["y0"], lvl)
+            else:
+                flow.add_line("plain", convert(line["text"]), line["text"],
+                              line["x0"], line["y0"], 1)
+            prev_page = pno
+    return flow.html()
 
 
 def find_law_starts(doc):
@@ -129,35 +293,6 @@ def find_law_starts(doc):
                     starts[n] = i + 1
                 break
     return starts
-
-
-def render_html(text: str) -> str:
-    """行级启发式: •/·列表 -> ul, 数字. -> ol, 其余为段落; 清理CJK间空格"""
-    out, ul, ol = [], False, False
-    def close():
-        nonlocal ul, ol
-        if ul: out.append("</ul>"); ul = False
-        if ol: out.append("</ol>"); ol = False
-    for raw in text.split("\n"):
-        ln = convert(raw).strip()
-        if not ln:
-            close(); continue
-        if re.match(r"^[•·▪]\s*", ln):
-            if not ul: close(); out.append("<ul>"); ul = True
-            out.append("<li>" + re.sub(r"^[•·▪]\s*", "", ln) + "</li>")
-            continue
-        m = re.match(r"^(\d{1,2})[.、]\s*(.*)", ln)
-        if m:
-            if not ol: close(); out.append("<ol>"); ol = True
-            out.append("<li>" + m.group(2) + "</li>")
-            continue
-        close()
-        out.append("<p>" + ln + "</p>")
-    close()
-    html = "\n".join(out)
-    # 清理CJK字符间由提取产生的空格
-    html = re.sub(r"([\u4e00-\u9fff、，。；：）»])( )+([\u4e00-\u9fff（])", r"\1\3", html)
-    return html
 
 
 RULES_TEMPLATE = r"""<!DOCTYPE html>
@@ -196,12 +331,15 @@ main{overflow-y:auto;padding:22px 28px 60px}
   padding:26px 32px;box-shadow:0 1px 3px rgba(15,40,80,.05)}
 .content h2{margin:0 0 4px;font-size:23px;color:var(--brand)}
 .content .pages{font-size:12.5px;color:var(--muted);margin-bottom:14px}
-.content h3{font-size:17.5px;color:var(--brand);margin:20px 0 6px}
+.content h3{font-size:17.5px;color:var(--brand);margin:22px 0 6px}
 .content p{margin:9px 0}
-.content ul,.content ol{margin:8px 0;padding-left:26px}
-.content li{margin:4px 0}
+.content ul{margin:8px 0;padding-left:26px}
+.content li{margin:5px 0}
+.content li.l2{margin-left:24px;list-style-type:"–"}
+.content .fn{font-size:12.5px;color:var(--muted);margin:4px 0}
+.content .pg{margin:16px 0;text-align:center}
+.content .pg img{max-width:100%;border:1px solid var(--line);border-radius:8px}
 .content mark{background:var(--mark);padding:0 2px;border-radius:3px}
-.content .lawbody p:has(strong:only-child){margin-top:14px}
 .dnav{display:flex;gap:10px;margin-top:20px}
 .dnav button{flex:1;padding:10px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;
   cursor:pointer;font-size:14.5px;color:var(--ink)}
@@ -304,7 +442,7 @@ document.getElementById("fsMinus").onclick = ()=>{ fs=Math.max(13,fs-1); documen
 
 // ---------- 搜索 ----------
 const sb = document.getElementById("searchBox");
-fSearch = document.getElementById("fSearch");
+const fSearch = document.getElementById("fSearch");
 fSearch.addEventListener("input", ()=>{
   const q = fSearch.value.trim();
   if(q.length < 2){ sb.classList.remove("open"); clearMarks(); return; }
@@ -313,13 +451,13 @@ fSearch.addEventListener("input", ()=>{
     const plain = s.html.replace(/<[^>]+>/g,"");
     let i = plain.indexOf(q);
     while(i >= 0 && hits.length < 60){
-      hits.push({id: s.id, title: s.title, at: i, snippet:
+      hits.push({id: s.id, title: s.title, snippet:
         (i>40?"…":"") + esc(plain.slice(Math.max(0,i-40), i+q.length+60)) + "…"});
       i = plain.indexOf(q, i+q.length);
     }
   }
   sb.innerHTML = hits.length
-    ? hits.map((h,k)=>`<button class="sr" data-id="${h.id}" data-q="${esc(q)}" data-pos="${h.at}">
+    ? hits.map(h=>`<button class="sr" data-id="${h.id}" data-q="${esc(q)}">
         <span class="t">${esc(h.title)}</span><br><span class="s">${h.snippet.replace(new RegExp(esc(q).replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"g"), m=>`<mark>${m}</mark>`)}</span></button>`).join("")
     : `<div style="padding:12px;color:var(--muted)">未找到「${esc(q)}」</div>`;
   sb.classList.add("open");
@@ -345,15 +483,15 @@ function highlight(q){
   }
   for (const node of nodes){
     const frag = document.createDocumentFragment();
-    let text = node.textContent, lower = text.toLowerCase(), ql = q.toLowerCase(), pos;
-    let idx = lower.indexOf(ql);
-    while(idx >= 0){
-      frag.appendChild(document.createTextNode(text.slice(0, idx)));
+    let text = node.textContent, lower = text.toLowerCase(), ql = q.toLowerCase();
+    let pos = lower.indexOf(ql);
+    while(pos >= 0){
+      frag.appendChild(document.createTextNode(text.slice(0, pos)));
       const mk = document.createElement("mark"); mk.dataset.h = "1";
-      mk.textContent = text.slice(idx, idx+q.length);
+      mk.textContent = text.slice(pos, pos+q.length);
       frag.appendChild(mk);
-      text = text.slice(idx+q.length); lower = lower.slice(idx+q.length);
-      idx = lower.indexOf(ql);
+      text = text.slice(pos+q.length); lower = lower.slice(pos+q.length);
+      pos = lower.indexOf(ql);
     }
     frag.appendChild(document.createTextNode(text));
     node.parentNode.replaceChild(frag, node);
@@ -391,31 +529,38 @@ def main():
     missing = [n for n in LAW_TITLES if n not in starts]
     assert not missing, f"章节起始页缺失: {missing}"
 
+    # 图表页（人工核定的图形/信号页：文字提取必然破碎，渲染为图片才可读）
+    diagrams = set(DIAGRAM_PAGES)
+    IMG_DIR.mkdir(parents=True, exist_ok=True)
+    for pno in sorted(diagrams):
+        png = IMG_DIR / f"p{pno}.png"
+        if not png.exists():
+            pix = doc[pno - 1].get_pixmap(matrix=pymupdf.Matrix(1.6, 1.6))
+            pix.save(str(png))
+    print(f"图表页: {sorted(diagrams)}")
+
     sections = []
     for sid, title, a, b in FRONT:
+        nums = list(range(a, b + 1))
         sections.append({"id": sid, "title": title, "pages": f"{a}-{b}",
-                         "html": render_html("\n".join(clean_page(doc[i]) for i in range(a - 1, b)))})
+                         "html": build_section_html(doc, nums, diagrams)})
     order = sorted(starts.items())
     for idx, (n, start) in enumerate(order):
         end = (order[idx + 1][1] - 1) if idx + 1 < len(order) else BACK[0][2] - 1
-        pages = doc[start - 1:end]  # end 为含端点的最后一页
-        body = "\n".join(clean_page(p) for p in pages)
-        # 去掉章分隔页残留
-        body = re.sub(r"^\s*球例\s*\d{1,2}\s*$", "", body, flags=re.M)
+        nums = list(range(start, end + 1))  # 图表页包含在内（以图片形式呈现）
         sections.append({"id": f"law-{n}", "title": f"第{CN_NUM[n]}章 {LAW_TITLES[n]}",
                          "law": n, "pages": f"{start}-{end}",
-                         "html": render_html(body)})
+                         "html": build_section_html(doc, nums, diagrams)})
     for sid, title, a, b in BACK:
+        nums = list(range(a, b + 1))
         sections.append({"id": sid, "title": title, "pages": f"{a}-{b}",
-                         "html": render_html("\n".join(clean_page(doc[i]) for i in range(a - 1, b)))})
+                         "html": build_section_html(doc, nums, diagrams)})
 
     OUT.write_text(json.dumps({"season": "2026/27", "sections": sections},
                               ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(len(s["html"]) for s in sections)
     print(f"共 {len(sections)} 节, 正文 {total/1000:.0f}K 字符 -> {OUT}")
     build_html_page(sections)
-    for s in sections:
-        print(f"  {s['id']:10s} {s['title']}  ({len(s['html'])/1000:.1f}K)")
 
 
 if __name__ == "__main__":

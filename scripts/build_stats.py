@@ -14,6 +14,8 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from crest_catalog import load_catalog
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 
@@ -197,8 +199,8 @@ def build_data(season):
     matches = build_matches(impact, scores, cmap)
     victims = team_stats(matches, "victim")
     benefits = team_stats(matches, "benefit")
-    crest_path = ROOT / "data" / "crests.json"
-    crests = json.loads(crest_path.read_text(encoding="utf-8")) if crest_path.exists() else {}
+    catalog = load_catalog()
+    teams = {item["name"]: item for item in catalog.values()}
 
     issues = {i["no"]: i for i in impact.get("issues", [])} if "issues" in impact else {}
     # 补充期数信息用于链接展示
@@ -247,7 +249,7 @@ def build_data(season):
         "typeLabelsBenefit": TYPE_LABEL_BENEFIT,
         "victims": victims,
         "benefits": benefits,
-        "crests": crests,
+        "crests": {}, "teams": teams,
         "scoreSource": json.loads((ROOT / "data" / SEASONS[season]["scores"])
                                   .read_text(encoding="utf-8"))["note"],
     }
@@ -299,6 +301,9 @@ main{padding:20px 0 60px}
 .thead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;cursor:pointer}
 .thead h3{margin:0;font-size:19px}
 .thead .crest{background:#fff;border-radius:4px}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+  border-radius:5px;margin-right:6px;vertical-align:-6px;font-size:10px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
 .thead .lg{font-size:13px;color:var(--brand2);background:var(--bluebg);
   border-radius:6px;padding:1px 8px}
 .thead .tot{color:var(--muted);font-size:14px}
@@ -449,9 +454,13 @@ function renderTeam(name, t){
   }).join("");
   const inLg = !curLg || t.leagues.includes(curLg);
   const sortKey = -(t.swing*1000 + t.cases);
+  const team = DATA.teams && DATA.teams[name];
+  const crest = team && team.status === 'verified' && team.path
+    ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
+    : `<span class="team-badge" style="--badge-fg:${(team&&team.fg)||'#0b4c8c'};--badge-bg:${(team&&team.bg)||'#e9f2fb'}" title="${esc(name)}：文字徽章（队徽待核验）" aria-label="${esc(name)}文字徽章">${esc((team&&team.initials)||name.slice(0,2))}</span>`;
   return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'}">
     <div class="thead" onclick="this.parentElement.classList.toggle('open')">
-      <h3>${(DATA.crests&&DATA.crests[name])?`<img class="crest" src="${DATA.crests[name]}" style="height:24px;vertical-align:-5px;margin-right:6px">`:""}${esc(name)}</h3>
+      <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
       <span class="tot">错漏判 ${t.cases} 例 · ${t.n_matches} 场</span>
     </div>

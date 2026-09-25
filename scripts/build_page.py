@@ -9,23 +9,10 @@ import sys
 from datetime import date
 from pathlib import Path
 
+from crest_catalog import load_catalog, normalize_team
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
-
-# 队名归一化（与 fetch_crests.py 的 NAME_VARIANTS 保持同步！）
-NAME_VARIANTS = {
-    "广东广州豹": "广州豹",
-    "河南俱乐部酒祖杜康": "河南俱乐部",
-    "河南酒祖杜康": "河南俱乐部",
-    "浙江俱乐部": "浙江俱乐部绿城",
-    "陕西联合月亮泊": "陕西联合",
-    "广西平果国晶": "广西平果",
-    "大连英博海发": "大连英博",
-    "温州俱乐部中胤": "温州俱乐部",
-    # —— 2024 赛季变体 ——
-    "广西平果哈嘹": "广西平果",
-    "浙江": "浙江俱乐部绿城",
-}
 
 # 赛季配置（输出文件/存储键/期数/统计页链接）
 SEASONS = {
@@ -109,8 +96,8 @@ def build_data(season):
         cases.append({
             "seq": c["seq"], "issue": c["issue"], "no": c["no"],
             "comp": comp, "round": c.get("round", ""),
-            "home": NAME_VARIANTS.get(c.get("home", ""), c.get("home", "")),
-            "away": NAME_VARIANTS.get(c.get("away", ""), c.get("away", "")),
+            "home": normalize_team(c.get("home", "")),
+            "away": normalize_team(c.get("away", "")),
             "minute": c.get("minute", ""), "match_info": c["match_info"],
             "desc": c["desc"], "appeal": c.get("appeal", ""),
             "conclusion": c["conclusion"],
@@ -118,8 +105,8 @@ def build_data(season):
             "category": c["category"], "tags": c.get("tags", []),
             "v": c["referee_verdict"], "var": c["var_verdict"],
         })
-    crest_path = ROOT / "data" / "crests.json"
-    crests = json.loads(crest_path.read_text(encoding="utf-8")) if crest_path.exists() else {}
+    catalog = load_catalog()
+    teams = {item["name"]: item for item in catalog.values()}
     issues = {i["no"]: {"title": i["title"], "date": i["date"], "url": i["url"],
                         "expected": i["expected_wrong"], "summary": i.get("summary", "")}
               for i in data["issues"]}
@@ -127,7 +114,7 @@ def build_data(season):
     return {"cfg": {"season": season, "favKey": cfg["favKey"], "noteKey": cfg["noteKey"],
                     "issueCount": cfg["issueCount"], "issueDesc": cfg["issueDesc"],
                     "stats": cfg["stats"]},
-            "cases": cases, "issues": issues, "crests": crests,
+            "cases": cases, "issues": issues, "crests": {}, "teams": teams,
             "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
             "notes": CATEGORY_NOTES, "issueNotes": ISSUE_NOTES.get(season, {}),
             "verdictNames": VERDICT_NAME, "varNames": VAR_NAME,
@@ -222,11 +209,18 @@ body.sb-off .sidebar{display:none}
   overflow:hidden;text-overflow:ellipsis}
 .prow .ptxt i{display:block;font-style:normal;font-size:11.5px;color:var(--muted);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prow .ptxt .p-source{font-family:Georgia,"Times New Roman","Noto Serif SC",serif;
+  font-style:italic;font-weight:600;color:#456b92}
+.prow .ptxt .p-case-id{color:#8a9bad;font-style:normal;font-weight:400}
+.prow .ptxt .p-verdict{font-style:normal;font-weight:500}
 .prow .rv{flex:none;font-size:11px;border-radius:5px;padding:0 6px;
   background:var(--bluebg);color:var(--brand2)}
 .prow .rv.bad{background:var(--redbg);color:var(--red)}
 .prow .pmark{flex:none;font-size:12px}
 .crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:3px;background:#fff}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
+  border-radius:4px;margin-right:3px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
 .plist-empty{padding:40px 16px;text-align:center;color:var(--muted)}
 
 /* ---------- 详情区 ---------- */
@@ -435,8 +429,12 @@ function persistFav() {
 function isFav(seq) { return !!fav[seq]; }
 function hasNote(seq) { return !!(notes[seq] && notes[seq].text && notes[seq].text.trim()); }
 function crest(team, h) {
-  const f = DATA.crests[team];
-  return f ? `<img class="crest" style="height:${h}px" src="${f}" alt="">` : "";
+  const item = DATA.teams && DATA.teams[team];
+  if (!item) return `<span class="team-badge" title="${esc(team)}：未登记">?</span>`;
+  if (item.status === "verified" && item.path)
+    return `<img class="crest" style="height:${h}px" src="${item.path}" alt="${esc(team)}队徽">`;
+  const scale = Math.max(16, h);
+  return `<span class="team-badge" style="width:${scale}px;height:${scale}px;--badge-fg:${item.fg};--badge-bg:${item.bg}" title="${esc(team)}：文字徽章（队徽待核验）" aria-label="${esc(team)}文字徽章">${esc(item.initials)}</span>`;
 }
 
 // 预聚合搜索串
@@ -488,8 +486,7 @@ for (const c of DATA.cases) {
   }
 }
 function teamBadge(t){
-  return DATA.crests[t] ? `<img class="crest" style="height:18px" src="${DATA.crests[t]}" alt="">`
-                        : `<span class="tav">${esc(t[0]||"?")}</span>`;
+  return crest(t, 18);
 }
 
 // 除 skip 维度外的全部筛选（用于分面计数；skip 可为字符串或数组）
@@ -564,7 +561,7 @@ function renderList(){
       return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}">
         <span class="dot ${c.v}"></span>
         <span class="ptxt"><b>${crest(c.home,16)}${esc(c.home)} <span style="color:var(--muted);font-weight:400">vs</span> ${crest(c.away,16)}${esc(c.away)}</b>
-        <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 期${c.issue}-${c.no} · ${VN[c.v]}</i></span>
+        <i><span class="p-source">${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""}</span> · <span class="p-case-id">第${c.issue}期-判例${c.no}</span> · <span class="p-verdict">${VN[c.v]}</span></i></span>
         <span class="pmark">${isFav(c.seq)?"★":""}${hasNote(c.seq)?"📝":""}</span>
         ${varChip}</div>`;
     }).join("")).join("");

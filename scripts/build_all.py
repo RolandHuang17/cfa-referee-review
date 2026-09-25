@@ -23,6 +23,7 @@ def main():
         raise SystemExit("缺少规则 PDF，且 site/rules.html 不存在；请先运行 fetch_laws.py")
     else:
         print("未找到规则 PDF，保留仓库中的 site/rules.html")
+    run("fetch_crests.py")
     run("build_portal.py")
     run("build_page.py")
     run("build_stats.py")

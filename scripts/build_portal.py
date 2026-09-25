@@ -115,7 +115,7 @@ a{color:inherit}
   .hero h1{font-size:26px} .wrap{padding-top:28px} }
 </style>
 </head>
-<body>
+<body class="page-portal">
 <header class="topbar">
   <div class="brand"><b>⚽ 裁判学习平台</b><span>评议合集 · 竞赛规则 · 尺度统一</span></div>
   <nav>

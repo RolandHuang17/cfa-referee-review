@@ -340,7 +340,7 @@ footer a{color:#7fb3e0}
   border:none;border-radius:24px;padding:10px 18px;font-size:14px;cursor:pointer}
 </style>
 </head>
-<body>
+<body class="page-stats">
 <header class="top">
   <div class="wrap">
     <h1>__SEASON__赛季官方认定错漏判 · 各队得失盘点</h1>

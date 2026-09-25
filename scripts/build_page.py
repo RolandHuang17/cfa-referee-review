@@ -320,7 +320,7 @@ body.sb-off .sidebar{display:none}
 }
 </style>
 </head>
-<body>
+<body class="page-season">
 <header class="topbar">
   <div class="brand"><b>__BRAND__</b><span id="totalBadge"></span></div>
   <input id="fSearch" type="search" placeholder="搜索：球队、判例内容、关键词…  (按 / 聚焦)">
@@ -330,28 +330,31 @@ body.sb-off .sidebar{display:none}
   <a class="tbtn" href="__STATS__">📊 得失盘点</a>
   <a class="tbtn" href="rules.html">📖 竞赛规则</a>
   <button class="tbtn" id="btnHelp">？说明</button>
-  <button class="tbtn" id="btnSb" title="收起/展开侧栏">☰ 侧栏</button>
+  <button class="tbtn" id="btnSb" title="收起/展开筛选">☰ 筛选</button>
 </header>
 
-<div class="filterbar">
-  <aside class="sidebar" id="sidebar">
-    <div class="side-h">赛事</div>
-    <div id="compList"></div>
-    <div class="side-h">球队</div>
-    <div class="sidebox" id="teamList"></div>
-    <div class="side-h">评议期数</div>
-    <div class="sidebox" id="issueList"></div>
-    <div class="side-h">犯规分类</div>
-    <div id="catList"></div>
-    <div class="side-h">评议判定</div>
-    <div id="verList"></div>
-    <div class="side-h">我的收藏</div>
-    <div id="favList"></div>
-    <button class="side-link" id="btnExport">⬇ 导出收藏/笔记 (JSON)</button>
-    <button class="side-link" id="btnImport" style="border:none;width:calc(100% - 12px);text-align:left">⬆ 导入收藏/笔记</button>
+<div class="filterbar" id="filterbar">
+  <div class="filter-primary">
+    <span class="filter-label">判定</span><div id="verList"></div>
+    <span class="filter-label filter-label-fav">学习</span><div id="favList"></div>
+    <button class="filter-action" id="btnExport">导出</button>
+    <button class="filter-action" id="btnImport">导入</button>
     <input type="file" id="importFile" accept=".json,application/json" style="display:none">
-    <a class="side-link" href="__STATS__">📊 各队得失盘点（错漏判影响统计）→</a>
-  </aside>
+  </div>
+  <div class="filter-secondary">
+    <span class="filter-label">筛选</span>
+    <button class="filter-toggle" data-filter="compList">赛事 <span>⌄</span></button>
+    <button class="filter-toggle" data-filter="teamList">球队 <span>⌄</span></button>
+    <button class="filter-toggle" data-filter="issueList">期数 <span>⌄</span></button>
+    <button class="filter-toggle" data-filter="catList">分类 <span>⌄</span></button>
+    <a class="filter-stats" href="__STATS__">查看得失盘点 →</a>
+  </div>
+  <div class="filter-menus">
+    <div id="compList" class="filter-menu"></div>
+    <div id="teamList" class="filter-menu"></div>
+    <div id="issueList" class="filter-menu"></div>
+    <div id="catList" class="filter-menu"></div>
+  </div>
 </div>
 
 <div class="layout">
@@ -756,11 +759,10 @@ function renderFavList(){
   const cur = state.fav;
   const item = (val, label, n) =>
     `<button class="ver-item ${cur===val?"on":""}" data-fav="${val}"><span class="nm">${label}</span><b>${n}</b></button>`;
-  let h = item("all", "★ 全部收藏", nAll) + item("note", "📝 有笔记", nNote);
+  let h = item("", "全部", DATA.cases.length) + item("all", "★ 收藏", nAll) + item("note", "📝 笔记", nNote);
   for (const t of TAG_PRESETS) h += item("tag:"+t, t, tags[t]||0);
   for (const t of Object.keys(tags)) if (!TAG_PRESETS.includes(t)) h += item("tag:"+t, t, tags[t]);
-  document.getElementById("favList").innerHTML = nAll||nNote ? h :
-    `<div style="font-size:12.5px;color:var(--muted);padding:4px 10px">暂无收藏——在详情区点「☆ 收藏」试试</div>`;
+  document.getElementById("favList").innerHTML = h;
 }
 document.getElementById("favList").addEventListener("click", e=>{
   const b = e.target.closest("[data-fav]"); if(!b) return;
@@ -848,9 +850,24 @@ document.getElementById("vswRow").addEventListener("click", e=>{
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
 document.getElementById("btnSb").onclick = ()=>{
-  document.body.classList.toggle("sb-off");
+  document.body.classList.toggle("filters-off");
 };
 document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
+document.querySelectorAll(".filter-toggle").forEach(btn=>{
+  btn.onclick = e=>{
+    e.stopPropagation();
+    const menu = document.getElementById(btn.dataset.filter);
+    const open = menu.classList.toggle("open");
+    document.querySelectorAll(".filter-menu").forEach(other=>{ if(other!==menu) other.classList.remove("open"); });
+    document.querySelectorAll(".filter-toggle").forEach(other=>other.classList.toggle("on", other===btn && open));
+  };
+});
+document.addEventListener("click", e=>{
+  if (!e.target.closest(".filterbar")) {
+    document.querySelectorAll(".filter-menu").forEach(menu=>menu.classList.remove("open"));
+    document.querySelectorAll(".filter-toggle").forEach(btn=>btn.classList.remove("on"));
+  }
+});
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
 document.querySelectorAll("[data-close]").forEach(b=>
   b.onclick = ()=>b.closest(".modal-mask").classList.remove("open"));

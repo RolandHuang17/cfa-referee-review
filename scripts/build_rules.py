@@ -387,7 +387,7 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px}
   .searchbox{left:12px;right:12px}}
 </style>
 </head>
-<body>
+<body class="page-rules">
 <header class="topbar">
   <div class="brand">📖 足球竞赛规则 <span>2026/27 · 简体中文</span></div>
   <input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）">

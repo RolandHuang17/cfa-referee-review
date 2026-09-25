@@ -1,0 +1,5 @@
+# 规则模块构建依赖（仅构建 rules.html 时需要；生成的页面运行时零依赖）
+# 安装: pip install -r scripts/requirements-build.txt
+pymupdf>=1.24
+opencc-python-reimplemented>=0.1.7
+markdown>=3.5

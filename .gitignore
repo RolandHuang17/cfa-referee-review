@@ -1,4 +1,5 @@
 videos/
+data/laws_raw/
 data/shots/
 data/download_log.txt
 data/verify_result.json

@@ -4,9 +4,9 @@
 
 ## 项目是什么
 
-「2025赛季中国足协裁判评议教学合集」：抓取中国足协官网 2025 赛季全部 **32 期裁判评议**（227 个判例、229 段视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），并附带各队得失盘点统计页（stats.html）。
+「2025赛季中国足协裁判评议教学合集」：抓取中国足协官网 2025 赛季全部 **32 期裁判评议**（227 个判例、229 段视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats.html）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换）。目标是做成裁判员一站式学习站。
 
-核心交付物是**两个自包含的 HTML 文件**（CSS/JS/数据全部内联）+ 本地 `videos/` 视频文件夹。数据抓取与页面生成由 Python 脚本完成，可复用于其他赛季（2026 赛季已开赛）。
+核心交付物是**三个自包含的 HTML 文件**（CSS/JS/数据全部内联）+ 本地 `videos/` 视频文件夹。数据抓取与页面生成由 Python 脚本完成，可复用于其他赛季（2026 赛季已开赛）。
 
 ## 环境
 
@@ -19,6 +19,7 @@
 ```
 ├── index.html              ← 主合集页（由 build_page.py 生成，勿手改）
 ├── stats.html              ← 各队得失盘点页（由 build_stats.py 生成，勿手改）
+├── rules.html              ← 竞赛规则 2026-27 简体版（由 build_rules.py 生成，勿手改）
 ├── videos/                 ← 229段视频（git忽略，download脚本重建）
 ├── assets/crests/          ← 球队队徽（fetch_crests.py 采集）
 ├── data/
@@ -26,6 +27,8 @@
 │   ├── impact.json         ← 错漏判影响标注（受损队/类型/确定得失球）
 │   ├── match_scores.json   ← 60场比赛最终比分（人工网络查证）
 │   ├── crests.json         ← 队名→队徽文件映射
+│   ├── laws.json           ← 竞赛规则章节内容（build_rules.py 产物，内联进 rules.html）
+│   ├── laws_raw/           ← IFAB 官方繁体规则PDF（git忽略，fetch_laws.py 重建）
 │   ├── issues_raw/         ← 32期官方页面原始HTML存档
 │   └── review.txt          ← 判例纯文本汇编（可再生成）
 └── scripts/                ← 全部管线脚本（见下）
@@ -43,13 +46,19 @@ python classify_cases.py             # 5. 教学分类与结论复核（分类�
                                      #    末尾含第27期判例2拆分后的#195判定校正，勿删）
 python make_impact.py                # 6. 错漏判影响标注（受损队/损失类型表 CLS 在脚本内）
 python fetch_crests.py               # 7. 队徽采集 → assets/crests/ + data/crests.json
-python build_page.py                 # 8. 生成 index.html
-python build_stats.py                # 9. 生成 stats.html
+python fetch_laws.py                 # 8. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/laws_raw/
+python build_rules.py                # 9. 规则提取+繁转简+术语表 → data/laws.json + rules.html
+python build_page.py                 # 10. 生成 index.html
+python build_stats.py                # 11. 生成 stats.html
 python verify_videos.py              # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
 python range_server.py [端口]        # 本地预览服务（支持Range，视频可拖进度条）
 ```
 
 ⚠️ 顺序要点：fix_issue27_merge 必须在 classify 之前（它拆分结构），classify 末尾会恢复 #195 的拆分后判定；漏掉任何一步都会导致统计错位。
+
+规则模块构建依赖（仅 fetch/build_rules 需要，页面运行时零依赖）：
+`pip install -r scripts/requirements-build.txt`（pymupdf / opencc-python-reimplemented / markdown）。
+新赛季更新流程：换 fetch_laws.py 里的 PDF URL → 重跑 fetch_laws + build_rules；术语表 GLOSSARY 在 build_rules.py 内按需增补。
 
 `parse/classify/make_impact` 会重新覆盖 `cases.json` 中的对应字段——改了前面步骤后按序重跑，最后必须重跑 build_page/build_stats。
 

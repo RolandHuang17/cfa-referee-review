@@ -313,7 +313,7 @@ footer a{color:#7fb3e0}
     <h1>2025赛季官方认定错漏判 · 各队得失盘点</h1>
     <div class="sub">
       仅统计男子中超/中甲/中乙 · 共67例错漏判 · 依据评议组认定结论与最终比分修正比对 ·
-      <a href="index.html">← 返回判例合集</a> · 数据生成于 __BUILT__
+      <a href="index.html">← 返回判例合集</a> · <a href="rules.html">📖 竞赛规则</a> · 数据生成于 __BUILT__
     </div>
     <div class="statbar" id="statbar"></div>
   </div>

@@ -6,6 +6,7 @@ has been manually verified; pages therefore use the safe text badge for them.
 """
 import json
 import re
+from urllib.parse import quote
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
@@ -36,10 +37,13 @@ for index, name in enumerate(sorted(teams)):
     old_path = OLD.get(name)
     initials = re.sub(r"(俱乐部|足球俱乐部|队|女足)$", "", name)[:2] or name[:2]
     fg, bg = palette[index % len(palette)]
+    has_existing = bool(old_path)
     result[f"team-{index + 1:03d}"] = {
         "name": name, "aliases": aliases, "slug": f"team-{index + 1:03d}",
         "path": old_path if old_path else None,
-        "source_url": "", "source_type": "", "status": "fallback",
+        "source_url": f"https://zh.wikipedia.org/wiki/{quote(name)}" if has_existing else "",
+        "source_type": "wikipedia-article" if has_existing else "",
+        "status": "verified" if has_existing else "fallback",
         "initials": initials, "fg": fg, "bg": bg,
         "parent": None,
     }

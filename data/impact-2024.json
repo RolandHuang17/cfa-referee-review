@@ -1,0 +1,1024 @@
+{
+ "scope": [
+  "中超联赛",
+  "中甲联赛",
+  "中乙联赛",
+  "中国足协杯"
+ ],
+ "type_labels": {
+  "denied_goal": "漏判进球（应有效）",
+  "opp_goal_should_disallow": "对方进球应无效",
+  "missed_penalty": "漏判点球（机会）",
+  "wrong_penalty_against": "错判点球",
+  "missed_red_opponent": "漏判对方红牌",
+  "wrong_red_self": "错判本队红牌",
+  "missed_yellow_opponent": "漏判对方黄牌",
+  "wrong_yellow_self": "错判本队黄牌",
+  "wrong_foul_called_self": "错判犯规",
+  "missed_foul_called": "漏判犯规",
+  "wrong_offside_self": "误判越位"
+ },
+ "swing": {
+  "denied_goal": 1,
+  "opp_goal_should_disallow": -1
+ },
+ "team_normalize": {
+  "河南俱乐部酒祖杜康": "河南俱乐部",
+  "河南酒祖杜康": "河南俱乐部",
+  "浙江俱乐部": "浙江俱乐部绿城",
+  "陕西联合月亮泊": "陕西联合",
+  "广西平果国晶": "广西平果",
+  "大连英博海发": "大连英博",
+  "温州俱乐部中胤": "温州俱乐部",
+  "浙江": "浙江俱乐部绿城",
+  "广西平果哈嘹": "广西平果"
+ },
+ "match_notes": {},
+ "impacts": {
+  "4": {
+   "league": "中超联赛",
+   "round": 3,
+   "home": "青岛西海岸",
+   "away": "青岛海牛",
+   "issue": 2,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "青岛海牛",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "西海岸33号向后挥手击打裆部，应黄牌（非体育行为）"
+    }
+   ]
+  },
+  "5": {
+   "league": "中甲联赛",
+   "round": 4,
+   "home": "广西平果",
+   "away": "无锡吴钩",
+   "issue": 2,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "无锡吴钩",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "平果哈嘹角球进球前攻方犯规漏判，进球应无效"
+    }
+   ]
+  },
+  "7": {
+   "league": "中甲联赛",
+   "round": 4,
+   "home": "广西平果",
+   "away": "无锡吴钩",
+   "issue": 2,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西平果",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "吴钩5号肘击面部构成暴力行为，漏判红牌"
+    }
+   ]
+  },
+  "8": {
+   "league": "中乙联赛",
+   "round": 2,
+   "home": "上海海港B队",
+   "away": "湖南湘涛",
+   "issue": 2,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "湖南湘涛",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "视频无法证明手球接触，点球错判"
+    }
+   ]
+  },
+  "12": {
+   "league": "中超联赛",
+   "round": 5,
+   "home": "青岛西海岸",
+   "away": "天津津门虎",
+   "issue": 3,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "青岛西海岸",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "争抢动作为鲁莽犯规，红牌错误应黄牌"
+    }
+   ]
+  },
+  "19": {
+   "league": "中超联赛",
+   "round": 8,
+   "home": "浙江俱乐部绿城",
+   "away": "北京国安",
+   "issue": 5,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "浙江俱乐部绿城",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "浙江45号犯规在先，国安17号不犯规，点球改判错误"
+    }
+   ]
+  },
+  "21": {
+   "league": "中乙联赛",
+   "round": 6,
+   "home": "大连鲲城",
+   "away": "湖北青年星",
+   "issue": 5,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "湖北青年星",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "鲲城13号越位位置影响守门员，漏判越位进球应无效"
+    }
+   ]
+  },
+  "25": {
+   "league": "中甲联赛",
+   "round": 8,
+   "home": "黑龙江冰城",
+   "away": "上海嘉定汇龙",
+   "issue": 5,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "上海嘉定汇龙",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "嘉定7号行为非暴力行为，红牌错误应黄牌"
+    }
+   ]
+  },
+  "27": {
+   "league": "中甲联赛",
+   "round": 8,
+   "home": "黑龙江冰城",
+   "away": "上海嘉定汇龙",
+   "issue": 5,
+   "case_no": 9,
+   "match_note": "",
+   "items": [
+    {
+     "team": "上海嘉定汇龙",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "球未接触10号手臂，手球点球错判"
+    }
+   ]
+  },
+  "30": {
+   "league": "中超联赛",
+   "round": 9,
+   "home": "浙江俱乐部绿城",
+   "away": "河南俱乐部",
+   "issue": 6,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "河南俱乐部",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "浙江29号不合理挥臂击打，漏判黄牌"
+    }
+   ]
+  },
+  "31": {
+   "league": "中超联赛",
+   "round": 9,
+   "home": "浙江俱乐部绿城",
+   "away": "河南俱乐部",
+   "issue": 6,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "浙江俱乐部绿城",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "河南3号手球阻挡射门，漏判黄牌"
+    }
+   ]
+  },
+  "39": {
+   "league": "中超联赛",
+   "round": 10,
+   "home": "北京国安",
+   "away": "成都蓉城",
+   "issue": 7,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "国安23号鲁莽犯规，漏判黄牌"
+    }
+   ]
+  },
+  "40": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "延边龙鼎",
+   "away": "黑龙江冰城",
+   "issue": 7,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "黑龙江冰城",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "延边守门员犯规漏判点球（DOGSO以争抢为目的应黄牌）"
+    },
+    {
+     "team": "黑龙江冰城",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "同一犯规应出示黄牌"
+    }
+   ]
+  },
+  "41": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "延边龙鼎",
+   "away": "黑龙江冰城",
+   "issue": 7,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "黑龙江冰城",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "延边9号进球前推人犯规漏判，进球应无效"
+    }
+   ]
+  },
+  "42": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "青岛红狮",
+   "away": "云南玉昆",
+   "issue": 7,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "青岛红狮",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "云南30号手球漏判，应判点球（另有攻方27号手球为错判）"
+    }
+   ]
+  },
+  "43": {
+   "league": "中甲联赛",
+   "round": 9,
+   "home": "大连英博",
+   "away": "广州俱乐部",
+   "issue": 7,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广州俱乐部",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "英博17号守门员故意击打面部，暴力行为漏判红牌"
+    }
+   ]
+  },
+  "53": {
+   "league": "中甲联赛",
+   "round": 10,
+   "home": "南京城市",
+   "away": "重庆铜梁龙",
+   "issue": 8,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "铜梁龙10号佯装，守门员无犯规，点球错判"
+    },
+    {
+     "team": "南京城市",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "铜梁龙10号佯装应黄牌"
+    }
+   ]
+  },
+  "54": {
+   "league": "中乙联赛",
+   "round": 8,
+   "home": "北京理工",
+   "away": "湖北青年星",
+   "issue": 8,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "北京理工",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "犯规地点在罚球区外，应直接任意球而非点球"
+    },
+    {
+     "team": "北京理工",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "青年星守门员DOGSO应红牌"
+    }
+   ]
+  },
+  "58": {
+   "league": "中超联赛",
+   "round": 13,
+   "home": "南通支云",
+   "away": "沧州雄狮",
+   "issue": 9,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "沧州雄狮",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "守门员已控球被侵犯，进球应无效"
+    },
+    {
+     "team": "沧州雄狮",
+     "type": "missed_foul_called",
+     "swing": 0,
+     "note": "攻方犯规漏判"
+    }
+   ]
+  },
+  "65": {
+   "league": "中乙联赛",
+   "round": 9,
+   "home": "广西蓝航",
+   "away": "赣州瑞狮",
+   "issue": 9,
+   "case_no": 10,
+   "match_note": "",
+   "items": [
+    {
+     "team": "赣州瑞狮",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "铲球草率犯规+起身挑衅，红牌错误应黄牌"
+    }
+   ]
+  },
+  "67": {
+   "league": "中甲联赛",
+   "round": 12,
+   "home": "江西庐山",
+   "away": "广州俱乐部",
+   "issue": 10,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "江西庐山",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "守门员先触球无犯规，点球错判"
+    }
+   ]
+  },
+  "69": {
+   "league": "中乙联赛",
+   "round": 11,
+   "home": "廊坊荣耀之城",
+   "away": "湖北青年星",
+   "issue": 10,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "廊坊荣耀之城",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "撞击属情绪宣泄非暴力行为，红牌错误应黄牌"
+    }
+   ]
+  },
+  "70": {
+   "league": "中甲联赛",
+   "round": 14,
+   "home": "大连英博",
+   "away": "云南玉昆",
+   "issue": 11,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连英博",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "球击中横梁弹地已整体过线，漏判进球"
+    }
+   ]
+  },
+  "73": {
+   "league": "中甲联赛",
+   "round": 14,
+   "home": "延边龙鼎",
+   "away": "广州俱乐部",
+   "issue": 11,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "延边龙鼎",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "2号主动摔倒佯装，点球错判"
+    }
+   ]
+  },
+  "78": {
+   "league": "中超联赛",
+   "round": 7,
+   "home": "梅州客家",
+   "away": "上海海港",
+   "issue": 12,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "梅州客家",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "海港18号手球后进球（其他渠道视频确认），进球应无效"
+    }
+   ]
+  },
+  "79": {
+   "league": "中超联赛",
+   "round": 7,
+   "home": "梅州客家",
+   "away": "上海海港",
+   "issue": 12,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "梅州客家",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "海港3号拉扯犯规在先，进球应无效"
+    },
+    {
+     "team": "梅州客家",
+     "type": "missed_foul_called",
+     "swing": 0,
+     "note": "拉扯犯规漏判"
+    }
+   ]
+  },
+  "80": {
+   "league": "中超联赛",
+   "round": 16,
+   "home": "武汉三镇",
+   "away": "上海海港",
+   "issue": 12,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "海港19号正面踢人鲁莽犯规，漏判犯规和黄牌"
+    }
+   ]
+  },
+  "81": {
+   "league": "中甲联赛",
+   "round": 15,
+   "home": "广西平果",
+   "away": "重庆铜梁龙",
+   "issue": 12,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西平果",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "铜梁龙31号越位位置参与争抢，漏判越位进球应无效"
+    }
+   ]
+  },
+  "87": {
+   "league": "中乙联赛",
+   "round": 14,
+   "home": "赣州瑞狮",
+   "away": "上海海港B队",
+   "issue": 12,
+   "case_no": 10,
+   "match_note": "",
+   "items": [
+    {
+     "team": "赣州瑞狮",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "海港B队60号手臂不自然扩大手球，漏判点球"
+    },
+    {
+     "team": "赣州瑞狮",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "手球阻挡射门应黄牌"
+    }
+   ]
+  },
+  "90": {
+   "league": "中乙联赛",
+   "round": 15,
+   "home": "湖北青年星",
+   "away": "大连鲲城",
+   "issue": 13,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连鲲城",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "青年星41号越位位置干扰，漏判越位犯规在先"
+    }
+   ]
+  },
+  "95": {
+   "league": "中乙联赛",
+   "round": 16,
+   "home": "北京理工",
+   "away": "泰安天贶",
+   "issue": 14,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "北京理工",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "泰安11号恶意踢倒地球员属严重犯规，漏判红牌"
+    },
+    {
+     "team": "北京理工",
+     "type": "wrong_foul_called_self",
+     "swing": 0,
+     "note": "60号无危险方式比赛，错判间接任意球"
+    }
+   ]
+  },
+  "97": {
+   "league": "中乙联赛",
+   "round": 16,
+   "home": "湖南湘涛",
+   "away": "海口名城",
+   "issue": 14,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "湖南湘涛",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "海口名城20号跨步绊摔，漏判点球"
+    }
+   ]
+  },
+  "98": {
+   "league": "中乙联赛",
+   "round": 16,
+   "home": "大连鲲城",
+   "away": "海门珂缔缘",
+   "issue": 14,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "海门珂缔缘",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "拉拽非倒地主因+主动倒地，点球错判"
+    }
+   ]
+  },
+  "99": {
+   "league": "中乙联赛",
+   "round": 16,
+   "home": "大连鲲城",
+   "away": "海门珂缔缘",
+   "issue": 14,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连鲲城",
+     "type": "wrong_foul_called_self",
+     "swing": 0,
+     "note": "手臂为身体带动合理位置非手球，且地点判断错误"
+    }
+   ]
+  },
+  "101": {
+   "league": "中甲联赛",
+   "round": 18,
+   "home": "延边龙鼎",
+   "away": "南京城市",
+   "issue": 15,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "南京城市",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "延边37号踢倒对方，草率犯规漏判点球"
+    }
+   ]
+  },
+  "102": {
+   "league": "中甲联赛",
+   "round": 18,
+   "home": "广西平果",
+   "away": "大连英博",
+   "issue": 15,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西平果",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "英博40号击打面部暴力行为，漏判红牌"
+    },
+    {
+     "team": "广西平果",
+     "type": "missed_foul_called",
+     "swing": 0,
+     "note": "漏判直接任意球"
+    }
+   ]
+  },
+  "107": {
+   "league": "中甲联赛",
+   "round": 18,
+   "home": "苏州东吴",
+   "away": "无锡吴钩",
+   "issue": 15,
+   "case_no": 7,
+   "match_note": "",
+   "items": [
+    {
+     "team": "无锡吴钩",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "拉扯推搡不足以犯规，点球正确但黄牌错误"
+    }
+   ]
+  },
+  "109": {
+   "league": "中乙联赛",
+   "round": 18,
+   "home": "赣州瑞狮",
+   "away": "广西蓝航",
+   "issue": 16,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西蓝航",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "守门员先触球无犯规，点球错判"
+    },
+    {
+     "team": "广西蓝航",
+     "type": "wrong_yellow_self",
+     "swing": 0,
+     "note": "守门员无犯规不应黄牌"
+    }
+   ]
+  },
+  "110": {
+   "league": "中乙联赛",
+   "round": 18,
+   "home": "赣州瑞狮",
+   "away": "广西蓝航",
+   "issue": 16,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西蓝航",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "守门员罚点球时提前离线缺乏尊重，漏判黄牌"
+    }
+   ]
+  },
+  "127": {
+   "league": "中甲联赛",
+   "round": 21,
+   "home": "江西庐山",
+   "away": "黑龙江冰城",
+   "issue": 20,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "黑龙江冰城",
+     "type": "missed_foul_called",
+     "swing": 0,
+     "note": "侧后方冲撞漏判犯规（地点在罚球区外应直接任意球）"
+    },
+    {
+     "team": "黑龙江冰城",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "该犯规阻止有希望的进攻应黄牌"
+    }
+   ]
+  },
+  "128": {
+   "league": "中甲联赛",
+   "round": 21,
+   "home": "辽宁铁人",
+   "away": "大连英博",
+   "issue": 20,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连英博",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "铁人5号手臂不自然扩大手球，漏判点球（VAR角度所限）"
+    }
+   ]
+  },
+  "132": {
+   "league": "中乙联赛",
+   "round": 21,
+   "home": "北京理工",
+   "away": "广西蓝航",
+   "issue": 20,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "北京理工",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "蓝航拉扯犯规漏判点球"
+    },
+    {
+     "team": "北京理工",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "拉扯阻止有希望的进攻应黄牌"
+    }
+   ]
+  },
+  "134": {
+   "league": "中乙联赛",
+   "round": 22,
+   "home": "赣州瑞狮",
+   "away": "日照宇启",
+   "issue": 21,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "日照宇启",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "倒地过程无附加动作非暴力行为，红牌错误"
+    }
+   ]
+  },
+  "138": {
+   "league": "中乙联赛",
+   "round": 23,
+   "home": "北京理工",
+   "away": "赣州瑞狮",
+   "issue": 22,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "北京理工",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "赣州瑞狮手球手臂向球移动，漏判点球"
+    }
+   ]
+  },
+  "139": {
+   "league": "中乙联赛",
+   "round": 23,
+   "home": "北京理工",
+   "away": "赣州瑞狮",
+   "issue": 22,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "赣州瑞狮",
+     "type": "wrong_foul_called_self",
+     "swing": 0,
+     "note": "攻方先触球被错判犯规（反判）"
+    },
+    {
+     "team": "北京理工",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "守方草率犯规漏判点球"
+    }
+   ]
+  },
+  "141": {
+   "league": "中超联赛",
+   "round": 26,
+   "home": "南通支云",
+   "away": "青岛海牛",
+   "issue": 23,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "青岛海牛",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "南通支云10号直腿抢截危及安全，严重犯规漏判红牌"
+    },
+    {
+     "team": "青岛海牛",
+     "type": "missed_foul_called",
+     "swing": 0,
+     "note": "VAR未介入错误"
+    }
+   ]
+  },
+  "143": {
+   "league": "中甲联赛",
+   "round": 24,
+   "home": "广西平果",
+   "away": "上海嘉定汇龙",
+   "issue": 23,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西平果",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "嘉定汇龙30号背后拉拽，草率犯规漏判点球"
+    }
+   ]
+  },
+  "144": {
+   "league": "中乙联赛",
+   "round": 24,
+   "home": "泰安天贶",
+   "away": "泉州亚新",
+   "issue": 23,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "泰安天贶",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "泉州亚新26号抢截犯规满足DOGSO四要素，漏判红牌"
+    },
+    {
+     "team": "泰安天贶",
+     "type": "missed_foul_called",
+     "swing": 0,
+     "note": "犯规本身漏判"
+    }
+   ]
+  },
+  "145": {
+   "league": "中国足协杯",
+   "round": 0,
+   "home": "山东泰山",
+   "away": "成都蓉城",
+   "issue": 24,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "成都蓉城",
+     "type": "wrong_foul_called_self",
+     "swing": 0,
+     "note": "正常争抢接触，判攻方蓉城31号犯规错误（足协杯半决赛）"
+    }
+   ]
+  },
+  "150": {
+   "league": "中乙联赛",
+   "round": 25,
+   "home": "泉州亚新",
+   "away": "北京理工",
+   "issue": 24,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "北京理工",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "守门员铲球清晰触球无附加动作，点球错判"
+    }
+   ]
+  },
+  "151": {
+   "league": "中超联赛",
+   "round": 28,
+   "home": "武汉三镇",
+   "away": "浙江俱乐部绿城",
+   "issue": 25,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "浙江俱乐部绿城",
+     "type": "missed_red_opponent",
+     "swing": 0,
+     "note": "三镇23号踩踏脚踝构成严重犯规，漏判红牌"
+    }
+   ]
+  },
+  "156": {
+   "league": "中乙联赛",
+   "round": 28,
+   "home": "赣州瑞狮",
+   "away": "北京理工",
+   "issue": 25,
+   "case_no": 6,
+   "match_note": "",
+   "items": [
+    {
+     "team": "赣州瑞狮",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "北理工52号越位位置进球，漏判越位"
+    }
+   ]
+  },
+  "158": {
+   "league": "中甲联赛",
+   "round": 29,
+   "home": "云南玉昆",
+   "away": "大连英博",
+   "issue": 26,
+   "case_no": 2,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连英博",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "球未触手臂进球有效，VAR错误介入致进球被取消"
+    }
+   ]
+  }
+ }
+}

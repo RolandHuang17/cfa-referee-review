@@ -15,7 +15,7 @@ echo   (平时不上网分享的话, 其实不用本服务, 直接双击 index.html 就能看)
 echo.
 echo 正在打开浏览器...
 start "" "http://127.0.0.1:8808/index.html"
-python scripts/range_server.py 8808
+python scripts/serve.py 8808
 if errorlevel 1 (
   echo.
   echo [提示] 8808端口被占用, 可能服务已经在运行。若浏览器能打开页面, 无需处理。

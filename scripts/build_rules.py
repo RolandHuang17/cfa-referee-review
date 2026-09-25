@@ -12,9 +12,10 @@ import pymupdf
 import opencc
 
 ROOT = Path(__file__).resolve().parent.parent
+SITE = ROOT / "site"
 PDF = ROOT / "data" / "laws_raw" / "lotg-202627-tc-single.pdf"
 OUT = ROOT / "data" / "laws.json"
-RULES_HTML = ROOT / "rules.html"
+RULES_HTML = SITE / "rules.html"
 IMG_DIR = ROOT / "assets" / "rules"
 
 CC = opencc.OpenCC("t2s")
@@ -732,6 +733,7 @@ def build_html_page(sections):
     data = {"season": "2026/27", "sections": sections}
     html = RULES_TEMPLATE.replace("__DATA__",
         json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    SITE.mkdir(parents=True, exist_ok=True)
     RULES_HTML.write_text(html, encoding="utf-8")
     print(f"生成 {RULES_HTML}  ({len(html.encode('utf-8'))/1024:.0f} KB)")
 

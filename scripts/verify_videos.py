@@ -12,7 +12,7 @@ from safe_http import head_size
 
 ROOT = Path(__file__).resolve().parent.parent
 SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"
-VID = ROOT / "videos" / SEASON
+VID = ROOT / "site" / "videos" / SEASON
 
 
 def rename_legacy():
@@ -66,7 +66,7 @@ def main():
 
 
 def _remote_path(data, fname):
-    """从cases.json反查视频URL路径"""
+    """从当前赛季数据反查视频URL路径"""
     for c in data["cases"]:
         if fname in c["video_files"]:
             i = c["video_files"].index(fname)

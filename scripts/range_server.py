@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """带 Range(断点/快进)支持的本地静态服务器
-用法: python range_server.py [端口]   (默认8808, 服务当前工作目录)
+用法: python range_server.py [端口] [目录]   (默认8808, 服务当前工作目录)
 Python内置 http.server 不支持 Range 请求, 导致浏览器视频无法拖动进度条;
 本模块补上单区间 Range 处理 (bytes=a-b / bytes=-N), 足够浏览器视频seek使用。
 """
@@ -72,6 +72,9 @@ class RangeHandler(SimpleHTTPRequestHandler):
 
 def main():
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8808
+    directory = sys.argv[2] if len(sys.argv) > 2 else None
+    if directory:
+        os.chdir(directory)
     try:
         srv = ThreadingHTTPServer(("0.0.0.0", port), RangeHandler)
     except OSError:

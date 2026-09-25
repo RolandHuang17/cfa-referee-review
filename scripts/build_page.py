@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+SITE = ROOT / "site"
 
 # 队名归一化（与 fetch_crests.py 的 NAME_VARIANTS 保持同步！）
 NAME_VARIANTS = {
@@ -948,7 +949,8 @@ def build_season(season):
             .replace("__TITLE__", cfg["title"])
             .replace("__BRAND__", cfg["brand"])
             .replace("__STATS__", cfg["stats"]))
-    out = ROOT / cfg["out"]
+    SITE.mkdir(parents=True, exist_ok=True)
+    out = SITE / cfg["out"]
     out.write_text(html, encoding="utf-8")
     print(f"[{season}] 生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB, "
           f"{len(data['cases'])}判例)")

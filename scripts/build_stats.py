@@ -15,6 +15,7 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+SITE = ROOT / "site"
 
 SEASONS = {
     "2025": {
@@ -509,7 +510,8 @@ def build_season(season):
     html = (html.replace("__SEASON__", season)
                 .replace("__PAGE__", cfg["page"])
                 .replace("__BUILT__", date.today().isoformat()))
-    out = ROOT / cfg["out"]
+    SITE.mkdir(parents=True, exist_ok=True)
+    out = SITE / cfg["out"]
     out.write_text(html, encoding="utf-8")
     ov = data["overview"]
     print(f"[{season}] 生成 {out} ({len(html.encode('utf-8'))/1024:.0f} KB)")

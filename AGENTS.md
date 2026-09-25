@@ -6,11 +6,11 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025 两个赛季全部 59 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2025.html / stats-2024.html）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是**五个自包含的 HTML 文件**（CSS/JS/数据全部内联）+ 本地 `videos/` 视频文件夹（按赛季分子目录）：
-- `index.html` 门户首页（三入口卡片）
-- `season-2025.html` / `season-2024.html` 各赛季判例合集
-- `stats-2025.html` / `stats-2024.html` 各队得失盘点
-- `rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
+核心交付物是 `site/` 下的**六个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（三入口卡片）
+- `site/season-2025.html` / `site/season-2024.html` 各赛季判例合集
+- `site/stats-2025.html` / `site/stats-2024.html` 各队得失盘点
+- `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 
 数据抓取与页面生成由 Python 脚本完成，可复用于其他赛季（2026 赛季已开赛）。
 
@@ -23,13 +23,14 @@
 ## 目录结构
 
 ```
-├── index.html              ← 门户首页（由 build_portal.py 生成，勿手改）
+├── site/                   ← 生成站点与 GitHub Pages 发布目录（勿手改）
+│   ├── index.html / season-*.html / stats-*.html / rules.html
+│   └── videos/             ← 视频按赛季分目录（git忽略）
 ├── season-2025.html        ← 2025赛季合集页（由 build_page.py 生成，勿手改）
 ├── season-2024.html        ← 2024赛季合集页（同上）
 ├── stats-2025.html         ← 2025各队得失盘点页（由 build_stats.py 生成，勿手改）
 ├── stats-2024.html         ← 2024得失盘点页（同上）
 ├── rules.html              ← 竞赛规则 2026-27 简体版（由 build_rules.py 生成，勿手改）
-├── videos/                 ← 视频按赛季分目录 videos/2024/ videos/2025/（git忽略）
 ├── assets/crests/          ← 球队队徽（fetch_crests.py 采集）
 ├── data/
 │   ├── cases-2025.json     ← 核心：2025赛季227判例（issues + cases）
@@ -43,7 +44,11 @@
 │   ├── laws_raw/           ← IFAB 官方繁体规则PDF（git忽略，fetch_laws.py 重建）
 │   ├── issues_raw/         ← 32期官方页面原始HTML存档
 │   └── review.txt          ← 判例纯文本汇编（可再生成）
-└── scripts/                ← 全部管线脚本（见下）
+├── scripts/                ← 全部管线脚本（见下）
+├── src/                    ← 页面模板和共享前端的演进目录
+├── CONTRIBUTING.md         ← 贡献与本地构建说明
+├── LICENSE / NOTICE.md     ← 许可证与第三方版权说明
+└── .github/workflows/      ← GitHub Pages 自动构建发布
 ```
 
 ## 数据管线（按序执行）
@@ -73,11 +78,11 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 `pip install -r scripts/requirements-build.txt`（pymupdf / opencc-python-reimplemented / markdown）。
 新赛季更新流程：换 fetch_laws.py 里的 PDF URL → 重跑 fetch_laws + build_rules；术语表 GLOSSARY 在 build_rules.py 内按需增补。
 
-`parse/classify/make_impact` 会重新覆盖 `cases.json` 中的对应字段——改了前面步骤后按序重跑，最后必须重跑 build_page/build_stats。
+`parse/classify/make_impact` 会重新覆盖对应赛季的 `cases-{season}.json` 字段；改了前面步骤后按序重跑，最后必须运行 `python scripts/build_all.py`。
 
 ## 数据 schema 速查
 
-### cases.json
+### cases-{season}.json
 - `issues[N]`: `{no, title, date, url, expected_wrong(官方标题认定数), summary, parsed_wrong}`
 - `cases[]`: `{seq(1-227全局唯一), issue(1-32), no(期内判例号), comp, round, home, away, minute, desc, appeal, conclusion(评议组认定原文), video_files[](本地文件名), video_urls[](原始URL，与video_files一一对应), category(教学分类id), tags[], referee_verdict(wrong/correct/pending), var_verdict(correct/wrong/none)}`
 - **referee_verdict 是人工复核过的结论**，官方口径差异见 `ISSUE_NOTES`（build_page.py 内）

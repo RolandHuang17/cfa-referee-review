@@ -4,14 +4,16 @@
 
 项目收录 **2024、2025 两个赛季共59期中国足协裁判评议**：2025赛季32期、227个判例、229段视频；2024赛季27期、160个判例、161段视频。判例按统一尺度教学分类重组，并附判定与影响统计。另收录 **《足球竞赛规则 2026/27》简体中文版**（rules.html，支持全文搜索、划词高亮和章节笔记）。
 
-- 数据来源：中国足球协会官方网站「裁判评议结果发布」栏目（第1—23期原发布于赛事新闻栏目）；竞赛规则来自 theifab.com 官方下载（版权声明见 declaration.md）
+在线版本：<https://rolandhuang17.github.io/cfa-referee-review/>
+
+- 数据来源：中国足球协会官方网站「裁判评议结果发布」栏目；竞赛规则来自 The IFAB 官方下载（版权说明见 [NOTICE.md](NOTICE.md)）。
 - 每条判例卡片均附官方原文链接，判定结论引用评议组认定原文
 
 ## 怎么用
 
-1. **保持 `index.html` 和 `videos` 文件夹在一起**（这是唯一的结构要求）
-2. 双击 `index.html`，用 Edge / Chrome 等浏览器打开即可——**完全离线可用**
-3. 整个文件夹拷贝到U盘、教室电脑均可直接放映
+1. 进入 `site/`，双击 `index.html`，用 Edge / Chrome 打开即可。
+2. 如需视频，将视频下载到 `site/videos/2024/` 和 `site/videos/2025/`。
+3. 也可以直接访问 GitHub Pages 在线版本。
 
 页面功能（双栏布局：左侧分类/判定导航，中间播放列表，右侧大屏详情）：
 
@@ -54,39 +56,53 @@
 ## 目录结构
 
 ```
-2025评议整理/
-├── index.html          ← 门户首页（三入口）
-├── season-2025.html / season-2024.html ← 双赛季判例合集
-├── stats-2025.html / stats-2024.html   ← 双赛季得失盘点
-├── rules.html          ← 竞赛规则与学习标注
-├── videos/             ← 双赛季评议视频（约26GB，按赛季分目录）
-├── data/
+项目根目录/
+├── site/               ← 生成后的离线站点与 GitHub Pages 发布目录
+│   ├── index.html      ← 门户首页
+│   ├── season-*.html   ← 双赛季判例合集
+│   ├── stats-*.html    ← 双赛季得失盘点
+│   ├── rules.html      ← 竞赛规则与学习标注
+│   ├── assets/         ← 发布时由根目录 assets/ 同步
+│   └── videos/         ← 本地视频（不进 Git）
+├── assets/             ← 队徽与规则图源文件
+├── data/               ← 判例、统计、规则和原始抓取数据
 │   ├── cases-2025.json / cases-2024.json ← 双赛季判例数据
 │   ├── impact.json / impact-2024.json ← 双赛季影响标注
 │   ├── match_scores.json / match-scores-2024.json ← 比分数据
 │   ├── issues_raw/     ← 官方页面原始HTML存档
 │   └── review.txt      ← 判例纯文本汇编（便于打印速查）
-└── scripts/            ← 抓取/解析/下载/生成脚本（可复用于其他赛季）
+├── scripts/            ← 抓取、解析、下载、构建和校验脚本
+├── src/                ← 页面模板和共享前端的演进目录
+├── CONTRIBUTING.md     ← 贡献与本地构建说明
+├── LICENSE             ← 本项目原创代码和模板的 MIT 许可
+└── NOTICE.md           ← 第三方内容和版权说明
 ```
 
 ## 从 GitHub 克隆后如何使用
 
-视频体积太大（约16GB）不进仓库。克隆后：
+视频体积太大（约26GB）不进仓库。克隆后：
 
 ```bash
-cd scripts
-python download_videos_parallel.py   # 重新下载229段视频（断点续传，约1-3小时）
+python scripts/download_videos_parallel.py 2025
+python scripts/download_videos_parallel.py 2024
 ```
 
-然后双击 `index.html` 即可。若只看文字与统计，不下载视频也能正常使用（仅无画面）。
+然后双击 `site/index.html` 即可。若只看文字与统计，不下载视频也能正常使用（仅无画面）。
 
 ## 重新生成或扩展
 
-依赖 Python 3.8+（无需第三方库，仅标准库）。按顺序：
+依赖 Python 3.8+；规则页构建需要 `scripts/requirements-build.txt` 中的依赖。标准构建命令：
 
-完整的双赛季管线、执行顺序和安全网络要求见 `AGENTS.md`；页面生成使用 `build_portal.py`、`build_page.py`、`build_stats.py` 和 `build_rules.py`。
+```bash
+python -m pip install -r scripts/requirements-build.txt
+python scripts/build_all.py
+python scripts/verify_project.py
+python scripts/serve.py
+```
 
-如需收录2026赛季（截至2026年9月已发布22期），在 `fetch_issues.py` 的 `ISSUES` 表中补入新一期URL后重跑上述流程即可。
+抓取和数据管线、安全网络要求见 `AGENTS.md`；GitHub Actions 会自动构建并发布 `site/`。
+
+如需收录新赛季，先在对应抓取脚本中加入期数和数据配置，再运行完整构建与校验。
 
 ---
 数据生成日期：2026-09-25 · 判定结论以评议组认定原文为准，分类为教学整理用途

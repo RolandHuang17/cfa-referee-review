@@ -12,7 +12,7 @@ from pathlib import Path
 from safe_http import download
 
 ROOT = Path(__file__).resolve().parent.parent
-VID_DIR = ROOT / "videos"
+VID_DIR = ROOT / "site" / "videos"
 LOG = ROOT / "data" / "download_log.txt"
 LOCK = threading.Lock()
 

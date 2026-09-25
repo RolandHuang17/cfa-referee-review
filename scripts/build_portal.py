@@ -7,6 +7,7 @@ from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+SITE = ROOT / "site"
 
 
 def load_stats():
@@ -189,8 +190,8 @@ a{color:inherit}
   </div>
 
   <div class="foot">
-    <p>本站为裁判员教学研究用途 · 判罚认定权属于中国足协裁判委员会评议组 · 规则文本版权归 IFAB，译文使用须遵守 <a href="declaration.md">版权声明</a></p>
-    <p>构建于 __BUILT__ · 双击本文件即可离线使用，视频请放在同目录 videos/ 文件夹</p>
+    <p>本站为裁判员教学研究用途 · 判罚认定权属于中国足协裁判委员会评议组 · 规则文本版权归 IFAB，译文使用须遵守 <a href="NOTICE.md">版权声明</a></p>
+    <p>构建于 __BUILT__ · 打开本目录即可离线使用，视频请放在 videos/ 文件夹</p>
   </div>
 </div>
 </body>
@@ -212,7 +213,8 @@ def main():
             .replace("__NRL__", str(s["rules"]["sections"]))
             .replace("__NLAW__", str(s["rules"]["laws"]))
             .replace("__BUILT__", date.today().isoformat()))
-    out = ROOT / "index.html"
+    SITE.mkdir(parents=True, exist_ok=True)
+    out = SITE / "index.html"
     out.write_text(html, encoding="utf-8")
     print(f"生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB)")
 

@@ -8,13 +8,15 @@
 - **五页架构已上线**：`index.html`（门户，build_portal.py）+ `season-2025.html`/`season-2024.html`（build_page.py，共用模板、赛季配置在脚本内 `SEASONS` 字典）+ `stats-2025.html`/`stats-2024.html`（build_stats.py，同样参数化）+ `rules.html`（划词高亮黄/绿/红 + 章节笔记 + 导出导入）。
 - 所有页面顶栏导航统一（首页/24评议/25评议/得失盘点/竞赛规则）。
 - 收藏/笔记 localStorage 键：`cfa2025.*`（沿用旧键保数据）、`cfa2024.*`；规则页 `cfa2026rules.hl`/`cfa2026rules.notes`。
-- `data/match-scores-2024.json` 已入库 40/45 场比分；缺的场次 stats-2024 页自动显示"待补"。
+- `data/match-scores-2024.json` 已入库影响统计涉及的45/45场比分；未纳入影响统计的场次仍可显示"待补"。
 - 视频：`videos/2024/`（161个，9.92GB）+ `videos/2025/`（229个，15.9GB）均已下载完成（不进 git）。
 - 生成页全部无残留占位符（已 grep 验证）；构建命令见 AGENTS.md 管线第 8-12 步。
 
 ## 剩余任务（按优先级）
 
 ### 1. 队徽补全（可见缺口最大）
+
+已复跑采集并统一加入“广东广州豹”→“广州豹”归一化；维基无可靠队徽的球队仍保留首字占位，当前映射为34队。
 
 `data/crests.json` 现只有 34 键。按 **build_page.py 的 NAME_VARIANTS 归一化后的规范名**，以下球队缺队徽（括号为涉及判例数）：
 
@@ -32,9 +34,11 @@
 - 新增误采（国旗/球衣模板）往 `NOISE`/`BLOCK_FILES` 加。
 - 完成后重跑：`python fetch_crests.py && python build_portal.py && python build_page.py && python build_stats.py`，提交时 assets/crests/*.png 与 data/crests.json 一起进 git。
 
-### 2. 2024 剩余 5 场比分
+### 2. 2024 剩余 5 场比分（已完成）
 
-`data/match-scores-2024.json` 的 scores 缺这 5 个键（键格式 `league|round|home|away`，队名必须是 impact-2024.json 里的归一化名）：
+已依据 2024 年中甲、 中乙联赛公开赛果页补齐，统计页已重建。
+
+此前缺少的键如下（现已全部写入）：
 
 ```
 中甲联赛|10|南京城市|重庆铜梁龙
@@ -44,15 +48,19 @@
 中乙联赛|28|赣州瑞狮|北京理工
 ```
 
-2024 中甲第18轮为 2024-08-25 前后、第10轮为 2024-05-11 前后；搜索"2024中甲 第18轮 苏州东吴"式关键词可证。查到后填 `{"h":x,"a":y,"source":"来源","date":"YYYY-MM-DD"}`，重跑 `python scripts/build_stats.py 2024`。
+来源记录为 `维基百科：2024年中国足球甲级联赛` / `维基百科：2024年中国足球乙级联赛`，并已重跑 `python scripts/build_stats.py 2024`。
 
 ### 3. 启动合集网页.bat 文案（小）
 
-仍是"2025赛季裁判评议合集"，可改为"裁判学习平台"。**必须以 GBK 编码写入**（cmd 解析），用 `python` + `open(..., encoding="gbk")` 改，别用 echo/重定向。
+已完成，当前文案为“裁判学习平台”，文件保持GBK编码。
+
+原文案已更新，无需再次修改。
 
 ### 4. README.md 更新（小）
 
-还写着旧三页结构，改成五页门户架构 + 双赛季说明（可参考 AGENTS.md 开头两节直接精简）。
+已完成，已改为双赛季门户架构说明。
+
+README 已更新为门户、双赛季合集、双赛季统计和规则页说明。
 
 ### 5. 浏览器回归（最后做）
 

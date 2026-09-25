@@ -5,7 +5,7 @@ import json
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-path = ROOT / "data" / "cases.json"
+path = ROOT / "data" / "cases-2025.json"
 data = json.loads(path.read_text(encoding="utf-8"))
 cases = {c["seq"]: c for c in data["cases"]}
 

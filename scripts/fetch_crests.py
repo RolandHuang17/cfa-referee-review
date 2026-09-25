@@ -43,7 +43,7 @@ TEAMS = {
     "定南赣联": ("dingnan-ganlian", "定南赣联足球俱乐部"),
     "石家庄功夫": ("shijiazhuang-gongfu", "石家庄功夫足球俱乐部"),
     "苏州东吴": ("suzhou-dongwu", "苏州东吴足球俱乐部"),
-    "广东广州豹": ("guangzhou-bao", "广东广州豹足球俱乐部"),
+    "广州豹": ("guangzhou-bao", "广东广州豹足球俱乐部"),
     "深圳青年人": ("shenzhen-qingnianren", "深圳青年人足球俱乐部"),
     "佛山南狮": ("foshan-nanshi", "佛山南狮足球俱乐部"),
     "大连鲲城": ("dalian-kuncheng", "大连鲲城足球俱乐部"),
@@ -88,7 +88,7 @@ BLOCK_FILES = re.compile(r"Wikinews-logo|Adidas Logo|Heilongjiang Lava Spring|"
                          r"Guangzhou City FC logo|Question book-new|Yingbo", re.I)
 
 # 维基上确认无法取到正确队徽的队（跳过采集，页面用首字占位）
-NO_WIKI_CREST = {"大连鲲城", "广东广州豹"}
+NO_WIKI_CREST = {"大连鲲城", "广州豹"}
 
 B_TEAM_MAP = {
     "山东泰山B队": "山东泰山",
@@ -98,6 +98,7 @@ B_TEAM_MAP = {
 }
 
 NAME_VARIANTS = {
+    "广东广州豹": "广州豹",
     "河南俱乐部酒祖杜康": "河南俱乐部",
     "河南酒祖杜康": "河南俱乐部",
     "浙江俱乐部": "浙江俱乐部绿城",

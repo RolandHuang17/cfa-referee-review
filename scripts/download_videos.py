@@ -13,7 +13,9 @@ LOG = ROOT / "data" / "download_log.txt"
 
 
 def main():
-    data = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))
+    season = sys.argv[1] if len(sys.argv) > 1 else "2025"
+    data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+    season_vid_dir = VID_DIR / season
     jobs = []
     seen = {}
     for c in data["cases"]:
@@ -32,7 +34,7 @@ def main():
         (ROOT / "data" / "video_aliases.json").write_text(
             json.dumps(aliases, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    print(f"待下载 {len(jobs)} 个视频（去重后）")
+    print(f"待下载 {len(jobs)} 个视频（去重后，赛季{season}）")
     # 先统计总大小
     total = 0
     for url, fname in jobs:
@@ -48,7 +50,7 @@ def main():
     t0 = time.time()
     for i, (url, fname) in enumerate(jobs, 1):
         try:
-            status, size = download(url, VID_DIR / fname, expected_size=None, progress=False)
+            status, size = download(url, season_vid_dir / fname, expected_size=None, progress=False)
             done_bytes += size
             eta = ""
             if i > 2:

@@ -5,12 +5,14 @@
 3. 报告缺失/损坏文件（可重跑 download_videos_parallel.py 补齐）
 """
 import json
+import sys
 from pathlib import Path
 
 from safe_http import head_size
 
 ROOT = Path(__file__).resolve().parent.parent
-VID = ROOT / "videos"
+SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"
+VID = ROOT / "videos" / SEASON
 
 
 def rename_legacy():
@@ -30,7 +32,7 @@ def rename_legacy():
 
 def main():
     rename_legacy()
-    data = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))
+    data = json.loads((ROOT / "data" / f"cases-{SEASON}.json").read_text(encoding="utf-8"))
     need = {}
     for c in data["cases"]:
         for f in c["video_files"]:

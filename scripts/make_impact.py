@@ -132,7 +132,7 @@ MATCH_NOTES = {
 
 
 def main():
-    data = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))
+    data = json.loads((ROOT / "data" / "cases-2025.json").read_text(encoding="utf-8"))
     cases = {c["seq"]: c for c in data["cases"]}
 
     # 修正 #48 的赛事字段（"中超第7轮"未带"联赛"导致提取为空）

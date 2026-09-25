@@ -13,6 +13,7 @@ ROOT = Path(__file__).resolve().parent.parent
 
 # 队名归一化（与 fetch_crests.py 的 NAME_VARIANTS 保持同步！）
 NAME_VARIANTS = {
+    "广东广州豹": "广州豹",
     "河南俱乐部酒祖杜康": "河南俱乐部",
     "河南酒祖杜康": "河南俱乐部",
     "浙江俱乐部": "浙江俱乐部绿城",

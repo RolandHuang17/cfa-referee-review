@@ -37,15 +37,19 @@
 cd scripts
 python fetch_issues.py               # 1. 抓取官方页面 → data/issues_raw/（URL清单在脚本内 ISSUES 表）
 python parse_issues.py               # 2. 解析 → data/cases.json（判例/结论/视频映射/自动判定）
-python download_videos_parallel.py   # 3. 下载视频 → videos/（断点续传，失败重跑即可）
-python classify_cases.py             # 4. 教学分类与结论复核（分类表 CLS 在脚本内，人工维护）
-python make_impact.py                # 5. 错漏判影响标注（受损队/损失类型表 CLS 在脚本内）
-python fetch_crests.py               # 6. 队徽采集 → assets/crests/ + data/crests.json
-python build_page.py                 # 7. 生成 index.html
-python build_stats.py                # 8. 生成 stats.html
+python fix_issue27_merge.py          # 3. 拆分第27期文章内嵌的第26期补充认定（必须在 classify 前跑）
+python download_videos_parallel.py   # 4. 下载视频 → videos/（断点续传，失败重跑即可）
+python classify_cases.py             # 5. 教学分类与结论复核（分类表 CLS 在脚本内，人工维护；
+                                     #    末尾含第27期判例2拆分后的#195判定校正，勿删）
+python make_impact.py                # 6. 错漏判影响标注（受损队/损失类型表 CLS 在脚本内）
+python fetch_crests.py               # 7. 队徽采集 → assets/crests/ + data/crests.json
+python build_page.py                 # 8. 生成 index.html
+python build_stats.py                # 9. 生成 stats.html
 python verify_videos.py              # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
 python range_server.py [端口]        # 本地预览服务（支持Range，视频可拖进度条）
 ```
+
+⚠️ 顺序要点：fix_issue27_merge 必须在 classify 之前（它拆分结构），classify 末尾会恢复 #195 的拆分后判定；漏掉任何一步都会导致统计错位。
 
 `parse/classify/make_impact` 会重新覆盖 `cases.json` 中的对应字段——改了前面步骤后按序重跑，最后必须重跑 build_page/build_stats。
 
@@ -81,8 +85,9 @@ python range_server.py [端口]        # 本地预览服务（支持Range，视�
 2. **safe_http.py 安全模块**：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且 URL 不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入，且路径分隔符不要用 `\r` 开头的转义组合
-5. **期数结构坑**：第27期文章内嵌了对第26期判例2/判例7的补充认定（`fix_issue27_merge.py` 处理过）；约19条判例 comp 为空（其中10条是"中超第28轮"式写法，已归中超；其余为全运会）
-6. **球队名变体**：河南俱乐部/河南酒祖杜康、陕西联合/陕西联合月亮泊、广西平果/广西平果国晶、浙江俱乐部/浙江俱乐部绿城、大连英博/大连英博海发、温州俱乐部/温州俱乐部中胤——统一映射在 `NAME_VARIANTS`（fetch_crests.py），新增统计维度时必须先归一化
+5. **期数结构坑**：第27期文章内嵌了对第26期判例2/判例7的补充认定（`fix_issue27_merge.py` 处理过）；comp 曾有19条为空（"中超第28轮"式写法与"第十五届运动会"式），已在 parse_issues.py 用兜底关键词+COMP_ALIAS 归一修复，修复后分布：中超75/中甲71/中乙51/女超13/全运会12/女甲4/足协杯1；seq=11（南京城市-大连鲲城）两队用"-"分隔，parse_case_head 有横杠兜底解析
+6. **球队名变体**：河南俱乐部/河南酒祖杜康、陕西联合/陕西联合月亮泊、广西平果/广西平果国晶、浙江俱乐部/浙江俱乐部绿城、大连英博/大连英博海发、温州俱乐部/温州俱乐部中胤——统一映射在 `NAME_VARIANTS`（fetch_crests.py 与 build_page.py **双处存在，修改须同步**），新增统计维度时必须先归一化
+7. **侧栏筛选体系**：赛事→球队→期数三维 + 犯规分类/判定/收藏；分面计数走 `baseMatch(c, skip)`（skip 为要排除的维度名或数组）；球队筛选跨赛事聚合（选中球队会清空赛事筛选，广州豹=中甲8例+足协杯1例）
 
 ## 扩展任务指南
 

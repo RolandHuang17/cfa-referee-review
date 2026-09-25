@@ -9,6 +9,20 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
+# 队名归一化（与 fetch_crests.py 的 NAME_VARIANTS 保持同步！）
+NAME_VARIANTS = {
+    "河南俱乐部酒祖杜康": "河南俱乐部",
+    "河南酒祖杜康": "河南俱乐部",
+    "浙江俱乐部": "浙江俱乐部绿城",
+    "陕西联合月亮泊": "陕西联合",
+    "广西平果国晶": "广西平果",
+    "大连英博海发": "大连英博",
+    "温州俱乐部中胤": "温州俱乐部",
+}
+# comp 安全网归一（parse_issues 已修复，此处兜底）
+COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
+              "女超": "女超联赛", "女甲": "女甲联赛", "运动会": "全运会"}
+
 CATEGORY_ORDER = [
     ("handball", "手球犯规", "✋"),
     ("offside", "越位", "🚩"),
@@ -49,10 +63,20 @@ def build_data():
     data = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))
     cases = []
     for c in data["cases"]:
+        comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
+        if not comp:
+            mi = c.get("match_info", "")
+            for k, v in (("中超", "中超联赛"), ("中甲", "中甲联赛"), ("中乙", "中乙联赛"),
+                         ("女超", "女超联赛"), ("女甲", "女甲联赛"), ("足协杯", "中国足协杯"),
+                         ("运动会", "全运会")):
+                if k in mi:
+                    comp = v
+                    break
         cases.append({
             "seq": c["seq"], "issue": c["issue"], "no": c["no"],
-            "comp": c.get("comp", ""), "round": c.get("round", ""),
-            "home": c.get("home", ""), "away": c.get("away", ""),
+            "comp": comp, "round": c.get("round", ""),
+            "home": NAME_VARIANTS.get(c.get("home", ""), c.get("home", "")),
+            "away": NAME_VARIANTS.get(c.get("away", ""), c.get("away", "")),
             "minute": c.get("minute", ""), "match_info": c["match_info"],
             "desc": c["desc"], "appeal": c.get("appeal", ""),
             "conclusion": c["conclusion"],
@@ -131,6 +155,13 @@ body.sb-off .sidebar{display:none}
 .side-link{display:block;margin:16px 6px 0;padding:8px 10px;border-radius:8px;
   background:var(--bluebg);color:var(--brand2);text-decoration:none;font-size:13px}
 .side-link:hover{background:#dfeafa}
+.sidebox{max-height:236px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;
+  background:#fff;padding:4px}
+.sidebox .cat-item{padding:5px 8px;font-size:13px}
+.tav{display:inline-flex;width:18px;height:18px;border-radius:50%;background:#e2e8f0;
+  color:#475569;font-size:11px;align-items:center;justify-content:center;
+  margin-right:3px;vertical-align:-4px;flex:none}
+#compList .cat-item .nm, #teamList .cat-item .nm, #issueList .cat-item .nm{font-size:13px}
 
 /* ---------- 播放列表 ---------- */
 .plist{overflow-y:auto;background:#fff;border-right:1px solid var(--line)}
@@ -257,7 +288,6 @@ body.sb-off .sidebar{display:none}
 <header class="topbar">
   <div class="brand"><b>2025评议合集</b><span id="totalBadge"></span></div>
   <input id="fSearch" type="search" placeholder="搜索：球队、判例内容、关键词…  (按 / 聚焦)">
-  <select id="fIssue"><option value="">全部期数</option></select>
   <button class="tbtn" id="btnStats">📊 统计</button>
   <button class="tbtn" id="btnHelp">？说明</button>
   <button class="tbtn" id="btnSb" title="收起/展开侧栏">☰ 侧栏</button>
@@ -265,6 +295,12 @@ body.sb-off .sidebar{display:none}
 
 <div class="layout">
   <aside class="sidebar" id="sidebar">
+    <div class="side-h">赛事</div>
+    <div id="compList"></div>
+    <div class="side-h">球队</div>
+    <div class="sidebox" id="teamList"></div>
+    <div class="side-h">评议期数</div>
+    <div class="sidebox" id="issueList"></div>
     <div class="side-h">犯规分类</div>
     <div id="catList"></div>
     <div class="side-h">评议判定</div>
@@ -278,7 +314,7 @@ body.sb-off .sidebar{display:none}
   </aside>
 
   <section class="plist">
-    <div class="plist-head">显示 <b id="shownCount">0</b> 例 · 点击行在右侧查看，<span class="kbd">↑</span><span class="kbd">↓</span> 切换</div>
+    <div class="plist-head" id="plistHead"><span id="issueTitle"></span><span>显示 <b id="shownCount">0</b> 例 · 点击行在右侧查看，<span class="kbd">↑</span><span class="kbd">↓</span> 切换</span></div>
     <div id="plistRows"></div>
   </section>
 
@@ -386,35 +422,85 @@ document.getElementById("verList").innerHTML =
   `<button class="ver-item" data-v="correct"><span class="vdot" style="background:#3a9d55"></span><span class="nm">✅ 支持原判</span><b>${verCount.correct}</b></button>` +
   `<button class="ver-item" data-v="pending"><span class="vdot" style="background:#d9a514"></span><span class="nm">⚪ 不予认定</span><b>${verCount.pending}</b></button>`;
 
-// 期数下拉
-{ const sel = document.getElementById("fIssue");
-  for (let i=1;i<=32;i++){ const o=document.createElement("option");
-    o.value=i; o.textContent=`第${i}期`; sel.appendChild(o); } }
-
 // ---------- 状态与筛选 ----------
-const state = {cat:"", v:"", issue:"", q:"", sel:null, vIdx:0, fav:null};
+const state = {cat:"", v:"", issue:"", q:"", sel:null, vIdx:0, fav:null,
+               comp:"", team:""};
 const fSearch = document.getElementById("fSearch");
-const fIssue = document.getElementById("fIssue");
 
-function visibleCases(){
-  const q = state.q.trim().toLowerCase();
-  return DATA.cases.filter(c => {
-    if (state.cat && c.category !== state.cat) return false;
-    if (state.v && c.v !== state.v) return false;
-    if (state.issue && String(c.issue) !== state.issue) return false;
-    if (q && !c.search.includes(q)) return false;
-    if (state.fav === "all" && !isFav(c.seq)) return false;
-    if (state.fav === "note" && !hasNote(c.seq)) return false;
+const COMP_ORDER = [["中超联赛","中超"],["中甲联赛","中甲"],["中乙联赛","中乙"],
+                    ["女超联赛","女超"],["女甲联赛","女甲"],["中国足协杯","足协杯"],
+                    ["全运会","全运会"]];
+const COMP_SHORT = Object.fromEntries(COMP_ORDER);
+const teamComps = {};
+for (const c of DATA.cases) {
+  for (const t of new Set([c.home, c.away].filter(Boolean))) {
+    (teamComps[t] = teamComps[t] || new Set()).add(c.comp);
+  }
+}
+function teamBadge(t){
+  return DATA.crests[t] ? `<img class="crest" style="height:18px" src="${DATA.crests[t]}" alt="">`
+                        : `<span class="tav">${esc(t[0]||"?")}</span>`;
+}
+
+// 除 skip 维度外的全部筛选（用于分面计数；skip 可为字符串或数组）
+function baseMatch(c, skip){
+  skip = Array.isArray(skip) ? skip : (skip ? [skip] : []);
+  const sk = k => skip.includes(k);
+  if (!sk("cat") && state.cat && c.category!==state.cat) return false;
+  if (!sk("v") && state.v && c.v!==state.v) return false;
+  if (!sk("issue") && state.issue && String(c.issue)!==state.issue) return false;
+  if (!sk("comp") && state.comp && c.comp!==state.comp) return false;
+  if (!sk("team") && state.team && c.home!==state.team && c.away!==state.team) return false;
+  if (!sk("fav")){
+    if (state.fav==="all" && !isFav(c.seq)) return false;
+    if (state.fav==="note" && !hasNote(c.seq)) return false;
     if (state.fav && state.fav.startsWith("tag:")) {
       const t = state.fav.slice(4);
       if (!(fav[c.seq] && (fav[c.seq].tags||[]).includes(t))) return false;
     }
-    return true;
-  });
+  }
+  if (!sk("q")){ const q=state.q.trim().toLowerCase(); if(q && !c.search.includes(q)) return false; }
+  return true;
+}
+
+function visibleCases(){
+  return DATA.cases.filter(c => baseMatch(c, null));
+}
+
+// ---------- 侧栏：赛事/球队/期数（计数随其他筛选联动） ----------
+function renderSidebar(){
+  document.getElementById("compList").innerHTML =
+    `<button class="cat-item ${state.comp===""?"on":""}" data-comp=""><span class="nm">全部赛事</span><b>${DATA.cases.filter(c=>baseMatch(c,["comp","team"])).length}</b></button>` +
+    COMP_ORDER.map(([full,short])=>{
+      const n = DATA.cases.filter(c=>baseMatch(c,["comp","team"]) && c.comp===full).length;
+      return `<button class="cat-item ${state.comp===full?"on":""}" data-comp="${full}"><span class="nm">${short}</span><b>${n}</b></button>`;
+    }).join("");
+  const teams = {};
+  for (const c of DATA.cases) {
+    if (!baseMatch(c,"team")) continue;
+    if (state.comp && c.comp!==state.comp) continue;
+    for (const t of new Set([c.home,c.away].filter(Boolean))) teams[t]=(teams[t]||0)+1;
+  }
+  document.getElementById("teamList").innerHTML =
+    Object.entries(teams).sort((a,b)=>b[1]-a[1]||a[0].localeCompare(b[0])).map(([t,n])=>
+      `<button class="cat-item ${state.team===t?"on":""}" data-team="${esc(t)}">${teamBadge(t)}<span class="nm">${esc(t)}</span><b>${n}</b></button>`).join("") ||
+    `<div style="font-size:12.5px;color:var(--muted);padding:6px 8px">该赛事下无判例</div>`;
+  document.getElementById("issueList").innerHTML =
+    Array.from({length:32},(_,k)=>k+1).map(i=>{
+      const n = DATA.cases.filter(c=>baseMatch(c,"issue") && String(c.issue)===String(i)).length;
+      return `<button class="cat-item ${String(state.issue)===String(i)?"on":""}" data-issue="${i}"><span class="nm">第${i}期</span><b>${n}</b></button>`;
+    }).join("");
 }
 
 function renderList(){
   const list = visibleCases();
+  const issueTitle = document.getElementById("issueTitle");
+  if (state.issue) {
+    const iss = DATA.issues[state.issue];
+    issueTitle.innerHTML = `第${state.issue}期 · ${esc(iss.title)} · ${iss.date.slice(0,4)}-${iss.date.slice(4,6)}-${iss.date.slice(6,8)}发布 · `;
+  } else {
+    issueTitle.innerHTML = "";
+  }
   document.getElementById("shownCount").textContent = list.length;
   const groups = {};
   list.forEach(c => (groups[c.category] = groups[c.category]||[]).push(c));
@@ -436,6 +522,8 @@ function renderList(){
 }
 
 function applyFilter(){
+  renderSidebar();
+  renderFavList();
   renderList();
   const list = visibleCases();
   if (!list.some(c=>c.seq===state.sel)) {
@@ -675,7 +763,24 @@ document.getElementById("verList").addEventListener("click", e=>{
 });
 fSearch.addEventListener("input", ()=>{ state.q = fSearch.value; applyFilter(); });
 fSearch.addEventListener("search", ()=>{ state.q = fSearch.value; applyFilter(); }); // 搜索框✕清空按钮
-fIssue.addEventListener("change", ()=>{ state.issue = fIssue.value; applyFilter(); });
+fSearch.addEventListener("search", ()=>{ state.q = fSearch.value; applyFilter(); }); // 搜索框✕清空按钮
+document.getElementById("compList").addEventListener("click", e=>{
+  const b = e.target.closest("[data-comp]"); if(!b) return;
+  state.comp = (state.comp===b.dataset.comp) ? "" : b.dataset.comp;
+  state.team = "";   // 切回按赛事浏览
+  applyFilter();
+});
+document.getElementById("teamList").addEventListener("click", e=>{
+  const b = e.target.closest("[data-team]"); if(!b) return;
+  state.team = (state.team===b.dataset.team) ? "" : b.dataset.team;
+  state.comp = "";   // 球队跨赛事聚合：显示该队全部判例
+  applyFilter();
+});
+document.getElementById("issueList").addEventListener("click", e=>{
+  const b = e.target.closest("[data-issue]"); if(!b) return;
+  state.issue = (String(state.issue)===b.dataset.issue) ? "" : b.dataset.issue;
+  applyFilter();
+});
 document.getElementById("prevBtn").onclick = ()=>step(-1);
 document.getElementById("nextBtn").onclick = ()=>step(1);
 document.getElementById("vswRow").addEventListener("click", e=>{
@@ -742,7 +847,7 @@ const hasPen = t => (t||[]).includes("点球");
     .map(([k,v])=>`第${k}期：${v.replace(/。$/,"")}`).join("；");
   document.getElementById("helpBody").innerHTML = `
     <p><b>判定口径：</b>「错漏判」指评议组认定裁判员（或助理裁判员）判罚决定错误/漏判；「支持原判」指评议组支持临场决定；「不予认定」指现有视频无法判断、评议组不做认定。VAR错误单独标注。</p>
-    <p><b>操作方法：</b>左侧选分类/判定，中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；「☰ 侧栏」可收起侧栏获得更宽画面。</p>
+    <p><b>操作方法：</b>左侧自上而下：赛事（中超/中甲/中乙等）→ 球队（跨赛事聚合，如广州豹同时列出其中甲与足协杯判例）→ 评议期数（按原网页一期一期浏览，选中后列表头显示该期官方标题）→ 犯规分类 → 判定 → 我的收藏；中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；「☰ 侧栏」可收起侧栏获得更宽画面。</p>
     <p><b>收藏与笔记：</b>在详情区点「☆ 收藏」收藏判例并可打多个标签（精选/有疑问/尺度标杆/易错点/课堂讨论/自定义），笔记自动保存。收藏的判例在列表中显示★，可通过左侧「我的收藏」按标签筛选。数据存于浏览器 localStorage；用「导出/导入」按钮可在不同浏览器或 file:// 与 http:// 两种打开方式之间同步。</p>
     <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，2025赛季第1—32期（第1—23期原发布于赛事新闻栏目）。每条判例附原文链接。</p>
     <p><b>期数口径注释：</b>${issNotes}。其余各期与官方标题认定数一致。</p>
@@ -755,14 +860,15 @@ applyFilter();
 { // 支持 #case-N 锚点（来自 stats.html 的跳转或刷新恢复）
   const target = initialHashSeq ? bySeq[+initialHashSeq] : null;
   if (target && !visibleCases().some(x=>x.seq===target.seq)) {
-    // 目标判例被当前筛选挡住时，切到其分类（其余筛选清空）
+    // 目标判例被当前筛选挡住时，清空各筛选（锚点跳转优先）
     state.cat = target.category; state.v = ""; state.issue = ""; state.q = "";
-    fSearch.value = ""; fIssue.value = "";
+    state.comp = ""; state.team = "";
+    fSearch.value = "";
     document.querySelectorAll(".cat-item").forEach(x=>
       x.classList.toggle("on", x.dataset.cat===target.category));
     document.querySelectorAll(".ver-item").forEach(x=>
       x.classList.toggle("on", x.dataset.v===""));
-    renderList();
+    applyFilter();
   }
   const list = visibleCases();
   if (target && bySeq[target.seq]) {

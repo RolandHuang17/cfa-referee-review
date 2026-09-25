@@ -48,7 +48,12 @@ ISSUE_URL = {
 COMP_KEYWORDS = ["中超联赛", "中甲联赛", "中乙联赛", "中国足协杯", "足协杯",
                  "全国运动会", "全运会", "女超联赛", "女甲联赛", "女乙联赛",
                  "中冠联赛", "U21联赛", "U19联赛", "U17联赛", "锦标赛",
-                 "青少年联赛", "超级杯"]
+                 "青少年联赛", "超级杯",
+                 # 兜底：不带"联赛"字样的写法（"中超第7轮"等）
+                 "中超", "中甲", "中乙", "女超", "女甲", "运动会"]
+# 关键词命中后归一为标准赛事名
+COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
+              "女超": "女超联赛", "女甲": "女甲联赛", "运动会": "全运会"}
 
 
 def cn2int(s: str) -> int:
@@ -97,6 +102,7 @@ def parse_case_head(text: str):
     head = text.split("。")[0]
     head = re.sub(r"^判例[一二三四五六七八九十百]+[：:]", "", head).strip()
     comp = next((k for k in COMP_KEYWORDS if k in head), "")
+    comp = COMP_ALIAS.get(comp, comp)
     rnd = ""
     m = re.search(r"第[0-9一二三四五六七八九十百]+轮", head)
     if m:
@@ -105,6 +111,11 @@ def parse_case_head(text: str):
     m = re.search(r"([^，,。\s]+?)\s*(?:VS|vs|Vs)\s*([^，,。\s]+)", head)
     if m:
         home, away = m.group(1), m.group(2)
+    else:
+        # 兜底：无VS时找"甲-乙"式对阵（首段可能整段无句号，取最后一个匹配）
+        pairs = re.findall(r"([\u4e00-\u9fa5A-Za-z0-9]{2,20})-([\u4e00-\u9fa5A-Za-z0-9]{2,20})", head)
+        if pairs:
+            home, away = pairs[-1]
     minute = ""
     m = re.search(r"比赛第\s*(\d+)\s*分钟", text)
     if m:

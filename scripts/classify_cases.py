@@ -319,6 +319,13 @@ def main():
         c["var_verdict_name"] = VAR_NAMES[vv]
         c.pop("need_manual", None)
 
+    # 第27期判例2拆分校正：fix_issue27_merge 已把合并的补充认定拆走，
+    # CLS 按原合并形态将其标为 wrong，此处恢复拆分后的真实判定（无锡吴钩越位申诉→支持原判）
+    c195 = next(c for c in cases if c["seq"] == 195)
+    c195.update(referee_verdict="correct", referee_verdict_name="支持原判",
+                var_verdict="none", var_verdict_name="未涉及",
+                category="offside", category_name="越位", tags=["证据不足"])
+
     # 每期核对
     print(f"{'期':>3} {'判例':>4} {'标题认定':>6} {'复核错误':>6}  差异说明")
     for it in data["issues"]:

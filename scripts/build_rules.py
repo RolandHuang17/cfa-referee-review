@@ -309,7 +309,8 @@ body{margin:0;background:var(--bg);color:var(--ink);font-size:var(--fs);line-hei
   font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif}
 .topbar{height:54px;display:flex;align-items:center;gap:10px;padding:0 14px;
   background:linear-gradient(90deg,#0b3d73,#0b4c8c 60%,#1266b5);color:#fff;
-  position:sticky;top:0;z-index:40}
+  position:sticky;top:0;z-index:40;overflow-x:auto;scrollbar-width:none}
+.topbar::-webkit-scrollbar{display:none}
 .topbar .brand{font-size:17px;font-weight:700;white-space:nowrap}
 .topbar .brand span{font-size:12.5px;color:#cfe2f5;font-weight:400;margin-left:6px}
 .topbar input[type=search]{flex:1;max-width:430px;padding:7px 12px;border:1px solid #3a6ea8;
@@ -340,6 +341,30 @@ main{overflow-y:auto;padding:22px 28px 60px}
 .content .pg{margin:16px 0;text-align:center}
 .content .pg img{max-width:100%;border:1px solid var(--line);border-radius:8px}
 .content mark{background:var(--mark);padding:0 2px;border-radius:3px}
+/* —— 划词高亮 —— */
+mark.hl{padding:0 1px;border-radius:3px;cursor:pointer}
+mark.hl.hy{background:#ffe58f}
+mark.hl.hg{background:#b7ebc8}
+mark.hl.hr{background:#ffc2b8}
+#hlBar{position:fixed;z-index:80;display:none;gap:6px;background:#1c2733;border-radius:10px;
+  padding:6px 8px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+#hlBar button{border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:13px;font-weight:600}
+#hlBar .by{background:#ffe58f;color:#5c4a00}
+#hlBar .bg{background:#b7ebc8;color:#0a4d24}
+#hlBar .br{background:#ffc2b8;color:#7a1d10}
+/* —— 章节笔记 —— */
+.notebox{margin:0 0 16px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe}
+.notebox summary{cursor:pointer;padding:8px 14px;color:var(--brand);font-weight:600;user-select:none}
+.notebox summary .hasnote{color:#9a6700}
+.notebox textarea{width:100%;min-height:96px;border:none;border-top:1px dashed var(--line);
+  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:#fffdf5;outline:none;
+  display:block;border-radius:0 0 10px 10px}
+.notebox .nrow{display:flex;gap:10px;align-items:center;padding:6px 14px 10px;font-size:12.5px;color:var(--muted)}
+.notebox .nrow button{border:1px solid #cbd5e1;background:#fff;border-radius:6px;
+  padding:3px 12px;cursor:pointer;font-size:12.5px;color:var(--ink)}
+.notebox .nrow button:hover{border-color:var(--brand2);color:var(--brand2)}
+.hltip{font-size:12.5px;color:var(--muted);background:#f6f9fc;border:1px dashed #c9d8e6;
+  border-radius:8px;padding:6px 12px;margin:0 0 14px}
 .dnav{display:flex;gap:10px;margin-top:20px}
 .dnav button{flex:1;padding:10px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;
   cursor:pointer;font-size:14.5px;color:var(--ink)}
@@ -366,8 +391,10 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px}
   <input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）">
   <button class="tbtn" id="fsMinus">A－</button>
   <button class="tbtn" id="fsPlus">A＋</button>
-  <a class="tbtn" href="index.html">← 判例合集</a>
-  <a class="tbtn" href="stats.html">得失盘点</a>
+  <a class="tbtn" href="index.html">🏠 首页</a>
+  <a class="tbtn" href="season-2024.html">24评议</a>
+  <a class="tbtn" href="season-2025.html">25评议</a>
+  <a class="tbtn" href="stats-2025.html">📊 盘点</a>
 </header>
 <div class="layout">
   <nav class="sidebar" id="toc"></nav>
@@ -377,6 +404,18 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px}
       <div id="secBody" style="display:none">
         <h2 id="secTitle"></h2>
         <div class="pages" id="secPages"></div>
+        <div class="hltip">💡 划选正文文字可添加高亮：<b>黄=重要</b> / <b>绿=已掌握</b> / <b>红=易错</b>；点击已有高亮可删除。高亮与笔记保存在本浏览器。</div>
+        <details class="notebox" id="noteWrap">
+          <summary>✏️ 本节笔记 <span class="hasnote" id="noteFlag"></span></summary>
+          <textarea id="secNote" placeholder="写下对本章的理解、执法要点、疑问…（自动保存）"></textarea>
+          <div class="nrow">
+            <span id="noteStat"></span>
+            <span style="flex:1"></span>
+            <button id="btnExportN">⬇ 导出笔记/高亮</button>
+            <button id="btnImportN">⬆ 导入</button>
+            <input type="file" id="importFileN" accept=".json,application/json" style="display:none">
+          </div>
+        </details>
         <div id="secHtml"></div>
       </div>
       <div class="dnav">
@@ -393,6 +432,11 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px}
   </main>
 </div>
 <div class="searchbox" id="searchBox"></div>
+<div id="hlBar">
+  <button class="by" data-c="y">黄 · 重要</button>
+  <button class="bg" data-c="g">绿 · 已掌握</button>
+  <button class="br" data-c="r">红 · 易错</button>
+</div>
 <script>
 const DATA = __DATA__;
 const byId = {};
@@ -423,6 +467,8 @@ function select(id, scroll=true){
   document.querySelectorAll(".toc-item").forEach(x=>x.classList.toggle("on", x.dataset.id===id));
   history.replaceState(null, "", "#"+id);
   clearMarks();
+  applyHl();
+  loadNote();
 }
 function step(dir){
   if(!cur) return;
@@ -502,6 +548,174 @@ document.addEventListener("keydown", e=>{
 });
 document.addEventListener("click", e=>{
   if(!e.target.closest("#searchBox") && !e.target.closest("#fSearch")) sb.classList.remove("open");
+});
+
+// ---------- 划词高亮（localStorage: cfa2026rules.hl） ----------
+const HL_KEY = "cfa2026rules.hl";
+let hlData = [];
+try { hlData = JSON.parse(localStorage.getItem(HL_KEY) || "[]") || []; } catch(_) { hlData = []; }
+function saveHl(){ try { localStorage.setItem(HL_KEY, JSON.stringify(hlData)); } catch(_){} }
+const secHtmlEl = document.getElementById("secHtml");
+const hlBar = document.getElementById("hlBar");
+
+document.addEventListener("mouseup", e=>{
+  if(e.target.closest("#hlBar")) return;
+  setTimeout(()=>{
+    const sel = window.getSelection();
+    const txt = sel ? sel.toString() : "";
+    if(txt.trim().length >= 2 && sel.rangeCount &&
+       secHtmlEl.contains(sel.getRangeAt(0).commonAncestorContainer)){
+      const r = sel.getRangeAt(0).getBoundingClientRect();
+      hlBar.style.display = "flex";
+      hlBar.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 260)) + "px";
+      hlBar.style.top = Math.max(8, r.top - 46) + "px";
+    } else if (!e.target.closest("#hlBar")) {
+      hlBar.style.display = "none";
+    }
+  }, 10);
+});
+hlBar.addEventListener("mousedown", e=>e.preventDefault());   // 防止点击工具条丢失选区
+hlBar.addEventListener("click", e=>{
+  const b = e.target.closest("button[data-c]"); if(!b) return;
+  addHighlight(b.dataset.c);
+});
+function addHighlight(color){
+  const sel = window.getSelection();
+  if(!sel || sel.isCollapsed || !sel.rangeCount) return;
+  const range = sel.getRangeAt(0);
+  if(!secHtmlEl.contains(range.commonAncestorContainer)) return;
+  const quote = sel.toString();
+  if(quote.replace(/\s+/g,"").length < 2) return;
+  const ts = Date.now();
+  hlData.push({sec: cur, quote, color, ts});
+  saveHl();
+  const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT);
+  const nodes = []; let n;
+  while((n = walker.nextNode())){
+    if(range.intersectsNode(n) && n.textContent.trim()) nodes.push(n);
+  }
+  for (const node of nodes){
+    const t = node.textContent;
+    let start = 0, end = t.length;
+    if(node === range.startContainer && node.nodeType === 3) start = range.startOffset;
+    if(node === range.endContainer && node.nodeType === 3) end = range.endOffset;
+    if(end <= start) continue;
+    const frag = document.createDocumentFragment();
+    if(start > 0) frag.appendChild(document.createTextNode(t.slice(0, start)));
+    const mk = document.createElement("mark");
+    mk.className = "hl h" + color; mk.dataset.ts = ts;
+    mk.textContent = t.slice(start, end);
+    frag.appendChild(mk);
+    if(end < t.length) frag.appendChild(document.createTextNode(t.slice(end)));
+    node.parentNode.replaceChild(frag, node);
+  }
+  hlBar.style.display = "none";
+  sel.removeAllRanges();
+}
+function applyHl(){
+  const list = hlData.filter(h=>h.sec===cur);
+  if(!list.length) return;
+  const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT);
+  const nodes = []; let n;
+  while((n = walker.nextNode())) nodes.push(n);
+  for (const node of nodes){
+    let rest = node.textContent;
+    if(!rest.trim()) continue;
+    let frag = null;
+    while(rest.length){
+      let best = null;
+      for (const h of list){
+        const q = h.quote.length > 80 ? h.quote.slice(0, 80) : h.quote;
+        const i = rest.indexOf(q);
+        if(i >= 0 && (!best || i < best.i)) best = {h, i, q};
+      }
+      if(!best){
+        (frag = frag || document.createDocumentFragment())
+          .appendChild(document.createTextNode(rest));
+        break;
+      }
+      (frag = frag || document.createDocumentFragment())
+        .appendChild(document.createTextNode(rest.slice(0, best.i)));
+      const mk = document.createElement("mark");
+      mk.className = "hl h" + best.h.color; mk.dataset.ts = best.h.ts;
+      mk.textContent = rest.slice(best.i, best.i + best.q.length);
+      frag.appendChild(mk);
+      rest = rest.slice(best.i + best.q.length);
+    }
+    if(frag) node.parentNode.replaceChild(frag, node);
+  }
+}
+secHtmlEl.addEventListener("click", e=>{
+  const mk = e.target.closest("mark.hl"); if(!mk) return;
+  const ts = mk.dataset.ts;
+  if(confirm("删除这条高亮？")){
+    hlData = hlData.filter(h=>String(h.ts)!==String(ts));
+    saveHl();
+    document.querySelectorAll(`#secHtml mark.hl[data-ts="${CSS.escape(ts)}"]`).forEach(m=>{
+      const p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+    });
+  }
+});
+
+// ---------- 章节笔记（localStorage: cfa2026rules.notes） ----------
+const NOTE_KEY = "cfa2026rules.notes";
+let secNotes = {};
+try { secNotes = JSON.parse(localStorage.getItem(NOTE_KEY) || "{}") || {}; } catch(_) { secNotes = {}; }
+function saveNotes(){ try { localStorage.setItem(NOTE_KEY, JSON.stringify(secNotes)); } catch(_){} }
+function loadNote(){
+  const ta = document.getElementById("secNote");
+  ta.value = (secNotes[cur] && secNotes[cur].text) || "";
+  document.getElementById("noteStat").textContent =
+    (secNotes[cur] && secNotes[cur].text && secNotes[cur].text.trim()) ? "已保存" : "";
+  document.getElementById("noteFlag").textContent =
+    (secNotes[cur] && secNotes[cur].text && secNotes[cur].text.trim()) ? "· 有笔记" : "";
+}
+let noteTimer = null;
+document.getElementById("secNote").addEventListener("input", ()=>{
+  document.getElementById("noteStat").textContent = "正在保存…";
+  clearTimeout(noteTimer);
+  noteTimer = setTimeout(()=>{
+    const t = document.getElementById("secNote").value;
+    if(t.trim()) secNotes[cur] = {text: t, ts: Date.now()};
+    else delete secNotes[cur];
+    saveNotes();
+    const d = new Date();
+    document.getElementById("noteStat").textContent =
+      "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
+    loadNote();
+  }, 800);
+});
+document.getElementById("btnExportN").onclick = ()=>{
+  const blob = new Blob(
+    [JSON.stringify({highlights: hlData, notes: secNotes, exported: new Date().toISOString(), app:"cfa-rules-2026"}, null, 1)],
+    {type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  a.download = "竞赛规则-笔记与高亮.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+};
+document.getElementById("btnImportN").onclick = ()=>document.getElementById("importFileN").click();
+document.getElementById("importFileN").addEventListener("change", e=>{
+  const f = e.target.files[0]; if(!f) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try {
+      const d = JSON.parse(rd.result);
+      let n = 0;
+      const seen = new Set(hlData.map(h=>h.sec+"|"+h.quote));
+      for (const h of (d.highlights||[])) {
+        if (h.sec && h.quote && !seen.has(h.sec+"|"+h.quote)) { hlData.push(h); n++; }
+      }
+      for (const [s, v] of Object.entries(d.notes||{})) {
+        if (!secNotes[s] || (v.ts||0) > (secNotes[s].ts||0)) { secNotes[s] = v; n++; }
+      }
+      saveHl(); saveNotes(); applyHl(); loadNote();
+      alert(`导入完成：合并了 ${n} 条记录`);
+    } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }
+  };
+  rd.readAsText(f, "utf-8");
+  e.target.value = "";
 });
 
 // ---------- 初始化 ----------

@@ -1,4 +1,36 @@
-<!DOCTYPE html>
+# -*- coding: utf-8 -*-
+"""生成门户首页 index.html：三入口（24评议/25评议/竞赛规则）+ 得失盘点快捷入口
+纯静态单文件离线可用；数据计数从 data/*.json 读取
+"""
+import json
+from datetime import date
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+
+
+def load_stats():
+    def season_stats(season):
+        d = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+        cases = d["cases"]
+        return {
+            "n": len(cases),
+            "issues": len(d["issues"]),
+            "wrong": sum(1 for c in cases if c["referee_verdict"] == "wrong"),
+            "correct": sum(1 for c in cases if c["referee_verdict"] == "correct"),
+            "videos": sum(len(c["video_files"]) for c in cases),
+        }
+    laws = json.loads((ROOT / "data" / "laws.json").read_text(encoding="utf-8"))
+    secs = laws["sections"] if isinstance(laws, dict) else laws
+    return {
+        "2025": season_stats("2025"),
+        "2024": season_stats("2024"),
+        "rules": {"sections": len(secs),
+                  "laws": sum(1 for s in secs if isinstance(s, dict) and s.get("law"))},
+    }
+
+
+HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
@@ -102,22 +134,22 @@ a{color:inherit}
     <a class="card c-2025" href="season-2025.html">
       <div class="icon">🟦</div>
       <h2>2025赛季评议</h2>
-      <p class="desc">最新赛季全部 32 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
+      <p class="desc">最新赛季全部 __N25_ISSUES__ 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
       <div class="nums">
-        <div><b>227</b><span>判例</span></div>
-        <div><b>82</b><span>错漏判</span></div>
-        <div><b>229</b><span>视频</span></div>
+        <div><b>__N25__</b><span>判例</span></div>
+        <div><b>__W25__</b><span>错漏判</span></div>
+        <div><b>__V25__</b><span>视频</span></div>
       </div>
       <div class="go">进入学习 →</div>
     </a>
     <a class="card c-2024" href="season-2024.html">
       <div class="icon">🟩</div>
       <h2>2024赛季评议</h2>
-      <p class="desc">上赛季全部 27 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
+      <p class="desc">上赛季全部 __N24_ISSUES__ 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
       <div class="nums">
-        <div><b>160</b><span>判例</span></div>
-        <div><b>60</b><span>错漏判</span></div>
-        <div><b>161</b><span>视频</span></div>
+        <div><b>__N24__</b><span>判例</span></div>
+        <div><b>__W24__</b><span>错漏判</span></div>
+        <div><b>__V24__</b><span>视频</span></div>
       </div>
       <div class="go">进入学习 →</div>
     </a>
@@ -126,8 +158,8 @@ a{color:inherit}
       <h2>足球竞赛规则 2026-27</h2>
       <p class="desc">IFAB 官方最新版全文（简体中文），支持划词高亮、章节笔记、全文搜索——备赛案头工具。</p>
       <div class="nums">
-        <div><b>25</b><span>章节</span></div>
-        <div><b>15</b><span>规则正文</span></div>
+        <div><b>__NRL__</b><span>章节</span></div>
+        <div><b>__NLAW__</b><span>规则正文</span></div>
         <div><b>✎</b><span>可标注</span></div>
       </div>
       <div class="go">打开规则 →</div>
@@ -158,8 +190,32 @@ a{color:inherit}
 
   <div class="foot">
     <p>本站为裁判员教学研究用途 · 判罚认定权属于中国足协裁判委员会评议组 · 规则文本版权归 IFAB，译文使用须遵守 <a href="declaration.md">版权声明</a></p>
-    <p>构建于 2026-09-25 · 双击本文件即可离线使用，视频请放在同目录 videos/ 文件夹</p>
+    <p>构建于 __BUILT__ · 双击本文件即可离线使用，视频请放在同目录 videos/ 文件夹</p>
   </div>
 </div>
 </body>
 </html>
+"""
+
+
+def main():
+    s = load_stats()
+    html = (HTML
+            .replace("__N25__", str(s["2025"]["n"]))
+            .replace("__W25__", str(s["2025"]["wrong"]))
+            .replace("__V25__", str(s["2025"]["videos"]))
+            .replace("__N25_ISSUES__", str(s["2025"]["issues"]))
+            .replace("__N24__", str(s["2024"]["n"]))
+            .replace("__W24__", str(s["2024"]["wrong"]))
+            .replace("__V24__", str(s["2024"]["videos"]))
+            .replace("__N24_ISSUES__", str(s["2024"]["issues"]))
+            .replace("__NRL__", str(s["rules"]["sections"]))
+            .replace("__NLAW__", str(s["rules"]["laws"]))
+            .replace("__BUILT__", date.today().isoformat()))
+    out = ROOT / "index.html"
+    out.write_text(html, encoding="utf-8")
+    print(f"生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB)")
+
+
+if __name__ == "__main__":
+    main()

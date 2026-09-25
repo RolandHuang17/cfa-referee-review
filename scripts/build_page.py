@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
-"""生成合集页面 index.html：播放列表+大详情双栏布局（单文件离线可用）
+"""生成各赛季合集页 season-2025.html / season-2024.html（单文件离线可用）
 布局: 单行顶栏 | 侧栏(分类/判定) | 播放列表(密集行) | 详情区(大视频+全文)
 内存: 详情区唯一<video>, 选中即载入, 切换即替换
+用法: python build_page.py [2025] [2024]   # 不带参数=两个赛季都构建
 """
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
@@ -18,6 +20,33 @@ NAME_VARIANTS = {
     "广西平果国晶": "广西平果",
     "大连英博海发": "大连英博",
     "温州俱乐部中胤": "温州俱乐部",
+    # —— 2024 赛季变体 ——
+    "广西平果哈嘹": "广西平果",
+    "浙江": "浙江俱乐部绿城",
+}
+
+# 赛季配置（输出文件/存储键/期数/统计页链接）
+SEASONS = {
+    "2025": {
+        "out": "season-2025.html",
+        "title": "2025赛季中国足协裁判评议全集 · 新裁判教学合集",
+        "brand": "2025评议合集",
+        "stats": "stats-2025.html",
+        "issueCount": 32,
+        "issueDesc": "2025赛季第1—32期（第1—23期原发布于赛事新闻栏目）",
+        "favKey": "cfa2025.fav",
+        "noteKey": "cfa2025.notes",
+    },
+    "2024": {
+        "out": "season-2024.html",
+        "title": "2024赛季中国足协裁判评议全集 · 新裁判教学合集",
+        "brand": "2024评议合集",
+        "stats": "stats-2024.html",
+        "issueCount": 27,
+        "issueDesc": "2024赛季第1—27期",
+        "favKey": "cfa2024.fav",
+        "noteKey": "cfa2024.notes",
+    },
 }
 # comp 安全网归一（parse_issues 已修复，此处兜底）
 COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
@@ -50,17 +79,20 @@ CATEGORY_NOTES = {
 }
 
 ISSUE_NOTES = {
-    9: "本期标题认定6例，其中判例三为VAR越位划线错误（评议组对裁判员判定不予认定），本合集计入VAR错误统计。",
-    26: "本期判例七（头撞事件）当期未认定，第27期补充认定为漏判红牌；本合集将该错漏判随原判例计入第26期。",
-    27: "本期文章的认定1例为对第26期判例七的补充认定（已计入第26期）；本期新增判例二经评议为支持原判。",
+    "2025": {
+        9: "本期标题认定6例，其中判例三为VAR越位划线错误（评议组对裁判员判定不予认定），本合集计入VAR错误统计。",
+        26: "本期判例七（头撞事件）当期未认定，第27期补充认定为漏判红牌；本合集将该错漏判随原判例计入第26期。",
+        27: "本期文章的认定1例为对第26期判例七的补充认定（已计入第26期）；本期新增判例二经评议为支持原判。",
+    },
+    "2024": {},
 }
 
 VERDICT_NAME = {"wrong": "错漏判", "correct": "支持原判", "pending": "不予认定"}
 VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
-def build_data():
-    data = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))
+def build_data(season):
+    data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
     cases = []
     for c in data["cases"]:
         comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
@@ -89,9 +121,13 @@ def build_data():
     issues = {i["no"]: {"title": i["title"], "date": i["date"], "url": i["url"],
                         "expected": i["expected_wrong"], "summary": i.get("summary", "")}
               for i in data["issues"]}
-    return {"cases": cases, "issues": issues, "crests": crests,
+    cfg = SEASONS[season]
+    return {"cfg": {"season": season, "favKey": cfg["favKey"], "noteKey": cfg["noteKey"],
+                    "issueCount": cfg["issueCount"], "issueDesc": cfg["issueDesc"],
+                    "stats": cfg["stats"]},
+            "cases": cases, "issues": issues, "crests": crests,
             "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
-            "notes": CATEGORY_NOTES, "issueNotes": ISSUE_NOTES,
+            "notes": CATEGORY_NOTES, "issueNotes": ISSUE_NOTES.get(season, {}),
             "verdictNames": VERDICT_NAME, "varNames": VAR_NAME,
             "built": date.today().isoformat()}
 
@@ -101,7 +137,7 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2025赛季中国足协裁判评议全集 · 新裁判教学合集</title>
+<title>__TITLE__</title>
 <style>
 :root{
   --bg:#eef2f7; --card:#fff; --ink:#1c2733; --muted:#5c6b7a; --line:#e3e9f0;
@@ -117,7 +153,10 @@ body{margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
 /* ---------- 顶栏(单行) ---------- */
 .topbar{height:54px;display:flex;align-items:center;gap:10px;padding:0 14px;
   background:linear-gradient(90deg,#0b3d73,#0b4c8c 60%,#1266b5);color:#fff;
-  position:relative;z-index:40}
+  position:relative;z-index:40;overflow-x:auto;scrollbar-width:none}
+.topbar::-webkit-scrollbar{display:none}
+.topbar a.tbtn{text-decoration:none}
+.topbar .tbtn.cur{background:rgba(255,255,255,.28);font-weight:700}
 .topbar .brand{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
 .topbar .brand b{font-size:17px;letter-spacing:.5px}
 .topbar .brand span{font-size:12.5px;color:#cfe2f5}
@@ -286,10 +325,13 @@ body.sb-off .sidebar{display:none}
 </head>
 <body>
 <header class="topbar">
-  <div class="brand"><b>2025评议合集</b><span id="totalBadge"></span></div>
+  <div class="brand"><b>__BRAND__</b><span id="totalBadge"></span></div>
   <input id="fSearch" type="search" placeholder="搜索：球队、判例内容、关键词…  (按 / 聚焦)">
+  <a class="tbtn" href="index.html">🏠 首页</a>
+  <a class="tbtn" href="season-2024.html">24评议</a>
+  <a class="tbtn" href="season-2025.html">25评议</a>
+  <a class="tbtn" href="__STATS__">📊 得失盘点</a>
   <a class="tbtn" href="rules.html">📖 竞赛规则</a>
-  <button class="tbtn" id="btnStats">📊 统计</button>
   <button class="tbtn" id="btnHelp">？说明</button>
   <button class="tbtn" id="btnSb" title="收起/展开侧栏">☰ 侧栏</button>
 </header>
@@ -311,7 +353,7 @@ body.sb-off .sidebar{display:none}
     <button class="side-link" id="btnExport">⬇ 导出收藏/笔记 (JSON)</button>
     <button class="side-link" id="btnImport" style="border:none;width:calc(100% - 12px);text-align:left">⬆ 导入收藏/笔记</button>
     <input type="file" id="importFile" accept=".json,application/json" style="display:none">
-    <a class="side-link" href="stats.html">📊 各队得失盘点（错漏判影响统计）→</a>
+    <a class="side-link" href="__STATS__">📊 各队得失盘点（错漏判影响统计）→</a>
   </aside>
 
   <section class="plist">
@@ -377,8 +419,9 @@ DATA.cases.forEach(c => bySeq[c.seq] = c);
 // 必须在applyFilter的自动选中改写hash之前捕获初始锚点
 const initialHashSeq = (location.hash.match(/^#case-(\d+)$/)||[])[1];
 
-// ---------- 收藏与笔记（localStorage 持久化） ----------
-const FAV_KEY = "cfa2025.fav", NOTE_KEY = "cfa2025.notes";
+// ---------- 收藏与笔记（localStorage 持久化，键按赛季隔离） ----------
+const CFG = DATA.cfg;
+const FAV_KEY = CFG.favKey, NOTE_KEY = CFG.noteKey;
 const TAG_PRESETS = ["精选", "有疑问", "尺度标杆", "易错点", "课堂讨论"];
 let fav = {}, notes = {};
 try { fav = JSON.parse(localStorage.getItem(FAV_KEY) || "{}") || {}; } catch(_) { fav = {}; }
@@ -412,6 +455,10 @@ for (const c of DATA.cases) verCount[c.v]++;
 
 document.getElementById("totalBadge").textContent =
   `${DATA.cases.length}例 · 错漏判${verCount.wrong} · 支持原判${verCount.correct}`;
+const badge = document.getElementById("totalBadge");
+badge.style.cursor = "pointer";
+badge.title = "点击查看分类统计总表";
+badge.onclick = ()=>openModal("modalStats");
 document.getElementById("catList").innerHTML =
   `<button class="cat-item on" data-cat=""><span class="nm">全部分类</span><b>${DATA.cases.length}</b></button>` +
   CATS.filter(k=>catCount[k.id]).map(k=>
@@ -430,7 +477,7 @@ const fSearch = document.getElementById("fSearch");
 
 const COMP_ORDER = [["中超联赛","中超"],["中甲联赛","中甲"],["中乙联赛","中乙"],
                     ["女超联赛","女超"],["女甲联赛","女甲"],["中国足协杯","足协杯"],
-                    ["全运会","全运会"]];
+                    ["全运会","全运会"],["三大球运动会","三大球"]];
 const COMP_SHORT = Object.fromEntries(COMP_ORDER);
 const teamComps = {};
 for (const c of DATA.cases) {
@@ -474,8 +521,9 @@ function renderSidebar(){
     `<button class="cat-item ${state.comp===""?"on":""}" data-comp=""><span class="nm">全部赛事</span><b>${DATA.cases.filter(c=>baseMatch(c,["comp","team"])).length}</b></button>` +
     COMP_ORDER.map(([full,short])=>{
       const n = DATA.cases.filter(c=>baseMatch(c,["comp","team"]) && c.comp===full).length;
-      return `<button class="cat-item ${state.comp===full?"on":""}" data-comp="${full}"><span class="nm">${short}</span><b>${n}</b></button>`;
-    }).join("");
+      return {full, short, n};
+    }).filter(x=>x.n>0 || state.comp===x.full)
+      .map(x=>`<button class="cat-item ${state.comp===x.full?"on":""}" data-comp="${x.full}"><span class="nm">${x.short}</span><b>${x.n}</b></button>`).join("");
   const teams = {};
   for (const c of DATA.cases) {
     if (!baseMatch(c,"team")) continue;
@@ -487,7 +535,7 @@ function renderSidebar(){
       `<button class="cat-item ${state.team===t?"on":""}" data-team="${esc(t)}">${teamBadge(t)}<span class="nm">${esc(t)}</span><b>${n}</b></button>`).join("") ||
     `<div style="font-size:12.5px;color:var(--muted);padding:6px 8px">该赛事下无判例</div>`;
   document.getElementById("issueList").innerHTML =
-    Array.from({length:32},(_,k)=>k+1).map(i=>{
+    Array.from({length:CFG.issueCount},(_,k)=>k+1).map(i=>{
       const n = DATA.cases.filter(c=>baseMatch(c,"issue") && String(c.issue)===String(i)).length;
       return `<button class="cat-item ${String(state.issue)===String(i)?"on":""}" data-issue="${i}"><span class="nm">第${i}期</span><b>${n}</b></button>`;
     }).join("");
@@ -715,11 +763,11 @@ document.getElementById("favList").addEventListener("click", e=>{
   applyFilter();
 });
 document.getElementById("btnExport").onclick = ()=>{
-  const blob = new Blob([JSON.stringify({fav, notes, exported: new Date().toISOString(), app:"cfa-referee-review-2025"}, null, 1)],
+  const blob = new Blob([JSON.stringify({fav, notes, exported: new Date().toISOString(), app:"cfa-referee-review-"+CFG.season}, null, 1)],
     {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
-  a.download = "cfa2025-收藏与笔记.json";
+  a.download = CFG.season + "赛季-收藏与笔记.json";
   a.click();
   URL.revokeObjectURL(a.href);
 };
@@ -796,7 +844,6 @@ document.getElementById("vswRow").addEventListener("click", e=>{
 document.getElementById("btnSb").onclick = ()=>{
   document.body.classList.toggle("sb-off");
 };
-document.getElementById("btnStats").onclick = ()=>openModal("modalStats");
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
 document.querySelectorAll("[data-close]").forEach(b=>
   b.onclick = ()=>b.closest(".modal-mask").classList.remove("open"));
@@ -850,9 +897,9 @@ const hasPen = t => (t||[]).includes("点球");
     <p><b>判定口径：</b>「错漏判」指评议组认定裁判员（或助理裁判员）判罚决定错误/漏判；「支持原判」指评议组支持临场决定；「不予认定」指现有视频无法判断、评议组不做认定。VAR错误单独标注。</p>
     <p><b>操作方法：</b>左侧自上而下：赛事（中超/中甲/中乙等）→ 球队（跨赛事聚合，如广州豹同时列出其中甲与足协杯判例）→ 评议期数（按原网页一期一期浏览，选中后列表头显示该期官方标题）→ 犯规分类 → 判定 → 我的收藏；中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；「☰ 侧栏」可收起侧栏获得更宽画面。</p>
     <p><b>收藏与笔记：</b>在详情区点「☆ 收藏」收藏判例并可打多个标签（精选/有疑问/尺度标杆/易错点/课堂讨论/自定义），笔记自动保存。收藏的判例在列表中显示★，可通过左侧「我的收藏」按标签筛选。数据存于浏览器 localStorage；用「导出/导入」按钮可在不同浏览器或 file:// 与 http:// 两种打开方式之间同步。</p>
-    <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，2025赛季第1—32期（第1—23期原发布于赛事新闻栏目）。每条判例附原文链接。</p>
-    <p><b>期数口径注释：</b>${issNotes}。其余各期与官方标题认定数一致。</p>
-    <p><b>离线使用：</b>将 index.html 与 videos 文件夹放在一起，双击即可离线学习；配套页面 <a href="stats.html" target="_blank">stats.html</a> 为各队得失盘点。</p>
+    <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，${CFG.issueDesc}。每条判例附原文链接。</p>
+    <p><b>期数口径注释：</b>${issNotes ? issNotes + "。" : ""}其余各期与官方标题认定数一致。</p>
+    <p><b>离线使用：</b>将本页 HTML 与 videos 文件夹放在一起，双击即可离线学习；配套页面 <a href="${CFG.stats}" target="_blank">${CFG.stats}</a> 为各队得失盘点。</p>
     <p><b>声明：</b>本合集为教学研究用途，判罚认定权属于中国足协裁判委员会评议组。</p>`;
 }
 
@@ -891,15 +938,27 @@ window.addEventListener("hashchange", () => {
 """
 
 
-def main():
-    data = build_data()
+def build_season(season):
+    cfg = SEASONS[season]
+    data = build_data(season)
     data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     html = (HTML
             .replace("__DATA__", data_js)
-            .replace("__BUILT__", date.today().isoformat()))
-    out = ROOT / "index.html"
+            .replace("__TITLE__", cfg["title"])
+            .replace("__BRAND__", cfg["brand"])
+            .replace("__STATS__", cfg["stats"]))
+    out = ROOT / cfg["out"]
     out.write_text(html, encoding="utf-8")
-    print(f"生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB)")
+    print(f"[{season}] 生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB, "
+          f"{len(data['cases'])}判例)")
+
+
+def main():
+    seasons = sys.argv[1:] or ["2025", "2024"]
+    for season in seasons:
+        if season not in SEASONS:
+            raise SystemExit(f"未知赛季: {season}（可选: {'/'.join(SEASONS)}）")
+        build_season(season)
 
 
 if __name__ == "__main__":

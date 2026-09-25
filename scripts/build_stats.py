@@ -1,17 +1,35 @@
 # -*- coding: utf-8 -*-
-"""生成错漏判影响统计页 stats.html（单文件离线可用，风格与 index.html 一致）
-数据: data/cases.json + data/impact.json + data/match_scores.json
+"""生成错漏判影响统计页 stats-2025.html / stats-2024.html（单文件离线可用）
+用法: python build_stats.py [2025] [2024]   # 不带参数=两个赛季都构建
+数据: data/cases-{s}.json + data/impact[-{s}].json + data/match[-]scores[-{s}].json
 口径:
   - 确定得失球修正仅含进球判定类错误（漏判进球/对方进球应无效）
   - 点球为机会类, 不折算进球
   - 结果影响判定: 修正比分后受影响球队积分提高 -> "结果或被改变";
     未提高但存在点球/红牌机会因素且修正后分差<=1 -> "存在影响可能"; 否则"未改变结果"
+  - 比分缺失的场次显示"待补"并优雅降级
 """
 import json
+import sys
 from datetime import date
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
+
+SEASONS = {
+    "2025": {
+        "cases": "cases-2025.json", "impact": "impact.json",
+        "scores": "match_scores.json",
+        "out": "stats-2025.html", "page": "season-2025.html",
+        "season": "2025", "issueDesc": "2025赛季第1—32期",
+    },
+    "2024": {
+        "cases": "cases-2024.json", "impact": "impact-2024.json",
+        "scores": "match-scores-2024.json",
+        "out": "stats-2024.html", "page": "season-2024.html",
+        "season": "2024", "issueDesc": "2024赛季第1—27期",
+    },
+}
 
 # type -> (本队进球修正, 对方进球修正)
 GOAL_DELTA = {"denied_goal": (1, 0), "opp_goal_should_disallow": (0, -1)}
@@ -27,6 +45,7 @@ TYPE_LABEL = {
     "wrong_yellow_self": "错判本队黄牌",
     "wrong_foul_called_self": "错判犯规",
     "wrong_offside_self": "误判越位",
+    "missed_foul_called": "漏判犯规（漏吹）",
 }
 TYPE_LABEL_BENEFIT = {
     "denied_goal": "取消对方应得进球",
@@ -39,18 +58,21 @@ TYPE_LABEL_BENEFIT = {
     "wrong_yellow_self": "对方被错罚黄牌（获益）",
     "wrong_foul_called_self": "对方被错判犯规",
     "wrong_offside_self": "对方被误判越位",
+    "missed_foul_called": "漏判本队犯规（获益）",
 }
-LEAGUE_SHORT = {"中超联赛": "中超", "中甲联赛": "中甲", "中乙联赛": "中乙"}
+LEAGUE_SHORT = {"中超联赛": "中超", "中甲联赛": "中甲", "中乙联赛": "中乙",
+                "中国足协杯": "足协杯", "足协杯": "足协杯"}
 TYPE_ORDER = ["denied_goal", "opp_goal_should_disallow", "missed_penalty",
               "wrong_penalty_against", "missed_red_opponent", "wrong_red_self",
               "missed_yellow_opponent", "wrong_yellow_self",
-              "wrong_foul_called_self", "wrong_offside_self"]
+              "wrong_foul_called_self", "missed_foul_called", "wrong_offside_self"]
 
 
-def load():
-    cases = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))
-    impact = json.loads((ROOT / "data" / "impact.json").read_text(encoding="utf-8"))
-    scores = json.loads((ROOT / "data" / "match_scores.json").read_text(encoding="utf-8"))["scores"]
+def load(season):
+    cfg = SEASONS[season]
+    cases = json.loads((ROOT / "data" / cfg["cases"]).read_text(encoding="utf-8"))
+    impact = json.loads((ROOT / "data" / cfg["impact"]).read_text(encoding="utf-8"))
+    scores = json.loads((ROOT / "data" / cfg["scores"]).read_text(encoding="utf-8"))["scores"]
     cmap = {c["seq"]: c for c in cases["cases"]}
     return impact, scores, cmap
 
@@ -100,7 +122,8 @@ def build_matches(impact, scores, cmap):
         has_opp_factor = any(i["type"] in (
             "missed_penalty", "wrong_penalty_against", "missed_red_opponent",
             "wrong_red_self", "missed_yellow_opponent", "wrong_yellow_self",
-            "wrong_foul_called_self", "wrong_offside_self") for i in m["items"])
+            "wrong_foul_called_self", "missed_foul_called", "wrong_offside_self")
+            for i in m["items"])
         for t in {i["team"] for i in m["items"]}:
             act_pts = {"win": 3, "draw": 1, "loss": 0}[
                 "win" if (act_res == "win" and t == m["home"]) or
@@ -168,8 +191,8 @@ def team_stats(matches, view):
     return teams
 
 
-def build_data():
-    impact, scores, cmap = load()
+def build_data(season):
+    impact, scores, cmap = load(season)
     matches = build_matches(impact, scores, cmap)
     victims = team_stats(matches, "victim")
     benefits = team_stats(matches, "benefit")
@@ -178,7 +201,7 @@ def build_data():
 
     issues = {i["no"]: i for i in impact.get("issues", [])} if "issues" in impact else {}
     # 补充期数信息用于链接展示
-    cases = json.loads((ROOT / "data" / "cases.json").read_text(encoding="utf-8"))["cases"]
+    cases = json.loads((ROOT / "data" / SEASONS[season]["cases"]).read_text(encoding="utf-8"))["cases"]
     cmap2 = {c["seq"]: c for c in cases}
     for view_teams in (victims, benefits):
         for t in view_teams.values():
@@ -213,6 +236,9 @@ def build_data():
 
     return {
         "built": date.today().isoformat(),
+        "season": season,
+        "page": SEASONS[season]["page"],
+        "issueDesc": SEASONS[season]["issueDesc"],
         "overview": overview,
         "typeCounts": type_counts,
         "typeOrder": TYPE_ORDER,
@@ -221,7 +247,7 @@ def build_data():
         "victims": victims,
         "benefits": benefits,
         "crests": crests,
-        "scoreSource": json.loads((ROOT / "data" / "match_scores.json")
+        "scoreSource": json.loads((ROOT / "data" / SEASONS[season]["scores"])
                                   .read_text(encoding="utf-8"))["note"],
     }
 
@@ -231,7 +257,7 @@ HTML = r"""<!DOCTYPE html>
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2025赛季错漏判影响统计 · 各队得失盘点</title>
+<title>__SEASON__赛季错漏判影响统计 · 各队得失盘点</title>
 <style>
 :root{
   --bg:#f4f6f9; --card:#fff; --ink:#1c2733; --muted:#5c6b7a; --line:#e3e9f0;
@@ -310,10 +336,11 @@ footer a{color:#7fb3e0}
 <body>
 <header class="top">
   <div class="wrap">
-    <h1>2025赛季官方认定错漏判 · 各队得失盘点</h1>
+    <h1>__SEASON__赛季官方认定错漏判 · 各队得失盘点</h1>
     <div class="sub">
-      仅统计男子中超/中甲/中乙 · 共67例错漏判 · 依据评议组认定结论与最终比分修正比对 ·
-      <a href="index.html">← 返回判例合集</a> · <a href="rules.html">📖 竞赛规则</a> · 数据生成于 __BUILT__
+      仅统计男子中超/中甲/中乙/足协杯 · 依据评议组认定结论与最终比分修正比对 ·
+      <a href="index.html">🏠 首页</a> · <a href="season-2024.html">24评议</a> · <a href="season-2025.html">25评议</a> ·
+      <a href="__PAGE__">← 返回判例合集</a> · <a href="rules.html">📖 竞赛规则</a> · 数据生成于 __BUILT__
     </div>
     <div class="statbar" id="statbar"></div>
   </div>
@@ -329,6 +356,7 @@ footer a{color:#7fb3e0}
       <button class="lg-chip" data-lg="中超">中超</button>
       <button class="lg-chip" data-lg="中甲">中甲</button>
       <button class="lg-chip" data-lg="中乙">中乙</button>
+      <button class="lg-chip" data-lg="足协杯">足协杯</button>
     </div>
   </div>
 </div>
@@ -343,8 +371,8 @@ footer a{color:#7fb3e0}
 
 <footer>
   <div class="wrap">
-    <p><b>数据来源：</b>判例与认定结论来自中国足协官网裁判评议（2025赛季第1—32期，详见
-      <a href="index.html">判例合集</a>）；最终比分来自公开赛程赛果检索核对（懂球帝、直播吧、新华社、中新网、俱乐部官网等）。</p>
+    <p><b>数据来源：</b>判例与认定结论来自中国足协官网裁判评议（${DATA.issueDesc}，详见
+      <a href="${DATA.page}">判例合集</a>）；最终比分来自公开赛程赛果检索核对（懂球帝、直播吧、新华社、中新网、俱乐部官网等），缺失比分以「待补」标注。</p>
     <p id="scoreNote"></p>
     <p><b>声明：</b>本页为教学研究用途的客观盘点，错漏判认定权属于中国足协裁判委员会评议组；比分修正为假设性推演，仅用于说明判罚影响的量级与方向。</p>
   </div>
@@ -373,7 +401,7 @@ const TC = {
   "missed_penalty":"tc-pen","wrong_penalty_against":"tc-pen",
   "missed_red_opponent":"tc-red","wrong_red_self":"tc-red",
   "missed_yellow_opponent":"tc-yellow","wrong_yellow_self":"tc-yellow",
-  "wrong_foul_called_self":"tc-foul","wrong_offside_self":"tc-foul"};
+  "wrong_foul_called_self":"tc-foul","missed_foul_called":"tc-foul","wrong_offside_self":"tc-foul"};
 const RS = {
   changed:['r-changed','结果或被改变'],
   possible:['r-possible','存在影响可能'],
@@ -414,7 +442,7 @@ function renderTeam(name, t){
       ${d.match_note?`<span class="badge">${esc(d.match_note)}</span>`:""}
       ${corrLine}
       <span class="badge">${label}</span>
-      <a href="index.html#case-${d.seq}" target="_blank">期${String(d.issue).padStart(2,'0')}判例${d.case_no} ↗</a>
+      <a href="${DATA.page}#case-${d.seq}" target="_blank">期${String(d.issue).padStart(2,'0')}判例${d.case_no} ↗</a>
       <span class="note">${esc(d.note)}</span>
     </div>`;
   }).join("");
@@ -473,20 +501,30 @@ render();
 """
 
 
-def main():
-    data = build_data()
+def build_season(season):
+    cfg = SEASONS[season]
+    data = build_data(season)
     html = HTML.replace("__DATA__",
                         json.dumps(data, ensure_ascii=False, separators=(",", ":")))
-    html = html.replace("__BUILT__", date.today().isoformat())
-    out = ROOT / "stats.html"
+    html = (html.replace("__SEASON__", season)
+                .replace("__PAGE__", cfg["page"])
+                .replace("__BUILT__", date.today().isoformat()))
+    out = ROOT / cfg["out"]
     out.write_text(html, encoding="utf-8")
     ov = data["overview"]
-    print(f"生成 {out} ({len(html.encode('utf-8'))/1024:.0f} KB)")
-    print(f"总览: {ov['cases']}例 / {ov['matches']}场 / {ov['teams']}队 / "
+    print(f"[{season}] 生成 {out} ({len(html.encode('utf-8'))/1024:.0f} KB)")
+    print(f"  总览: {ov['cases']}例 / {ov['matches']}场 / {ov['teams']}队 / "
           f"确定得失球{ov['swing']} / 点球{ov['penalty']} / 红{ov['red']}黄{ov['yellow']} / "
           f"或改变{ov['changed']} / 可能{ov['possible']}")
-    # 三重核对: 类型分布
-    print("类型分布:", {k: ov.get(k) for k in []} or data["typeCounts"])
+    print("  类型分布:", data["typeCounts"])
+
+
+def main():
+    seasons = sys.argv[1:] or ["2025", "2024"]
+    for season in seasons:
+        if season not in SEASONS:
+            raise SystemExit(f"未知赛季: {season}（可选: {'/'.join(SEASONS)}）")
+        build_season(season)
 
 
 if __name__ == "__main__":

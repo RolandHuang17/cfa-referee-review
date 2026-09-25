@@ -7,6 +7,7 @@
 import json
 import re
 from pathlib import Path
+from theme import inject_theme
 
 import pymupdf
 import opencc
@@ -731,8 +732,8 @@ document.getElementById("importFileN").addEventListener("change", e=>{
 
 def build_html_page(sections):
     data = {"season": "2026/27", "sections": sections}
-    html = RULES_TEMPLATE.replace("__DATA__",
-        json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    html = inject_theme(RULES_TEMPLATE.replace("__DATA__",
+        json.dumps(data, ensure_ascii=False, separators=(",", ":"))))
     SITE.mkdir(parents=True, exist_ok=True)
     RULES_HTML.write_text(html, encoding="utf-8")
     print(f"生成 {RULES_HTML}  ({len(html.encode('utf-8'))/1024:.0f} KB)")

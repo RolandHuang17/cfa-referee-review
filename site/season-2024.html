@@ -195,7 +195,56 @@ body.sb-off .sidebar{display:none}
   .topbar .brand span{display:none}
 }
 </style>
-</head>
+<style data-cfa-theme>
+:root{
+  --cfa-navy:#082b52;--cfa-blue:#0f5da8;--cfa-ink:#15263a;--cfa-muted:#687b91;
+  --cfa-bg:#eef3f8;--cfa-card:#fff;--cfa-line:#dce5ee;--cfa-soft:#f6f9fc;
+  --cfa-shadow:0 14px 34px rgba(22,57,91,.10);--cfa-radius:14px;
+}
+html{background:var(--cfa-bg)}
+body{color:var(--cfa-ink);background:var(--cfa-bg);font-family:"Microsoft YaHei","PingFang SC","Noto Sans CJK SC",system-ui,sans-serif}
+button,a,input,select{font:inherit}
+.topbar{height:66px!important;padding:0 24px!important;background:linear-gradient(110deg,#061f3c,#0a4178 58%,#126ab6)!important;box-shadow:0 4px 18px rgba(4,31,59,.2);gap:12px!important}
+.topbar .brand b{font-size:18px!important;letter-spacing:.3px!important}.topbar .brand span{color:#c3d9ee!important}
+.topbar .tbtn{border:1px solid transparent!important;border-radius:9px!important;padding:7px 11px!important;color:#dcecff!important;transition:.18s ease}
+.topbar .tbtn:hover,.topbar .tbtn.cur{background:rgba(255,255,255,.16)!important;border-color:rgba(255,255,255,.2)!important}
+.topbar input[type=search]{height:38px!important;border:1px solid rgba(255,255,255,.25)!important;background:rgba(255,255,255,.12)!important;color:#fff!important;border-radius:10px!important}
+.topbar input[type=search]::placeholder{color:#c4d7eb}
+.filterbar{padding:12px 22px 10px;background:rgba(255,255,255,.92);border-bottom:1px solid var(--cfa-line);box-shadow:0 2px 10px rgba(33,67,100,.05);position:relative;z-index:20}
+.filterbar .sidebar{height:auto!important;max-height:132px!important;overflow:auto!important;display:flex!important;align-items:center;gap:9px!important;padding:0!important;background:transparent!important;border:0!important;white-space:nowrap}
+.filterbar .side-h{font-size:11px!important;color:var(--cfa-muted)!important;padding:4px 3px!important;border:0!important;flex:none!important;background:transparent!important}
+.filterbar .sidebox{display:flex!important;align-items:center;gap:5px!important;margin:0!important;padding:0!important;flex:none!important}
+.filterbar .sidebox .cat-item,.filterbar .sidebox .ver-item,.filterbar .side-link{border:1px solid var(--cfa-line)!important;background:#fff!important;border-radius:8px!important;padding:5px 9px!important;min-height:30px!important;box-shadow:none!important}
+.filterbar .sidebox .cat-item.on,.filterbar .sidebox .ver-item.on{border-color:#7bb2e3!important;background:#edf6ff!important;color:var(--cfa-blue)!important}
+.filterbar .side-h:nth-of-type(n+5),.filterbar #favList,.filterbar #btnExport,.filterbar #btnImport,.filterbar a.side-link{display:none!important}
+.layout{height:calc(100vh - 210px)!important;min-height:520px;grid-template-columns:minmax(340px,400px) minmax(0,1fr)!important;grid-template-rows:1fr!important;background:var(--cfa-bg);gap:14px;padding:14px 18px 18px}
+.plist{grid-column:1!important;grid-row:1!important;border:1px solid var(--cfa-line)!important;border-radius:var(--cfa-radius)!important;box-shadow:var(--cfa-shadow);overflow:hidden!important;background:#fff!important}
+.plist-head{padding:13px 16px!important;background:linear-gradient(#fff,#f8fbfe)!important;border-bottom:1px solid var(--cfa-line)!important}
+.prow{padding:11px 14px!important;border-bottom:1px solid #edf2f6!important;transition:background .15s ease,box-shadow .15s ease}.prow:hover{background:#f6faff!important}.prow.sel{background:#eaf4ff!important;box-shadow:inset 3px 0 0 var(--cfa-blue)!important}
+.detail{grid-column:2!important;grid-row:1!important;padding:0 4px 24px 0!important;background:transparent!important}
+.mobile-back{display:none;border:0;background:transparent;color:var(--cfa-blue);font-weight:700;padding:8px 0 10px;cursor:pointer}
+.d-card{max-width:none!important;border:1px solid var(--cfa-line)!important;border-radius:var(--cfa-radius)!important;box-shadow:var(--cfa-shadow)!important;padding:22px 24px!important}
+.d-head{gap:9px!important}.d-head .match{font-size:24px!important;letter-spacing:.1px}.d-video{margin:18px 0 8px!important}.d-video video{border-radius:12px!important;box-shadow:0 10px 24px rgba(6,26,51,.18)}
+.d-nav button,.favbtn,.vsw{border-radius:9px!important;border-color:#c9d8e7!important}.d-nav button:hover{background:#eef6ff!important}
+.modal-mask{backdrop-filter:blur(4px);background:rgba(4,20,39,.62)!important}.modal{border-radius:var(--cfa-radius)!important;box-shadow:0 20px 60px rgba(0,0,0,.22)}
+body.sb-off .layout{grid-template-columns:minmax(340px,400px) minmax(0,1fr)!important}
+
+/* portal */
+body:has(.hero){background:linear-gradient(180deg,#e9f1f8 0,#f8fbfd 50%,#eef4f8 100%)}
+body:has(.hero) .topbar{height:70px!important}.hero{padding:36px 0 24px!important}.hero h1{font-size:42px!important;color:#0a315b!important;letter-spacing:0!important}.hero h1 em{background:linear-gradient(90deg,#0b4c8c,#2a8bdd)!important;-webkit-background-clip:text!important}.grid{gap:18px!important}.card{border:1px solid #d8e4ee!important;border-radius:18px!important;box-shadow:0 12px 30px rgba(20,62,99,.08)!important;background:rgba(255,255,255,.9)!important;padding:25px!important}.card:hover{transform:translateY(-5px);box-shadow:0 18px 36px rgba(20,62,99,.15)!important}.aux a{border-radius:14px!important;border:1px solid #d9e5ef!important;box-shadow:0 8px 22px rgba(20,62,99,.06)}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:24px 0}.steps div{display:grid;grid-template-columns:42px 1fr;column-gap:10px;align-items:center;padding:14px 16px;border:1px solid #dbe6ef;border-radius:12px;background:#fff}.steps b{grid-row:span 2;color:#2b82cf;font-size:22px}.steps span{font-weight:700;color:#173d66}.steps small{color:var(--cfa-muted);font-size:12px}
+
+/* stats and rules */
+body:has(.teamcard) .top{background:linear-gradient(110deg,#061f3c,#0a4178 58%,#126ab6)!important;padding:28px 20px 24px!important}.stat{border-radius:12px!important;background:rgba(255,255,255,.13)!important}.controls{box-shadow:0 3px 14px rgba(18,55,88,.08)!important}.viewbtn,.lg-chip{border-radius:9px!important}.teamcard{border-radius:14px!important;box-shadow:0 8px 22px rgba(18,55,88,.07)!important;border-color:#dce6ef!important}.teamcard:hover{border-color:#a7c6e2!important}.thead{padding-bottom:2px}
+body:has(.law-body) .topbar,body:has(.law-content) .topbar{height:66px!important}.law-content,.reader{max-width:850px!important;line-height:1.95!important}.law-sidebar,.toc{border-radius:12px!important;border:1px solid var(--cfa-line)!important;box-shadow:0 8px 20px rgba(18,55,88,.06)}
+
+@media (max-width:900px){
+  .topbar{padding:0 12px!important}.topbar .brand span,.topbar a.tbtn:nth-of-type(n+4){display:none!important}.filterbar{padding:9px 12px}.filterbar .sidebar{max-height:104px!important;flex-wrap:wrap;white-space:normal}.layout{height:calc(100vh - 185px)!important;grid-template-columns:1fr!important;padding:10px!important;display:block!important}.plist{height:100%;}.detail{display:none!important}.detail-open .plist{display:none!important}.detail-open .detail{display:block!important;height:100%;overflow:auto}.mobile-back{display:block}.d-card{padding:15px!important}.d-head .match{font-size:20px!important}.hero h1{font-size:30px!important}.wrap{padding-left:14px!important;padding-right:14px!important}
+}
+@media (max-width:960px){.steps{grid-template-columns:1fr}}
+@media (max-width:560px){.topbar .brand b{font-size:15px!important}.topbar input[type=search]{min-width:90px!important}.filterbar .side-h{display:none!important}.card{padding:20px!important}.hero{padding-top:24px!important}.hero h1{font-size:27px!important}}
+
+</style></head>
 <body>
 <header class="topbar">
   <div class="brand"><b>2024评议合集</b><span id="totalBadge"></span></div>
@@ -209,7 +258,7 @@ body.sb-off .sidebar{display:none}
   <button class="tbtn" id="btnSb" title="收起/展开侧栏">☰ 侧栏</button>
 </header>
 
-<div class="layout">
+<div class="filterbar">
   <aside class="sidebar" id="sidebar">
     <div class="side-h">赛事</div>
     <div id="compList"></div>
@@ -228,6 +277,9 @@ body.sb-off .sidebar{display:none}
     <input type="file" id="importFile" accept=".json,application/json" style="display:none">
     <a class="side-link" href="stats-2024.html">📊 各队得失盘点（错漏判影响统计）→</a>
   </aside>
+</div>
+
+<div class="layout">
 
   <section class="plist">
     <div class="plist-head" id="plistHead"><span id="issueTitle"></span><span>显示 <b id="shownCount">0</b> 例 · 点击行在右侧查看，<span class="kbd">↑</span><span class="kbd">↓</span> 切换</span></div>
@@ -235,6 +287,7 @@ body.sb-off .sidebar{display:none}
   </section>
 
   <section class="detail" id="detail">
+    <button class="mobile-back" id="mobileBack">← 返回判例列表</button>
     <div class="detail-empty" id="detailEmpty">← 从左侧列表选择判例开始学习</div>
     <div class="d-card" id="dcard" style="display:none">
       <div class="d-head" id="dHead"></div>
@@ -470,6 +523,8 @@ function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replac
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
+  if (window.matchMedia && window.matchMedia("(max-width:900px)").matches)
+    document.body.classList.add("detail-open");
   state.sel = seq;
   const iss = DATA.issues[c.issue];
   document.getElementById("detailEmpty").style.display = "none";
@@ -720,6 +775,7 @@ document.getElementById("vswRow").addEventListener("click", e=>{
 document.getElementById("btnSb").onclick = ()=>{
   document.body.classList.toggle("sb-off");
 };
+document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
 document.querySelectorAll("[data-close]").forEach(b=>
   b.onclick = ()=>b.closest(".modal-mask").classList.remove("open"));

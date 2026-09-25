@@ -15,6 +15,7 @@ from datetime import date
 from pathlib import Path
 
 from crest_catalog import load_catalog
+from theme import inject_theme
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -514,8 +515,8 @@ render();
 def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
-    html = HTML.replace("__DATA__",
-                        json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+    html = inject_theme(HTML.replace("__DATA__",
+                        json.dumps(data, ensure_ascii=False, separators=(",", ":"))))
     html = (html.replace("__SEASON__", season)
                 .replace("__PAGE__", cfg["page"])
                 .replace("__BUILT__", date.today().isoformat()))

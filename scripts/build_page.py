@@ -10,6 +10,7 @@ from datetime import date
 from pathlib import Path
 
 from crest_catalog import load_catalog, normalize_team
+from theme import inject_theme
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -332,7 +333,7 @@ body.sb-off .sidebar{display:none}
   <button class="tbtn" id="btnSb" title="收起/展开侧栏">☰ 侧栏</button>
 </header>
 
-<div class="layout">
+<div class="filterbar">
   <aside class="sidebar" id="sidebar">
     <div class="side-h">赛事</div>
     <div id="compList"></div>
@@ -351,6 +352,9 @@ body.sb-off .sidebar{display:none}
     <input type="file" id="importFile" accept=".json,application/json" style="display:none">
     <a class="side-link" href="__STATS__">📊 各队得失盘点（错漏判影响统计）→</a>
   </aside>
+</div>
+
+<div class="layout">
 
   <section class="plist">
     <div class="plist-head" id="plistHead"><span id="issueTitle"></span><span>显示 <b id="shownCount">0</b> 例 · 点击行在右侧查看，<span class="kbd">↑</span><span class="kbd">↓</span> 切换</span></div>
@@ -358,6 +362,7 @@ body.sb-off .sidebar{display:none}
   </section>
 
   <section class="detail" id="detail">
+    <button class="mobile-back" id="mobileBack">← 返回判例列表</button>
     <div class="detail-empty" id="detailEmpty">← 从左侧列表选择判例开始学习</div>
     <div class="d-card" id="dcard" style="display:none">
       <div class="d-head" id="dHead"></div>
@@ -593,6 +598,8 @@ function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replac
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
+  if (window.matchMedia && window.matchMedia("(max-width:900px)").matches)
+    document.body.classList.add("detail-open");
   state.sel = seq;
   const iss = DATA.issues[c.issue];
   document.getElementById("detailEmpty").style.display = "none";
@@ -843,6 +850,7 @@ document.getElementById("vswRow").addEventListener("click", e=>{
 document.getElementById("btnSb").onclick = ()=>{
   document.body.classList.toggle("sb-off");
 };
+document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
 document.querySelectorAll("[data-close]").forEach(b=>
   b.onclick = ()=>b.closest(".modal-mask").classList.remove("open"));
@@ -941,7 +949,7 @@ def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
     data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
-    html = (HTML
+    html = inject_theme(HTML
             .replace("__DATA__", data_js)
             .replace("__TITLE__", cfg["title"])
             .replace("__BRAND__", cfg["brand"])

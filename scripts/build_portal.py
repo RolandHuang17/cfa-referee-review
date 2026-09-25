@@ -5,6 +5,7 @@
 import json
 from datetime import date
 from pathlib import Path
+from theme import inject_theme
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -167,6 +168,12 @@ a{color:inherit}
     </a>
   </section>
 
+  <section class="steps">
+    <div><b>01</b><span>选择赛季</span><small>打开 2024 或 2025 评议合集</small></div>
+    <div><b>02</b><span>筛选判例</span><small>按赛事、球队、分类和判定查找</small></div>
+    <div><b>03</b><span>复盘记录</span><small>观看视频、收藏并记录学习笔记</small></div>
+  </section>
+
   <section class="aux">
     <a href="stats-2025.html">
       <div class="ai">📊</div>
@@ -201,7 +208,7 @@ a{color:inherit}
 
 def main():
     s = load_stats()
-    html = (HTML
+    html = inject_theme(HTML
             .replace("__N25__", str(s["2025"]["n"]))
             .replace("__W25__", str(s["2025"]["wrong"]))
             .replace("__V25__", str(s["2025"]["videos"]))

@@ -17,5 +17,3 @@ __pycache__/
 .mimosa/
 .zcode/
 .zcodeignore
-__pycache__/
-*.pyc

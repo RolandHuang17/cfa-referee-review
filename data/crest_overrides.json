@@ -1,0 +1,236 @@
+{
+ "上海海港": {
+  "path": "assets/crests/shanghai-haigang.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E4%B8%8A%E6%B5%B7%E6%B5%B7%E6%B8%AF",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "上海海港B队": {
+  "path": "assets/crests/team-004.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E4%B8%8A%E6%B5%B7%E6%B5%B7%E6%B8%AFB%E9%98%9F",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "上海海港富盛经开": {
+  "path": "assets/crests/shanghai-haigang.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E4%B8%8A%E6%B5%B7%E6%B5%B7%E6%B8%AF%E5%AF%8C%E7%9B%9B%E7%BB%8F%E5%BC%80",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "上海申花": {
+  "path": "assets/crests/shenhua.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E4%B8%8A%E6%B5%B7%E7%94%B3%E8%8A%B1",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "云南玉昆": {
+  "path": "assets/crests/yunnan-yukun.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E4%BA%91%E5%8D%97%E7%8E%89%E6%98%86",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "北京东方雨虹女足": {
+  "path": "assets/crests/team-011.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%8C%97%E4%BA%AC%E4%B8%9C%E6%96%B9%E9%9B%A8%E8%99%B9%E5%A5%B3%E8%B6%B3",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "北京国安": {
+  "path": "assets/crests/beijing-guoan.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%8C%97%E4%BA%AC%E5%9B%BD%E5%AE%89",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "北京理工": {
+  "path": "assets/crests/beijing-ligong.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%8C%97%E4%BA%AC%E7%90%86%E5%B7%A5",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "北京雨虹修缮女足": {
+  "path": "assets/crests/team-014.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%8C%97%E4%BA%AC%E9%9B%A8%E8%99%B9%E4%BF%AE%E7%BC%AE%E5%A5%B3%E8%B6%B3",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "南通支云": {
+  "path": "assets/crests/nantong-zhiyun.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%8D%97%E9%80%9A%E6%94%AF%E4%BA%91",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "大连英博": {
+  "path": "assets/crests/dalian-yingbo.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%A4%A7%E8%BF%9E%E8%8B%B1%E5%8D%9A",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "大连鲲城": {
+  "path": "assets/crests/team-020.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%A4%A7%E8%BF%9E%E9%B2%B2%E5%9F%8E",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "天津圣德女足": {
+  "path": "assets/crests/team-021.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%A4%A9%E6%B4%A5%E5%9C%A3%E5%BE%B7%E5%A5%B3%E8%B6%B3",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "天津津门虎": {
+  "path": "assets/crests/tianjin-jinmenhu.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%A4%A9%E6%B4%A5%E6%B4%A5%E9%97%A8%E8%99%8E",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "定南赣联": {
+  "path": "assets/crests/team-023.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%AE%9A%E5%8D%97%E8%B5%A3%E8%81%94",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "山东泰山": {
+  "path": "assets/crests/shandong-taishan.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%B1%B1%E4%B8%9C%E6%B3%B0%E5%B1%B1",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "山东泰山B队": {
+  "path": "assets/crests/shandong-taishan.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%B1%B1%E4%B8%9C%E6%B3%B0%E5%B1%B1B%E9%98%9F",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "广西平果": {
+  "path": "assets/crests/guangxi-pingguo.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%B9%BF%E8%A5%BF%E5%B9%B3%E6%9E%9C",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "广西恒宸": {
+  "path": "assets/crests/guangxi-hengchen.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E5%B9%BF%E8%A5%BF%E6%81%92%E5%AE%B8",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "成都蓉城": {
+  "path": "assets/crests/chengdu-rongcheng.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%88%90%E9%83%BD%E8%93%89%E5%9F%8E",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "成都蓉城B队": {
+  "path": "assets/crests/chengdu-rongcheng.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%88%90%E9%83%BD%E8%93%89%E5%9F%8EB%E9%98%9F",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "杭州临平吴越": {
+  "path": "assets/crests/hangzhou-linpingwuyue.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%9D%AD%E5%B7%9E%E4%B8%B4%E5%B9%B3%E5%90%B4%E8%B6%8A",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "梅州客家": {
+  "path": "assets/crests/meizhou-kejia.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%A2%85%E5%B7%9E%E5%AE%A2%E5%AE%B6",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "武汉三镇": {
+  "path": "assets/crests/wuhan-sanzhen.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%AD%A6%E6%B1%89%E4%B8%89%E9%95%87",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "武汉三镇B队": {
+  "path": "assets/crests/wuhan-sanzhen.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%AD%A6%E6%B1%89%E4%B8%89%E9%95%87B%E9%98%9F",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "江西庐山": {
+  "path": "assets/crests/jiangxi-lushan.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B1%9F%E8%A5%BF%E5%BA%90%E5%B1%B1",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "河北": {
+  "path": "assets/crests/team-058.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B2%B3%E5%8C%97%E8%B6%B3%E7%90%83%E4%BF%B1%E4%B9%90%E9%83%A8",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "河南俱乐部": {
+  "path": "assets/crests/henan.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B2%B3%E5%8D%97%E4%BF%B1%E4%B9%90%E9%83%A8",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "浙江俱乐部绿城": {
+  "path": "assets/crests/zhejiang-greentown.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B5%99%E6%B1%9F%E4%BF%B1%E4%B9%90%E9%83%A8%E7%BB%BF%E5%9F%8E",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "深圳二零二八": {
+  "path": "assets/crests/shenzhen-2028.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B7%B1%E5%9C%B3%E4%BA%8C%E9%9B%B6%E4%BA%8C%E5%85%AB",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "深圳新鹏城": {
+  "path": "assets/crests/shenzhen-xinpengcheng.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B7%B1%E5%9C%B3%E6%96%B0%E9%B9%8F%E5%9F%8E",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "深圳青年人": {
+  "path": "assets/crests/shenzhen-qingnianren.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B7%B1%E5%9C%B3%E9%9D%92%E5%B9%B4%E4%BA%BA",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "湖北青年星": {
+  "path": "assets/crests/hubei-qingnianxing.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E6%B9%96%E5%8C%97%E9%9D%92%E5%B9%B4%E6%98%9F%E8%B6%B3%E7%90%83%E4%BF%B1%E4%B9%90%E9%83%A8",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "苏州东吴": {
+  "path": "assets/crests/suzhou-dongwu.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E8%8B%8F%E5%B7%9E%E4%B8%9C%E5%90%B4",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "长春亚泰": {
+  "path": "assets/crests/changchun-yatai.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E9%95%BF%E6%98%A5%E4%BA%9A%E6%B3%B0",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "陕西联合": {
+  "path": "assets/crests/shaanxi-lianhe.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E9%99%95%E8%A5%BF%E8%81%94%E5%90%88",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "青岛海牛": {
+  "path": "assets/crests/qingdao-hainiu.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E9%9D%92%E5%B2%9B%E6%B5%B7%E7%89%9B",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ },
+ "青岛红狮": {
+  "path": "assets/crests/team-095.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E9%9D%92%E5%B2%9B%E7%BA%A2%E7%8B%AE%E8%B6%B3%E7%90%83%E4%BF%B1%E4%B9%90%E9%83%A8",
+  "source_type": "wikipedia-image",
+  "status": "verified"
+ },
+ "青岛西海岸": {
+  "path": "assets/crests/qingdao-xihaian.png",
+  "source_url": "https://zh.wikipedia.org/wiki/%E9%9D%92%E5%B2%9B%E8%A5%BF%E6%B5%B7%E5%B2%B8",
+  "source_type": "wikipedia-article",
+  "status": "verified"
+ }
+}

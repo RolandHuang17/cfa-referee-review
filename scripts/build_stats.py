@@ -15,7 +15,7 @@ from datetime import date
 from pathlib import Path
 
 from crest_catalog import load_catalog
-from theme import inject_theme
+from theme import inject_theme, icon, js_icons, topbar
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -263,91 +263,95 @@ HTML = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__SEASON__赛季错漏判影响统计 · 各队得失盘点</title>
 <style>
-:root{
-  --bg:#f4f6f9; --card:#fff; --ink:#1c2733; --muted:#5c6b7a; --line:#e3e9f0;
-  --brand:#0b4c8c; --brand2:#1266b5;
-  --red:#c0392b; --redbg:#fdeceb; --green:#1e7e34; --greenbg:#e9f6ec;
-  --amber:#9a6700; --amberbg:#fff5e0; --blue:#1266b5; --bluebg:#eef4fb;
-}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);
-  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
-  font-size:16px;line-height:1.75}
-header.top{background:linear-gradient(135deg,#0b3d73,#0b4c8c 55%,#1266b5);color:#fff;
-  padding:26px 20px 20px}
+/* ===== stats 页专属布局 (颜色/组件来自 data-cfa-theme 设计系统) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{padding-top:22px;padding-bottom:18px}
+.page-head h1{margin:0 0 4px;font-size:22px;letter-spacing:.3px}
+.page-head .sub{color:var(--muted);font-size:13.5px}
+.page-head .sub a{color:var(--brand);text-decoration:none}
+.page-head .sub a:hover{text-decoration:underline}
 .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
-header.top h1{margin:0 0 6px;font-size:25px;letter-spacing:1px}
-header.top .sub{color:#cfe2f5;font-size:14px}
-header.top .sub a{color:#ffd9a0;text-decoration:none}
-.statbar{display:flex;flex-wrap:wrap;gap:10px;margin-top:16px}
-.stat{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.22);
-  border-radius:10px;padding:8px 14px;min-width:104px}
-.stat b{display:block;font-size:22px;line-height:1.25}
-.stat span{font-size:12.5px;color:#d7e7f7}
-.controls{position:sticky;top:0;z-index:50;background:#ffffffee;backdrop-filter:blur(6px);
-  border-bottom:1px solid var(--line);padding:10px 0}
+.statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:16px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:10px 14px;box-shadow:var(--shadow-sm)}
+.stat b{display:block;font-size:21px;line-height:1.3;color:var(--brand)}
+.stat.hot b{color:var(--red)}
+.stat span{font-size:12px;color:var(--muted)}
+.controls{position:sticky;top:var(--top-h);z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 0}
 .row{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-.viewbtn{padding:8px 20px;border-radius:20px;border:1px solid #cbd5e1;background:#fff;
-  cursor:pointer;font-size:15px;color:var(--muted)}
-.viewbtn.on{background:var(--brand);border-color:var(--brand);color:#fff}
-.lg-chip{padding:6px 14px;border-radius:8px;border:1px solid var(--line);background:#fff;
-  cursor:pointer;font-size:14px;color:var(--ink)}
-.lg-chip.on{border-color:var(--brand2);color:var(--brand2);background:var(--bluebg)}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:999px;background:var(--card);padding:3px;gap:3px}
+.viewbtn{padding:6px 18px;border-radius:999px;border:none;background:none;cursor:pointer;
+  font-size:14px;color:var(--muted);font-family:inherit;transition:.15s}
+.viewbtn.on{background:var(--brand-strong);color:var(--on-brand);font-weight:600}
+.lg-chip{padding:5px 14px;border-radius:999px;border:1px solid var(--line);background:var(--card);
+  cursor:pointer;font-size:13px;color:var(--ink2);font-family:inherit;transition:.15s}
+.lg-chip.on{border-color:var(--brand);color:var(--brand);background:var(--info-bg);font-weight:600}
+.lg-label{color:var(--muted);font-size:13px}
 main{padding:20px 0 60px}
-.note{background:var(--card);border:1px dashed #b8cada;border-radius:10px;padding:10px 14px;
-  color:#33475b;font-size:14.5px;margin-bottom:20px}
+.note{background:var(--card);border:1px dashed var(--line);border-radius:var(--r-md);
+  padding:10px 14px;color:var(--ink2);font-size:13.5px;line-height:1.9;margin-bottom:20px}
 .note b{color:var(--brand)}
-.teamcard{background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:16px 18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(15,40,80,.05)}
-.thead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;cursor:pointer}
-.thead h3{margin:0;font-size:19px}
-.thead .crest{background:#fff;border-radius:4px}
+.teamcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:15px 18px;margin-bottom:13px;box-shadow:var(--shadow-sm);transition:border-color .15s}
+.teamcard:hover{border-color:var(--brand)}
+.thead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;cursor:pointer;user-select:none}
+.thead h3{margin:0;font-size:18px;display:flex;align-items:center}
+.thead .crest{background:#fff;border-radius:4px;height:24px}
 .team-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
   border-radius:5px;margin-right:6px;vertical-align:-6px;font-size:10px;font-weight:700;
   line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
-.thead .lg{font-size:13px;color:var(--brand2);background:var(--bluebg);
-  border-radius:6px;padding:1px 8px}
-.thead .tot{color:var(--muted);font-size:14px}
-.tchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
-.tchip{font-size:13px;border-radius:6px;padding:2px 9px;border:1px solid transparent}
-.tc-goal{background:var(--redbg);color:var(--red);border-color:#f2c4bf}
-.tc-pen{background:var(--amberbg);color:var(--amber);border-color:#ecd9a0}
-.tc-red{background:#fbe3e0;color:var(--red);border-color:#f2c4bf;font-weight:600}
-.tc-yellow{background:#fff8dc;color:#8a6d00;border-color:#ecd9a0}
-.tc-foul{background:#f1f5f9;color:var(--muted);border-color:var(--line)}
-.tres{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:13.5px}
+.thead .lg{font-size:12.5px;color:var(--brand);background:var(--info-bg);border-radius:6px;padding:1px 9px}
+.thead .tot{color:var(--muted);font-size:13.5px}
+.thead .arrow{margin-left:auto;color:var(--faint);transition:transform .15s;font-size:12px}
+.teamcard.open .thead .arrow{transform:rotate(180deg)}
+.tchips{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px}
+.tchip{font-size:12.5px;border-radius:6px;padding:2px 9px;border:1px solid transparent}
+.tc-goal{background:var(--red-bg);color:var(--red);border-color:var(--red-line)}
+.tc-pen{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-line)}
+.tc-red{background:var(--red-bg);color:var(--red);border-color:var(--red-line);font-weight:600}
+.tc-yellow{background:var(--amber-bg);color:var(--amber);border-color:var(--amber-line)}
+.tc-foul{background:var(--card2);color:var(--muted);border-color:var(--line)}
+.tres{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;font-size:13px}
 .rbadge{border-radius:6px;padding:2px 10px}
-.r-changed{background:var(--redbg);color:var(--red);border:1px solid #f2c4bf;font-weight:600}
-.r-possible{background:var(--amberbg);color:var(--amber);border:1px solid #ecd9a0}
-.r-nochange{background:var(--greenbg);color:var(--green);border:1px solid #bfe3c8}
-.r-pending{background:#f1f5f9;color:var(--muted);border:1px solid var(--line)}
+.r-changed{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line);font-weight:600}
+.r-possible{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.r-nochange{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.r-pending{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
 .detail{display:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
 .teamcard.open .detail{display:block}
-.drow{padding:9px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.drow{padding:9px 0;border-bottom:1px solid var(--line2);font-size:14px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
 .drow:last-child{border-bottom:none}
 .drow .mt{font-weight:600}
-.drow .sc{color:var(--brand2);font-weight:600}
+.drow .sc{color:var(--brand);font-weight:600}
 .drow .corr{color:var(--red);font-weight:600}
-.drow .badge{display:inline-block;font-size:12.5px;border-radius:5px;padding:0 8px;
-  margin-right:6px;background:#f1f5f9;color:var(--muted)}
-.drow .note{display:block;font-size:13.5px;color:#4a5a6a;margin-top:2px}
-.drow a{color:var(--brand2);text-decoration:none;font-size:13px}
+.drow .badge{display:inline-block;font-size:12px;border-radius:5px;padding:0 8px;
+  background:var(--card2);color:var(--muted);border:1px solid var(--line2)}
+.drow .note{display:block;flex-basis:100%;font-size:13px;color:var(--muted);margin-top:2px}
+.drow a{color:var(--brand);text-decoration:none;font-size:12.5px;white-space:nowrap}
 .drow a:hover{text-decoration:underline}
-footer{background:#0e1b2a;color:#9db4c9;padding:22px 0;font-size:13.5px}
-footer a{color:#7fb3e0}
+footer{background:var(--top-bg);color:var(--top-muted);padding:24px 0;font-size:13px;line-height:1.9}
+footer b{color:var(--top-ink)}
+footer a{color:var(--brand)}
 .noresult{padding:40px;text-align:center;color:var(--muted)}
-.top-btn{position:fixed;right:22px;bottom:26px;background:var(--brand);color:#fff;
-  border:none;border-radius:24px;padding:10px 18px;font-size:14px;cursor:pointer}
-</style>
+.top-btn{position:fixed;right:20px;bottom:24px;display:inline-flex;align-items:center;gap:6px;
+  background:var(--brand-strong);color:var(--on-brand);border:none;border-radius:999px;
+  padding:10px 17px;font-size:13.5px;cursor:pointer;box-shadow:var(--shadow-sm)}
+@media (max-width:640px){
+  .page-head h1{font-size:18px}
+  .stat b{font-size:18px}
+  .teamcard{padding:12px 13px}
+  .thead h3{font-size:16px}
+}
 </head>
 <body class="page-stats">
-<header class="top">
+__TOPBAR__
+<header class="page-head">
   <div class="wrap">
     <h1>__SEASON__赛季官方认定错漏判 · 各队得失盘点</h1>
     <div class="sub">
       仅统计男子中超/中甲/中乙/足协杯 · 依据评议组认定结论与最终比分修正比对 ·
-      <a href="index.html">🏠 首页</a> · <a href="season-2024.html">24评议</a> · <a href="season-2025.html">25评议</a> ·
-      <a href="__PAGE__">← 返回判例合集</a> · <a href="rules.html">📖 竞赛规则</a> · 数据生成于 __BUILT__
+      数据生成于 __BUILT__ · <a href="__PAGE__">← 返回判例合集</a>
     </div>
     <div class="statbar" id="statbar"></div>
   </div>
@@ -356,10 +360,12 @@ footer a{color:#7fb3e0}
 <div class="controls">
   <div class="wrap">
     <div class="row">
-      <button class="viewbtn on" id="btnVictim">受损方视角</button>
-      <button class="viewbtn" id="btnBenefit">获益方视角</button>
-      <span style="color:var(--muted);font-size:13.5px">按联赛筛选：</span>
-      <button class="lg-chip on" data-lg="">全部</button>
+      <span class="seg" role="group" aria-label="视角切换">
+        <button class="viewbtn on" id="btnVictim" aria-pressed="true">受损方视角</button>
+        <button class="viewbtn" id="btnBenefit" aria-pressed="false">获益方视角</button>
+      </span>
+      <span class="lg-label">按联赛筛选：</span>
+      <button class="lg-chip on" data-lg="" aria-pressed="true">全部</button>
       <button class="lg-chip" data-lg="中超">中超</button>
       <button class="lg-chip" data-lg="中甲">中甲</button>
       <button class="lg-chip" data-lg="中乙">中乙</button>
@@ -378,16 +384,17 @@ footer a{color:#7fb3e0}
 
 <footer>
   <div class="wrap">
-    <p><b>数据来源：</b>判例与认定结论来自中国足协官网裁判评议（${DATA.issueDesc}，详见
-      <a href="${DATA.page}">判例合集</a>）；最终比分来自公开赛程赛果检索核对（懂球帝、直播吧、新华社、中新网、俱乐部官网等），缺失比分以「待补」标注。</p>
+    <p><b>数据来源：</b>判例与认定结论来自中国足协官网裁判评议（__ISSUEDESC__，详见
+      <a href="__PAGE__">判例合集</a>）；最终比分来自公开赛程赛果检索核对（懂球帝、直播吧、新华社、中新网、俱乐部官网等），缺失比分以「待补」标注。</p>
     <p id="scoreNote"></p>
     <p><b>声明：</b>本页为教学研究用途的客观盘点，错漏判认定权属于中国足协裁判委员会评议组；比分修正为假设性推演，仅用于说明判罚影响的量级与方向。</p>
   </div>
 </footer>
-<button class="top-btn" onclick="scrollTo({top:0,behavior:'smooth'})">回到顶部</button>
+<button class="top-btn" id="btnTop">回到顶部</button>
 
 <script>
 const DATA = __DATA__;
+const IC = __ICONS__;
 const TL = DATA.typeLabels, TLB = DATA.typeLabelsBenefit, ORDER = DATA.typeOrder;
 
 // ---------- 总览 ----------
@@ -418,7 +425,8 @@ const RS = {
 
 let curView = 'victims', curLg = '';
 
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 
 function chip(t, n, benefit){
   if(!n) return "";
@@ -464,6 +472,7 @@ function renderTeam(name, t){
       <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
       <span class="tot">错漏判 ${t.cases} 例 · ${t.n_matches} 场</span>
+      <span class="arrow">${IC["chev-d"]}</span>
     </div>
     <div class="tchips">${chips}</div>
     <div class="tres">${rbadges}</div>
@@ -484,16 +493,19 @@ function render(){
 
 document.getElementById("btnVictim").onclick = e=>{
   curView='victims';
-  e.target.classList.add('on');
-  document.getElementById('btnBenefit').classList.remove('on');
+  e.target.classList.add('on'); e.target.setAttribute('aria-pressed','true');
+  const b=document.getElementById('btnBenefit');
+  b.classList.remove('on'); b.setAttribute('aria-pressed','false');
   render();
 };
 document.getElementById("btnBenefit").onclick = e=>{
   curView='benefits';
-  e.target.classList.add('on');
-  document.getElementById('btnVictim').classList.remove('on');
+  e.target.classList.add('on'); e.target.setAttribute('aria-pressed','true');
+  const v=document.getElementById('btnVictim');
+  v.classList.remove('on'); v.setAttribute('aria-pressed','false');
   render();
 };
+document.getElementById("btnTop").onclick = ()=>scrollTo({top:0,behavior:'smooth'});
 document.querySelectorAll(".lg-chip").forEach(b=>{
   b.onclick = ()=>{
     curLg = b.dataset.lg;
@@ -515,10 +527,15 @@ render();
 def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
+    tb = topbar(active=cfg["out"], stats=cfg["out"], brand_sub=f"{season}赛季 · 得失盘点",
+                seasons=tuple(sorted(SEASONS)))
     html = inject_theme(HTML.replace("__DATA__",
-                        json.dumps(data, ensure_ascii=False, separators=(",", ":"))))
+                        json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+                        .replace("__ICONS__", js_icons())
+                        .replace("__TOPBAR__", tb))
     html = (html.replace("__SEASON__", season)
                 .replace("__PAGE__", cfg["page"])
+                .replace("__ISSUEDESC__", cfg["issueDesc"])
                 .replace("__BUILT__", date.today().isoformat()))
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]

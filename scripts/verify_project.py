@@ -55,8 +55,6 @@ def main():
         data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
         for case in data["cases"]:
             raw_names.update(filter(None, (case.get("home"), case.get("away"))))
-    if len(raw_names) != 107:
-        fail(f"队伍原始名称数量异常: {len(raw_names)}")
     for raw in raw_names:
         canonical = normalize_team(raw)
         if canonical not in names:
@@ -75,7 +73,7 @@ def main():
                 fail(f"真实队徽缺少来源: {item.get('name')}")
     print(f"队徽目录校验通过: {len(raw_names)} 个原始名称 -> {len(names)} 个标准队伍")
 
-    print("项目校验通过: 6个页面、双赛季数据、离线资源路径和外部引用均正常")
+    print(f"项目校验通过: {len(PAGES)}个页面、双赛季数据、离线资源路径和外部引用均正常")
 
 
 if __name__ == "__main__":

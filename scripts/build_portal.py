@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-"""生成门户首页 index.html：三入口（24评议/25评议/竞赛规则）+ 得失盘点快捷入口
-纯静态单文件离线可用；数据计数从 data/*.json 读取
+"""生成门户首页 index.html：三入口（2024/2025评议/竞赛规则）+ 得失盘点快捷入口
+纯静态单文件离线可用；数据计数从 data/*.json 读取；视觉走 data-cfa-theme 设计系统
 """
 import json
 from datetime import date
 from pathlib import Path
-from theme import inject_theme
+from theme import inject_theme, icon, topbar
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -39,91 +39,70 @@ HTML = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>裁判学习一站式平台 · 足协评议合集与竞赛规则</title>
 <style>
-:root{
-  --bg:#0d1b2a; --ink:#e8f0f8; --muted:#8fa6bc; --line:#1e3a56;
-  --brand:#1266b5; --brand2:#2f8be6;
-  --red:#ff7b6b; --green:#5ad18a; --amber:#ffc94d;
-}
-*{box-sizing:border-box}
-body{margin:0;background:
-   radial-gradient(1200px 500px at 85% -10%, rgba(47,139,230,.22), transparent 60%),
-   radial-gradient(900px 420px at -10% 110%, rgba(90,209,138,.10), transparent 55%),
-   var(--bg);
-  color:var(--ink);min-height:100vh;
-  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;
-  font-size:15.5px;line-height:1.75}
-a{color:inherit}
+/* ===== portal 页专属布局 (颜色/组件来自 data-cfa-theme 设计系统) ===== */
+.hero-bg{background:
+   radial-gradient(1100px 460px at 82% -8%, rgba(77,159,255,.14), transparent 60%),
+   radial-gradient(900px 420px at -8% 108%, rgba(87,201,133,.08), transparent 55%)}
+.wrap{max-width:1120px;margin:0 auto;padding:40px 20px 56px}
+.hero{text-align:center;margin-bottom:38px}
+.hero h1{margin:0 0 10px;font-size:33px;line-height:1.4;letter-spacing:.5px}
+.hero h1 em{font-style:normal;color:var(--brand)}
+.hero p{margin:0 auto;color:var(--muted);font-size:15.5px;max-width:660px}
+.hero .sub{margin-top:12px;font-size:13px;color:var(--faint)}
 
-.topbar{height:54px;display:flex;align-items:center;gap:10px;padding:0 22px;
-  background:rgba(9,20,34,.85);border-bottom:1px solid var(--line);color:#fff;
-  position:sticky;top:0;z-index:10;backdrop-filter:blur(6px)}
-.topbar .brand b{font-size:17px;letter-spacing:.5px}
-.topbar .brand span{font-size:12.5px;color:#9db8d2;margin-left:8px}
-.topbar nav{margin-left:auto;display:flex;gap:8px}
-.topbar a.tbtn{padding:7px 14px;border-radius:8px;border:1px solid #2c5075;
-  color:#dceafa;text-decoration:none;font-size:13.5px;white-space:nowrap}
-.topbar a.tbtn:hover{background:rgba(255,255,255,.10)}
-
-.wrap{max-width:1120px;margin:0 auto;padding:44px 20px 60px}
-.hero{text-align:center;margin-bottom:40px}
-.hero h1{margin:0 0 10px;font-size:34px;line-height:1.35;letter-spacing:1px}
-.hero h1 em{font-style:normal;background:linear-gradient(90deg,#5ad1f0,#2f8be6 45%,#7ea8ff);
-  -webkit-background-clip:text;background-clip:text;color:transparent}
-.hero p{margin:0;color:var(--muted);font-size:16px;max-width:640px;margin:0 auto}
-.hero .sub{margin-top:12px;font-size:13.5px;color:#6f8aa3}
-
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
-.card{position:relative;display:flex;flex-direction:column;gap:0;text-decoration:none;
-  background:linear-gradient(180deg,#12263c,#0f2136);border:1px solid var(--line);
-  border-radius:16px;padding:24px 24px 20px;overflow:hidden;
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.card{position:relative;display:flex;flex-direction:column;text-decoration:none;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:22px 22px 18px;overflow:hidden;color:var(--ink);
   transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease}
-.card:hover{transform:translateY(-4px);border-color:#2f8be6;
-  box-shadow:0 14px 34px rgba(0,0,0,.45)}
-.card .icon{font-size:34px;line-height:1}
-.card h2{margin:14px 0 4px;font-size:21px}
-.card .desc{margin:0;color:var(--muted);font-size:13.8px;min-height:66px}
-.card .nums{display:flex;gap:18px;margin-top:16px;padding-top:14px;
-  border-top:1px dashed #234160}
-.card .nums div b{display:block;font-size:22px;font-weight:700;color:#fff}
-.card .nums div span{font-size:12px;color:#7e97ad}
-.card .go{margin-top:16px;font-size:13.5px;color:var(--brand2);font-weight:600}
-.card::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(255,255,255,.05) 48%,transparent 62%);
-  transform:translateX(-100%);transition:.5s}
-.card:hover::after{transform:translateX(100%)}
+.card:hover{transform:translateY(-4px);border-color:var(--brand);box-shadow:var(--shadow)}
+.card .icon{width:42px;height:42px;border-radius:var(--r-md);display:flex;align-items:center;
+  justify-content:center;background:var(--info-bg);color:var(--brand)}
+.card.c-rules .icon{background:var(--amber-bg);color:var(--amber)}
+.card.c-2024 .icon{background:var(--green-bg);color:var(--green)}
+.card h2{margin:13px 0 4px;font-size:19px}
+.card .desc{margin:0;color:var(--muted);font-size:13.5px;min-height:64px;line-height:1.7}
+.card .nums{display:flex;gap:20px;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
+.card .nums div b{display:block;font-size:21px;font-weight:700;color:var(--brand)}
 .card.c-rules .nums div b{color:var(--amber)}
 .card.c-2024 .nums div b{color:var(--green)}
-.card.c-2025 .nums div b{color:var(--brand2)}
+.card .nums div span{font-size:12px;color:var(--muted)}
+.card .go{margin-top:14px;font-size:13px;color:var(--brand);font-weight:600;display:flex;align-items:center;gap:5px}
+.card::after{content:"";position:absolute;inset:0;
+  background:linear-gradient(120deg,transparent 30%,rgba(148,178,214,.08) 48%,transparent 62%);
+  transform:translateX(-100%);transition:.5s}
+.card:hover::after{transform:translateX(100%)}
 
-.aux{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:18px}
-.aux a{display:flex;align-items:center;gap:16px;text-decoration:none;
-  background:#0f2136;border:1px solid var(--line);border-radius:14px;padding:18px 22px;
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
+.steps div{display:grid;grid-template-columns:40px 1fr;column-gap:10px;align-items:center;
+  padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card)}
+.steps b{grid-row:span 2;color:var(--brand);font-size:21px;font-variant-numeric:tabular-nums}
+.steps span{font-weight:700;color:var(--ink)}
+.steps small{color:var(--muted);font-size:12.5px}
+
+.aux{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
+.aux a{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 20px;
   transition:border-color .15s, transform .15s}
-.aux a:hover{border-color:#2f8be6;transform:translateY(-2px)}
-.aux .ai{font-size:26px}
-.aux b{display:block;font-size:16px}
-.aux span{font-size:13px;color:var(--muted)}
-.aux .arr{margin-left:auto;color:#5f7c96}
+.aux a:hover{border-color:var(--brand);transform:translateY(-2px)}
+.aux .ai{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;
+  justify-content:center;background:var(--info-bg);color:var(--brand);flex:none}
+.aux b{display:block;font-size:15px}
+.aux span{font-size:12.5px;color:var(--muted)}
+.aux .arr{margin-left:auto;color:var(--faint)}
 
-.feats{display:flex;flex-wrap:wrap;gap:10px;justify-content:center;margin:42px 0 0}
-.feat{font-size:13px;color:#a9c2d8;background:#10233a;border:1px solid #1e3a56;
-  border-radius:20px;padding:6px 16px}
-.foot{margin-top:46px;text-align:center;color:#5f7891;font-size:12.8px;line-height:2}
-.foot a{color:#7fa3c4}
-
+.feats{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:38px 0 0}
+.feat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);
+  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 15px}
+.feat .ic{color:var(--brand)}
+.foot{margin-top:40px;text-align:center;color:var(--faint);font-size:12.5px;line-height:2}
+.foot a{color:var(--brand);text-decoration:none}
 @media (max-width:960px){ .grid{grid-template-columns:1fr} .aux{grid-template-columns:1fr}
-  .hero h1{font-size:26px} .wrap{padding-top:28px} }
+  .steps{grid-template-columns:1fr} .hero h1{font-size:25px} .wrap{padding-top:26px} }
 </style>
 </head>
-<body class="page-portal">
-<header class="topbar">
-  <div class="brand"><b>⚽ 裁判学习平台</b><span>评议合集 · 竞赛规则 · 尺度统一</span></div>
-  <nav>
-    <a class="tbtn" href="season-2024.html">24评议</a>
-    <a class="tbtn" href="season-2025.html">25评议</a>
-    <a class="tbtn" href="rules.html">📖 竞赛规则</a>
-  </nav>
-</header>
+<body class="page-portal hero-bg">
+__TOPBAR__
 
 <div class="wrap">
   <section class="hero">
@@ -134,7 +113,7 @@ a{color:inherit}
 
   <section class="grid">
     <a class="card c-2025" href="season-2025.html">
-      <div class="icon">🟦</div>
+      <div class="icon">__I_FILM__</div>
       <h2>2025赛季评议</h2>
       <p class="desc">最新赛季全部 __N25_ISSUES__ 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
       <div class="nums">
@@ -142,10 +121,10 @@ a{color:inherit}
         <div><b>__W25__</b><span>错漏判</span></div>
         <div><b>__V25__</b><span>视频</span></div>
       </div>
-      <div class="go">进入学习 →</div>
+      <div class="go">进入学习 __I_RIGHT__</div>
     </a>
     <a class="card c-2024" href="season-2024.html">
-      <div class="icon">🟩</div>
+      <div class="icon">__I_FILM__</div>
       <h2>2024赛季评议</h2>
       <p class="desc">上赛季全部 __N24_ISSUES__ 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
       <div class="nums">
@@ -153,47 +132,47 @@ a{color:inherit}
         <div><b>__W24__</b><span>错漏判</span></div>
         <div><b>__V24__</b><span>视频</span></div>
       </div>
-      <div class="go">进入学习 →</div>
+      <div class="go">进入学习 __I_RIGHT__</div>
     </a>
     <a class="card c-rules" href="rules.html">
-      <div class="icon">📖</div>
+      <div class="icon">__I_BOOK__</div>
       <h2>足球竞赛规则 2026-27</h2>
       <p class="desc">IFAB 官方最新版全文（简体中文），支持划词高亮、章节笔记、全文搜索——备赛案头工具。</p>
       <div class="nums">
         <div><b>__NRL__</b><span>章节</span></div>
         <div><b>__NLAW__</b><span>规则正文</span></div>
-        <div><b>✎</b><span>可标注</span></div>
+        <div><b>__I_NOTE__</b><span>可标注</span></div>
       </div>
-      <div class="go">打开规则 →</div>
+      <div class="go">打开规则 __I_RIGHT__</div>
     </a>
   </section>
 
   <section class="steps">
     <div><b>01</b><span>选择赛季</span><small>打开 2024 或 2025 评议合集</small></div>
-    <div><b>02</b><span>筛选判例</span><small>按赛事、球队、分类和判定查找</small></div>
+    <div><b>02</b><span>筛选判例</span><small>按赛事、球队、期数、分类和判定查找</small></div>
     <div><b>03</b><span>复盘记录</span><small>观看视频、收藏并记录学习笔记</small></div>
   </section>
 
   <section class="aux">
     <a href="stats-2025.html">
-      <div class="ai">📊</div>
+      <div class="ai">__I_CHART__</div>
       <div><b>2025 各队得失盘点</b><span>错漏判影响统计：哪队受损、损失了什么</span></div>
-      <div class="arr">→</div>
+      <div class="arr">__I_RIGHT__</div>
     </a>
     <a href="stats-2024.html">
-      <div class="ai">📊</div>
+      <div class="ai">__I_CHART__</div>
       <div><b>2024 各队得失盘点</b><span>错漏判影响统计：中超 / 中甲 / 中乙 / 足协杯</span></div>
-      <div class="arr">→</div>
+      <div class="arr">__I_RIGHT__</div>
     </a>
   </section>
 
   <div class="feats">
-    <span class="feat">🎥 390段官方判罚视频</span>
-    <span class="feat">🗂 教学分类 + 统一尺度要点</span>
-    <span class="feat">⭐ 收藏多标签</span>
-    <span class="feat">✏️ 判例笔记</span>
-    <span class="feat">🔍 全文搜索</span>
-    <span class="feat">📶 完全离线可用</span>
+    <span class="feat">__I_PLAY__ 390段官方判罚视频</span>
+    <span class="feat">__I_SHIELD__ 教学分类 + 统一尺度要点</span>
+    <span class="feat">__I_STAR__ 收藏多标签</span>
+    <span class="feat">__I_NOTE__ 判例笔记</span>
+    <span class="feat">__I_SEARCH__ 全文搜索</span>
+    <span class="feat">__I_DOWN__ 完全离线可用</span>
   </div>
 
   <div class="foot">
@@ -208,7 +187,14 @@ a{color:inherit}
 
 def main():
     s = load_stats()
+    tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一")
+    subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
+            "__I_CHART__": icon("chart", 17), "__I_RIGHT__": icon("right", 13),
+            "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
+            "__I_SEARCH__": icon("search", 13), "__I_DOWN__": icon("download", 13),
+            "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13)}
     html = inject_theme(HTML
+            .replace("__TOPBAR__", tb)
             .replace("__N25__", str(s["2025"]["n"]))
             .replace("__W25__", str(s["2025"]["wrong"]))
             .replace("__V25__", str(s["2025"]["videos"]))
@@ -220,6 +206,8 @@ def main():
             .replace("__NRL__", str(s["rules"]["sections"]))
             .replace("__NLAW__", str(s["rules"]["laws"]))
             .replace("__BUILT__", date.today().isoformat()))
+    for k, v in subs.items():
+        html = html.replace(k, v)
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "index.html"
     out.write_text(html, encoding="utf-8")

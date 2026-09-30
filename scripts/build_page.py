@@ -10,7 +10,7 @@ from datetime import date
 from pathlib import Path
 
 from crest_catalog import load_catalog, normalize_team
-from theme import inject_theme
+from theme import inject_theme, icon, js_icons, topbar
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -129,244 +129,213 @@ HTML = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
 <style>
-:root{
-  --bg:#eef2f7; --card:#fff; --ink:#1c2733; --muted:#5c6b7a; --line:#e3e9f0;
-  --brand:#0b4c8c; --brand2:#1266b5;
-  --red:#c0392b; --redbg:#fdeceb; --green:#1e7e34; --greenbg:#e9f6ec;
-  --amber:#9a6700; --amberbg:#fff5e0; --bluebg:#eef4fb;
-}
-*{box-sizing:border-box}
-html,body{height:100%}
-body{margin:0;background:var(--bg);color:var(--ink);overflow:hidden;
-  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif;font-size:15px;line-height:1.7}
-
-/* ---------- 顶栏(单行) ---------- */
-.topbar{height:54px;display:flex;align-items:center;gap:10px;padding:0 14px;
-  background:linear-gradient(90deg,#0b3d73,#0b4c8c 60%,#1266b5);color:#fff;
-  position:relative;z-index:40;overflow-x:auto;scrollbar-width:none}
-.topbar::-webkit-scrollbar{display:none}
-.topbar a.tbtn{text-decoration:none}
-.topbar .tbtn.cur{background:rgba(255,255,255,.28);font-weight:700}
-.topbar .brand{display:flex;align-items:baseline;gap:8px;white-space:nowrap}
-.topbar .brand b{font-size:17px;letter-spacing:.5px}
-.topbar .brand span{font-size:12.5px;color:#cfe2f5}
-.topbar input[type=search]{flex:1;max-width:430px;min-width:120px;padding:7px 12px;
-  border:1px solid #3a6ea8;border-radius:8px;background:rgba(255,255,255,.94);
-  font-size:14px;color:var(--ink)}
-.topbar select{padding:7px 8px;border:1px solid #3a6ea8;border-radius:8px;
-  background:rgba(255,255,255,.94);font-size:13.5px;color:var(--ink);max-width:130px}
-.tbtn{padding:7px 14px;border-radius:8px;border:1px solid #3a6ea8;cursor:pointer;
-  background:rgba(255,255,255,.12);color:#e8f1fa;font-size:13.5px;white-space:nowrap}
-.tbtn:hover{background:rgba(255,255,255,.22)}
-.tbtn.stat b{color:#ffd2cc}.tbtn.stat i{font-style:normal;color:#c9f0d2}
-
-/* ---------- 三栏布局 ---------- */
-.layout{display:grid;grid-template-columns:238px 336px 1fr;height:calc(100vh - 54px)}
-body.sb-off .layout{grid-template-columns:0 336px 1fr}
+/* ===== season 页专属布局 (颜色/组件来自 data-cfa-theme 设计系统,此处只管结构) ===== */
+body{overflow:hidden}
+.workspace{display:grid;grid-template-columns:276px minmax(0,356px) minmax(0,1fr);
+  height:calc(100vh - var(--top-h));min-height:0}
+body.sb-off .workspace{grid-template-columns:0 minmax(0,356px) minmax(0,1fr)}
 body.sb-off .sidebar{display:none}
 
-/* ---------- 侧栏 ---------- */
-.sidebar{overflow-y:auto;background:#f8fafc;border-right:1px solid var(--line);
-  padding:12px 10px 20px}
-.side-h{font-size:12px;color:var(--muted);letter-spacing:1px;margin:14px 6px 6px;
-  text-transform:uppercase}
+/* ---- 侧栏筛选 ---- */
+.sidebar{background:var(--bg2);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
+.side-scroll{flex:1;min-height:0;overflow-y:auto;padding:10px 12px 18px}
+.side-h{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:15px 4px 7px;display:flex;align-items:center;gap:6px}
 .side-h:first-child{margin-top:2px}
-.cat-item,.ver-item{display:flex;align-items:center;gap:7px;width:100%;text-align:left;
-  padding:7px 10px;border:none;background:none;border-radius:8px;cursor:pointer;
-  font-size:13.8px;color:var(--ink);font-family:inherit}
-.cat-item:hover,.ver-item:hover{background:#eef3f9}
-.cat-item.on,.ver-item.on{background:var(--brand);color:#fff}
-.cat-item.on small,.ver-item.on small{color:#cfe2f5}
+#verList,#favList,#compList{display:flex;flex-wrap:wrap;gap:6px}
+.ver-item{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border:1px solid var(--line);
+  border-radius:999px;background:var(--card);color:var(--ink2);font-size:12.5px;cursor:pointer;
+  font-family:inherit;transition:.15s;text-align:left}
+.ver-item:hover{border-color:var(--brand);color:var(--brand)}
+.ver-item.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.ver-item b{font-size:11px;color:var(--muted);font-weight:600}
+.ver-item.on b{color:var(--brand)}
+#catList{display:flex;flex-direction:column;gap:2px}
+.cat-item{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:6.5px 9px;
+  border:1px solid transparent;background:none;border-radius:var(--r-sm);cursor:pointer;
+  font-size:13px;color:var(--ink2);font-family:inherit;transition:.12s}
+.cat-item:hover{background:var(--card2);color:var(--ink)}
+.cat-item.on{background:var(--info-bg);color:var(--brand);font-weight:600}
 .cat-item .nm{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.cat-item b,.ver-item b{font-weight:600;font-size:12.5px}
-.cat-item small,.ver-item small{color:var(--muted);font-size:11.5px}
-.ver-item .vdot{width:9px;height:9px;border-radius:50%;flex:none}
-.side-link{display:block;margin:16px 6px 0;padding:8px 10px;border-radius:8px;
-  background:var(--bluebg);color:var(--brand2);text-decoration:none;font-size:13px}
-.side-link:hover{background:#dfeafa}
-.sidebox{max-height:236px;overflow-y:auto;border:1px solid var(--line);border-radius:8px;
-  background:#fff;padding:4px}
-.sidebox .cat-item{padding:5px 8px;font-size:13px}
-.tav{display:inline-flex;width:18px;height:18px;border-radius:50%;background:#e2e8f0;
-  color:#475569;font-size:11px;align-items:center;justify-content:center;
-  margin-right:3px;vertical-align:-4px;flex:none}
-#compList .cat-item .nm, #teamList .cat-item .nm, #issueList .cat-item .nm{font-size:13px}
+.cat-item b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.cat-item small{color:var(--red);font-size:10.5px}
+.cat-item.on b{color:var(--brand)}
+#issueList{display:grid;grid-template-columns:repeat(6,1fr);gap:5px}
+#issueList .cat-item{flex-direction:column;gap:1px;padding:5px 2px;text-align:center;justify-content:center;
+  border:1px solid var(--line);background:var(--card);border-radius:var(--r-sm)}
+#issueList .cat-item .nm{flex:none;font-size:11.5px}
+#issueList .cat-item b{font-size:10px}
+#issueList .cat-item.on{background:var(--brand-strong);color:var(--on-brand)}
+#issueList .cat-item.on b{color:var(--on-brand);opacity:.85}
+#teamList{display:flex;flex-direction:column;gap:1px;max-height:232px;overflow-y:auto;
+  border:1px solid var(--line2);border-radius:var(--r-sm);background:var(--card);padding:3px}
+#teamList .cat-item{padding:4.5px 7px;font-size:12.5px}
+#teamList .crest{height:16px}
+.team-empty{font-size:12px;color:var(--muted);padding:7px 9px}
+.side-actions{display:flex;gap:7px;margin-top:9px}
+.side-actions .btn{flex:1;padding:6px 8px;font-size:12.5px}
+.side-link{display:flex;align-items:center;justify-content:center;gap:7px;width:100%;margin-top:14px;
+  padding:8px;border-radius:var(--r-sm);border:1px dashed var(--line);background:none;
+  color:var(--brand);cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
+.side-link:hover{border-color:var(--brand);background:var(--info-bg)}
 
-/* ---------- 播放列表 ---------- */
-.plist{overflow-y:auto;background:#fff;border-right:1px solid var(--line)}
-.plist-head{position:sticky;top:0;z-index:5;background:#fff;border-bottom:1px solid var(--line);
-  padding:8px 14px;font-size:12.5px;color:var(--muted)}
-.ph{position:sticky;top:33px;z-index:4;padding:7px 14px 5px;font-size:13px;font-weight:700;
-  color:var(--brand);background:#f4f8fc;border-bottom:1px solid var(--line)}
-.ph b{color:var(--muted);font-weight:500;font-size:12px}
-.prow{display:flex;align-items:center;gap:9px;padding:8px 12px;cursor:pointer;
-  border-bottom:1px solid #f1f5f9}
-.prow:hover{background:#f6f9fc}
-.prow.sel{background:var(--bluebg);box-shadow:inset 3px 0 0 var(--brand2)}
-.prow .dot{width:10px;height:10px;border-radius:50%;flex:none}
-.dot.wrong{background:var(--red)}.dot.correct{background:#3a9d55}.dot.pending{background:#d9a514}
+/* ---- 播放列表 ---- */
+.plist{display:flex;flex-direction:column;min-height:0;border-right:1px solid var(--line);background:var(--bg2)}
+.plist-head{flex:none;display:flex;flex-direction:column;gap:2px;padding:9px 14px 8px;
+  border-bottom:1px solid var(--line);background:var(--bg2)}
+.plist-head .iss{font-size:12.5px;color:var(--muted);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.plist-head .cnt{font-size:12px;color:var(--muted)}
+.plist-head .cnt b{color:var(--brand);font-weight:700}
+.plist-rows{flex:1;min-height:0;overflow-y:auto;background:var(--card)}
+.ph{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:8px;padding:6px 14px;
+  font-size:12px;font-weight:700;color:var(--brand);background:var(--card2);border-bottom:1px solid var(--line2)}
+.ph b{color:var(--muted);font-weight:500}
+.prow{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;
+  border-bottom:1px solid var(--line2);transition:background .12s}
+.prow:hover{background:var(--card2)}
+.prow.sel{background:var(--info-bg);box-shadow:inset 3px 0 0 var(--brand)}
 .prow .ptxt{flex:1;min-width:0}
-.prow .ptxt b{display:block;font-size:13.5px;font-weight:600;white-space:nowrap;
-  overflow:hidden;text-overflow:ellipsis}
+.prow .ptxt b{display:flex;align-items:center;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden}
+.prow .ptxt .vs{color:var(--faint);font-weight:400;font-size:11.5px;margin:0 2px}
 .prow .ptxt i{display:block;font-style:normal;font-size:11.5px;color:var(--muted);
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.prow .ptxt .p-source{font-family:Georgia,"Times New Roman","Noto Serif SC",serif;
-  font-style:italic;font-weight:600;color:#456b92}
-.prow .ptxt .p-case-id{color:#8a9bad;font-style:normal;font-weight:400}
-.prow .ptxt .p-verdict{font-style:normal;font-weight:500}
-.prow .rv{flex:none;font-size:11px;border-radius:5px;padding:0 6px;
-  background:var(--bluebg);color:var(--brand2)}
-.prow .rv.bad{background:var(--redbg);color:var(--red)}
-.prow .pmark{flex:none;font-size:12px}
-.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:3px;background:#fff}
-.team-badge{display:inline-flex;align-items:center;justify-content:center;width:18px;height:18px;
-  border-radius:4px;margin-right:3px;vertical-align:-4px;font-size:8px;font-weight:700;
-  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
-.plist-empty{padding:40px 16px;text-align:center;color:var(--muted)}
+.prow .rv{flex:none;font-size:10.5px;border-radius:5px;padding:1px 6px;background:var(--info-bg);color:var(--info);font-weight:600}
+.prow .rv.bad{background:var(--red-bg);color:var(--red)}
+.prow .pmark{flex:none;display:inline-flex;color:var(--amber);gap:2px}
+.prow .pmark .ic{vertical-align:0}
+.plist-empty{padding:48px 16px;text-align:center;color:var(--muted)}
 
-/* ---------- 详情区 ---------- */
-.detail{overflow-y:auto;padding:18px 24px 40px}
-.detail-empty{height:70vh;display:flex;align-items:center;justify-content:center;
-  color:var(--muted);font-size:15px}
-.d-card{background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:18px 22px;box-shadow:0 1px 3px rgba(15,40,80,.05);max-width:1080px}
-.d-head{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-bottom:4px}
-.cid{color:var(--muted);font-size:13px;background:#f1f5f9;border-radius:6px;padding:2px 10px}
-.d-head .match{flex-basis:100%;margin:2px 0 0;font-size:20px;font-weight:700;line-height:1.4}
-.badge{padding:3px 13px;border-radius:16px;font-size:14px;font-weight:600;white-space:nowrap}
-.b-wrong{background:var(--redbg);color:var(--red);border:1px solid #f2c4bf}
-.b-correct{background:var(--greenbg);color:var(--green);border:1px solid #bfe3c8}
-.b-pending{background:var(--amberbg);color:var(--amber);border:1px solid #ecd9a0}
-.b-var{background:var(--bluebg);color:var(--brand2);border:1px solid #c9dcf2;font-weight:500}
-.b-var.bad{background:var(--redbg);color:var(--red);border-color:#f2c4bf}
-.d-video{margin:14px 0 4px}
-.d-video video{width:100%;aspect-ratio:16/9;background:#0d1420;border-radius:10px;display:block}
-.vsw-row{display:flex;gap:8px;margin:8px 0 2px}
-.vsw{padding:3px 14px;border-radius:14px;border:1px solid #cbd5e1;background:#fff;
-  cursor:pointer;font-size:13px;color:var(--muted)}
-.vsw.on{background:var(--brand);border-color:var(--brand);color:#fff}
-.d-note{font-size:13px;color:var(--muted);margin:6px 0 0}
-.txt{font-size:15.5px;margin-top:10px}
+/* ---- 详情区 ---- */
+.detail{min-width:0;min-height:0;overflow-y:auto;padding:16px 20px 44px}
+.detail-empty{height:70vh;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;color:var(--faint);font-size:14.5px}
+.d-card{max-width:1120px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:18px 22px 16px;box-shadow:var(--shadow-sm)}
+.d-head{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:2px}
+.cid{color:var(--muted);font-size:12.5px;background:var(--card2);border:1px solid var(--line);
+  border-radius:6px;padding:2px 10px;white-space:nowrap}
+.d-head .match{flex-basis:100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 0;
+  font-size:20px;font-weight:700;line-height:1.45}
+.d-head .match .crest{height:24px}
+.d-video{max-width:960px;margin:13px auto 6px}
+.d-video video{width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--r-md);display:block}
+.vsw-row{display:flex;gap:8px;margin:9px 0 2px}
+.vsw{padding:3px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card2);
+  cursor:pointer;font-size:12.5px;color:var(--muted);font-family:inherit}
+.vsw.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
+.d-note{font-size:12.5px;color:var(--muted);margin:4px 0 0}
+.txt{font-size:15px;margin-top:10px;max-width:960px;margin-left:auto;margin-right:auto}
 .txt .lbl{color:var(--brand);font-weight:700}
-.txt p{margin:8px 0;white-space:pre-wrap}
-.txt .concl{background:#f6f9fc;border-left:3px solid var(--brand2);
-  padding:10px 14px;border-radius:0 8px 8px 0}
-.d-note-box{margin-top:12px;font-size:14px;background:#f6f9fc;border:1px solid var(--line);
-  border-radius:8px;padding:8px 14px}
+.txt p{margin:9px 0;white-space:pre-wrap}
+.txt .concl{background:var(--card2);border-left:3px solid var(--brand);
+  padding:11px 15px;border-radius:0 var(--r-md) var(--r-md) 0}
+.d-note-box{margin-top:13px;font-size:13.5px;background:var(--card2);border:1px solid var(--line);
+  border-radius:var(--r-md);padding:9px 14px;max-width:960px;margin-left:auto;margin-right:auto}
 .d-note-box summary{cursor:pointer;color:var(--brand);font-weight:600;user-select:none}
-.d-note-box div{margin-top:6px;color:#33475b}
+.d-note-box div{margin-top:7px;color:var(--ink2);line-height:1.8}
 .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-.tag{font-size:12.5px;color:var(--muted);background:#f1f5f9;border-radius:5px;padding:2px 9px}
-.d-foot{font-size:13px;margin-top:12px}
-.d-foot a{color:var(--brand2);text-decoration:none}
+.tag{font-size:12px;color:var(--muted);background:var(--card2);border:1px solid var(--line2);
+  border-radius:5px;padding:2px 9px}
+.d-foot{font-size:13px;margin-top:13px;color:var(--muted)}
+.d-foot a{color:var(--brand);text-decoration:none}
 .d-foot a:hover{text-decoration:underline}
-.d-nav{display:flex;gap:10px;margin-top:16px}
-.d-nav button{flex:1;padding:10px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;
-  cursor:pointer;font-size:14.5px;color:var(--ink)}
-.d-nav button:hover{border-color:var(--brand2);color:var(--brand2)}
-.favbtn{padding:4px 16px;border-radius:16px;border:1px solid #cbd5e1;background:#fff;
-  cursor:pointer;font-size:14px;color:var(--muted)}
-.favbtn.on{background:#fff7d6;border-color:#e6c34a;color:#9a6700;font-weight:700}
+.d-nav{display:flex;gap:10px;margin-top:15px;max-width:960px}
+.d-nav button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;
+  border-radius:var(--r-md);border:1px solid var(--line);background:var(--card2);cursor:pointer;
+  font-size:14px;color:var(--ink2);font-family:inherit}
+.d-nav button:hover{border-color:var(--brand);color:var(--brand)}
+.favbtn{display:inline-flex;align-items:center;gap:5px;padding:3.5px 13px;border-radius:999px;
+  border:1px solid var(--line);background:var(--card2);cursor:pointer;font-size:13px;color:var(--muted);font-family:inherit}
+.favbtn.on{background:var(--amber-bg);border-color:var(--amber);color:var(--amber);font-weight:700}
 .favtags{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:10px}
-.ftag{padding:3px 12px;border-radius:14px;border:1px solid #cbd5e1;background:#fff;
-  cursor:pointer;font-size:13px;color:var(--muted)}
-.ftag.on{background:var(--brand);border-color:var(--brand);color:#fff}
-.favtags input{padding:4px 8px;border:1px solid #cbd5e1;border-radius:6px;font-size:12.5px;width:110px}
-.notewrap{margin-top:14px}
-.notewrap textarea{width:100%;min-height:74px;padding:10px 12px;border:1px solid #cbd5e1;
-  border-radius:9px;font-size:14px;font-family:inherit;resize:vertical;background:#fffdf5}
+.ftag{padding:3px 12px;border-radius:999px;border:1px solid var(--line);background:var(--card2);
+  cursor:pointer;font-size:12.5px;color:var(--muted);font-family:inherit}
+.ftag.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.ftag b{cursor:pointer;font-weight:400;margin-left:3px}
+.favtags input{padding:4px 9px;border:1px solid var(--line);border-radius:var(--r-sm);
+  font-size:12.5px;width:110px;background:var(--card2);color:var(--ink)}
+.notewrap{margin-top:14px;max-width:960px}
+.notewrap textarea{width:100%;min-height:76px;padding:10px 12px;border:1px solid var(--line);
+  border-radius:var(--r-md);font-size:14px;font-family:inherit;resize:vertical;background:var(--card2);color:var(--ink)}
 .notewrap .nstatus{font-size:12px;color:var(--muted)}
-.kbd{font-size:11.5px;color:var(--muted);border:1px solid #cbd5e1;border-bottom-width:2px;
-  border-radius:4px;padding:0 5px;margin:0 2px}
+.mobile-back{display:none}
 
-/* ---------- 弹层 ---------- */
-.modal-mask{position:fixed;inset:0;background:rgba(8,20,38,.55);z-index:90;
-  display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
-.modal-mask.open{display:flex}
-.modal{background:#fff;border-radius:14px;max-width:980px;width:100%;padding:22px 26px}
-.modal h3{margin:0 0 12px;font-size:18px}
-.modal .close{float:right;border:none;background:#f1f5f9;color:var(--muted);
-  border-radius:8px;padding:4px 12px;cursor:pointer;font-size:13px}
-.matrix table{border-collapse:collapse;width:100%;font-size:13.8px}
-.matrix th,.matrix td{border-bottom:1px solid var(--line);padding:6px 10px;text-align:center}
+/* ---- 统计矩阵 / 帮助 / 回顶 ---- */
+.matrix table{border-collapse:collapse;width:100%;font-size:13.5px}
+.matrix th,.matrix td{border-bottom:1px solid var(--line2);padding:6px 10px;text-align:center}
 .matrix th:first-child,.matrix td:first-child{text-align:left}
-.matrix tr:hover td{background:#f6f9fc}
+.matrix tr:hover td{background:var(--card2)}
 .matrix .w{color:var(--red);font-weight:600}.matrix .g{color:var(--green);font-weight:600}
 .matrix .p{color:var(--amber);font-weight:600}
-.matrix tfoot td{font-weight:700;background:#f6f9fc}
-.help p{margin:8px 0;font-size:14.5px}
+.matrix tfoot td{font-weight:700;background:var(--card2)}
+.help p{margin:9px 0;font-size:14px;line-height:1.8}
 .help b{color:var(--brand)}
-.top-btn{position:fixed;right:22px;bottom:24px;background:var(--brand);color:#fff;
-  border:none;border-radius:24px;padding:9px 18px;font-size:13.5px;cursor:pointer;z-index:30}
+.top-btn{position:fixed;right:20px;bottom:22px;display:none;align-items:center;gap:6px;
+  background:var(--brand-strong);color:var(--on-brand);border:none;border-radius:999px;
+  padding:9px 16px;font-size:13px;cursor:pointer;z-index:30;box-shadow:var(--shadow-sm)}
 
-/* ---------- 响应式 ---------- */
-@media (max-width:1180px){
-  .layout{grid-template-columns:250px 1fr}
-  .plist{grid-column:1 / 3}
-  .detail{grid-column:1 / 3}
+/* ---- 响应式: 统一断点 1280 / 1080 / 640 ---- */
+@media (max-width:1280px){.workspace{grid-template-columns:244px minmax(0,320px) minmax(0,1fr)}}
+@media (max-width:1080px){
+  .workspace{grid-template-columns:minmax(0,1fr)}
+  .detail{display:none}
+  body.detail-open .workspace{grid-template-columns:minmax(0,1fr)}
+  body.detail-open .detail{display:block}
+  .sidebar{position:fixed;left:0;top:var(--top-h);bottom:0;width:284px;z-index:70;
+    transform:translateX(-105%);transition:transform .18s;box-shadow:var(--shadow)}
+  body.sb-open .sidebar{transform:none}
   body.detail-open .plist{display:none}
-  body.detail-open .detail{grid-column:1 / 3}
+  .mobile-back{display:inline-flex;align-items:center;gap:6px;border:0;background:none;
+    color:var(--brand);padding:2px 0 10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
+  body.detail-open .top-btn{display:inline-flex}
 }
-@media (max-width:860px){
-  .layout{grid-template-columns:1fr}
-  body{overflow:auto}
-  .layout{height:auto}
-  .sidebar{position:fixed;left:0;top:54px;bottom:0;width:260px;z-index:60;
-    transform:translateX(-105%);transition:.15s;box-shadow:4px 0 14px rgba(0,0,0,.15)}
-  body.sb-off .sidebar{display:block;transform:none}
-  body.sb-off .layout{grid-template-columns:1fr}
-  .plist{max-height:46vh}
-  .topbar .brand span{display:none}
+@media (max-width:640px){
+  .detail{padding:12px 12px 40px}
+  .d-card{padding:14px 14px 12px}
+  .d-head .match{font-size:17px}
+  .d-video video{max-height:44vh}
+  #issueList{grid-template-columns:repeat(5,1fr)}
 }
 </style>
 </head>
 <body class="page-season">
-<header class="topbar">
-  <div class="brand"><b>__BRAND__</b><span id="totalBadge"></span></div>
-  <input id="fSearch" type="search" placeholder="搜索：球队、判例内容、关键词…  (按 / 聚焦)">
-  <a class="tbtn" href="index.html">🏠 首页</a>
-  <a class="tbtn" href="season-2024.html">24评议</a>
-  <a class="tbtn" href="season-2025.html">25评议</a>
-  <a class="tbtn" href="__STATS__">📊 得失盘点</a>
-  <a class="tbtn" href="rules.html">📖 竞赛规则</a>
-  <button class="tbtn" id="btnHelp">？说明</button>
-  <button class="tbtn" id="btnSb" title="收起/展开筛选">☰ 筛选</button>
-</header>
+<a class="skip-link" href="#plistRows">跳到判例列表</a>
+__TOPBAR__
 
-<div class="filterbar" id="filterbar">
-  <div class="filter-primary">
-    <span class="filter-label">判定</span><div id="verList"></div>
-    <span class="filter-label filter-label-fav">学习</span><div id="favList"></div>
-    <button class="filter-action" id="btnExport">导出</button>
-    <button class="filter-action" id="btnImport">导入</button>
-    <input type="file" id="importFile" accept=".json,application/json" style="display:none">
-  </div>
-  <div class="filter-secondary">
-    <span class="filter-label">筛选</span>
-    <button class="filter-toggle" data-filter="compList">赛事 <span>⌄</span></button>
-    <button class="filter-toggle" data-filter="teamList">球队 <span>⌄</span></button>
-    <button class="filter-toggle" data-filter="issueList">期数 <span>⌄</span></button>
-    <button class="filter-toggle" data-filter="catList">分类 <span>⌄</span></button>
-    <a class="filter-stats" href="__STATS__">查看得失盘点 →</a>
-  </div>
-  <div class="filter-menus">
-    <div id="compList" class="filter-menu"></div>
-    <div id="teamList" class="filter-menu"></div>
-    <div id="issueList" class="filter-menu"></div>
-    <div id="catList" class="filter-menu"></div>
-  </div>
-</div>
+<div class="workspace">
 
-<div class="layout">
+  <aside class="sidebar" id="sidebar" aria-label="筛选侧栏">
+    <div class="side-scroll">
+      <h3 class="side-h">判定</h3>
+      <div id="verList"></div>
+      <h3 class="side-h">我的收藏</h3>
+      <div id="favList"></div>
+      <div class="side-actions">
+        <button class="btn" id="btnExport">__I_UP__ 导出</button>
+        <button class="btn" id="btnImport">__I_DOWN__ 导入</button>
+        <input type="file" id="importFile" accept=".json,application/json" style="display:none">
+      </div>
+      <h3 class="side-h">赛事</h3>
+      <div id="compList"></div>
+      <h3 class="side-h">球队</h3>
+      <div id="teamList"></div>
+      <h3 class="side-h">期数</h3>
+      <div id="issueList"></div>
+      <h3 class="side-h">教学分类</h3>
+      <div id="catList"></div>
+      <button class="side-link" id="btnStats">__I_CHART__ 分类统计总表</button>
+    </div>
+  </aside>
 
-  <section class="plist">
-    <div class="plist-head" id="plistHead"><span id="issueTitle"></span><span>显示 <b id="shownCount">0</b> 例 · 点击行在右侧查看，<span class="kbd">↑</span><span class="kbd">↓</span> 切换</span></div>
-    <div id="plistRows"></div>
+  <section class="plist" aria-label="判例列表">
+    <div class="plist-head">
+      <div class="iss" id="issueTitle"></div>
+      <div class="cnt">显示 <b id="shownCount">0</b> 例 · 点击行查看详情 · <span class="kbd">↑</span><span class="kbd">↓</span> 切换 · <span class="kbd">/</span> 搜索</div>
+    </div>
+    <div class="plist-rows" id="plistRows"></div>
   </section>
 
   <section class="detail" id="detail">
-    <button class="mobile-back" id="mobileBack">← 返回判例列表</button>
-    <div class="detail-empty" id="detailEmpty">← 从左侧列表选择判例开始学习</div>
+    <button class="mobile-back" id="mobileBack">__I_LEFT__ 返回列表</button>
+    <div class="detail-empty" id="detailEmpty">__I_FILM_B__<span>从中间列表选择判例开始学习</span></div>
     <div class="d-card" id="dcard" style="display:none">
       <div class="d-head" id="dHead"></div>
       <div class="d-video"><video id="dvid" controls preload="metadata" playsinline></video></div>
@@ -376,14 +345,14 @@ body.sb-off .sidebar{display:none}
       <details class="d-note-box" id="dCatNote"><summary></summary><div></div></details>
       <div class="favtags" id="favTags" style="display:none"></div>
       <div class="notewrap" id="noteWrap" style="display:none">
-        <textarea id="noteBox" placeholder="✏️ 写下你的学习笔记…（自动保存）"></textarea>
+        <textarea id="noteBox" placeholder="写下你的学习笔记…（自动保存）"></textarea>
         <span class="nstatus" id="noteStatus"></span>
       </div>
       <div class="tags" id="dTags"></div>
       <div class="d-foot" id="dFoot"></div>
       <div class="d-nav">
-        <button id="prevBtn">◀ 上一个 <span class="kbd">↑</span></button>
-        <button id="nextBtn">下一个 <span class="kbd">↓</span> ▶</button>
+        <button id="prevBtn">__I_UP__ 上一个 <span class="kbd">↑</span></button>
+        <button id="nextBtn">下一个 <span class="kbd">↓</span> __I_DOWN__</button>
       </div>
     </div>
   </section>
@@ -392,7 +361,7 @@ body.sb-off .sidebar{display:none}
 <!-- 统计弹层 -->
 <div class="modal-mask" id="modalStats">
   <div class="modal matrix">
-    <button class="close" data-close>关闭 ✕</button>
+    <button class="close" data-close>关闭</button>
     <h3>判罚认定统计总表（按教学分类）</h3>
     <table><thead><tr>
       <th>分类</th><th>错漏判</th><th>支持原判</th><th>不予认定</th><th>小计</th>
@@ -404,20 +373,20 @@ body.sb-off .sidebar{display:none}
 <!-- 说明弹层 -->
 <div class="modal-mask" id="modalHelp">
   <div class="modal help">
-    <button class="close" data-close>关闭 ✕</button>
+    <button class="close" data-close>关闭</button>
     <h3>使用说明与统计口径</h3>
     <div id="helpBody"></div>
   </div>
 </div>
 
-<button class="top-btn" onclick="document.getElementById('detail').scrollTo({top:0,behavior:'smooth'})">回到顶部</button>
+<button class="top-btn" id="btnTop">__I_UP__ 回到顶部</button>
 
 <script>
 const DATA = __DATA__;
+const IC = __ICONS__;
 const CATS = DATA.categories;
 const VN = {wrong:"错漏判", correct:"支持原判", pending:"不予认定"};
-const VICON = {wrong:"❌", correct:"✅", pending:"⚪"};
-const VCLS = {wrong:"b-wrong", correct:"b-correct", pending:"b-pending"};
+const VCLS = {wrong:"wrong", correct:"correct", pending:"pending"};
 const bySeq = {};
 DATA.cases.forEach(c => bySeq[c.seq] = c);
 // 必须在applyFilter的自动选中改写hash之前捕获初始锚点
@@ -461,22 +430,17 @@ for (const c of DATA.cases) {
 const verCount = {all:DATA.cases.length, wrong:0, correct:0, pending:0};
 for (const c of DATA.cases) verCount[c.v]++;
 
-document.getElementById("totalBadge").textContent =
-  `${DATA.cases.length}例 · 错漏判${verCount.wrong} · 支持原判${verCount.correct}`;
-const badge = document.getElementById("totalBadge");
-badge.style.cursor = "pointer";
-badge.title = "点击查看分类统计总表";
-badge.onclick = ()=>openModal("modalStats");
+document.getElementById("btnStats").onclick = ()=>openModal("modalStats");
 document.getElementById("catList").innerHTML =
   `<button class="cat-item on" data-cat=""><span class="nm">全部分类</span><b>${DATA.cases.length}</b></button>` +
   CATS.filter(k=>catCount[k.id]).map(k=>
-    `<button class="cat-item" data-cat="${k.id}"><span class="nm">${k.icon} ${k.name}</span>` +
+    `<button class="cat-item" data-cat="${k.id}"><span class="nm">${k.name}</span>` +
     `<b>${catCount[k.id]}</b><small>错${catWrong[k.id]||0}</small></button>`).join("");
 document.getElementById("verList").innerHTML =
-  `<button class="ver-item on" data-v=""><span class="vdot" style="background:#94a3b8"></span><span class="nm">全部判定</span><b>${verCount.all}</b></button>` +
-  `<button class="ver-item" data-v="wrong"><span class="vdot" style="background:var(--red)"></span><span class="nm">❌ 错漏判</span><b>${verCount.wrong}</b></button>` +
-  `<button class="ver-item" data-v="correct"><span class="vdot" style="background:#3a9d55"></span><span class="nm">✅ 支持原判</span><b>${verCount.correct}</b></button>` +
-  `<button class="ver-item" data-v="pending"><span class="vdot" style="background:#d9a514"></span><span class="nm">⚪ 不予认定</span><b>${verCount.pending}</b></button>`;
+  `<button class="ver-item on" data-v=""><span class="dot" style="background:var(--muted)"></span><span class="nm">全部</span><b>${verCount.all}</b></button>` +
+  `<button class="ver-item" data-v="wrong"><span class="dot wrong"></span>错漏判<b>${verCount.wrong}</b></button>` +
+  `<button class="ver-item" data-v="correct"><span class="dot correct"></span>支持原判<b>${verCount.correct}</b></button>` +
+  `<button class="ver-item" data-v="pending"><span class="dot pending"></span>不予认定<b>${verCount.pending}</b></button>`;
 
 // ---------- 状态与筛选 ----------
 const state = {cat:"", v:"", issue:"", q:"", sel:null, vIdx:0, fav:null,
@@ -544,7 +508,7 @@ function renderSidebar(){
   document.getElementById("issueList").innerHTML =
     Array.from({length:CFG.issueCount},(_,k)=>k+1).map(i=>{
       const n = DATA.cases.filter(c=>baseMatch(c,"issue") && String(c.issue)===String(i)).length;
-      return `<button class="cat-item ${String(state.issue)===String(i)?"on":""}" data-issue="${i}"><span class="nm">第${i}期</span><b>${n}</b></button>`;
+      return `<button class="cat-item ${String(state.issue)===String(i)?"on":""}" data-issue="${i}" title="第${i}期 · ${n}例"><span class="nm">${i}</span><b>${n}</b></button>`;
     }).join("");
 }
 
@@ -561,16 +525,16 @@ function renderList(){
   const groups = {};
   list.forEach(c => (groups[c.category] = groups[c.category]||[]).push(c));
   const rows = CATS.filter(k=>groups[k.id]).map(k =>
-    `<div class="ph">${k.icon} ${k.name} <b>${groups[k.id].length}例</b></div>` +
+    `<div class="ph">${k.name} <b>${groups[k.id].length} 例</b></div>` +
     groups[k.id].map(c=>{
       const short = (c.comp||"").replace("联赛","");
       const varChip = c.var==="none" ? "" :
         `<span class="rv ${c.var==="wrong"?"bad":""}">V${c.var==="wrong"?"✗":"✓"}</span>`;
-      return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}">
+      return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" aria-current="${state.sel===c.seq}">
         <span class="dot ${c.v}"></span>
-        <span class="ptxt"><b>${crest(c.home,16)}${esc(c.home)} <span style="color:var(--muted);font-weight:400">vs</span> ${crest(c.away,16)}${esc(c.away)}</b>
-        <i><span class="p-source">${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""}</span> · <span class="p-case-id">第${c.issue}期-判例${c.no}</span> · <span class="p-verdict">${VN[c.v]}</span></i></span>
-        <span class="pmark">${isFav(c.seq)?"★":""}${hasNote(c.seq)?"📝":""}</span>
+        <span class="ptxt"><b>${crest(c.home,16)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16)}${esc(c.away)}</b>
+        <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · ${VN[c.v]}</i></span>
+        <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}</span>
         ${varChip}</div>`;
     }).join("")).join("");
   document.getElementById("plistRows").innerHTML = rows ||
@@ -596,12 +560,13 @@ function clearDetail(){
   v.removeAttribute("src"); v.load();
 }
 
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
-  if (window.matchMedia && window.matchMedia("(max-width:900px)").matches)
+  if (window.matchMedia && window.matchMedia("(max-width:1080px)").matches)
     document.body.classList.add("detail-open");
   state.sel = seq;
   const iss = DATA.issues[c.issue];
@@ -613,11 +578,11 @@ function select(seq, scrollRow=true){
     .replace(c.home, `${crest(c.home,22)}${esc(c.home)}`)
     .replace(c.away, `${crest(c.away,22)}${esc(c.away)}`);
   const varBadge = c.var==="none" ? "" :
-    `<span class="badge b-var ${c.var==="wrong"?"bad":""}">VAR${c.var==="wrong"?"错误":"正确"}</span>`;
+    `<span class="badge ${c.var==="wrong"?"wrong":"info"}">VAR${c.var==="wrong"?"错误":"正确"}</span>`;
   document.getElementById("dHead").innerHTML =
     `<span class="cid">第${c.issue}期 · 判例${c.no}</span>
-     <span class="badge ${VCLS[c.v]}">${VICON[c.v]} ${VN[c.v]}</span>${varBadge}
-     <button class="favbtn ${isFav(c.seq)?"on":""}" id="favBtn" title="收藏该判例">${isFav(c.seq)?"★ 已收藏":"☆ 收藏"}</button>
+     <span class="badge ${VCLS[c.v]}">${VN[c.v]}</span>${varBadge}
+     <button class="favbtn ${isFav(c.seq)?"on":""}" id="favBtn" title="收藏该判例" aria-pressed="${isFav(c.seq)}">${isFav(c.seq)?IC["star-f"]+" 已收藏":IC.star+" 收藏"}</button>
      <h2 class="match">${matchHTML}</h2>`;
   renderFavUI(c);
   renderNoteUI(c);
@@ -759,7 +724,7 @@ function renderFavList(){
   const cur = state.fav;
   const item = (val, label, n) =>
     `<button class="ver-item ${cur===val?"on":""}" data-fav="${val}"><span class="nm">${label}</span><b>${n}</b></button>`;
-  let h = item("", "全部", DATA.cases.length) + item("all", "★ 收藏", nAll) + item("note", "📝 笔记", nNote);
+  let h = item("", "全部", DATA.cases.length) + item("all", IC["star-f"]+" 收藏", nAll) + item("note", IC.note+" 笔记", nNote);
   for (const t of TAG_PRESETS) h += item("tag:"+t, t, tags[t]||0);
   for (const t of Object.keys(tags)) if (!TAG_PRESETS.includes(t)) h += item("tag:"+t, t, tags[t]);
   document.getElementById("favList").innerHTML = h;
@@ -820,7 +785,6 @@ document.getElementById("verList").addEventListener("click", e=>{
 });
 fSearch.addEventListener("input", ()=>{ state.q = fSearch.value; applyFilter(); });
 fSearch.addEventListener("search", ()=>{ state.q = fSearch.value; applyFilter(); }); // 搜索框✕清空按钮
-fSearch.addEventListener("search", ()=>{ state.q = fSearch.value; applyFilter(); }); // 搜索框✕清空按钮
 document.getElementById("compList").addEventListener("click", e=>{
   const b = e.target.closest("[data-comp]"); if(!b) return;
   state.comp = (state.comp===b.dataset.comp) ? "" : b.dataset.comp;
@@ -850,24 +814,14 @@ document.getElementById("vswRow").addEventListener("click", e=>{
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
 document.getElementById("btnSb").onclick = ()=>{
-  document.body.classList.toggle("filters-off");
+  // 桌面端收起/展开侧栏; 窄屏(≤1080px)侧栏为抽屉,切换其开合
+  if (window.matchMedia && matchMedia("(max-width:1080px)").matches)
+    document.body.classList.toggle("sb-open");
+  else
+    document.body.classList.toggle("sb-off");
 };
 document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
-document.querySelectorAll(".filter-toggle").forEach(btn=>{
-  btn.onclick = e=>{
-    e.stopPropagation();
-    const menu = document.getElementById(btn.dataset.filter);
-    const open = menu.classList.toggle("open");
-    document.querySelectorAll(".filter-menu").forEach(other=>{ if(other!==menu) other.classList.remove("open"); });
-    document.querySelectorAll(".filter-toggle").forEach(other=>other.classList.toggle("on", other===btn && open));
-  };
-});
-document.addEventListener("click", e=>{
-  if (!e.target.closest(".filterbar")) {
-    document.querySelectorAll(".filter-menu").forEach(menu=>menu.classList.remove("open"));
-    document.querySelectorAll(".filter-toggle").forEach(btn=>btn.classList.remove("on"));
-  }
-});
+document.getElementById("btnTop").onclick = ()=>document.getElementById("detail").scrollTo({top:0,behavior:"smooth"});
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
 document.querySelectorAll("[data-close]").forEach(b=>
   b.onclick = ()=>b.closest(".modal-mask").classList.remove("open"));
@@ -919,7 +873,7 @@ const hasPen = t => (t||[]).includes("点球");
     .map(([k,v])=>`第${k}期：${v.replace(/。$/,"")}`).join("；");
   document.getElementById("helpBody").innerHTML = `
     <p><b>判定口径：</b>「错漏判」指评议组认定裁判员（或助理裁判员）判罚决定错误/漏判；「支持原判」指评议组支持临场决定；「不予认定」指现有视频无法判断、评议组不做认定。VAR错误单独标注。</p>
-    <p><b>操作方法：</b>左侧自上而下：赛事（中超/中甲/中乙等）→ 球队（跨赛事聚合，如广州豹同时列出其中甲与足协杯判例）→ 评议期数（按原网页一期一期浏览，选中后列表头显示该期官方标题）→ 犯规分类 → 判定 → 我的收藏；中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；「☰ 侧栏」可收起侧栏获得更宽画面。</p>
+    <p><b>操作方法：</b>左侧自上而下：判定 → 我的收藏（按标签筛选）→ 赛事（中超/中甲/中乙等）→ 球队（跨赛事聚合，如广州豹同时列出其中甲与足协杯判例）→ 期数（按原网页一期一期浏览，选中后列表头显示该期官方标题）→ 教学分类；中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；顶栏按钮可收起侧栏获得更宽画面，右上角可切换明暗主题。</p>
     <p><b>收藏与笔记：</b>在详情区点「☆ 收藏」收藏判例并可打多个标签（精选/有疑问/尺度标杆/易错点/课堂讨论/自定义），笔记自动保存。收藏的判例在列表中显示★，可通过左侧「我的收藏」按标签筛选。数据存于浏览器 localStorage；用「导出/导入」按钮可在不同浏览器或 file:// 与 http:// 两种打开方式之间同步。</p>
     <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，${CFG.issueDesc}。每条判例附原文链接。</p>
     <p><b>期数口径注释：</b>${issNotes ? issNotes + "。" : ""}其余各期与官方标题认定数一致。</p>
@@ -966,11 +920,25 @@ def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
     data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    search_html = (f'<div class="search-wrap">{icon("search")}'
+                   f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>')
+    tb = topbar(active=cfg["out"], right=search_html, stats=cfg["stats"],
+                brand_sub=f"{season}赛季 · {len(data['cases'])}判例", seasons=tuple(sorted(SEASONS)),
+                sb_btn=True, help_btn=True)
+    sub = {"__I_UP__": icon("up"), "__I_DOWN__": icon("down"), "__I_LEFT__": icon("left", 14),
+           "__I_CHART__": icon("chart", 14), "__I_FILM_B__": icon("film", 30)}
     html = inject_theme(HTML
             .replace("__DATA__", data_js)
+            .replace("__ICONS__", js_icons())
+            .replace("__TOPBAR__", tb)
             .replace("__TITLE__", cfg["title"])
+            .replace("__STATS__", cfg["stats"])
             .replace("__BRAND__", cfg["brand"])
-            .replace("__STATS__", cfg["stats"]))
+            .replace("__I_FILM_B__", sub["__I_FILM_B__"])
+            .replace("__I_CHART__", sub["__I_CHART__"])
+            .replace("__I_LEFT__", sub["__I_LEFT__"])
+            .replace("__I_DOWN__", sub["__I_DOWN__"])
+            .replace("__I_UP__", sub["__I_UP__"]))
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]
     out.write_text(html, encoding="utf-8")

@@ -22,10 +22,18 @@ NOISE = re.compile(r"flag|kit|stadium|map|icon|commons|wikimedia|nike|adidas|bal
 
 def api(params):
     query = "&".join(f"{k}={S.safe_urlencode(v)}" for k, v in params.items())
-    status, text = S.fetch_text(f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=2)
-    if status != 200 or not text.startswith("{"):
-        raise RuntimeError(f"Wikipedia API {status}")
-    return json.loads(text)
+    last = None
+    for attempt in range(5):  # 429 限流退避：2/6/12/24/48s
+        status, text = S.fetch_text(f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=1)
+        if status == 200 and text.startswith("{"):
+            time.sleep(.6)
+            return json.loads(text)
+        last = f"Wikipedia API {status}"
+        if status in (429, 503) or status is None:
+            time.sleep(2 * 3 ** attempt if attempt < 4 else 48)
+            continue
+        raise RuntimeError(last)
+    raise RuntimeError(last)
 
 
 def score_image(title, team):
@@ -38,20 +46,23 @@ def score_image(title, team):
 
 
 def own_article_images(team):
-    """仅取本队词条(精确标题)的图片，保证队徽来源即本俱乐部。"""
-    data = api({"action": "query", "format": "json", "prop": "images", "imlimit": "200",
-                "titles": team + "足球俱乐部"})
-    for pid, page in data.get("query", {}).get("pages", {}).items():
-        if pid == "-1":
-            return []
-        return [image.get("title", "") for image in page.get("images", [])]
-    return []
+    """仅取本队词条(精确标题)的图片，保证队徽来源即本俱乐部。女足等词条无"足球俱乐部"后缀，两种标题都试。"""
+    for article in (team + "足球俱乐部", team):
+        data = api({"action": "query", "format": "json", "prop": "images", "imlimit": "200",
+                    "titles": article})
+        for pid, page in data.get("query", {}).get("pages", {}).items():
+            if pid == "-1":
+                continue
+            images = [image.get("title", "") for image in page.get("images", [])]
+            if images:
+                return images, article
+    return [], team + "足球俱乐部"
 
 
 def candidate(team):
     # 优先且仅用本队词条图片：跨页面混选曾让名队队徽(如北京国安)覆盖目标队
-    article = team + "足球俱乐部"
-    for title in own_article_images(team):
+    images, article = own_article_images(team)
+    for title in images:
         score = score_image(title, team)
         if score:
             return (score, title, article)

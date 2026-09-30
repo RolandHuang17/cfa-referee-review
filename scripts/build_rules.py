@@ -7,7 +7,7 @@
 import json
 import re
 from pathlib import Path
-from theme import inject_theme
+from theme import inject_theme, icon, js_icons, topbar
 
 import pymupdf
 import opencc
@@ -304,34 +304,21 @@ RULES_TEMPLATE = r"""<!DOCTYPE html>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>足球竞赛规则 2026/27 · 简体中文</title>
 <style>
-:root{--bg:#f4f6f9;--card:#fff;--ink:#1c2733;--muted:#5c6b7a;--line:#e3e9f0;
-  --brand:#0b4c8c;--brand2:#1266b5;--bluebg:#eef4fb;--mark:#ffe9a8;--fs:16px}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--ink);font-size:var(--fs);line-height:1.85;
-  font-family:"Microsoft YaHei","PingFang SC","Segoe UI",system-ui,sans-serif}
-.topbar{height:54px;display:flex;align-items:center;gap:10px;padding:0 14px;
-  background:linear-gradient(90deg,#0b3d73,#0b4c8c 60%,#1266b5);color:#fff;
-  position:sticky;top:0;z-index:40;overflow-x:auto;scrollbar-width:none}
-.topbar::-webkit-scrollbar{display:none}
-.topbar .brand{font-size:17px;font-weight:700;white-space:nowrap}
-.topbar .brand span{font-size:12.5px;color:#cfe2f5;font-weight:400;margin-left:6px}
-.topbar input[type=search]{flex:1;max-width:430px;padding:7px 12px;border:1px solid #3a6ea8;
-  border-radius:8px;background:rgba(255,255,255,.94);font-size:14px;color:var(--ink)}
-.tbtn{padding:7px 14px;border-radius:8px;border:1px solid #3a6ea8;cursor:pointer;
-  background:rgba(255,255,255,.12);color:#e8f1fa;font-size:13.5px;text-decoration:none;white-space:nowrap}
-.tbtn:hover{background:rgba(255,255,255,.22)}
-.layout{display:grid;grid-template-columns:290px 1fr;height:calc(100vh - 54px)}
-.sidebar{overflow-y:auto;background:#f8fafc;border-right:1px solid var(--line);padding:10px 8px}
-.toc-item{display:block;width:100%;text-align:left;padding:7px 10px;border:none;background:none;
-  border-radius:8px;cursor:pointer;font-size:13.8px;color:var(--ink);font-family:inherit}
-.toc-item:hover{background:#eef3f9}
-.toc-item.on{background:var(--brand);color:#fff}
-.toc-item .lawno{display:inline-block;min-width:52px;color:var(--brand2);font-weight:600;font-size:12.5px}
-.toc-item.on .lawno{color:#cfe2f5}
-.toc-group{font-size:11.5px;color:var(--muted);letter-spacing:1px;margin:12px 6px 4px}
-main{overflow-y:auto;padding:22px 28px 60px}
-.content{max-width:900px;background:var(--card);border:1px solid var(--line);border-radius:12px;
-  padding:26px 32px;box-shadow:0 1px 3px rgba(15,40,80,.05)}
+/* ===== rules 页专属布局 (颜色/组件来自 data-cfa-theme 设计系统) ===== */
+:root{--fs:16px;--mark:rgba(255,214,90,.55)}
+body{font-size:var(--fs);line-height:1.9}
+.layout{display:grid;grid-template-columns:292px minmax(0,1fr);height:calc(100vh - var(--top-h));min-height:0}
+.sidebar{overflow-y:auto;background:var(--bg2);border-right:1px solid var(--line);padding:10px 8px 20px}
+.toc-group{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:14px 8px 5px}
+.toc-item{display:block;width:100%;text-align:left;padding:6.5px 10px;border:none;background:none;
+  border-radius:var(--r-sm);cursor:pointer;font-size:13.5px;color:var(--ink2);font-family:inherit;transition:.12s}
+.toc-item:hover{background:var(--card2);color:var(--ink)}
+.toc-item.on{background:var(--info-bg);color:var(--brand);font-weight:600}
+.toc-item .lawno{display:inline-block;min-width:52px;color:var(--brand);font-weight:600;font-size:12px}
+.toc-item.on .lawno{color:var(--brand)}
+main{overflow-y:auto;padding:22px 28px 60px;min-height:0}
+.content{max-width:900px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:26px 32px;box-shadow:var(--shadow-sm)}
 .content h2{margin:0 0 4px;font-size:23px;color:var(--brand)}
 .content .pages{font-size:12.5px;color:var(--muted);margin-bottom:14px}
 .content h3{font-size:17.5px;color:var(--brand);margin:22px 0 6px}
@@ -341,88 +328,89 @@ main{overflow-y:auto;padding:22px 28px 60px}
 .content li.l2{margin-left:24px;list-style-type:"–"}
 .content .fn{font-size:12.5px;color:var(--muted);margin:4px 0}
 .content .pg{margin:16px 0;text-align:center}
-.content .pg img{max-width:100%;border:1px solid var(--line);border-radius:8px}
+.content .pg img{max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm)}
 .content mark{background:var(--mark);padding:0 2px;border-radius:3px}
 /* —— 划词高亮 —— */
 mark.hl{padding:0 1px;border-radius:3px;cursor:pointer}
-mark.hl.hy{background:#ffe58f}
-mark.hl.hg{background:#b7ebc8}
-mark.hl.hr{background:#ffc2b8}
-#hlBar{position:fixed;z-index:80;display:none;gap:6px;background:#1c2733;border-radius:10px;
-  padding:6px 8px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
-#hlBar button{border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:13px;font-weight:600}
+mark.hl.hy{background:#ffe58f;color:#3d3200}
+mark.hl.hg{background:#b7ebc8;color:#0a4d24}
+mark.hl.hr{background:#ffc2b8;color:#7a1d10}
+#hlBar{position:fixed;z-index:80;display:none;gap:6px;background:var(--top-bg);border:1px solid var(--top-line);
+  border-radius:var(--r-md);padding:6px 8px;box-shadow:var(--shadow)}
+#hlBar button{border:none;border-radius:6px;padding:4px 14px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit}
 #hlBar .by{background:#ffe58f;color:#5c4a00}
 #hlBar .bg{background:#b7ebc8;color:#0a4d24}
 #hlBar .br{background:#ffc2b8;color:#7a1d10}
 /* —— 章节笔记 —— */
-.notebox{margin:0 0 16px;border:1px solid var(--line);border-radius:10px;background:#fbfcfe}
-.notebox summary{cursor:pointer;padding:8px 14px;color:var(--brand);font-weight:600;user-select:none}
-.notebox summary .hasnote{color:#9a6700}
+.notebox{margin:0 0 16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card2)}
+.notebox summary{cursor:pointer;padding:8px 14px;color:var(--brand);font-weight:600;user-select:none;display:flex;align-items:center;gap:6px}
+.notebox summary .hasnote{color:var(--amber)}
 .notebox textarea{width:100%;min-height:96px;border:none;border-top:1px dashed var(--line);
-  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:#fffdf5;outline:none;
-  display:block;border-radius:0 0 10px 10px}
+  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:var(--card);color:var(--ink);outline:none;
+  display:block;border-radius:0 0 var(--r-md) var(--r-md)}
 .notebox .nrow{display:flex;gap:10px;align-items:center;padding:6px 14px 10px;font-size:12.5px;color:var(--muted)}
-.notebox .nrow button{border:1px solid #cbd5e1;background:#fff;border-radius:6px;
-  padding:3px 12px;cursor:pointer;font-size:12.5px;color:var(--ink)}
-.notebox .nrow button:hover{border-color:var(--brand2);color:var(--brand2)}
-.hltip{font-size:12.5px;color:var(--muted);background:#f6f9fc;border:1px dashed #c9d8e6;
-  border-radius:8px;padding:6px 12px;margin:0 0 14px}
+.notebox .nrow button{border:1px solid var(--line);background:var(--card);border-radius:var(--r-sm);
+  padding:3px 12px;cursor:pointer;font-size:12.5px;color:var(--ink2);font-family:inherit}
+.notebox .nrow button:hover{border-color:var(--brand);color:var(--brand)}
+.hltip{font-size:12.5px;color:var(--muted);background:var(--card2);border:1px dashed var(--line);
+  border-radius:var(--r-sm);padding:6px 12px;margin:0 0 14px}
+.hltip b{color:var(--ink2)}
 .dnav{display:flex;gap:10px;margin-top:20px}
-.dnav button{flex:1;padding:10px;border-radius:9px;border:1px solid #cbd5e1;background:#fff;
-  cursor:pointer;font-size:14.5px;color:var(--ink)}
-.dnav button:hover{border-color:var(--brand2);color:var(--brand2)}
-.empty{padding:60px;text-align:center;color:var(--muted)}
-.searchbox{position:absolute;top:56px;left:300px;right:24px;z-index:30;display:none;
-  background:#fff;border:1px solid var(--line);border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.14);
+.dnav button{flex:1;padding:10px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--card2);
+  cursor:pointer;font-size:14px;color:var(--ink2);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
+.dnav button:hover{border-color:var(--brand);color:var(--brand)}
+.empty{padding:60px 20px;text-align:center;color:var(--faint);font-size:15px;display:flex;flex-direction:column;gap:12px;align-items:center}
+.searchbox{position:fixed;top:calc(var(--top-h) + 8px);left:308px;right:24px;z-index:55;display:none;
+  background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow);
   max-height:55vh;overflow-y:auto;padding:8px}
 .searchbox.open{display:block}
 .sr{display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:none;
-  cursor:pointer;border-bottom:1px solid #f1f5f9;font-size:13.5px;font-family:inherit;color:var(--ink)}
-.sr:hover{background:#f6f9fc}
-.sr .t{color:var(--brand2);font-weight:600}
+  cursor:pointer;border-bottom:1px solid var(--line2);font-size:13.5px;font-family:inherit;color:var(--ink)}
+.sr:hover{background:var(--card2)}
+.sr .t{color:var(--brand);font-weight:600}
 .sr .s{color:var(--muted);font-size:12.5px}
 .sr mark{background:var(--mark)}
-footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px}
-@media (max-width:900px){.layout{grid-template-columns:1fr}.sidebar{display:none}
-  .searchbox{left:12px;right:12px}}
+footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px;line-height:1.8}
+.fsdemo{font-size:12px}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .sidebar{position:fixed;left:0;top:var(--top-h);bottom:0;width:284px;z-index:70;
+    transform:translateX(-105%);transition:transform .18s;box-shadow:var(--shadow)}
+  body.toc-open .sidebar{transform:none}
+  .searchbox{left:12px;right:12px}
+  main{padding:14px 14px 50px}
+  .content{padding:18px 16px}
+}
 </style>
 </head>
 <body class="page-rules">
-<header class="topbar">
-  <div class="brand">📖 足球竞赛规则 <span>2026/27 · 简体中文</span></div>
-  <input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）">
-  <button class="tbtn" id="fsMinus">A－</button>
-  <button class="tbtn" id="fsPlus">A＋</button>
-  <a class="tbtn" href="index.html">🏠 首页</a>
-  <a class="tbtn" href="season-2024.html">24评议</a>
-  <a class="tbtn" href="season-2025.html">25评议</a>
-  <a class="tbtn" href="stats-2025.html">📊 盘点</a>
-</header>
+<a class="skip-link" href="#secHtml">跳到正文</a>
+__TOPBAR__
 <div class="layout">
-  <nav class="sidebar" id="toc"></nav>
+  <nav class="sidebar" id="toc" aria-label="章节目录"></nav>
   <main id="main">
     <div class="content" id="content">
-      <div class="empty" id="emptyBox">← 从左侧目录选择章节开始学习</div>
+      <div class="empty" id="emptyBox">__I_BOOK__<span>从左侧目录选择章节开始学习</span></div>
       <div id="secBody" style="display:none">
         <h2 id="secTitle"></h2>
         <div class="pages" id="secPages"></div>
-        <div class="hltip">💡 划选正文文字可添加高亮：<b>黄=重要</b> / <b>绿=已掌握</b> / <b>红=易错</b>；点击已有高亮可删除。高亮与笔记保存在本浏览器。</div>
+        <div class="hltip">划选正文文字可添加高亮：<b>黄=重要</b> / <b>绿=已掌握</b> / <b>红=易错</b>；点击已有高亮可删除。高亮与笔记保存在本浏览器。</div>
         <details class="notebox" id="noteWrap">
-          <summary>✏️ 本节笔记 <span class="hasnote" id="noteFlag"></span></summary>
+          <summary>本节笔记 <span class="hasnote" id="noteFlag"></span></summary>
           <textarea id="secNote" placeholder="写下对本章的理解、执法要点、疑问…（自动保存）"></textarea>
           <div class="nrow">
             <span id="noteStat"></span>
             <span style="flex:1"></span>
-            <button id="btnExportN">⬇ 导出笔记/高亮</button>
-            <button id="btnImportN">⬆ 导入</button>
+            <button id="btnExportN">导出笔记/高亮</button>
+            <button id="btnImportN">导入</button>
             <input type="file" id="importFileN" accept=".json,application/json" style="display:none">
           </div>
         </details>
         <div id="secHtml"></div>
       </div>
       <div class="dnav">
-        <button id="prevBtn">◀ 上一节</button>
-        <button id="nextBtn">下一节 ▶</button>
+        <button id="prevBtn">上一节</button>
+        <button id="nextBtn">下一节</button>
       </div>
       <footer>
         内容版权归国际足球协会理事会（The IFAB）所有。本页面为官方繁体中文版（2026/27单页版）的
@@ -441,11 +429,13 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px}
 </div>
 <script>
 const DATA = __DATA__;
+const IC = __ICONS__;
 const byId = {};
 DATA.sections.forEach((s,i)=>{ byId[s.id]=s; s.idx=i; });
 let cur = null;
 
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
+  .replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 
 // ---------- 目录 ----------
 const groups = [["前言与总纲", s=>!s.id.startsWith("law-") && !["var","changes","revision","guide"].includes(s.id)],
@@ -478,8 +468,12 @@ function step(dir){
   if(i>=0 && i<DATA.sections.length) select(DATA.sections[i].id);
 }
 document.getElementById("toc").addEventListener("click", e=>{
-  const b = e.target.closest(".toc-item"); if(b) select(b.dataset.id);
+  const b = e.target.closest(".toc-item"); if(!b) return;
+  select(b.dataset.id);
+  if (window.matchMedia && matchMedia("(max-width:900px)").matches)
+    document.body.classList.remove("toc-open");
 });
+document.getElementById("btnSb").onclick = ()=>document.body.classList.toggle("toc-open");
 document.getElementById("prevBtn").onclick = ()=>step(-1);
 document.getElementById("nextBtn").onclick = ()=>step(1);
 
@@ -732,8 +726,16 @@ document.getElementById("importFileN").addEventListener("change", e=>{
 
 def build_html_page(sections):
     data = {"season": "2026/27", "sections": sections}
+    right = (f'<div class="search-wrap">{icon("search")}'
+             f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'
+             f'<button class="tbtn" id="fsMinus" title="缩小字号">A－</button>'
+             f'<button class="tbtn" id="fsPlus" title="放大字号">A＋</button>')
+    tb = topbar(active="rules.html", right=right, brand_sub="2026/27 · 简体中文", sb_btn=True)
     html = inject_theme(RULES_TEMPLATE.replace("__DATA__",
-        json.dumps(data, ensure_ascii=False, separators=(",", ":"))))
+        json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+        .replace("__ICONS__", js_icons())
+        .replace("__TOPBAR__", tb)
+        .replace("__I_BOOK__", icon("book", 30)))
     SITE.mkdir(parents=True, exist_ok=True)
     RULES_HTML.write_text(html, encoding="utf-8")
     print(f"生成 {RULES_HTML}  ({len(html.encode('utf-8'))/1024:.0f} KB)")

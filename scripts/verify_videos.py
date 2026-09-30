@@ -39,7 +39,7 @@ def main():
             need.setdefault(f, c["seq"])
     missing, size_mismatch, ok = [], [], 0
     for f in sorted(need):
-        p = VID / f
+        p = VID / f.split("/", 1)[-1]  # video_files 自带 "2025/"、"2024/" 前缀，去掉避免双拼
         if not p.exists():
             missing.append(f)
             continue

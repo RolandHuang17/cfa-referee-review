@@ -472,7 +472,7 @@ function renderTeam(name, t){
   const team = DATA.teams && DATA.teams[name];
   const crest = team && team.status === 'verified' && team.path
     ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
-    : `<span class="team-badge" style="--badge-fg:${(team&&team.fg)||'#0b4c8c'};--badge-bg:${(team&&team.bg)||'#e9f2fb'}" title="${esc(name)}：文字徽章（队徽待核验）" aria-label="${esc(name)}文字徽章">${esc((team&&team.initials)||name.slice(0,2))}</span>`;
+    : `<span class="team-dot" style="width:22px;height:22px;--badge-fg:${(team&&team.fg)||'#0b4c8c'};--badge-bg:${(team&&team.bg)||'#e9f2fb'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
   return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'}">
     <div class="thead" onclick="this.parentElement.classList.toggle('open')">
       <h3>${crest}${esc(name)}</h3>

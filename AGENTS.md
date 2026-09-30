@@ -133,7 +133,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 2. **safe_http.py 安全模块**：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且内容不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入
-5. **期数结构坑**：2025 第27期内嵌第26期补充认定（fix_issue27_merge.py）；2026 第20期判例一无"判例N:"前缀（parse_issues.py 已有无前缀首判例兜底）；2026 第17期判例九沿判例八事件无对阵行（classify_cases.py 内补全）；comp 兜底归一在 parse/builder 双处
+5. **期数结构坑**：2024 第1期为"结论摘要"式文章（无标准判例结构/无视频，阵容仅在导语中，classify_cases.py 内按原文补全，判例二/三属中甲第1轮）；2025 第27期内嵌第26期补充认定（fix_issue27_merge.py）；2026 第20期判例一无"判例N:"前缀（parse_issues.py 已有无前缀首判例兜底）；2026 第17期判例九沿判例八事件无对阵行（classify_cases.py 内补全）；comp 兜底归一在 parse/builder 双处
 6. **球队名归一是单点**：`generate_teams_catalog.py` 的 `ALIASES`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；impact/scores 里的队名必须是归一化后名字；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
 7. **两 URL 表同步**：fetch_issues.py 的 `ISSUES` 与 parse_issues.py 的 `ISSUE_URL` 是同一套 URL 的两份拷贝，加新期必须同步
 8. **expectation 断言**：verify_project.py 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json

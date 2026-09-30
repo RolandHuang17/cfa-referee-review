@@ -430,11 +430,14 @@ function persistFav() {
 }
 function isFav(seq) { return !!fav[seq]; }
 function hasNote(seq) { return !!(notes[seq] && notes[seq].text && notes[seq].text.trim()); }
-function crest(team, h) {
+function crest(team, h, mark) {
   const item = DATA.teams && DATA.teams[team];
   if (!item) return `<span class="team-badge" title="${esc(team)}：未登记">?</span>`;
   if (item.status === "verified" && item.path)
     return `<img class="crest" style="height:${h}px" src="${item.path}" alt="${esc(team)}队徽">`;
+  // fallback 文字徽章：与完整队名相邻时用色块标记，避免首字与队名重复（如"黑龙黑龙江冰城"）
+  if (mark)
+    return `<span class="team-dot" style="width:${h}px;height:${h}px;background:${item.bg};border:1px solid ${item.fg}" title="${esc(team)}：队徽待核验" aria-label="${esc(team)}"></span>`;
   const scale = Math.max(16, h);
   return `<span class="team-badge" style="width:${scale}px;height:${scale}px;--badge-fg:${item.fg};--badge-bg:${item.bg}" title="${esc(team)}：文字徽章（队徽待核验）" aria-label="${esc(team)}文字徽章">${esc(item.initials)}</span>`;
 }
@@ -483,7 +486,7 @@ for (const c of DATA.cases) {
   }
 }
 function teamBadge(t){
-  return crest(t, 18);
+  return crest(t, 18, true);
 }
 
 // 除 skip 维度外的全部筛选（用于分面计数；skip 可为字符串或数组）
@@ -557,7 +560,7 @@ function renderList(){
         `<span class="rv ${c.var==="wrong"?"bad":""}">V${c.var==="wrong"?"✗":"✓"}</span>`;
       return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" aria-current="${state.sel===c.seq}">
         <span class="dot ${c.v}"></span>
-        <span class="ptxt"><b>${crest(c.home,16)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16)}${esc(c.away)}</b>
+        <span class="ptxt"><b>${crest(c.home,16,true)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16,true)}${esc(c.away)}</b>
         <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · ${VN[c.v]}</i></span>
         <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}</span>
         ${varChip}</div>`;
@@ -600,8 +603,8 @@ function select(seq, scrollRow=true){
   const match = [c.comp, c.round, (c.home&&c.away)?`${c.home} VS ${c.away}`:"", c.minute?`第${c.minute}分钟`:""]
     .filter(Boolean).join(" · ");
   const matchHTML = match
-    .replace(c.home, `${crest(c.home,22)}${esc(c.home)}`)
-    .replace(c.away, `${crest(c.away,22)}${esc(c.away)}`);
+    .replace(c.home, `${crest(c.home,22,true)}${esc(c.home)}`)
+    .replace(c.away, `${crest(c.away,22,true)}${esc(c.away)}`);
   const varBadge = c.var==="none" ? "" :
     `<span class="badge ${c.var==="wrong"?"wrong":"info"}">VAR${c.var==="wrong"?"错误":"正确"}</span>`;
   document.getElementById("dHead").innerHTML =

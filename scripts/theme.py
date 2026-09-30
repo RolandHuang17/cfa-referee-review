@@ -61,10 +61,10 @@ def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=(
     for s in seasons:
         items.append((f"season-{s}.html", f"{s}评议", "film"))
     items += [(stats, "得失盘点", "chart"), ("rules.html", "竞赛规则", "book")]
-    nav = "".join(
-        f'<a class="tbtn{" cur" if href == active else ""}" href="{href}"'
-        f'{" aria-current=\"page\"" if href == active else ""}>{icon(ic)}<span>{label}</span></a>'
-        for href, label, ic in items)
+    nav = ""
+    for href, label, ic in items:
+        cur = ' class="tbtn cur" aria-current="page"' if href == active else ' class="tbtn"'
+        nav += f'<a{cur} href="{href}">{icon(ic)}<span>{label}</span></a>'
     sb = (f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
           f'{icon("menu")}</button>') if sb_btn else ""
     help_b = (f'<button class="tbtn" id="btnHelp" title="使用说明与统计口径">'

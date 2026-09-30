@@ -18,6 +18,9 @@ ALIASES = {
     "温州俱乐部中胤": "温州俱乐部", "浙江": "浙江俱乐部绿城",
     # 官方评议原文两种写法混用（2024第12期"橙狮"/第18期起"澄狮"），规范名以冠名方橙狮体育为准
     "永川茶山竹海澄狮女足": "永川茶山竹海橙狮女足",
+    # 2026赛季赞助冠名/笔误变体
+    "河南俱乐部彩陶坊": "河南俱乐部", "辽宁铁人楠波湾": "辽宁铁人",
+    "延边龙鼎可喜安": "延边龙鼎", "杭州临江吴越": "杭州临平吴越",
 }
 OLD = None  # 旧 crests.json 兼容保留已废弃: verified 状态唯一来源是 crest_overrides.json
 OVERRIDES_PATH = ROOT / "data" / "crest_overrides.json"
@@ -26,7 +29,7 @@ OVERRIDES = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8")) if OVERRIDES_
 # 同一俱乐部更名链：新名 parent 指向旧名（山西崇德荣海 2025-03 由西安崇德荣海迁址更名，两赛季各自用名正确）
 PARENT = {"山西崇德荣海": "西安崇德荣海"}
 teams = {}
-for season in ("2024", "2025"):
+for season in ("2024", "2025", "2026"):
     data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
     for case in data["cases"]:
         for raw in (case.get("home"), case.get("away")):
@@ -55,7 +58,7 @@ for index, name in enumerate(sorted(teams)):
         "parent": PARENT.get(name),
     }
 payload = {"version": 1,
-          "generated_from": ["cases-2024.json", "cases-2025.json", "crest_overrides.json"],
+          "generated_from": ["cases-2024.json", "cases-2025.json", "cases-2026.json", "crest_overrides.json"],
           "teams": result}
 (ROOT / "data" / "teams.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 compat = {item["name"]: item["path"] for item in result.values() if item.get("path")}

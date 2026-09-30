@@ -21,6 +21,12 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 
 SEASONS = {
+    "2026": {
+        "cases": "cases-2026.json", "impact": "impact-2026.json",
+        "scores": "match-scores-2026.json",
+        "out": "stats-2026.html", "page": "season-2026.html",
+        "season": "2026", "issueDesc": "2026赛季第1—22期（赛季进行中）",
+    },
     "2025": {
         "cases": "cases-2025.json", "impact": "impact.json",
         "scores": "match_scores.json",
@@ -549,7 +555,7 @@ def build_season(season):
 
 
 def main():
-    seasons = sys.argv[1:] or ["2025", "2024"]
+    seasons = sys.argv[1:] or ["2026", "2025", "2024"]
     for season in seasons:
         if season not in SEASONS:
             raise SystemExit(f"未知赛季: {season}（可选: {'/'.join(SEASONS)}）")

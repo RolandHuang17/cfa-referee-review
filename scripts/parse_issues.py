@@ -10,9 +10,33 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
 
-CN_NUM = {"一": 1, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7,
+CN_NUM = {"一": 1, "两": 2, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7,
           "八": 8, "九": 9, "十": 10}
 ISSUE_URL = {
+    "2026": {
+        1: "https://www.thecfa.cn/cppy/20260318/37435.html",
+        2: "https://www.thecfa.cn/cppy/20260408/37528.html",
+        3: "https://www.thecfa.cn/cppy/20260415/37566.html",
+        4: "https://www.thecfa.cn/cppy/20260422/37586.html",
+        5: "https://www.thecfa.cn/cppy/20260429/37600.html",
+        6: "https://www.thecfa.cn/cppy/20260506/37623.html",
+        7: "https://www.thecfa.cn/cppy/20260513/37665.html",
+        8: "https://www.thecfa.cn/cppy/20260527/37734.html",
+        9: "https://www.thecfa.cn/cppy/20260604/37755.html",
+        10: "https://www.thecfa.cn/cppy/20260618/37791.html",
+        11: "https://www.thecfa.cn/cppy/20260701/37826.html",
+        12: "https://www.thecfa.cn/cppy/20260708/37857.html",
+        13: "https://www.thecfa.cn/cppy/20260716/37963.html",
+        14: "https://www.thecfa.cn/cppy/20260722/37975.html",
+        15: "https://www.thecfa.cn/cppy/20260729/38010.html",
+        16: "https://www.thecfa.cn/cppy/20260806/38045.html",
+        17: "https://www.thecfa.cn/cppy/20260812/38063.html",
+        18: "https://www.thecfa.cn/cppy/20260819/38072.html",
+        19: "https://www.thecfa.cn/cppy/20260826/38088.html",
+        20: "https://www.thecfa.cn/cppy/20260909/38123.html",
+        21: "https://www.thecfa.cn/cppy/20260916/38169.html",
+        22: "https://www.thecfa.cn/cppy/20260923/38210.html",
+    },
     "2025": {
         1: "https://www.thecfa.cn/zyls1/20250227/35667.html",
         2: "https://www.thecfa.cn/zyls1/20250305/35703.html",
@@ -190,12 +214,12 @@ def parse_season(season: str):
         title_m = re.search(r"<title>(.*?)</title>", html, re.S)
         title = clean(title_m.group(1)).split("-中国足球协会")[0] if title_m else ""
         expect = 0
-        tm = re.search(r"认定(\d+)例裁判[错漏判]+", title)
+        tm = re.search(r"认定([一二三四五六七八九十百两\d]+)例(?:裁判)?[错漏判]+", title)
         if tm:
-            expect = int(tm.group(1))
+            expect = cn2int(tm.group(1)) if not tm.group(1).isdigit() else int(tm.group(1))
         content = extract_content(html)
         paras = split_paragraphs(content)
-        summary, cur = [], None
+        summary, cur, prev_text = [], None, ""
         for text, vids in paras:
             cm = re.match(r"^判例([一二三四五六七八九十百]+)[：:]", text)
             if cm:
@@ -206,8 +230,18 @@ def parse_season(season: str):
                 cases.append(cur)
                 continue
             if cur is None:
+                # 兜底：个别文章首个判例没有"判例N:"前缀（如2026第20期判例一），
+                # 以"俱乐部申诉意见认为"行识别，前一非空段落即对阵描述
+                if "申诉意见认为" in text:
+                    cur = {"issue": n, "no": 1, "desc": prev_text or text,
+                           "appeal": text, "conclusion": "", "videos": []}
+                    seq += 1
+                    cur["seq"] = seq
+                    cases.append(cur)
+                    continue
                 if text and "扫码" not in text and "分享至" not in text:
                     summary.append(text)
+                    prev_text = text
                 continue
             if "申诉意见认为" in text or "申诉意见如下" in text:
                 cur["appeal"] += (("\n" if cur["appeal"] else "") + text)

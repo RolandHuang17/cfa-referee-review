@@ -19,6 +19,7 @@ import sys  # noqa: E402
 from pathlib import Path  # noqa: E402
 
 from classify_cls_2024 import CLS_2024  # noqa: E402
+from classify_cls_2026 import CLS_2026  # noqa: E402
 
 CLS_2025 = {
     # 期01
@@ -321,7 +322,7 @@ def main():
     path = root / "data" / f"cases-{season}.json"
     data = json.loads(path.read_text(encoding="utf-8"))
     cases = data["cases"]
-    table = CLS_2025 if season == "2025" else CLS_2024
+    table = {"2025": CLS_2025, "2024": CLS_2024, "2026": CLS_2026}[season]
     assert len(table) == len(cases), f"分类条目{len(table)} != 判例{len(cases)}"
     missing = [c["seq"] for c in cases if c["seq"] not in table]
     assert not missing, f"缺少分类: {missing}"
@@ -331,6 +332,10 @@ def main():
             c["comp"] = fix_comp_2024(c)
             if not c["comp"] and c["issue"] == 1:
                 c["comp"] = "中超联赛"  # 第1期3条判例均出自中超第2轮
+        if season == "2026" and c["seq"] == 195:
+            # 第17期判例九沿判例八事件（未重复给出对阵行），补全赛事与球队
+            c["comp"] = "中超联赛"
+            c["home"], c["away"] = "山东泰山", "天津津门虎"
         cat, tags, rv, vv = table[c["seq"]]
         c["category"] = cat
         c["category_name"] = CATEGORY_NAMES[cat]

@@ -10,8 +10,12 @@ from crest_catalog import load_catalog, normalize_team
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
-PAGES = ["index.html", "season-2024.html", "season-2025.html",
-         "stats-2024.html", "stats-2025.html", "rules.html"]
+PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
+         "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html"]
+# 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
+EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
+            "2025": (227, 229, {"wrong": 82, "correct": 138, "pending": 7}),
+            "2026": (225, 224, {"wrong": 95, "correct": 121, "pending": 9})}
 
 
 def fail(message):
@@ -29,9 +33,7 @@ def main():
         if re.search(r"<script\s+src=|fonts\.googleapis|cdnjs|unpkg|jsdelivr", text, re.I):
             fail(f"存在外部脚本或CDN引用: site/{name}")
 
-    expected = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
-                "2025": (227, 229, {"wrong": 82, "correct": 138, "pending": 7})}
-    for season, (case_count, video_count, verdicts) in expected.items():
+    for season, (case_count, video_count, verdicts) in EXPECTED.items():
         data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
         cases = data["cases"]
         actual = {key: sum(1 for case in cases if case["referee_verdict"] == key)
@@ -51,7 +53,7 @@ def main():
     catalog = load_catalog()
     names = {item["name"] for item in catalog.values()}
     raw_names = set()
-    for season in ("2024", "2025"):
+    for season in ("2024", "2025", "2026"):
         data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
         for case in data["cases"]:
             raw_names.update(filter(None, (case.get("home"), case.get("away"))))
@@ -73,7 +75,7 @@ def main():
                 fail(f"真实队徽缺少来源: {item.get('name')}")
     print(f"队徽目录校验通过: {len(raw_names)} 个原始名称 -> {len(names)} 个标准队伍")
 
-    print(f"项目校验通过: {len(PAGES)}个页面、双赛季数据、离线资源路径和外部引用均正常")
+    print(f"项目校验通过: {len(PAGES)}个页面、三赛季数据、离线资源路径和外部引用均正常")
 
 
 if __name__ == "__main__":

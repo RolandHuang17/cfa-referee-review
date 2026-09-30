@@ -25,6 +25,7 @@ def load_stats():
     laws = json.loads((ROOT / "data" / "laws.json").read_text(encoding="utf-8"))
     secs = laws["sections"] if isinstance(laws, dict) else laws
     return {
+        "2026": season_stats("2026"),
         "2025": season_stats("2025"),
         "2024": season_stats("2024"),
         "rules": {"sections": len(secs),
@@ -50,7 +51,7 @@ HTML = r"""<!DOCTYPE html>
 .hero p{margin:0 auto;color:var(--muted);font-size:15.5px;max-width:660px}
 .hero .sub{margin-top:12px;font-size:13px;color:var(--faint)}
 
-.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{position:relative;display:flex;flex-direction:column;text-decoration:none;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:22px 22px 18px;overflow:hidden;color:var(--ink);
@@ -66,6 +67,7 @@ HTML = r"""<!DOCTYPE html>
 .card .nums div b{display:block;font-size:21px;font-weight:700;color:var(--brand)}
 .card.c-rules .nums div b{color:var(--amber)}
 .card.c-2024 .nums div b{color:var(--green)}
+.card.c-2026 .nums div b{color:var(--red)}
 .card .nums div span{font-size:12px;color:var(--muted)}
 .card .go{margin-top:14px;font-size:13px;color:var(--brand);font-weight:600;display:flex;align-items:center;gap:5px}
 .card::after{content:"";position:absolute;inset:0;
@@ -112,6 +114,17 @@ __TOPBAR__
   </section>
 
   <section class="grid">
+    <a class="card c-2026" href="season-2026.html">
+      <div class="icon">__I_FILM__</div>
+      <h2>2026赛季评议</h2>
+      <p class="desc">进行中的最新赛季，已收录 __N26_ISSUES__ 期评议，随官方发布持续更新。</p>
+      <div class="nums">
+        <div><b>__N26__</b><span>判例</span></div>
+        <div><b>__W26__</b><span>错漏判</span></div>
+        <div><b>__V26__</b><span>视频</span></div>
+      </div>
+      <div class="go">进入学习 __I_RIGHT__</div>
+    </a>
     <a class="card c-2025" href="season-2025.html">
       <div class="icon">__I_FILM__</div>
       <h2>2025赛季评议</h2>
@@ -148,12 +161,17 @@ __TOPBAR__
   </section>
 
   <section class="steps">
-    <div><b>01</b><span>选择赛季</span><small>打开 2024 或 2025 评议合集</small></div>
+    <div><b>01</b><span>选择赛季</span><small>打开 2026 / 2025 / 2024 评议合集</small></div>
     <div><b>02</b><span>筛选判例</span><small>按赛事、球队、期数、分类和判定查找</small></div>
     <div><b>03</b><span>复盘记录</span><small>观看视频、收藏并记录学习笔记</small></div>
   </section>
 
   <section class="aux">
+    <a href="stats-2026.html">
+      <div class="ai">__I_CHART__</div>
+      <div><b>2026 各队得失盘点</b><span>错漏判影响统计（赛季进行中，比分逐步补齐）</span></div>
+      <div class="arr">__I_RIGHT__</div>
+    </a>
     <a href="stats-2025.html">
       <div class="ai">__I_CHART__</div>
       <div><b>2025 各队得失盘点</b><span>错漏判影响统计：哪队受损、损失了什么</span></div>
@@ -167,7 +185,7 @@ __TOPBAR__
   </section>
 
   <div class="feats">
-    <span class="feat">__I_PLAY__ 390段官方判罚视频</span>
+    <span class="feat">__I_PLAY__ __VTOTAL__段官方判罚视频</span>
     <span class="feat">__I_SHIELD__ 教学分类 + 统一尺度要点</span>
     <span class="feat">__I_STAR__ 收藏多标签</span>
     <span class="feat">__I_NOTE__ 判例笔记</span>
@@ -187,7 +205,8 @@ __TOPBAR__
 
 def main():
     s = load_stats()
-    tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一")
+    tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一",
+                seasons=("2024", "2025", "2026"))
     subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
             "__I_CHART__": icon("chart", 17), "__I_RIGHT__": icon("right", 13),
             "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
@@ -195,6 +214,11 @@ def main():
             "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
+            .replace("__N26__", str(s["2026"]["n"]))
+            .replace("__W26__", str(s["2026"]["wrong"]))
+            .replace("__V26__", str(s["2026"]["videos"]))
+            .replace("__N26_ISSUES__", str(s["2026"]["issues"]))
+            .replace("__VTOTAL__", str(s["2026"]["videos"] + s["2025"]["videos"] + s["2024"]["videos"]))
             .replace("__N25__", str(s["2025"]["n"]))
             .replace("__W25__", str(s["2025"]["wrong"]))
             .replace("__V25__", str(s["2025"]["videos"]))

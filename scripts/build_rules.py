@@ -59,6 +59,24 @@ GLOSSARY = {
     "攝錄機": "摄像机",
     "對賽": "比赛",
     "部份": "部分",
+    "娥媚月": "罚球弧",
+    "技術指導區域": "技术区域",
+    "隊職員": "球队官员",
+}
+# 跨行断词的补充对照：逐行替换时被断行拆开的词在此按简体形态对整节 HTML 二次修正
+SPLIT_GLOSSARY = {
+    "娥媚月": "罚球弧",
+    "技术指导区域": "技术区域",
+    "后备球员": "替补队员",
+    "球队职员": "球队官员",
+    "队职员": "球队官员",
+    "后备席球员及职员人数": "替补席球员及球队官员人数",
+    "其他职员": "其他官员",
+    "名单中的职员": "名单中的官员",
+    "最高级教练(职员)": "最高级教练(官员)",
+    "球员、职员或观众": "球员、官员或观众",
+    "球队或比赛场地职员": "球队官员、体育场官员",
+    "竞赛职员": "竞赛官员",
 }
 # 章节标题（简体规范译名）
 LAW_TITLES = {
@@ -85,9 +103,12 @@ BACK = [
     ("guide", "比赛官员实用指引", 211, 236),
 ]
 
-# 图形/信号页（人工核定）：球门尺寸、有利信号、红黄牌信号、助理裁判员信号、
+# 图形/信号页（人工核定）：球场测量图、球门尺寸、有利信号、红黄牌信号、助理裁判员信号、
 # 进球判定、点球区违例、角球反弹、裁判位置图、词汇图等 —— 渲染为图片而非文本
-DIAGRAM_PAGES = {51, 79, 80, 88, 89, 90, 104, 115, 142, 146, 201, 207, 211, 214, 215}
+DIAGRAM_PAGES = {46, 51, 79, 80, 88, 89, 90, 91, 104, 115, 142, 146, 201, 207, 211, 214, 215}
+# 图文混排页：{页码: (图形区顶, 图形区底)} 页高比例——区内文字(图形标签)随图裁掉，
+# 区外文字照常提取，图像插到区内首行原本出现的位置
+PARTIAL_DIAGRAMS = {29: (0.345, 0.755), 78: (0.45, 1.0), 81: (0.05, 0.50)}
 
 
 def convert(text: str) -> str:
@@ -194,7 +215,8 @@ class Flow:
             self.close_ul(); self.flush_p()
             self.out.append(f'<p class="fn">{html}</p>')
         elif cls == "bullet":
-            self.flush_p()
+            if self.p:            # 仅冲刷未决段落；close_ul 会连带关闭开放列表，
+                self.flush_p()    # 连续 bullet 间绝不能走这里
             if not self.in_ul:
                 self.out.append("<ul>")
                 self.in_ul = True
@@ -240,7 +262,7 @@ class Flow:
         return "\n".join(self.out)
 
 
-def build_section_html(doc, page_nums, diagrams):
+def build_section_html(doc, page_nums, diagrams, partials):
     flow = Flow()
     prev_page = None
     for pno in page_nums:
@@ -248,10 +270,21 @@ def build_section_html(doc, page_nums, diagrams):
             flow.add_img(pno)
             prev_page = pno
             continue
-        lines = page_lines(doc[pno - 1])
+        page = doc[pno - 1]
+        ph = page.rect.height
+        region = partials.get(pno)
+        fig_done = False
+        lines = page_lines(page)
         # 页内bullet按x0分级（每+10pt约一层）
         bullet_x = sorted({round(l["x0"], 1) for l in lines if classify(l) == "bullet"})
         for line in lines:
+            # 图文混排页：进入图形区的首行位置插整块裁剪图，区内行(图形标签)跳过
+            if region and not fig_done and region[0] <= line["y0"] / ph < region[1]:
+                flow.add_img(pno)
+                fig_done = True
+                continue
+            if region and fig_done and region[0] <= line["y0"] / ph < region[1]:
+                continue
             line["page"] = pno
             cls = classify(line)
             flow.new_page = (prev_page is not None and pno != prev_page)
@@ -268,7 +301,26 @@ def build_section_html(doc, page_nums, diagrams):
                 flow.add_line("plain", convert(line["text"]), line["text"],
                               line["x0"], line["y0"], 1)
             prev_page = pno
+        if region and not fig_done:  # 兜底：区内无文本行时图挂页尾
+            flow.add_img(pno)
+            prev_page = pno
     return flow.html()
+
+
+# 第1章 3/4 两节的两栏测量清单在线性提取中必然交错压行，按官方 PDF 原文以结构化列表重建
+MEASURE_FIXES = (
+    (r"<h3>3\.\s*场地幅度</h3>.*?(?=<h3>4\.)",
+     "<h3>3. 场地幅度</h3>"
+     "<p>比赛场地的界线必须较球门线长。</p>"
+     "<ul><li>长度（边线）：最短 90 米（100 码），最长 120 米（130 码）</li>"
+     "<li>宽度（球门线）：最短 45 米（50 码），最长 90 米（100 码）</li></ul>"
+     "<p>竞赛组织可自行在上述场地幅度内决定球门线及边线之长度。</p>"),
+    (r"<h3>4\.\s*国际比赛场地幅度</h3>.*?(?=<h3>|\Z)",
+     "<h3>4. 国际比赛场地幅度</h3>"
+     "<ul><li>长度（边线）：最短 100 米（110 码），最长 110 米（120 码）</li>"
+     "<li>宽度（球门线）：最短 64 米（70 码），最长 75 米（80 码）</li></ul>"
+     "<p>竞赛组织可自行在上述场地幅度内决定球门线及边线之长度。</p>"),
+)
 
 
 def find_law_starts(doc):
@@ -322,7 +374,8 @@ main{overflow-y:auto;padding:22px 28px 60px;min-height:0}
 .content h2{margin:0 0 4px;font-family:var(--font-display);font-size:24px;color:var(--ink);letter-spacing:.4px}
 .content .pages{font-size:12.5px;color:var(--muted);margin-bottom:14px}
 .content h3{font-family:var(--font-display);font-size:18px;color:var(--brand);margin:22px 0 6px;letter-spacing:.3px}
-.content p{margin:9px 0}
+.content p{margin:9px 0;text-indent:2em}
+.content p.fn{text-indent:0}
 .content ul{margin:8px 0;padding-left:26px}
 .content li{margin:5px 0}
 .content li.l2{margin-left:24px;list-style-type:"–"}
@@ -757,24 +810,40 @@ def main():
         if not png.exists():
             pix = doc[pno - 1].get_pixmap(matrix=pymupdf.Matrix(1.6, 1.6))
             pix.save(str(png))
-    print(f"图表页: {sorted(diagrams)}")
+    for pno, (t, b) in sorted(PARTIAL_DIAGRAMS.items()):  # 图文混排页的区域裁剪图
+        png = IMG_DIR / f"p{pno}.png"
+        if not png.exists():
+            page = doc[pno - 1]
+            r = page.rect
+            clip = pymupdf.Rect(r.width * 0.03, r.height * t, r.width * 0.97, r.height * b)
+            pix = page.get_pixmap(matrix=pymupdf.Matrix(1.6, 1.6), clip=clip)
+            pix.save(str(png))
+    print(f"图表页: {sorted(diagrams)} + 区域裁剪 {sorted(PARTIAL_DIAGRAMS)}")
 
     sections = []
     for sid, title, a, b in FRONT:
         nums = list(range(a, b + 1))
         sections.append({"id": sid, "title": title, "pages": f"{a}-{b}",
-                         "html": build_section_html(doc, nums, diagrams)})
+                         "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS)})
     order = sorted(starts.items())
     for idx, (n, start) in enumerate(order):
         end = (order[idx + 1][1] - 1) if idx + 1 < len(order) else BACK[0][2] - 1
         nums = list(range(start, end + 1))  # 图表页包含在内（以图片形式呈现）
         sections.append({"id": f"law-{n}", "title": f"第{CN_NUM[n]}章 {LAW_TITLES[n]}",
                          "law": n, "pages": f"{start}-{end}",
-                         "html": build_section_html(doc, nums, diagrams)})
+                         "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS)})
     for sid, title, a, b in BACK:
         nums = list(range(a, b + 1))
         sections.append({"id": sid, "title": title, "pages": f"{a}-{b}",
-                         "html": build_section_html(doc, nums, diagrams)})
+                         "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS)})
+
+    for s in sections:  # 跨行断词的术语二次修正
+        for k in sorted(SPLIT_GLOSSARY, key=len, reverse=True):
+            s["html"] = s["html"].replace(k, SPLIT_GLOSSARY[k])
+        if s["id"] == "law-1":  # 测量表结构化重建
+            for pat, repl in MEASURE_FIXES:
+                s["html"], n = re.subn(pat, repl, s["html"], flags=re.S)
+                assert n == 1, f"测量表替换未命中: {pat}"
 
     OUT.write_text(json.dumps({"season": "2026/27", "sections": sections},
                               ensure_ascii=False, indent=1), encoding="utf-8")

@@ -212,8 +212,9 @@ body.sb-off .sidebar{display:none}
 .plist-head .cnt b{color:var(--brand);font-weight:700}
 .plist-rows{flex:1;min-height:0;overflow-y:auto;background:var(--card)}
 .ph{position:sticky;top:0;z-index:4;display:flex;align-items:center;gap:8px;padding:6px 14px;
-  font-size:12px;font-weight:700;color:var(--brand);background:var(--card2);border-bottom:1px solid var(--line2)}
-.ph b{color:var(--muted);font-weight:500}
+  font-family:var(--font-display);font-size:12.5px;font-weight:700;letter-spacing:.8px;
+  color:var(--ink);background:var(--card2);border-bottom:1px solid var(--line2)}
+.ph b{color:var(--brand);font-weight:600}
 .prow{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;
   border-bottom:1px solid var(--line2);transition:background .12s}
 .prow:hover{background:var(--card2)}
@@ -238,7 +239,7 @@ body.sb-off .sidebar{display:none}
 .cid{color:var(--muted);font-size:12.5px;background:var(--card2);border:1px solid var(--line);
   border-radius:6px;padding:2px 10px;white-space:nowrap}
 .d-head .match{flex-basis:100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 0;
-  font-size:20px;font-weight:700;line-height:1.45}
+  font-family:var(--font-display);font-size:21px;font-weight:700;line-height:1.5;letter-spacing:.3px}
 .d-head .match .crest{height:24px}
 .d-video{max-width:960px;margin:13px auto 6px}
 .d-video video{width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--r-md);display:block}
@@ -251,7 +252,7 @@ body.sb-off .sidebar{display:none}
 .txt .lbl{color:var(--brand);font-weight:700}
 .txt p{margin:9px 0;white-space:pre-wrap}
 .txt .concl{background:var(--card2);border-left:3px solid var(--brand);
-  padding:11px 15px;border-radius:0 var(--r-md) var(--r-md) 0}
+  padding:11px 15px;border-radius:0 var(--r-md) var(--r-md) 0;font-size:15.5px}
 .d-note-box{margin-top:13px;font-size:13.5px;background:var(--card2);border:1px solid var(--line);
   border-radius:var(--r-md);padding:9px 14px;max-width:960px;margin-left:auto;margin-right:auto}
 .d-note-box summary{cursor:pointer;color:var(--brand);font-weight:600;user-select:none}

@@ -319,9 +319,9 @@ body{font-size:var(--fs);line-height:1.9}
 main{overflow-y:auto;padding:22px 28px 60px;min-height:0}
 .content{max-width:900px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:26px 32px;box-shadow:var(--shadow-sm)}
-.content h2{margin:0 0 4px;font-size:23px;color:var(--brand)}
+.content h2{margin:0 0 4px;font-family:var(--font-display);font-size:24px;color:var(--ink);letter-spacing:.4px}
 .content .pages{font-size:12.5px;color:var(--muted);margin-bottom:14px}
-.content h3{font-size:17.5px;color:var(--brand);margin:22px 0 6px}
+.content h3{font-family:var(--font-display);font-size:18px;color:var(--brand);margin:22px 0 6px;letter-spacing:.3px}
 .content p{margin:9px 0}
 .content ul{margin:8px 0;padding-left:26px}
 .content li{margin:5px 0}

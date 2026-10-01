@@ -46,7 +46,10 @@ HTML = r"""<!DOCTYPE html>
    radial-gradient(900px 420px at -8% 108%, rgba(87,201,133,.08), transparent 55%)}
 .wrap{max-width:1120px;margin:0 auto;padding:40px 20px 56px}
 .hero{text-align:center;margin-bottom:38px}
-.hero h1{margin:0 0 10px;font-size:33px;line-height:1.4;letter-spacing:.5px}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
+  letter-spacing:2.5px;color:var(--brand);margin-bottom:14px}
+.hero .eyebrow::before,.hero .eyebrow::after{content:"";width:28px;height:1px;background:var(--brand);opacity:.5}
+.hero h1{margin:0 0 12px;font-family:var(--font-display);font-size:36px;line-height:1.45;letter-spacing:.5px;font-weight:700}
 .hero h1 em{font-style:normal;color:var(--brand)}
 .hero p{margin:0 auto;color:var(--muted);font-size:15.5px;max-width:660px}
 .hero .sub{margin-top:12px;font-size:13px;color:var(--faint)}
@@ -61,10 +64,10 @@ HTML = r"""<!DOCTYPE html>
   justify-content:center;background:var(--info-bg);color:var(--brand)}
 .card.c-rules .icon{background:var(--amber-bg);color:var(--amber)}
 .card.c-2024 .icon{background:var(--green-bg);color:var(--green)}
-.card h2{margin:13px 0 4px;font-size:19px}
+.card h2{margin:13px 0 4px;font-family:var(--font-display);font-size:19.5px;letter-spacing:.3px}
 .card .desc{margin:0;color:var(--muted);font-size:13.5px;min-height:64px;line-height:1.7}
 .card .nums{display:flex;gap:20px;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
-.card .nums div b{display:block;font-size:21px;font-weight:700;color:var(--brand)}
+.card .nums div b{display:block;font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
 .card.c-rules .nums div b{color:var(--amber)}
 .card.c-2024 .nums div b{color:var(--green)}
 .card.c-2026 .nums div b{color:var(--red)}
@@ -108,10 +111,10 @@ __TOPBAR__
 
 <div class="wrap">
   <section class="hero">
-    <h1>中国足协裁判评议 <em>教学合集</em> 与最新竞赛规则</h1>
+    <div class="eyebrow">中国足协裁判评议 · 教学整理</div>
+    <h1>判例合集 <em>统一尺度</em> 与最新竞赛规则</h1>
     <p>按新裁判统一尺度教学重组的官方评议判例全集，配判罚视频、影响统计与最新版竞赛规则，全部内容可离线使用。</p>
-    <div class="sub">数据来源：中国足球协会官网「裁判评议」栏目 · IFAB《足球竞赛规则》2026-27</div>
-  </section>
+    <div class="sub">数据来源：中国足球协会官网「裁判评议」栏目 · IFAB《足球竞赛规则》2026-27</div>  </section>
 
   <section class="grid">
     <a class="card c-2026" href="season-2026.html">

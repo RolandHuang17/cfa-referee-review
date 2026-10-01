@@ -272,7 +272,7 @@ HTML = r"""<!DOCTYPE html>
 /* ===== stats 页专属布局 (颜色/组件来自 data-cfa-theme 设计系统) ===== */
 .page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
 .page-head .wrap{padding-top:22px;padding-bottom:18px}
-.page-head h1{margin:0 0 4px;font-size:22px;letter-spacing:.3px}
+.page-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:24px;letter-spacing:.4px}
 .page-head .sub{color:var(--muted);font-size:13.5px}
 .page-head .sub a{color:var(--brand);text-decoration:none}
 .page-head .sub a:hover{text-decoration:underline}
@@ -280,7 +280,7 @@ HTML = r"""<!DOCTYPE html>
 .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:16px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
   padding:10px 14px;box-shadow:var(--shadow-sm)}
-.stat b{display:block;font-size:21px;line-height:1.3;color:var(--brand)}
+.stat b{display:block;font-family:var(--font-display);font-size:22px;line-height:1.3;color:var(--brand);font-variant-numeric:tabular-nums}
 .stat.hot b{color:var(--red)}
 .stat span{font-size:12px;color:var(--muted)}
 .controls{position:sticky;top:var(--top-h);z-index:50;background:color-mix(in srgb,var(--bg) 88%,transparent);

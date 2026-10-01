@@ -107,7 +107,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 
 ## 前端架构（src/theme.css 设计系统 + 四个 builder）
 
-- **设计系统**：`src/theme.css` 是全站唯一权威样式层——design tokens（深色默认，`[data-theme="light"]` 浅色翻转；品牌蓝 + 红/绿/黄判定语义色）、共享组件（topbar/btn/chip/badge/dot/card/modal/team-badge）、SVG 图标与明暗切换。`scripts/theme.py` 提供 `inject_theme()`（注入 CSS + 首帧主题脚本 + 切换脚本，localStorage 键 `cfa.theme`，默认跟随系统）与 `topbar()`（统一顶栏生成器：brand/nav/搜索槽/主题切换，season 页另有 sb_btn/help_btn）
+- **设计系统**：`src/theme.css` 是全站唯一权威样式层——视觉风格为暖纸色编辑排版（浅色=米白纸面，深色=暖炭色；陶土色为品牌点缀色，红/绿/黄为判定语义色；标题用衬线字栈 `--font-display`，正文用无衬线 `--font`）、共享组件（topbar/btn/chip/badge/dot/card/modal/team-badge）、SVG 图标与明暗切换。`scripts/theme.py` 提供 `inject_theme()`（注入 CSS + 首帧主题脚本 + 切换脚本，localStorage 键 `cfa.theme`，默认跟随系统）与 `topbar()`（统一顶栏生成器：brand/nav/搜索槽/主题切换，season 页另有 sb_btn/help_btn）
 - **builder 职责**：四个 builder 的 `<style>` 只写页面专属布局，禁止重定义 tokens/顶栏/组件；颜色一律用 var(--token)
 - **season 页布局**：顶栏 + `.workspace` 三栏 grid（侧栏筛选 276px / 播放列表 356px / 详情自适应），每列独立滚动；**全部筛选收进侧栏**（判定 chips / 我的收藏 chips / 赛事 chips / 球队列表(带徽) / 期数 6 列数字网格 / 教学分类行），`body.sb-off` 收起侧栏
 - **数据以 `const DATA = {...}` 内联注入**；`bySeq` 为判例索引

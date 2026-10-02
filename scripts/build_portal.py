@@ -161,6 +161,17 @@ __TOPBAR__
       </div>
       <div class="go">打开规则 __I_RIGHT__</div>
     </a>
+    <a class="card c-scale" href="scale.html">
+      <div class="icon">__I_SHIELD__</div>
+      <h2>统一判罚尺度宣讲</h2>
+      <p class="desc">中国足协官方《2026赛季统一判罚尺度》：27 例典型场景视频、官方说明与判罚决定对照。</p>
+      <div class="nums">
+        <div><b>27</b><span>场景</span></div>
+        <div><b>8</b><span>分组</span></div>
+        <div><b>27</b><span>视频</span></div>
+      </div>
+      <div class="go">进入学习 __I_RIGHT__</div>
+    </a>
   </section>
 
   <section class="steps">

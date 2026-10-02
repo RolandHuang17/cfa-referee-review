@@ -11,7 +11,8 @@ from crest_catalog import load_catalog, normalize_team
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
-         "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html"]
+         "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
+         "scale.html"]
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
             "2025": (227, 229, {"wrong": 82, "correct": 138, "pending": 7}),
@@ -46,6 +47,8 @@ def main():
         for target in re.findall(r"(?:href|src)=\"([^\"]+)\"", path.read_text(encoding="utf-8")):
             if target.startswith(("#", "http://", "https://", "data:", "mailto:")) or "${" in target:
                 continue
+            if target.startswith("videos/"):
+                continue  # 视频为本地 gitignored 资产，线上按需提供
             target_path = (path.parent / target.split("#", 1)[0]).resolve()
             if target.split("#", 1)[0] and not target_path.exists():
                 fail(f"{path.name} 引用了不存在的路径: {target}")

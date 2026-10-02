@@ -27,6 +27,7 @@ def main():
     run("build_portal.py")
     run("build_page.py")
     run("build_stats.py")
+    run("build_scale.py")
     site_assets = SITE / "assets"
     if site_assets.exists():
         shutil.rmtree(site_assets)

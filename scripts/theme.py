@@ -60,7 +60,8 @@ def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=(
     items = [("index.html", "首页", "home")]
     for s in seasons:
         items.append((f"season-{s}.html", f"{s}评议", "film"))
-    items += [(stats, "得失盘点", "chart"), ("rules.html", "竞赛规则", "book")]
+    items += [(stats, "得失盘点", "chart"), ("rules.html", "竞赛规则", "book"),
+              ("scale.html", "统一尺度", "sliders")]
     nav = ""
     for href, label, ic in items:
         cur = ' class="tbtn cur" aria-current="page"' if href == active else ' class="tbtn"'

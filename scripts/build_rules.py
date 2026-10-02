@@ -172,6 +172,9 @@ def classify(line):
         return "bullet"
     if line["bold"] and line["x0"] < 60 and re.match(r"^\d{1,2}[.、]", t):
         return "h3"
+    # 无编号粗体小节头（如"安全守则""获益"）：短、独立行、不以句读收尾
+    if line["bold"] and line["x0"] < 60 and len(t) <= 24 and not re.search(r"[。？！：，]$", t):
+        return "h3"
     return "plain"
 
 
@@ -222,7 +225,16 @@ class Flow:
                      and y0 is not None and y0 - self.prev_y > 19)
         if cls == "h3":
             self.close_ul(); self.flush_p()
-            self.out.append(f"<h3>{html}</h3>")
+            if html == "经修订文字":  # 变更章节的标签,渲染为专用小标签而非标题
+                self.out.append('<p class="rev">经修订文字</p>')
+            else:
+                # 编号与标题被 PDF 断成两行（如"3."+"权力和职责"）时合并为一个标题
+                last = self.out[-1] if self.out else ""
+                m_last = re.fullmatch(r"<h3>(\d{1,2}[.、])\s*</h3>", last)
+                if m_last and not re.match(r"\d{1,2}[.、]", html):
+                    self.out[-1] = f"<h3>{m_last.group(1)} {html}</h3>"
+                else:
+                    self.out.append(f"<h3>{html}</h3>")
         elif cls == "fn":
             self.close_ul(); self.flush_p()
             self.out.append(f'<p class="fn">{html}</p>')
@@ -287,6 +299,15 @@ def build_section_html(doc, page_nums, diagrams, partials):
         region = partials.get(pno)
         fig_done = False
         lines = page_lines(page)
+        # 同一视觉行被 PDF 拆成两个文本块的断头编号（如"3."+"权力和职责"）先行合并
+        merged = []
+        for ln in lines:
+            if (merged and re.fullmatch(r"\d{1,2}[.、]", merged[-1]["text"])
+                    and abs(ln["y0"] - merged[-1]["y0"]) < 2 and ln["bold"]):
+                merged[-1] = dict(merged[-1], text=merged[-1]["text"] + " " + ln["text"])
+            else:
+                merged.append(ln)
+        lines = merged
         # 页内bullet按x0分级（每+10pt约一层）
         bullet_x = sorted({round(l["x0"], 1) for l in lines if classify(l) == "bullet"})
         for line in lines:
@@ -391,7 +412,8 @@ main{overflow-y:auto;padding:22px 28px 60px;min-height:0}
 .content ul{margin:8px 0;padding-left:26px}
 .content li{margin:5px 0}
 .content li.l2{margin-left:24px;list-style-type:"–"}
-.content .fn{font-size:12.5px;color:var(--muted);margin:4px 0}
+.content .fn{font-size:12.5px;color:var(--muted);margin:4px 0;text-indent:0}
+.content p.rev{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:1.5px;margin:14px 0 4px;text-indent:0}
 .content .pg{margin:16px 0;text-align:center}
 .content .pg img{max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm)}
 .content mark{background:var(--mark);padding:0 2px;border-radius:3px}

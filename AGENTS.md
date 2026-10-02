@@ -4,13 +4,14 @@
 
 ## 项目是什么
 
-「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
+「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《2026赛季统一判罚尺度》宣讲页（scale.html，27例场景视频+判罚决定）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**八个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（四张赛季/规则入口卡片）
+核心交付物是 `site/` 下的**九个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（五张入口卡片）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
+- `site/scale.html` 官方统一判罚尺度宣讲（27例场景视频+判罚决定矩阵）
 
 数据抓取与页面生成由 Python 脚本完成，可复用于后续赛季（管线已三赛季参数化）。
 
@@ -37,6 +38,7 @@
 │   ├── teams.json          ← 队伍统一目录（generate_teams_catalog.py 产物，勿手改）
 │   ├── crest_overrides.json ← 人工核验的队徽成果（重建目录时不丢失的唯一权威源）
 │   ├── crests.json         ← 兼容映射（generate_teams_catalog.py 产物）
+│   ├── scale.json          ← 官方统一尺度宣讲内容（build_scale.py 从原包解码提取）
 │   ├── laws.json           ← 竞赛规则章节内容（build_rules.py 产物）
 │   ├── issues_raw/{2024,2025,2026}/ ← 各期官方页面原始 HTML 存档（按赛季子目录！）
 │   └── review-*.txt        ← 判例纯文本汇编（可再生成）
@@ -62,9 +64,11 @@ python generate_teams_catalog.py      # 7. 队伍目录重建（读全部 cases-
 python fetch_crests.py                # 8. 队徽目录校验（校验器，不联网）
 python fetch_laws.py                  # 9. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/laws_raw/
 python build_rules.py                 # 10. 规则提取+繁转简+术语表 → data/laws.json + rules.html
-python build_portal.py                # 11. 生成门户 index.html
-python build_page.py                  # 12. 生成 season-2026/2025/2024.html（可带赛季参数）
-python build_stats.py                 # 13. 生成 stats-2026/2025/2024.html（可带赛季参数）
+python build_scale.py                 # 11. 统一尺度宣讲页（原包在仓库外 ../统一尺度宣讲原始包-2026 时
+                                      #     重新解码提取；否则用 data/scale.json 构建 → scale.html）
+python build_portal.py                # 12. 生成门户 index.html
+python build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
+python build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
 python verify_videos.py [赛季]        # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
 python range_server.py [端口]         # 本地预览服务（支持Range，视频可拖进度条）
 ```

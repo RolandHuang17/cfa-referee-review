@@ -43,10 +43,12 @@
   color:var(--faint);font-size:12px;background:var(--card2)}
 .dchip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:700}
 .hreason{font-size:12px;color:var(--faint);margin:9px 0 0}
-/* 轻量版：隐藏视频，显示官方发布页横幅 */
+/* 轻量版：隐藏视频，按当前赛季页签显示对应官方发布页横幅 */
 .lite-banner{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;
   padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
   border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.lite-banner .lb-item{display:none;flex-wrap:wrap;align-items:center;gap:8px}
+.lite-banner .lb-item.on{display:flex}
 .lite-banner a{color:var(--brand);font-weight:600;text-decoration:none}
 .lite-banner a:hover{text-decoration:underline}
 .lite-banner .ic{color:var(--brand)}
@@ -242,7 +244,7 @@ html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
   <div class="wrap">
     <h1>中国足协统一判罚尺度 · 官方宣讲合集</h1>
     <div class="sub">内容取自中国足协官方《统一判罚尺度》宣讲材料 · 每例含官方视频片段、视频说明与判罚决定 · 版权归中国足协所有</div>
-    <div class="lite-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。前往官方发布页观看：<a href="https://www.thecfa.cn/cpwjxz/20260305/37380.html" target="_blank" rel="noopener">中国足协官网 · 判罚统一尺度材料发布页</a></div>
+    <div class="lite-banner"><span class="lb-item on" data-season="2026"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。前往官方发布页观看：<a href="https://www.thecfa.cn/cpwjxz/20260305/37380.html" target="_blank" rel="noopener">中国足协官网 · 2026赛季判罚统一尺度材料发布页</a></span><span class="lb-item" data-season="2025"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。前往官方发布页观看：<a href="https://www.thecfa.cn/cpwjxz/20250224/35659.html" target="_blank" rel="noopener">中国足协官网 · 2025赛季判罚统一尺度材料发布页</a></span></div>
     <div class="season-tabs" role="tablist"><button class="season-tab on" role="tab" data-season="2026" aria-selected="true">2026 赛季</button><button class="season-tab" role="tab" data-season="2025" aria-selected="false">2025 赛季</button></div>
   </div>
 </header>
@@ -602,10 +604,12 @@ html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
 (function(){
   var tabs = document.querySelectorAll(".season-tab");
   var blocks = document.querySelectorAll(".sblock");
+  var banners = document.querySelectorAll(".lite-banner .lb-item");
   tabs.forEach(function(t){
     t.addEventListener("click", function(){
       tabs.forEach(function(x){ x.classList.toggle("on", x === t); });
       blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+      banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
       try { history.replaceState(null, "", "#s" + t.dataset.season); } catch(_) {}
     });
   });

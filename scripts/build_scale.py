@@ -27,8 +27,11 @@ PACKAGES = {
     "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
     "2025": ROOT / "2025-中国足球协会判罚统一尺度（Win版）",
 }
-# 官方发布页（zip 压缩包的下载/观看入口；轻量版横幅跳转用）
-SCALE_SOURCE_URL = "https://www.thecfa.cn/cpwjxz/20260305/37380.html"
+# 官方发布页（zip 压缩包的下载/观看入口；轻量版横幅按赛季页签跳转）
+SCALE_SOURCE_URLS = {
+    "2026": "https://www.thecfa.cn/cpwjxz/20260305/37380.html",
+    "2025": "https://www.thecfa.cn/cpwjxz/20250224/35659.html",
+}
 SERIES_NAMES = {"highlights": "判罚案例", "reckless": "纪律处罚", "var": "VAR 视频助理裁判",
                 "tam": "战术犯规"}
 EN2CN = {"No Foul": "不犯规", "No Card": "不出牌", "Indirect Free Kick": "间接任意球",
@@ -226,10 +229,12 @@ HTML = r"""<!DOCTYPE html>
   color:var(--faint);font-size:12px;background:var(--card2)}
 .dchip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:700}
 .hreason{font-size:12px;color:var(--faint);margin:9px 0 0}
-/* 轻量版：隐藏视频，显示官方发布页横幅 */
+/* 轻量版：隐藏视频，按当前赛季页签显示对应官方发布页横幅 */
 .lite-banner{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;
   padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
   border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.lite-banner .lb-item{display:none;flex-wrap:wrap;align-items:center;gap:8px}
+.lite-banner .lb-item.on{display:flex}
 .lite-banner a{color:var(--brand);font-weight:600;text-decoration:none}
 .lite-banner a:hover{text-decoration:underline}
 .lite-banner .ic{color:var(--brand)}
@@ -261,10 +266,12 @@ __TOPBAR__
 (function(){
   var tabs = document.querySelectorAll(".season-tab");
   var blocks = document.querySelectorAll(".sblock");
+  var banners = document.querySelectorAll(".lite-banner .lb-item");
   tabs.forEach(function(t){
     t.addEventListener("click", function(){
       tabs.forEach(function(x){ x.classList.toggle("on", x === t); });
       blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+      banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
       try { history.replaceState(null, "", "#s" + t.dataset.season); } catch(_) {}
     });
   });
@@ -309,9 +316,11 @@ def build_page(data):
         secs += f'<div class="sblock{" on" if i == 0 else ""}" data-season="{s}" id="content{i}">{sec}</div>'
     tb = topbar(active="scale.html", stats="stats-2026.html", brand_sub="统一判罚尺度",
                 seasons=("2024", "2025", "2026"), lite_btn=True)
-    banner = (f'{icon("external", 14)} 官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。'
-              f'前往官方发布页观看：<a href="{SCALE_SOURCE_URL}" target="_blank" rel="noopener">'
-              f'中国足协官网 · 判罚统一尺度材料发布页</a>')
+    banner = "".join(
+        f'<span class="lb-item{" on" if i == 0 else ""}" data-season="{s}">{icon("external", 14)} '
+        f'官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。前往官方发布页观看：'
+        f'<a href="{SCALE_SOURCE_URLS[s]}" target="_blank" rel="noopener">中国足协官网 · {s}赛季判罚统一尺度材料发布页</a></span>'
+        for i, s in enumerate(seasons))
     html = inject_theme(HTML.replace("__TOPBAR__", tb)
                         .replace("__LITE_BANNER__", banner)
                         .replace("__TABS__", tabs).replace("__NAVS__", navs)

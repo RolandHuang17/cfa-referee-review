@@ -1,8 +1,11 @@
 # -*- coding: utf-8 -*-
-"""解码官方"2026赛季中国足协统一判罚尺度"宣讲包 → data/scale.json
+"""解码官方"统一判罚尺度"宣讲包（2025/2026）→ data/scale.json + site/scale.html
 原包 highlight 页为 document.write(unescape("%...")) 编码; 解码后提取:
   编号/场景名, 视频文件, 视频说明, 判罚决定矩阵(激活项), Reason
-同时把 mp4 复制到 site/videos/scale/, png 海报到 assets/scale/。
+两代包的矩阵激活标记不同: 2026 用 <p style="color:grey">(灰=未激活),
+2025 用前置图标 <img .../t.jpg>=激活 / c.jpg=未激活; 2025 VAR 页判罚为英文标签。
+视频复制到 site/videos/scale/{year}/, 海报到 assets/scale/{year}-*.png。
+原包路径见 PACKAGES; 不在仓库内(第三方库会被安全钩子拦截), 缺失时复用已提取的 data/scale.json。
 """
 import json
 import re
@@ -10,94 +13,198 @@ import shutil
 from pathlib import Path
 from urllib.parse import unquote
 
+from theme import inject_theme, topbar
+
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
-PKG = ROOT / "2026赛季中国足协统一尺度"
-CAT = PKG / "files" / "categories"
 OUT_JSON = ROOT / "data" / "scale.json"
 VID_OUT = ROOT / "site" / "videos" / "scale"
 IMG_OUT = ROOT / "assets" / "scale"  # build_all 会整目录重建 site/assets，海报须放根 assets/
+def PKG_IMG(year):
+    return IMG_OUT  # 海报平铺: assets/scale/{year}-{cat}-{series}-{id}.png
 
+PACKAGES = {
+    "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
+    "2025": ROOT / "2025-中国足球协会判罚统一尺度（Win版）",
+}
+SERIES_NAMES = {"highlights": "判罚案例", "reckless": "纪律处罚", "var": "VAR 视频助理裁判",
+                "tam": "战术犯规"}
+EN2CN = {"No Foul": "不犯规", "No Card": "不出牌", "Indirect Free Kick": "间接任意球",
+         "Direct Free Kick": "直接任意球", "Penalty Kick": "罚球点球", "Yellow Card": "黄牌",
+         "Red Card": "红牌", "Goal": "进球", "Penalty": "罚球点球"}
+
+# 分组排序（同组按场景名聚合）
 
 def decode_page(path: Path) -> str:
-    """document.write(unescape("%...")) → 解码后的完整 HTML"""
     raw = path.read_text(encoding="utf-8", errors="replace")
     m = re.search(r'document\.write\(unescape\("([^"]+)"\)\)', raw)
-    if not m:
-        return raw  # 未编码页原样返回
-    return unquote(m.group(1))
+    return unquote(m.group(1)) if m else raw
 
 
 def clean(html: str) -> str:
     return re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", html)).strip()
 
 
-def parse_matrix(body: str):
-    """判罚决定矩阵: 返回激活项列表(灰色=未激活)"""
+def parse_matrix(body: str, after_kw: str):
+    """判罚决定矩阵: 兼容两代标记。返回与原文顺序一致的 [{label, active}]。"""
+    seg = body.split(after_kw)[-1]
     acts = []
-    for table in re.findall(r"<table[\s\S]*?</table>", body):
-        for td in re.findall(r"<td[^>]*>\s*(<p[^>]*>.*?</p>)\s*</td>", table, re.S):
-            p = td
-            text = clean(p)
-            if not text:
+    for table in re.findall(r"<table[\s\S]*?</table>", seg):
+        if "<p" not in table:
+            continue
+        use_img = bool(re.search(r'img[^>]*src="[^"]*/(?:t|c)\.jpg', table))
+        last_img = None
+        for cell in re.findall(r"<td[^>]*>([\s\S]*?)</td>", table):
+            img = re.search(r'src="[^"]*/(t|c)\.jpg', cell)
+            if img:
+                last_img = img.group(1)
+            p = re.search(r"<p[^>]*>([^<]+)</p>", cell)
+            if not p:
                 continue
-            active = "color:grey" not in p and "color: grey" not in p
-            acts.append({"label": text, "active": active})
+            label = p.group(1).strip()
+            label = EN2CN.get(label, label)
+            if not label:
+                continue
+            if use_img:
+                active = last_img == "t"
+            else:
+                active = "color:grey" not in cell
+            acts.append({"label": label, "active": active})
     return acts
 
 
-def parse_highlight(path: Path):
+def parse_note(body: str):
+    """视频说明: '视频说明'标题后的第一段实质文本(p 或无样式的 h2)"""
+    seg = body.split("视频说明")[-1]
+    for m in re.finditer(r"<(p|h2)([^>]*)>([^<]{15,})</", seg):
+        if "color:#fff" in m.group(2) or "color: #fff" in m.group(2):
+            continue  # 面板标题
+        return m.group(3).strip()
+    return ""
+
+
+def parse_highlight(path: Path, year: str, cat: str, series: str):
     body = decode_page(path)
     hl_id = path.stem
     m = re.search(r"<h1[^>]*>\s*([^<]*?)\s*</h1>", body)
-    title = clean(m.group(1)) if m else hl_id
-    title = re.sub(rf"^{hl_id}\s*-\s*", "", title)
-    # 视频说明: slidingDiv 内第一个带 text-indent 的 <p>
-    cm = re.search(r'视频说明</h1>.*?<p[^>]*>([^<]+)</p>', body, re.S)
-    note = cm.group(1).strip() if cm else ""
+    title = re.sub(r"\s+", " ", m.group(1)).strip() if m else hl_id
+    title = re.sub(r"^[A-Z]*\d+\s*-\s*", "", title)  # 去"A1 - "/"1 - "编号前缀（文件号与标题号可能错位）
+    if title == hl_id or not title:  # VAR 等无名页
+        title = f"场景 {hl_id}"
     vm = re.search(r'<source[^>]*src="([^"]+\.mp4)"', body)
-    video = vm.group(1) if vm else ""
     reason = ""
     rm = re.search(r'<h2>\s*Reason\s*</h2>([\s\S]*?)</div>', body)
     if rm:
         reason = clean(rm.group(1))
-    matrix = parse_matrix(body.split("判罚决定")[-1]) if "判罚决定" in body else []
-    return {"id": hl_id, "title": title, "video": video, "note": note,
-            "reason": reason, "decision": matrix}
+    fname = f"{series}-{hl_id}"
+    return {"id": hl_id, "series": series, "title": title,
+            "note": parse_note(body),
+            "decision": parse_matrix(body, "判罚决定") or parse_matrix(body, "Decision"),
+            "reason": reason,
+            "video": f"videos/scale/{year}/{fname}.mp4",
+            "poster": f"assets/scale/{year}-{cat}-{fname}.png"}, \
+           (PKG_VID(year) / f"{fname}.mp4", PKG_IMG(year) / f"{year}-{cat}-{fname}.png")
 
 
-# 分组规范名（按片段编号前缀）
-GROUPS = [
-    ("A", "争抢"), ("B", "战术犯规"), ("C", "手球"), ("D", "罚球区事件"),
-    ("E", "比赛管理"), ("F", "越位"), ("G", "视频助理裁判"), ("H", "25/26规则变更"),
-]
-DECISION_ORDER = ["不犯规", "间接任意球", "直接任意球", "罚球点球", "不出牌", "黄牌", "红牌"]
+def PKG_VID(year):
+    return VID_OUT / year
 
-from theme import inject_theme, icon, topbar
+
+def extract_season(year: str, pkg: Path):
+    cats = []
+    cat_root = pkg / "files" / "categories"
+    for cat_dir in sorted(p for p in cat_root.iterdir() if p.is_dir()):
+        groups = {}
+        order = []
+        for series_dir in sorted(p for p in cat_dir.iterdir() if p.is_dir()):
+            series = series_dir.name
+            name = SERIES_NAMES.get(series, series)
+            for p in sorted(series_dir.glob("*.html"),
+                            key=lambda x: int(x.stem) if x.stem.isdigit() else 999):
+                item, files = parse_highlight(p, year, cat_dir.name, series)
+                # 分组键：VAR 无名页归入"视频助理裁判"组
+                gkey = item["title"]
+                if series == "var" and re.match(r"^场景 \d+$", gkey):
+                    gkey = "视频助理裁判"
+                    item["title"] = f"VAR 场景 {p.stem}"
+                (VID_OUT / year).mkdir(parents=True, exist_ok=True)
+                (IMG_OUT).mkdir(parents=True, exist_ok=True)
+                src_mp4 = series_dir / f"{p.stem}.mp4"
+                src_png = series_dir / f"{p.stem}.png"
+                if src_mp4.exists():
+                    shutil.copy2(src_mp4, files[0])
+                if src_png.exists():
+                    shutil.copy2(src_png, files[1])
+                if gkey not in groups:
+                    groups[gkey] = {"name": gkey, "items": []}
+                    order.append(gkey)
+                groups[gkey]["items"].append(item)
+        cats.append({"key": cat_dir.name,
+                     "name": "犯规与不正当行为" if cat_dir.name == "fouls-misconduct" else cat_dir.name,
+                     "groups": [groups[k] for k in order]})
+    return {"sections": cats}
+
+
+def legacy_migrate():
+    """旧 v1 数据/文件迁移到按年分目录结构"""
+    if OUT_JSON.exists():
+        d = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+        if "sections" not in d.get("2026", {}):
+            OUT_JSON.unlink()
+    for flat in VID_OUT.glob("*.mp4"):  # 旧平铺 2026 视频 → 2026/
+        (VID_OUT / "2026").mkdir(parents=True, exist_ok=True)
+        flat.rename(VID_OUT / "2026" / f"highlights-{flat.stem}.mp4")
+    # 旧海报拍平为 {year}- 前缀（含历史遗留的年份子目录）
+    for old in list(IMG_OUT.glob("fouls-misconduct-*.png")):
+        old.rename(IMG_OUT / f"2026-{old.name}")
+    for sub in ("2026", "2025"):
+        d = IMG_OUT / sub
+        if d.is_dir():
+            for f in d.iterdir():
+                name = f.name if f.name.startswith(sub) else f"{sub}-{f.name}"
+                f.rename(IMG_OUT / name)
+            d.rmdir()
+
+
+# 分组排序（同组按场景名聚合）
+GROUP_ORDER = ["争抢", "战术犯规", "手球", "手球犯规", "罚球区事件", "罚球区内手球犯规",
+               "球点球时的侵入", "越位", "越位犯规", "比赛管理", "视频助理裁判", "25/26规则变更"]
+DECISION_ORDER = ["不犯规", "间接任意球", "直接任意球", "罚球点球", "不出牌", "黄牌", "红牌",
+                  "不越位犯规", "干扰比赛", "越位犯规", "干扰对方队员", "越位位置获得利益"]
+
+
+def sort_groups(groups):
+    def key(g):
+        return (GROUP_ORDER.index(g["name"]) if g["name"] in GROUP_ORDER else len(GROUP_ORDER), g["name"])
+    return sorted(groups, key=key)
+
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2026赛季中国足协统一判罚尺度 · 官方宣讲</title>
+<title>中国足协统一判罚尺度 · 官方宣讲合集</title>
 <style>
 /* ===== scale 页专属布局 (tokens/组件来自 data-cfa-theme) ===== */
 .page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
-.page-head .wrap{padding-top:22px;padding-bottom:16px;max-width:1180px;margin:0 auto;padding-left:16px;padding-right:16px}
+.page-head .wrap{max-width:1180px;margin:0 auto;padding:22px 16px 16px}
 .page-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
 .page-head .sub{color:var(--muted);font-size:13px}
+.season-tabs{display:flex;gap:8px;margin-top:14px}
+.season-tab{padding:7px 18px;border-radius:999px;border:1px solid var(--line);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;font-family:inherit}
+.season-tab.on{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
 .layout{max-width:1180px;margin:0 auto;padding:18px 16px 60px;display:grid;
   grid-template-columns:216px minmax(0,1fr);gap:20px;align-items:start}
+.sblock{display:none}
+.sblock.on{display:block}
 .gnavs{position:sticky;top:calc(var(--top-h) + 14px);display:flex;flex-direction:column;gap:4px}
 .gnavs .gh{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:2px 4px 6px}
 .gnav{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:var(--r-sm);
-  color:var(--ink2);text-decoration:none;font-size:13.5px;border:1px solid transparent;transition:.12s}
+  color:var(--ink2);text-decoration:none;font-size:13.5px;border:1px solid var(--line);transition:.12s}
 .gnav b{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
-.gnav span{color:var(--muted);font-size:12.5px}
-.gnav:hover{background:var(--card2);color:var(--ink)}
-.gnavs .gnav{border-color:var(--line)}
-.gnavs .gnav:hover{border-color:var(--brand)}
+.gnav:hover{background:var(--card2);border-color:var(--brand);color:var(--ink)}
 .gcontent{min-width:0}
 .gsec{margin-bottom:34px}
 .gsec h2{font-family:var(--font-display);font-size:19px;margin:0 0 12px;letter-spacing:.4px}
@@ -117,7 +224,6 @@ HTML = r"""<!DOCTYPE html>
   color:var(--faint);font-size:12px;background:var(--card2)}
 .dchip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:700}
 .hreason{font-size:12px;color:var(--faint);margin:9px 0 0}
-.hempty{padding:40px;text-align:center;color:var(--muted)}
 @media (max-width:900px){
   .layout{grid-template-columns:minmax(0,1fr)}
   .gnavs{position:static;flex-direction:row;flex-wrap:wrap}
@@ -126,103 +232,96 @@ HTML = r"""<!DOCTYPE html>
 </style>
 </head>
 <body class="page-scale">
-<a class="skip-link" href="#gA">跳到内容</a>
+<a class="skip-link" href="#content0">跳到内容</a>
 __TOPBAR__
 <header class="page-head">
   <div class="wrap">
-    <h1>2026赛季中国足协统一判罚尺度 · 官方宣讲</h1>
-    <div class="sub">内容取自中国足协官方《2026赛季中国足协统一判罚尺度》宣讲材料 · 每例含官方视频片段、视频说明与判罚决定 · 27例 · 版权归中国足协所有</div>
+    <h1>中国足协统一判罚尺度 · 官方宣讲合集</h1>
+    <div class="sub">内容取自中国足协官方《统一判罚尺度》宣讲材料 · 每例含官方视频片段、视频说明与判罚决定 · 版权归中国足协所有</div>
+    <div class="season-tabs" role="tablist">__TABS__</div>
   </div>
 </header>
 <div class="layout">
-  <aside class="gnavs" aria-label="场景分组">
-    <div class="gh">场景分组</div>
-    __GROUPS__
-  </aside>
-  <div class="gcontent">
-    __SECS__
-    <div class="hempty" style="padding-top:10px;font-size:12.5px">宣讲材料持续更新，更多分类以官方发布为准。视频文件请置于 videos/scale/ 文件夹。</div>
-  </div>
+  <aside class="gnavs" aria-label="场景分组" data-navs>__NAVS__</aside>
+  <div class="gcontent">__SECS__</div>
 </div>
+<script>
+(function(){
+  var tabs = document.querySelectorAll(".season-tab");
+  var blocks = document.querySelectorAll(".sblock");
+  tabs.forEach(function(t){
+    t.addEventListener("click", function(){
+      tabs.forEach(function(x){ x.classList.toggle("on", x === t); });
+      blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+      try { history.replaceState(null, "", "#s" + t.dataset.season); } catch(_) {}
+    });
+  });
+})();
+</script>
 </body>
 </html>
 """
 
 
 def build_page(data):
-    cats = {k: v for k, v in data.items() if isinstance(v, dict) and "highlights" in v}
-    groups = []
-    for gid, gname in GROUPS:
-        items = [h for h in cats["fouls-misconduct"]["highlights"] if h["id"].startswith(gid)]
-        if items:
-            groups.append((gid, gname, items))
-
-    nav = "".join(
-        f'<a class="gnav" href="#g{gid}">{gid} <span>{gname}</span><b>{len(items)}</b></a>'
-        for gid, gname, items in groups)
-    secs = ""
-    for gid, gname, items in groups:
-        cards = ""
-        for h in items:
-            chips = "".join(
-                f'<span class="dchip{" on" if d["active"] else ""}">{d["label"]}</span>'
-                for d in sorted(h["decision"], key=lambda x: DECISION_ORDER.index(x["label"])
-                                if x["label"] in DECISION_ORDER else 99))
-            src = f"videos/scale/{h['id']}.mp4"
-            poster = f"assets/scale/fouls-misconduct-{h['id']}.png"
-            cards += f"""<article class="hcard" id="h{h['id']}">
+    seasons = sorted(data.keys(), reverse=True)
+    tabs = "".join(
+        f'<button class="season-tab{" on" if i == 0 else ""}" role="tab" data-season="{s}"'
+        f' aria-selected="{str(i == 0).lower()}">{s} 赛季</button>'
+        for i, s in enumerate(seasons))
+    navs, secs = "", ""
+    for i, s in enumerate(seasons):
+        nav, sec = "", ""
+        for si, secdata in enumerate(data[s]["sections"]):
+            for gi, g in enumerate(secdata["groups"]):
+                anchor = f"s{s}-{si}-{gi}"
+                nav += (f'<a class="gnav" href="#{anchor}">{g["name"]}'
+                        f'<b>{len(g["items"])}</b></a>')
+                cards = ""
+                for h in g["items"]:
+                    chips = "".join(
+                        f'<span class="dchip{" on" if d["active"] else ""}">{d["label"]}</span>'
+                        for d in sorted(h["decision"],
+                                        key=lambda x: DECISION_ORDER.index(x["label"])
+                                        if x["label"] in DECISION_ORDER else 99))
+                    cards += f"""<article class="hcard" id="h{s}-{h['series']}-{h['id']}">
   <div class="hhead"><span class="hid">{h['id']}</span><h3>{h['title']}</h3></div>
-  <div class="hvideo"><video controls preload="none" poster="{poster}"><source src="{src}" type="video/mp4"></video></div>
+  <div class="hvideo"><video controls preload="none" poster="{h['poster']}"><source src="{h['video']}" type="video/mp4"></video></div>
   <p class="hnote">{h['note']}</p>
   <div class="drow"><span class="dlbl">判罚决定</span>{chips}</div>
   {f'<p class="hreason">Reason: {h["reason"]}</p>' if h['reason'] else ''}
 </article>"""
-        secs += f'<section class="gsec" id="g{gid}"><h2>{gid} · {gname} <b>{len(items)}例</b></h2>{cards}</section>'
-
-    html = inject_theme(HTML
-            .replace("__TOPBAR__", topbar(active="scale.html", stats="stats-2026.html",
-                                          brand_sub="统一判罚尺度", seasons=("2024", "2025", "2026")))
-            .replace("__GROUPS__", nav).replace("__SECS__", secs))
+                sec += (f'<section class="gsec" id="{anchor}">'
+                        f'<h2>{g["name"]} <b>{len(g["items"])}例</b></h2>{cards}</section>')
+        navs += f'<div class="gnavcol sblock{" on" if i == 0 else ""}" data-season="{s}">{nav}</div>'
+        secs += f'<div class="sblock{" on" if i == 0 else ""}" data-season="{s}" id="content{i}">{sec}</div>'
+    tb = topbar(active="scale.html", stats="stats-2026.html", brand_sub="统一判罚尺度",
+                seasons=("2024", "2025", "2026"))
+    html = inject_theme(HTML.replace("__TOPBAR__", tb)
+                        .replace("__TABS__", tabs).replace("__NAVS__", navs)
+                        .replace("__SECS__", secs))
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "scale.html").write_text(html, encoding="utf-8")
-    print(f"生成 {SITE / 'scale.html'}")
+    n = sum(len(g["items"]) for s in seasons for sec in data[s]["sections"] for g in sec["groups"])
+    print(f"生成 {SITE / 'scale.html'}（{'/'.join(seasons)} 共 {n} 例）")
 
 
 def main():
-    cats = {}
-    if PKG.exists():
-        for cat_dir in sorted(CAT.iterdir()):
-            if not cat_dir.is_dir():
-                continue
-            name = cat_dir.name
-            info = {}
-            for f, key in (("contents.html", "contents"), ("cat.html", "cat"), ("can.html", "can")):
-                p = cat_dir / f
-                if p.exists():
-                    body = decode_page(p)
-                    body = re.sub(r"<style[\s\S]*?</style>", "", body)
-                    info[key] = clean(body)[:600]
-            hls = []
-            hdir = cat_dir / "highlights"
-            if hdir.exists():
-                for p in sorted(hdir.glob("*.html"), key=lambda x: (len(x.stem), x.stem)):
-                    hls.append(parse_highlight(p))
-                    src_mp4 = hdir / f"{p.stem}.mp4"
-                    src_png = hdir / f"{p.stem}.png"
-                    if src_mp4.exists():
-                        VID_OUT.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(src_mp4, VID_OUT / src_mp4.name)
-                    if src_png.exists():
-                        IMG_OUT.mkdir(parents=True, exist_ok=True)
-                        shutil.copy2(src_png, IMG_OUT / f"{name}-{p.stem}.png")
-            cats[name] = {"info": info, "highlights": hls}
-            print(f"[{name}] {len(hls)} 条片段")
-        OUT_JSON.write_text(json.dumps(cats, ensure_ascii=False, indent=1), encoding="utf-8")
-
-    if not OUT_JSON.exists():
-        print("跳过 scale.html: 无宣讲包且无 data/scale.json")
-        return
-    build_page(json.loads(OUT_JSON.read_text(encoding="utf-8")))
+    legacy_migrate()
+    data = {}
+    if OUT_JSON.exists():
+        d = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+        data = {k: v for k, v in d.items() if isinstance(v, dict) and "sections" in v}
+    for year, pkg in PACKAGES.items():
+        if pkg.exists():
+            data[year] = extract_season(year, pkg)
+        elif year not in data:
+            print(f"跳过 {year}: 原包缺失且无已提取数据")
+    for year in data:  # 组排序
+        for sec in data[year]["sections"]:
+            sec["groups"] = sort_groups(sec["groups"])
+    OUT_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    build_page(data)
 
 
 if __name__ == "__main__":

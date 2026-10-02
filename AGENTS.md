@@ -7,11 +7,13 @@
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2026+2025 两季 58 例场景视频+判罚决定）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**九个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（五张入口卡片）
+- `site/index.html` 门户首页（五张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 - `site/scale.html` 官方统一判罚尺度宣讲（2026+2025 两季 58 例场景视频+判罚决定矩阵）
+
+全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
 数据抓取与页面生成由 Python 脚本完成，可复用于后续赛季（管线已三赛季参数化）。
 
@@ -121,6 +123,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - **视频内存策略**：详情区只有一个 `<video>`，`select()` 时替换 src（视频路径已含赛季前缀）。**绝不要**恢复为列表内联 video 元素——几百个播放器会让浏览器内存膨胀到 4-5GB（已经踩过并修复的坑）
 - **响应式断点（唯一一套）**：1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）
 - 收藏/笔记存 localStorage：键 `cfa2026.fav/notes`、`cfa2025.fav/notes`、`cfa2024.fav/notes`（按赛季隔离，且按 origin 隔离，file:// 与 http:// 不同源，故有导出/导入 JSON 功能）
+- **轻量版模式（cfa.lite）**：全局浏览模式开关——门户分段控件（`#modeFull/#modeLite`）+ season/scale 顶栏 `#btnLite`（theme.py `_TOGGLE_JS` 统一处理：写 `cfa.lite`、切 `html[data-lite]`、派发 `cfa:lite` 事件；`_EARLY_JS` 首帧前设置防闪烁）。开启后（build_page.py）：`select()` 走 LITE 分支，无任何视频逻辑，`#srcActions` 渲染「打开官方评议页」（`issues[].url`，按期跳转）+ 每条 `video_urls` 官方直链（新标签页在线播放）；scale 页 CSS 隐藏 58 个 `.hvideo` 并显示官方发布页横幅（`SCALE_SOURCE_URL`，官方材料为 zip 发布无逐例链接）。筛选/收藏/笔记/锚点两模式共用同一套（同一 localStorage 键，笔记本用法核心）。完整版遇本地视频 404 自动改用官方直链（`vidsMissing` 会话级直连，`ossTried` 防循环），彻底失败且未开轻量时弹 `#vfailTip` 一次性提示条（sessionStorage `cfa.vfail` 记忆关闭）
 - **锚点**：`season-*.html#case-<seq>` 打开时自动选中对应判例（stats-*.html 明细链接依赖此；初始化代码必须在 applyFilter **之前**捕获 hash——`initialHashSeq`，否则会被自动选中的 replaceState 覆盖——已踩过）
 - 搜索框监听 `input` 和 `search` 事件（后者是 type=search ✕ 清空按钮触发）；`esc()` 必须转义引号（用于 data-* 属性）
 
@@ -141,6 +144,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 6. **球队名归一是单点**：`generate_teams_catalog.py` 的 `ALIASES`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；impact/scores 里的队名必须是归一化后名字；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
 7. **两 URL 表同步**：fetch_issues.py 的 `ISSUES` 与 parse_issues.py 的 `ISSUE_URL` 是同一套 URL 的两份拷贝，加新期必须同步
 8. **expectation 断言**：verify_project.py 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
+9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。凡指向它的 `<video>` 或 `<a>` 必须带 `referrerpolicy="no-referrer"`（直链再加 `rel="noreferrer"`），否则轻量版直链与完整版在线回退全部失效
 
 ## 扩展任务指南
 
@@ -164,10 +168,12 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 
 改动后依次验证：
 - [ ] `python build_portal.py && python build_page.py && python build_stats.py && python build_rules.py` 无报错
-- [ ] `python scripts/verify_project.py` 通过（8页面/三赛季数据/离线资源/队徽目录）
-- [ ] 浏览器打开 index.html：门户四卡片数字正确
+- [ ] `python scripts/verify_project.py` 通过（9页面/三赛季数据/离线资源/队徽目录）
+- [ ] 浏览器打开 index.html：门户五张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
+- [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、顶栏「轻量版」随时切回完整版、刷新记忆保持
+- [ ] 完整版在线回退：临时改名 site/videos 后刷新 → 自动改用官方直链播放并出提示条；恢复原名后 → 本地播放
 - [ ] stats-2026/2025/2024.html：双视角切换、联赛筛选（含足协杯）、缺失比分显示"待补"、明细链接跳对应赛季页
 - [ ] rules.html：划词出现高亮工具条、三种颜色可标可删、章节笔记自动保存、导出导入
 - [ ] `python verify_videos.py [赛季]`（如动过视频/数据）
@@ -180,3 +186,4 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - 官方标题认定数与合集口径存在差异（漏判黄牌/低级别联赛/本轮中超口径），已在页面"说明"弹层按期注释（ISSUE_NOTES）
 - 2026 判例的判定与影响标注为按同一方法论复核（非官方逐条人工背书），把握度低的判 pending 并注释
 - 收藏/笔记仅存浏览器本地，无云同步（导出/导入 JSON 作为迁移方案）
+- 轻量版直链与完整版在线回退依赖官方 videooss CDN 现行策略（无 Referer 即可播，见硬约束 9）；若官方收紧防盗链，在线直播路径失效，页面会降级为提示条引导切换轻量版/官方文章页观看

@@ -13,7 +13,7 @@ import shutil
 from pathlib import Path
 from urllib.parse import unquote
 
-from theme import inject_theme, topbar
+from theme import inject_theme, topbar, icon
 
 ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
@@ -27,6 +27,8 @@ PACKAGES = {
     "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
     "2025": ROOT / "2025-中国足球协会判罚统一尺度（Win版）",
 }
+# 官方发布页（zip 压缩包的下载/观看入口；轻量版横幅跳转用）
+SCALE_SOURCE_URL = "https://www.thecfa.cn/cpwjxz/20260305/37380.html"
 SERIES_NAMES = {"highlights": "判罚案例", "reckless": "纪律处罚", "var": "VAR 视频助理裁判",
                 "tam": "战术犯规"}
 EN2CN = {"No Foul": "不犯规", "No Card": "不出牌", "Indirect Free Kick": "间接任意球",
@@ -224,6 +226,15 @@ HTML = r"""<!DOCTYPE html>
   color:var(--faint);font-size:12px;background:var(--card2)}
 .dchip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:700}
 .hreason{font-size:12px;color:var(--faint);margin:9px 0 0}
+/* 轻量版：隐藏视频，显示官方发布页横幅 */
+.lite-banner{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin-top:14px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.lite-banner a{color:var(--brand);font-weight:600;text-decoration:none}
+.lite-banner a:hover{text-decoration:underline}
+.lite-banner .ic{color:var(--brand)}
+html[data-lite] .lite-banner{display:flex}
+html[data-lite] .hvideo{display:none}
 @media (max-width:900px){
   .layout{grid-template-columns:minmax(0,1fr)}
   .gnavs{position:static;flex-direction:row;flex-wrap:wrap}
@@ -238,6 +249,7 @@ __TOPBAR__
   <div class="wrap">
     <h1>中国足协统一判罚尺度 · 官方宣讲合集</h1>
     <div class="sub">内容取自中国足协官方《统一判罚尺度》宣讲材料 · 每例含官方视频片段、视频说明与判罚决定 · 版权归中国足协所有</div>
+    <div class="lite-banner">__LITE_BANNER__</div>
     <div class="season-tabs" role="tablist">__TABS__</div>
   </div>
 </header>
@@ -296,8 +308,12 @@ def build_page(data):
         navs += f'<div class="gnavcol sblock{" on" if i == 0 else ""}" data-season="{s}">{nav}</div>'
         secs += f'<div class="sblock{" on" if i == 0 else ""}" data-season="{s}" id="content{i}">{sec}</div>'
     tb = topbar(active="scale.html", stats="stats-2026.html", brand_sub="统一判罚尺度",
-                seasons=("2024", "2025", "2026"))
+                seasons=("2024", "2025", "2026"), lite_btn=True)
+    banner = (f'{icon("external", 14)} 官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。'
+              f'前往官方发布页观看：<a href="{SCALE_SOURCE_URL}" target="_blank" rel="noopener">'
+              f'中国足协官网 · 判罚统一尺度材料发布页</a>')
     html = inject_theme(HTML.replace("__TOPBAR__", tb)
+                        .replace("__LITE_BANNER__", banner)
                         .replace("__TABS__", tabs).replace("__NAVS__", navs)
                         .replace("__SECS__", secs))
     SITE.mkdir(parents=True, exist_ok=True)

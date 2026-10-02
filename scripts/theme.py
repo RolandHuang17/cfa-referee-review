@@ -54,9 +54,10 @@ def js_icons():
 
 
 def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=("2024", "2025"),
-           sb_btn=False, help_btn=False):
+           sb_btn=False, help_btn=False, lite_btn=False):
     """统一顶栏。active=当前页 href;right=页面临有控件(搜索框等)HTML;
-    sb_btn=侧栏开关(#btnSb, season 页用);help_btn=说明按钮(#btnHelp, season 页用)。"""
+    sb_btn=侧栏开关(#btnSb, season 页用);help_btn=说明按钮(#btnHelp, season 页用);
+    lite_btn=轻量版开关(#btnLite, season/scale 页用;门户用自带的分段控件)。"""
     items = [("index.html", "首页", "home")]
     for s in seasons:
         items.append((f"season-{s}.html", f"{s}评议", "film"))
@@ -68,6 +69,8 @@ def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=(
         nav += f'<a{cur} href="{href}">{icon(ic)}<span>{label}</span></a>'
     sb = (f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
           f'{icon("menu")}</button>') if sb_btn else ""
+    lite_b = ('<button class="tbtn" id="btnLite" title="切换轻量版：纯文字+官方链接（无视频窗口），适合在线浏览" '
+              'aria-pressed="false">' + icon("book") + '<span>轻量版</span></button>') if lite_btn else ""
     help_b = (f'<button class="tbtn" id="btnHelp" title="使用说明与统计口径">'
               f'{icon("help")}<span>说明</span></button>') if help_btn else ""
     theme_btn = ('<button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题">'
@@ -77,18 +80,29 @@ def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=(
     return (f'<header class="topbar">{sb}'
             f'<a class="brand" href="index.html">{icon("shield", 19)}<b>裁判学习平台</b>{sub}</a>'
             f'<nav class="nav" aria-label="站点导航">{nav}</nav>'
-            f'<div class="top-right">{right}{help_b}{theme_btn}</div></header>')
+            f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>')
 
 
-# 首帧前设置主题,避免明暗闪跳
+# 首帧前设置主题与轻量版标记,避免明暗闪跳/布局闪跳
 _EARLY_JS = ("<script>try{var t=localStorage.getItem('cfa.theme');"
              "if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';"
-             "document.documentElement.dataset.theme=t}catch(e){}</script>")
-# 主题切换按钮的全局点击处理(所有页面通用)
+             "document.documentElement.dataset.theme=t;"
+             "if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1'"
+             "}catch(e){}</script>")
+# 主题/轻量版切换按钮的全局点击处理(所有页面通用;#btnLite 切换后派发 cfa:lite 事件供页面重渲染)
 _TOGGLE_JS = ("<script>document.addEventListener('click',function(e){"
               "var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;"
               "var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';"
-              "r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});</script>")
+              "r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});"
+              "document.addEventListener('click',function(e){"
+              "var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;"
+              "var r=document.documentElement,on=r.dataset.lite!=='1';"
+              "if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');"
+              "b.setAttribute('aria-pressed',on?'true':'false');"
+              "try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}"
+              "try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});"
+              "(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',"
+              "document.documentElement.dataset.lite==='1'?'true':'false');})();</script>")
 
 
 def inject_theme(html):

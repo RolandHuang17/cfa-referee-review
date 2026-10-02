@@ -284,6 +284,26 @@ body.sb-off .sidebar{display:none}
 .notewrap .nstatus{font-size:12px;color:var(--muted)}
 .mobile-back{display:none}
 
+/* ---- 轻量版(html[data-lite]) 与 视频回退提示 ---- */
+.src-actions{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:11px auto 0;max-width:960px}
+.src-actions .srcbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:999px;
+  border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
+  font-size:13.5px;font-weight:600;text-decoration:none}
+.src-actions .srcbtn:hover{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
+.src-actions .srcsub{font-size:12px;color:var(--muted)}
+.vfail-tip{display:none;flex-wrap:wrap;align-items:center;gap:9px;margin:13px auto 0;max-width:960px;
+  padding:9px 14px;border:1px solid var(--amber-line);background:var(--amber-bg);
+  border-radius:var(--r-md);font-size:13px;color:var(--ink2)}
+.vfail-tip button{padding:4px 13px;border-radius:999px;border:1px solid var(--brand);
+  background:var(--card);color:var(--brand);font-size:12.5px;font-weight:600;cursor:pointer}
+.vfail-tip .vx{margin-left:auto;border:none;background:none;color:var(--muted);font-size:14px;padding:2px 6px;cursor:pointer}
+html[data-lite] .src-actions{display:flex}
+html[data-lite] .d-video,html[data-lite] .vsw-row,html[data-lite] .d-note,
+html[data-lite] .vfail-tip{display:none!important}
+html[data-lite] .txt{font-size:15.5px;line-height:1.95}
+html[data-lite] .txt .concl{font-size:16px}
+html[data-lite] .notewrap textarea{min-height:180px;font-size:14.5px;line-height:1.8}
+
 /* ---- 统计矩阵 / 帮助 / 回顶 ---- */
 .matrix table{border-collapse:collapse;width:100%;font-size:13.5px}
 .matrix th,.matrix td{border-bottom:1px solid var(--line2);padding:6px 10px;text-align:center}
@@ -364,7 +384,9 @@ __TOPBAR__
     <div class="detail-empty" id="detailEmpty">__I_FILM_B__<span>从中间列表选择判例开始学习</span></div>
     <div class="d-card" id="dcard" style="display:none">
       <div class="d-head" id="dHead"></div>
-      <div class="d-video"><video id="dvid" controls preload="metadata" playsinline></video></div>
+      <div class="src-actions" id="srcActions"></div>
+      <div class="vfail-tip" id="vfailTip"></div>
+      <div class="d-video"><video id="dvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"></video></div>
       <div class="vsw-row" id="vswRow" style="display:none"></div>
       <p class="d-note" id="dNote"></p>
       <div class="txt" id="dText"></div>
@@ -417,6 +439,8 @@ const bySeq = {};
 DATA.cases.forEach(c => bySeq[c.seq] = c);
 // 必须在applyFilter的自动选中改写hash之前捕获初始锚点
 const initialHashSeq = (location.hash.match(/^#case-(\d+)$/)||[])[1];
+// 轻量版（cfa.lite，theme.py 首帧前设置 dataset.lite）：纯文字+官方链接笔记本模式，无视频窗口
+let LITE = document.documentElement.dataset.lite === "1";
 
 // ---------- 收藏与笔记（localStorage 持久化，键按赛季隔离） ----------
 const CFG = DATA.cfg;
@@ -592,6 +616,74 @@ function clearDetail(){
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
   .replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
 
+// ---------- 视频源与回退（完整版：本地缺失 → 官方直链在线播放） ----------
+let vidsMissing = false;  // 会话级：本地视频目录不可用（404 过一次后全程直连官方直链）
+let ossTried = false;     // 当前 <video> 是否已在官方直链上
+function hasVideos(c){ return !!(c.videos && c.videos.length); }
+function videoSrc(c, i){
+  const url = (c.video_urls || [])[i];
+  if (vidsMissing && url) return url;
+  return "videos/" + c.videos[i];
+}
+let vfailDismissed = false;
+try { vfailDismissed = sessionStorage.getItem("cfa.vfail") === "1"; } catch(_) {}
+function showVFailTip(msg, offerLite){
+  if (offerLite && vfailDismissed) return;
+  const tip = document.getElementById("vfailTip");
+  tip.innerHTML = `<span>${esc(msg)}</span>` +
+    (offerLite ? `<button id="vfailGoLite">切换轻量版</button>` +
+      `<button class="vx" id="vfailX" title="本次会话不再提示">✕</button>` : "");
+  tip.style.display = "flex";
+}
+document.getElementById("vfailTip").addEventListener("click", e=>{
+  if (e.target.id === "vfailGoLite") { goLite(); return; }
+  if (e.target.id === "vfailX") {
+    vfailDismissed = true;
+    try { sessionStorage.setItem("cfa.vfail", "1"); } catch(_) {}
+    document.getElementById("vfailTip").style.display = "none";
+  }
+});
+document.getElementById("dvid").addEventListener("error", ()=>{
+  if (LITE) return;
+  const c = bySeq[state.sel];
+  if (!c || !hasVideos(c)) return;
+  if (!ossTried) {
+    const url = (c.video_urls || [])[state.vIdx];
+    if (url) {
+      vidsMissing = true; ossTried = true;
+      document.getElementById("dvid").src = url;
+      showVFailTip("本地视频缺失，已自动改用官方直链在线播放。");
+      return;
+    }
+  }
+  showVFailTip("视频无法播放（本地缺失且官方直链不可达）。可切换轻量版：纯文字 + 官方链接，无需视频。", true);
+});
+
+// ---------- 轻量版切换 ----------
+function syncEmptyState(){
+  document.getElementById("detailEmpty").innerHTML = LITE
+    ? `${IC.note}<span>轻量版：从中间列表选择判例即可阅读与记笔记；视频请点详情里的「官方评议页 / 官方视频」链接到官方页面观看。顶栏「轻量版」按钮可切回完整版。</span>`
+    : `__I_FILM_B__<span>从中间列表选择判例开始学习</span>`;
+}
+function stopVideo(){
+  const vid = document.getElementById("dvid");
+  try { vid.pause(); } catch(_) {}
+  vid.removeAttribute("src"); vid.load();
+}
+function applyLite(){  // 模式切换后原地重渲染（无需刷新页面）
+  LITE = document.documentElement.dataset.lite === "1";
+  stopVideo();
+  document.getElementById("vfailTip").style.display = "none";
+  syncEmptyState();
+  if (state.sel) select(state.sel, false); else clearDetail();
+}
+function goLite(){
+  document.documentElement.dataset.lite = "1";
+  try { localStorage.setItem("cfa.lite", "1"); } catch(_) {}
+  applyLite();
+}
+document.addEventListener("cfa:lite", applyLite);  // theme.py 顶栏 #btnLite 切换时派发
+
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
@@ -615,19 +707,47 @@ function select(seq, scrollRow=true){
      <h2 class="match">${matchHTML}</h2>`;
   renderFavUI(c);
   renderNoteUI(c);
-  // 视频（唯一播放器，切换即替换）
+  // 视频区：轻量版无视频窗口，改放官方链接；完整版唯一播放器，切换即替换
   state.vIdx = 0;
   const vid = document.getElementById("dvid");
-  try{ vid.pause(); }catch(_){}
-  vid.src = "videos/" + c.videos[0];
+  const srcActs = document.getElementById("srcActions");
+  const vfail = document.getElementById("vfailTip");
+  const dvidWrap = document.querySelector(".d-video");
   const vsr = document.getElementById("vswRow");
-  if (c.videos.length > 1) {
-    vsr.style.display = "flex";
-    vsr.innerHTML = c.videos.map((f,i)=>
-      `<button class="vsw ${i===0?"on":""}" data-i="${i}">${/-(2|3)\.mp4$/.test(f)&&i>0?"补充角度":"视频"+(i+1)}</button>`).join("");
-  } else { vsr.style.display = "none"; vsr.innerHTML = ""; }
-  document.getElementById("dNote").textContent =
-    c.videos.length>1 ? "同判例存在多个角度视频，可切换：" : "";
+  if (LITE) {
+    stopVideo();
+    dvidWrap.style.display = "none";
+    vsr.style.display = "none"; vsr.innerHTML = "";
+    document.getElementById("dNote").textContent = "";
+    vfail.style.display = "none";
+    srcActs.style.display = "flex";
+    srcActs.innerHTML =
+      `<a class="srcbtn" href="${esc(iss.url)}" target="_blank" rel="noopener">${IC.external} 打开官方评议页</a>` +
+      (c.video_urls||[]).map((u,i)=>
+        // 官方 CDN 拒绝带 Referer 的请求（403），直链必须免 Referer 打开
+        `<a class="srcbtn" href="${esc(u)}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">${IC.play} 官方视频${i+1}</a>`).join("") +
+      `<span class="srcsub">轻量版：到官方页面观看视频，收藏与笔记两种模式共用</span>`;
+  } else {
+    srcActs.style.display = "none"; srcActs.innerHTML = "";
+    vfail.style.display = "none";
+    if (!hasVideos(c)) {
+      dvidWrap.style.display = "none";
+      vsr.style.display = "none"; vsr.innerHTML = "";
+      document.getElementById("dNote").textContent = "该判例无视频片段";
+    } else {
+      dvidWrap.style.display = "";
+      try{ vid.pause(); }catch(_){}
+      ossTried = !!(vidsMissing && (c.video_urls||[])[0]);
+      vid.src = videoSrc(c, 0);
+      if (c.videos.length > 1) {
+        vsr.style.display = "flex";
+        vsr.innerHTML = c.videos.map((f,i)=>
+          `<button class="vsw ${i===0?"on":""}" data-i="${i}">${/-(2|3)\.mp4$/.test(f)&&i>0?"补充角度":"视频"+(i+1)}</button>`).join("");
+      } else { vsr.style.display = "none"; vsr.innerHTML = ""; }
+      document.getElementById("dNote").textContent =
+        c.videos.length>1 ? "同判例存在多个角度视频，可切换：" : "";
+    }
+  }
   // 正文
   document.getElementById("dText").innerHTML =
     `<p>${esc(c.desc.replace(/^判例[一二三四五六七八九十百]+[：:]/,"").trim())}</p>` +
@@ -835,11 +955,12 @@ document.getElementById("prevBtn").onclick = ()=>step(-1);
 document.getElementById("nextBtn").onclick = ()=>step(1);
 document.getElementById("vswRow").addEventListener("click", e=>{
   const b = e.target.closest(".vsw"); if(!b) return;
-  const c = bySeq[state.sel]; if(!c) return;
+  const c = bySeq[state.sel]; if(!c || LITE || !hasVideos(c)) return;
   state.vIdx = +b.dataset.i;
   const vid = document.getElementById("dvid");
   try{ vid.pause(); }catch(_){}
-  vid.src = "videos/" + c.videos[state.vIdx];
+  ossTried = !!(vidsMissing && (c.video_urls||[])[state.vIdx]);
+  vid.src = videoSrc(c, state.vIdx);
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
 document.getElementById("btnSb").onclick = ()=>{
@@ -904,6 +1025,8 @@ const hasPen = t => (t||[]).includes("点球");
     <p><b>判定口径：</b>「错漏判」指评议组认定裁判员（或助理裁判员）判罚决定错误/漏判；「支持原判」指评议组支持临场决定；「不予认定」指现有视频无法判断、评议组不做认定。VAR错误单独标注。</p>
     <p><b>操作方法：</b>左侧自上而下：判定 → 我的收藏（按标签筛选）→ 赛事（中超/中甲/中乙等）→ 球队（跨赛事聚合，如广州豹同时列出其中甲与足协杯判例）→ 期数（按原网页一期一期浏览，选中后列表头显示该期官方标题）→ 教学分类；中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；顶栏按钮可收起侧栏获得更宽画面，右上角可切换明暗主题。</p>
     <p><b>收藏与笔记：</b>在详情区点「☆ 收藏」收藏判例并可打多个标签（精选/有疑问/尺度标杆/易错点/课堂讨论/自定义），笔记自动保存。收藏的判例在列表中显示★，可通过左侧「我的收藏」按标签筛选。数据存于浏览器 localStorage；用「导出/导入」按钮可在不同浏览器或 file:// 与 http:// 两种打开方式之间同步。</p>
+    <p><b>轻量版模式：</b>门户首页的分段开关或顶栏「轻量版」按钮可切换（自动记忆）。轻量版去掉视频窗口，详情变为纯文字阅读 + 加大的笔记区，并提供「打开官方评议页」（按期跳转官方文章）与每条判例的官方视频直链（新标签页在线播放，官方 videooss 服务器支持拖进度条）——适合纯在线访问、不下载视频的用法。收藏与笔记在两种模式下共用同一份。</p>
+    <p><b>视频播放：</b>完整版优先播放本地 videos 文件夹；在线访问（如 GitHub Pages）本地视频缺失时，会自动改用官方直链在线播放，离线用户不受任何影响。</p>
     <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，${CFG.issueDesc}。每条判例附原文链接。</p>
     <p><b>期数口径注释：</b>${issNotes ? issNotes + "。" : ""}其余各期与官方标题认定数一致。</p>
     <p><b>离线使用：</b>将本页 HTML 与 videos 文件夹放在一起，双击即可离线学习；配套页面 <a href="${CFG.stats}" target="_blank">${CFG.stats}</a> 为各队得失盘点。</p>
@@ -911,6 +1034,7 @@ const hasPen = t => (t||[]).includes("点球");
 }
 
 // ---------- 初始化 ----------
+syncEmptyState();
 applyFilter();
 { // 支持 #case-N 锚点（来自 stats.html 的跳转或刷新恢复）
   const target = initialHashSeq ? bySeq[+initialHashSeq] : null;
@@ -953,7 +1077,7 @@ def build_season(season):
                    f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>')
     tb = topbar(active=cfg["out"], right=search_html, stats=cfg["stats"],
                 brand_sub=f"{season}赛季 · {len(data['cases'])}判例", seasons=tuple(sorted(SEASONS)),
-                sb_btn=True, help_btn=True)
+                sb_btn=True, help_btn=True, lite_btn=True)
     sub = {"__I_UP__": icon("up"), "__I_DOWN__": icon("down"), "__I_LEFT__": icon("left", 14),
            "__I_CHART__": icon("chart", 14), "__I_FILM_B__": icon("film", 30)}
     html = inject_theme(HTML

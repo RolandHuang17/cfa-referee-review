@@ -19,6 +19,19 @@
 .hero p{margin:0 auto;color:var(--muted);font-size:15.5px;max-width:660px}
 .hero .sub{margin-top:12px;font-size:13px;color:var(--faint)}
 
+/* 浏览模式分段开关（完整版/轻量版，记忆于 localStorage cfa.lite） */
+.mode-pick{margin:-16px 0 30px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.mp-label{font-size:11.5px;font-weight:700;letter-spacing:2.5px;color:var(--muted)}
+.mp-switch{display:inline-flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px}
+.mp-switch button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 24px;
+  border-radius:999px;border:1px solid transparent;background:none;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:700;color:var(--ink2);transition:.15s}
+.mp-switch button span{font-size:11.5px;font-weight:400;color:var(--muted)}
+.mp-switch button:hover{border-color:var(--brand);color:var(--brand)}
+.mp-switch button.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
+.mp-switch button.on span{color:var(--on-brand);opacity:.82}
+.mp-desc{margin:0;font-size:12.5px;color:var(--muted);max-width:720px;text-align:center;line-height:1.7}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{position:relative;display:flex;flex-direction:column;text-decoration:none;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
@@ -184,6 +197,10 @@ h1,h2{font-variant-numeric:tabular-nums}
 [data-theme="light"] #btnTheme .when-dark{display:none}
 [data-theme="light"] #btnTheme .when-light{display:inline-flex}
 
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
 /* ---------- 通用组件 ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
   padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
@@ -242,7 +259,7 @@ h1,h2{font-variant-numeric:tabular-nums}
   .topbar .tbtn{padding:6px 8px}
 }
 
-</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t}catch(e){}</script></head>
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1'}catch(e){}</script></head>
 <body class="page-portal hero-bg">
 <header class="topbar"><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">评议 · 规则 · 尺度统一</span></a><nav class="nav" aria-label="站点导航"><a class="tbtn cur" aria-current="page" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025评议</span></a><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026评议</span></a><a class="tbtn" href="stats-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header>
 
@@ -252,6 +269,15 @@ h1,h2{font-variant-numeric:tabular-nums}
     <h1>判例合集 <em>统一尺度</em> 与最新竞赛规则</h1>
     <p>按新裁判统一尺度教学重组的官方评议判例全集，配判罚视频、影响统计与最新版竞赛规则，全部内容可离线使用。</p>
     <div class="sub">数据来源：中国足球协会官网「裁判评议」栏目 · IFAB《足球竞赛规则》2026-27</div>  </section>
+
+  <section class="mode-pick">
+    <div class="mp-label">浏览模式</div>
+    <div class="mp-switch" role="group" aria-label="浏览模式切换">
+      <button type="button" id="modeFull" aria-pressed="false">完整版<span>含视频 · 适合本地离线</span></button>
+      <button type="button" id="modeLite" aria-pressed="false">轻量版<span>纯文字+官方链接 · 适合在线浏览</span></button>
+    </div>
+    <p class="mp-desc" id="modeDesc"></p>
+  </section>
 
   <section class="grid">
     <a class="card c-2026" href="season-2026.html">
@@ -346,8 +372,35 @@ h1,h2{font-variant-numeric:tabular-nums}
 
   <div class="foot">
     <p>本站为裁判员教学研究用途 · 判罚认定权属于中国足协裁判委员会评议组 · 规则文本版权归 IFAB，译文使用须遵守 <a href="NOTICE.md">版权声明</a></p>
-    <p>构建于 2026-10-03 · 打开本目录即可离线使用，视频请放在 videos/ 文件夹</p>
+    <p>构建于 2026-10-03 · 打开本目录即可离线使用，视频请放在 videos/ 文件夹 · 纯在线访问（如 GitHub Pages）无需下载视频，选上方「轻量版」即可</p>
   </div>
 </div>
-<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});</script></body>
+<script>
+(function(){
+  var lite = false;
+  try { lite = localStorage.getItem("cfa.lite") === "1"; } catch(_) {}
+  var full = document.getElementById("modeFull"), lit = document.getElementById("modeLite"),
+      desc = document.getElementById("modeDesc");
+  var DESC_ON = "已选轻量版：评议与统一尺度各页无视频窗口，判例详情为纯文字阅读 + 笔记区，并提供官方评议页与官方视频直链链接（新标签页在线播放）。",
+      DESC_OFF = "已选完整版：判例详情内嵌视频播放器（本地需有 videos/ 视频文件夹；在线访问时本地视频缺失会自动改用官方直链在线播放）。";
+  function sync(){
+    full.classList.toggle("on", !lite);
+    lit.classList.toggle("on", lite);
+    full.setAttribute("aria-pressed", lite ? "false" : "true");
+    lit.setAttribute("aria-pressed", lite ? "true" : "false");
+    desc.textContent = lite ? DESC_ON : DESC_OFF;
+  }
+  function set(v){
+    lite = v;
+    try { localStorage.setItem("cfa.lite", v ? "1" : "0"); } catch(_) {}
+    if (v) document.documentElement.dataset.lite = "1";
+    else document.documentElement.removeAttribute("data-lite");
+    sync();
+  }
+  full.addEventListener("click", function(){ set(false); });
+  lit.addEventListener("click", function(){ set(true); });
+  sync();
+})();
+</script>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
 </html>

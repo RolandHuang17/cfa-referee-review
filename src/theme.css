@@ -111,6 +111,10 @@ h1,h2{font-variant-numeric:tabular-nums}
 [data-theme="light"] #btnTheme .when-dark{display:none}
 [data-theme="light"] #btnTheme .when-light{display:inline-flex}
 
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
 /* ---------- 通用组件 ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
   padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);

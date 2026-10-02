@@ -54,6 +54,19 @@ HTML = r"""<!DOCTYPE html>
 .hero p{margin:0 auto;color:var(--muted);font-size:15.5px;max-width:660px}
 .hero .sub{margin-top:12px;font-size:13px;color:var(--faint)}
 
+/* 浏览模式分段开关（完整版/轻量版，记忆于 localStorage cfa.lite） */
+.mode-pick{margin:-16px 0 30px;display:flex;flex-direction:column;align-items:center;gap:10px}
+.mp-label{font-size:11.5px;font-weight:700;letter-spacing:2.5px;color:var(--muted)}
+.mp-switch{display:inline-flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px}
+.mp-switch button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 24px;
+  border-radius:999px;border:1px solid transparent;background:none;cursor:pointer;
+  font-family:inherit;font-size:14px;font-weight:700;color:var(--ink2);transition:.15s}
+.mp-switch button span{font-size:11.5px;font-weight:400;color:var(--muted)}
+.mp-switch button:hover{border-color:var(--brand);color:var(--brand)}
+.mp-switch button.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
+.mp-switch button.on span{color:var(--on-brand);opacity:.82}
+.mp-desc{margin:0;font-size:12.5px;color:var(--muted);max-width:720px;text-align:center;line-height:1.7}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .card{position:relative;display:flex;flex-direction:column;text-decoration:none;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
@@ -115,6 +128,15 @@ __TOPBAR__
     <h1>判例合集 <em>统一尺度</em> 与最新竞赛规则</h1>
     <p>按新裁判统一尺度教学重组的官方评议判例全集，配判罚视频、影响统计与最新版竞赛规则，全部内容可离线使用。</p>
     <div class="sub">数据来源：中国足球协会官网「裁判评议」栏目 · IFAB《足球竞赛规则》2026-27</div>  </section>
+
+  <section class="mode-pick">
+    <div class="mp-label">浏览模式</div>
+    <div class="mp-switch" role="group" aria-label="浏览模式切换">
+      <button type="button" id="modeFull" aria-pressed="false">完整版<span>含视频 · 适合本地离线</span></button>
+      <button type="button" id="modeLite" aria-pressed="false">轻量版<span>纯文字+官方链接 · 适合在线浏览</span></button>
+    </div>
+    <p class="mp-desc" id="modeDesc"></p>
+  </section>
 
   <section class="grid">
     <a class="card c-2026" href="season-2026.html">
@@ -209,9 +231,36 @@ __TOPBAR__
 
   <div class="foot">
     <p>本站为裁判员教学研究用途 · 判罚认定权属于中国足协裁判委员会评议组 · 规则文本版权归 IFAB，译文使用须遵守 <a href="NOTICE.md">版权声明</a></p>
-    <p>构建于 __BUILT__ · 打开本目录即可离线使用，视频请放在 videos/ 文件夹</p>
+    <p>构建于 __BUILT__ · 打开本目录即可离线使用，视频请放在 videos/ 文件夹 · 纯在线访问（如 GitHub Pages）无需下载视频，选上方「轻量版」即可</p>
   </div>
 </div>
+<script>
+(function(){
+  var lite = false;
+  try { lite = localStorage.getItem("cfa.lite") === "1"; } catch(_) {}
+  var full = document.getElementById("modeFull"), lit = document.getElementById("modeLite"),
+      desc = document.getElementById("modeDesc");
+  var DESC_ON = "已选轻量版：评议与统一尺度各页无视频窗口，判例详情为纯文字阅读 + 笔记区，并提供官方评议页与官方视频直链链接（新标签页在线播放）。",
+      DESC_OFF = "已选完整版：判例详情内嵌视频播放器（本地需有 videos/ 视频文件夹；在线访问时本地视频缺失会自动改用官方直链在线播放）。";
+  function sync(){
+    full.classList.toggle("on", !lite);
+    lit.classList.toggle("on", lite);
+    full.setAttribute("aria-pressed", lite ? "false" : "true");
+    lit.setAttribute("aria-pressed", lite ? "true" : "false");
+    desc.textContent = lite ? DESC_ON : DESC_OFF;
+  }
+  function set(v){
+    lite = v;
+    try { localStorage.setItem("cfa.lite", v ? "1" : "0"); } catch(_) {}
+    if (v) document.documentElement.dataset.lite = "1";
+    else document.documentElement.removeAttribute("data-lite");
+    sync();
+  }
+  full.addEventListener("click", function(){ set(false); });
+  lit.addEventListener("click", function(){ set(true); });
+  sync();
+})();
+</script>
 </body>
 </html>
 """

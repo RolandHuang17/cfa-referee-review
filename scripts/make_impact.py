@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""错漏判影响标注：data/impact.json
+"""错漏判影响标注：data/impact-2025.json
 范围：仅男子中超/中甲/中乙的官方认定错漏判（67例）
 每例 items[].type（受损队视角）:
   denied_goal                漏判进球（本队进球被误判无效，确定+1球）
@@ -194,7 +194,7 @@ def main():
         for v in out["impacts"].values():
             if (v["league"], str(v["round"]), v["home"], v["away"]) == (lg, rd, h, a):
                 v["match_note"] = note
-    (DATA / "impact.json").write_text(
+    (DATA / "impact-2025.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # 汇总

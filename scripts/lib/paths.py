@@ -44,6 +44,15 @@ CREST_OVERRIDES_JSON = DATA / "crest_overrides.json"
 LAWS_JSON = DATA / "laws.json"
 SCALE_JSON = DATA / "scale.json"
 UEFA_JSON = DATA / "uefa.json"
-ISSUES = DATA / "issues_raw"
-IFAB_PDF = DATA / "laws_raw" / "lotg-202627-tc-single.pdf"
-UEFA_CACHE = DATA / "uefa_cache"
+ISSUES = DATA / "issues"
+
+# 本机专用：原始材料、抓取缓存、截图、日志。整个 data/local/ 被 git 忽略，
+# clone 下来是空的——凡往这里写文件的脚本都必须自己 mkdir(parents=True)。
+LOCAL = DATA / "local"
+LOCAL_LOGS = LOCAL / "logs"
+SHOTS = LOCAL / "shots"
+IFAB_PDF = LOCAL / "laws" / "lotg-202627-tc-single.pdf"
+UEFA_CACHE = LOCAL / "uefa-cache"
+# 2024 官方统一尺度材料包（3.3GB，第三代 EXE+XML）。2025/2026 两包在仓库外
+# 的 ROOT.parent，见 build_scale.PACKAGES。
+SCALE_PACK_2024 = LOCAL / "scale-2024"

@@ -19,7 +19,7 @@ from urllib.parse import unquote
 
 from lib.theme import inject_theme, topbar, icon
 
-from lib.paths import ROOT, SCALE_JSON, SCALE_POSTERS, SITE, SITE_VIDEOS
+from lib.paths import ROOT, SCALE_JSON, SCALE_PACK_2024, SCALE_POSTERS, SITE, SITE_VIDEOS
 
 SCALE_VIDEOS = SITE_VIDEOS / "scale"
 def PKG_IMG(year):
@@ -28,7 +28,7 @@ def PKG_IMG(year):
 PACKAGES = {
     "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
     "2025": ROOT.parent / "统一尺度宣讲原始包-2025",
-    "2024": ROOT / "2024-统一尺度-0220(1)",
+    "2024": SCALE_PACK_2024,
 }
 # 官方发布页（zip 压缩包的下载/观看入口；轻量版横幅按赛季页签跳转）
 SCALE_SOURCE_URLS = {

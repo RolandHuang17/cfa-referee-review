@@ -2,7 +2,7 @@
 """抓取 UEFA Clear Line 判例库 → data/uefa.json（提交进仓库，build_uefa.py 据此生成 site/uefa.html）
 
 用法: python fetch_uefa.py [fetch|parse|all]   (默认 all)
-- fetch: 落地页→分类页逐页抓取，原始 HTML 缓存 data/uefa_cache/（断点续抓，已缓存页不再联网）
+- fetch: 落地页→分类页逐页抓取，原始 HTML 缓存 data/local/uefa-cache/（断点续抓，已缓存页不再联网）
 - parse: 纯本地从缓存解析写 data/uefa.json（可反复调参重跑，不联网）
 
 ⚠ uefa.com 对高频请求 tarpit（挂起不响应）：页间随机间隔 DELAY 秒、完整浏览器头；

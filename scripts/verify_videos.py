@@ -9,7 +9,7 @@ import sys
 
 from lib.safe_http import head_size
 
-from lib.paths import DATA, SITE_VIDEOS
+from lib.paths import DATA, LOCAL_LOGS, SITE_VIDEOS
 SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"
 VID = SITE_VIDEOS / SEASON
 
@@ -59,7 +59,8 @@ def main():
     if size_mismatch:
         print("大小不符:", size_mismatch)
         print("-> 删除对应 .mp4 后重跑下载脚本修复")
-    (DATA / "verify_result.json").write_text(
+    LOCAL_LOGS.mkdir(parents=True, exist_ok=True)
+    (LOCAL_LOGS / "verify_result.json").write_text(
         json.dumps({"missing": missing, "mismatch": size_mismatch, "ok": ok},
                    ensure_ascii=False, indent=1), encoding="utf-8")
 

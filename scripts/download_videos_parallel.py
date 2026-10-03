@@ -10,9 +10,10 @@ from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from lib.safe_http import download
 
-from lib.paths import DATA, SITE_VIDEOS
+from lib.paths import DATA, LOCAL_LOGS, SITE_VIDEOS
 
-LOG = DATA / "download_log.txt"
+LOCAL_LOGS.mkdir(parents=True, exist_ok=True)
+LOG = LOCAL_LOGS / "download_log.txt"
 LOCK = threading.Lock()
 
 
@@ -55,7 +56,7 @@ def main():
                 log(f"FAIL {fname}: {e}")
             time.sleep(0.1)
     log(f"[{season}] 完成。成功{done} 失败{len(fails)} 总计{total_size/1e9:.2f}GB 失败清单:{fails}")
-    (DATA / f"download-fail-{season}.json").write_text(
+    (LOCAL_LOGS / f"download-fail-{season}.json").write_text(
         json.dumps(fails, ensure_ascii=False), encoding="utf-8")
 
 

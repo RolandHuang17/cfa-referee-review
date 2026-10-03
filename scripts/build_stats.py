@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """生成错漏判影响统计页 stats-2025.html / stats-2024.html（单文件离线可用）
 用法: python build_stats.py [2025] [2024]   # 不带参数=两个赛季都构建
-数据: data/cases-{s}.json + data/impact[-{s}].json + data/match[-]scores[-{s}].json
+数据: data/cases-{s}.json + data/impact-{s}.json + data/match-scores-{s}.json
 口径:
   - 确定得失球修正仅含进球判定类错误（漏判进球/对方进球应无效）
   - 点球为机会类, 不折算进球
@@ -26,8 +26,8 @@ SEASONS = {
         "season": "2026", "issueDesc": "2026赛季第1—22期（赛季进行中）",
     },
     "2025": {
-        "cases": "cases-2025.json", "impact": "impact.json",
-        "scores": "match_scores.json",
+        "cases": "cases-2025.json", "impact": "impact-2025.json",
+        "scores": "match-scores-2025.json",
         "out": "stats-2025.html", "page": "season-2025.html",
         "season": "2025", "issueDesc": "2025赛季第1—32期",
     },

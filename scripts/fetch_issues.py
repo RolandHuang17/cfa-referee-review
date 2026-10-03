@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """抓取中国足协裁判评议文章页HTML（2024/2025双赛季）
 用法: python fetch_issues.py [赛季] [期数...]
-输出: data/issues_raw/{season}/issue_NN.html
+输出: data/issues/{season}/issue_NN.html
 """
 import re
 import sys

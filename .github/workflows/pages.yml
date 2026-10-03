@@ -27,7 +27,7 @@ jobs:
       - name: Build static site
         run: python scripts/build_all.py
       - name: Verify project
-        run: python scripts/verify_project.py
+        run: python tests/test_integrity.py
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

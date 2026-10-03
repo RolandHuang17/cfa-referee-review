@@ -2,31 +2,25 @@
 """检查人工队徽目录，不再自动猜测 Wikipedia 图片。"""
 import json
 
-from lib.paths import CRESTS_JSON, ROOT, TEAMS_JSON
+from lib.crest_catalog import validate_catalog
+from lib.paths import CRESTS_JSON, TEAMS_JSON
 
 
 def main():
-    payload = json.loads(TEAMS_JSON.read_text(encoding="utf-8"))
-    verified, fallback = 0, 0
+    teams = json.loads(TEAMS_JSON.read_text(encoding="utf-8"))["teams"]
+    problems = validate_catalog(teams)
+    if problems:
+        raise SystemExit("队徽目录校验失败:\n  " + "\n  ".join(problems))
     compat = {}
-    for item in payload["teams"].values():
-        status = item.get("status")
-        path = item.get("path")
-        if status == "verified":
-            if not path or not path.startswith("assets/crests/"):
-                raise SystemExit(f"队徽路径无效: {item['name']}")
-            if not (ROOT / path).exists():
-                raise SystemExit(f"队徽文件不存在: {item['name']} -> {path}")
-            if not item.get("source_url") or not item.get("source_type"):
-                raise SystemExit(f"缺少来源元数据: {item['name']}")
-            compat[item["name"]] = path
+    verified, fallback = 0, 0
+    for item in teams.values():
+        if item.get("status") == "verified":
+            compat[item["name"]] = item["path"]
             verified += 1
-        elif status == "fallback":
-            if path:
-                compat[item["name"]] = path
-            fallback += 1
         else:
-            raise SystemExit(f"未知队徽状态: {item['name']} -> {status}")
+            if item.get("path"):
+                compat[item["name"]] = item["path"]
+            fallback += 1
     CRESTS_JSON.write_text(
         json.dumps(compat, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"队徽目录检查完成: verified={verified}, fallback={fallback}")

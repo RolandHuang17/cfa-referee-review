@@ -20,7 +20,7 @@
 
 ## 环境
 
-- Python 3.8+，**零第三方依赖**（规则模块构建除外）
+- Python 3.9+（`pyproject.toml` 的 `requires-python`；CI 锁 3.11），**零第三方依赖**（规则模块构建除外）
 - Windows 优先（脚本在 Windows 上开发；`启动合集网页.bat` 仅支持 Windows，**必须存 GBK**）
 - 视频不进仓库（三赛季约 30GB），clone 后运行 `python scripts/download_videos_parallel.py [赛季]` 重新下载（断点续传、可中断重跑）
 
@@ -28,65 +28,82 @@
 
 ```
 ├── site/                   ← 生成站点与 GitHub Pages 发布目录（勿手改）
-│   ├── index.html / season-*.html / stats-*.html / rules.html
+│   ├── index.html / season-*.html / stats-*.html / rules.html / scale.html / uefa.html
 │   └── videos/             ← 视频按赛季分目录（git忽略）
 ├── src/
 │   ├── theme.css           ← 全站设计系统（唯一权威样式层：tokens+组件+明暗主题）
 │   └── README.md
 ├── assets/crests/          ← 球队队徽 png（仅 verified 状态被页面使用）
-├── data/
-│   ├── cases-2026/2025/2024.json ← 核心：各赛季判例（issues + cases）
-│   ├── impact-2026.json / impact.json(2025) / impact-2024.json ← 错漏判影响标注
-│   ├── match-scores-2026.json / match_scores.json / match-scores-2024.json ← 比分（人工查证）
+├── data/                   ← 入库数据（本机产物一律进 data/local/，见下）
+│   ├── cases-{2024,2025,2026}.json ← 核心：各赛季判例（issues + cases）
+│   ├── impact-{2024,2025,2026}.json ← 错漏判影响标注
+│   ├── match-scores-{2024,2025,2026}.json ← 比分（人工查证）
 │   ├── teams.json          ← 队伍统一目录（generate_teams_catalog.py 产物，勿手改）
 │   ├── crest_overrides.json ← 人工核验的队徽成果（重建目录时不丢失的唯一权威源）
 │   ├── crests.json         ← 兼容映射（generate_teams_catalog.py 产物）
 │   ├── scale.json          ← 官方统一尺度宣讲内容（build_scale.py 从原包解码提取）
 │   ├── laws.json           ← 竞赛规则章节内容（build_rules.py 产物）
-│   ├── issues_raw/{2024,2025,2026}/ ← 各期官方页面原始 HTML 存档（按赛季子目录！）
-│   └── review-*.txt        ← 判例纯文本汇编（可再生成）
-├── scripts/                ← 全部管线脚本（见下）
-├── CONTRIBUTING.md / LICENSE / NOTICE.md
-└── .github/workflows/      ← GitHub Pages 自动构建发布
+│   ├── uefa.json / uefa-zh.json ← UEFA 判例抓取产物 / 中文译文层（两者不可互相覆盖）
+│   ├── issues/{2024,2025,2026}/ ← 各期官方页面原始 HTML 存档（按赛季子目录！）
+│   └── local/              ← **整目录 gitignored**：规则 PDF、抓取缓存、截图、日志、
+│                             2024 官方材料包；clone 下来不存在，脚本各自 mkdir
+├── scripts/                ← 可执行入口脚本（凡直接在本层的都能 python 跑）
+│   └── lib/                ← **只被 import，永不直接执行**：paths.py（路径常量唯一
+│                             权威源）/ theme.py / safe_http.py / crest_catalog.py /
+│                             classify_cls_{2024,2026}.py
+├── tests/test_integrity.py ← 完整性断言（裸跑或 pytest 皆可，fail-collecting）
+├── docs/                   ← 结构说明 / 新赛季接入 / 队徽指南
+├── pyproject.toml          ← 纯元数据（py-modules=[]，不打包任何模块）
+├── requirements-build.txt  ← 构建依赖唯一权威源（CI 与 pyproject build extra 共用）
+├── CHANGELOG.md / CODE_OF_CONDUCT.md / CONTRIBUTING.md / LICENSE / NOTICE.md
+└── .github/                ← workflows/（Pages 自动构建发布）+ Issue/PR 模板
 ```
 
 ## 数据管线（按序执行）
 
+命令一律在**仓库根**执行（脚本靠 `sys.path[0]` 解析 `lib`，两种 cwd 都可用，但文档
+统一用仓库根形式）：
+
 ```bash
-cd scripts
-python enum_issues.py                 # 0. (新赛季) 枚举 /cppy/ 列表页发现新期URL → 人工核对后写入两处URL表
-python fetch_issues.py 2026           # 1. 抓取官方页面 → data/issues_raw/{season}/（URL清单在脚本内 ISSUES 表，三季）
-python parse_issues.py 2026           # 2. 解析 → data/cases-{season}.json（判例/结论/视频映射/自动判定）
-python fix_issue27_merge.py           # 3. 拆分第27期文章内嵌的第26期补充认定（仅2025需要；必须在 classify 前跑）
-python download_videos_parallel.py 2026  # 4. 下载视频 → site/videos/{season}/（断点续传，失败重跑即可）
-python classify_cases.py 2026         # 5. 教学分类与结论复核（CLS_2026/CLS_2025/CLS_2024 分别在
-                                      #    classify_cls_2026.py / classify_cases.py / classify_cls_2024.py）
-python make_impact_2026.py            # 6. 错漏判影响标注（make_impact.py=2025，make_impact_2024.py=2024；
-                                      #    比分人工查证后填 data/match-scores-2026.json）
-python generate_teams_catalog.py      # 7. 队伍目录重建（读全部 cases-*.json + crest_overrides.json）
-python fetch_crests.py                # 8. 队徽目录校验（校验器，不联网）
-python fetch_laws.py                  # 9. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/laws_raw/
-python build_rules.py                 # 10. 规则提取+繁转简+术语表 → data/laws.json + rules.html
-python build_scale.py                 # 11. 统一尺度宣讲页（原包在位时重新解码提取：
-                                      #     2026/2025: 仓库外 ../统一尺度宣讲原始包-{2026,2025}；
-                                      #     2024: 仓库内 2024-统一尺度-0220(1)/，第三代 XML/GBK 包走
-                                      #     extract_season_2024；否则用 data/scale.json 构建 → scale.html）
-python fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Clear Line 判例库 → data/uefa.json
-                                      #     ⚠ uefa.com 对高频请求 tarpit：页间隔 35-55s，可断点续抓
-                                      #     （缓存 data/uefa_cache/，gitignored）；parse 子命令纯本地重解析
-python build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json + data/uefa-zh.json
-                                      #     译文层合并构建：中文为主、英文原文开关，CI 安全）
-python build_portal.py                # 12. 生成门户 index.html
-python build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
-python build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
-python verify_videos.py [赛季]        # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
-python range_server.py [端口]         # 本地预览服务（支持Range，视频可拖进度条）
+python scripts/enum_issues.py                 # 0. (新赛季) 枚举 /cppy/ 列表页发现新期URL → 人工核对后写入两处URL表
+python scripts/fetch_issues.py 2026           # 1. 抓取官方页面 → data/issues/{season}/（URL清单在脚本内 ISSUES 表，三季）
+python scripts/parse_issues.py 2026           # 2. 解析 → data/cases-{season}.json（判例/结论/视频映射/自动判定）
+python scripts/fix_issue27_merge.py           # 3. 拆分第27期文章内嵌的第26期补充认定（仅2025需要；必须在 classify 前跑）
+python scripts/download_videos_parallel.py 2026  # 4. 下载视频 → site/videos/{season}/（断点续传，失败重跑即可）
+python scripts/classify_cases.py 2026         # 5. 教学分类与结论复核（CLS_2025 内联在 classify_cases.py，
+                                              #    CLS_2024 / CLS_2026 是纯数据表，分别在
+                                              #    scripts/lib/classify_cls_2024.py 与 _2026.py）
+python scripts/make_impact_2026.py            # 6. 错漏判影响标注（make_impact.py=2025，make_impact_2024.py=2024；
+                                              #    比分人工查证后填 data/match-scores-2026.json）
+python scripts/generate_teams_catalog.py      # 7. 队伍目录重建（读全部 cases-*.json + crest_overrides.json）
+python scripts/fetch_crests.py                # 8. 队徽目录校验（校验器，不联网）
+python scripts/fetch_laws.py                  # 9. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/local/laws/
+python scripts/build_rules.py                 # 10. 规则提取+繁转简+术语表 → data/laws.json + rules.html
+python scripts/build_scale.py                 # 11. 统一尺度宣讲页（原包在位时重新解码提取：
+                                              #     2026/2025: 仓库外 ../统一尺度宣讲原始包-{2026,2025}；
+                                              #     2024: data/local/scale-2024/，第三代 XML/GBK 包走
+                                              #     extract_season_2024；否则用 data/scale.json 构建 → scale.html）
+python scripts/fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Clear Line 判例库 → data/uefa.json
+                                              #     ⚠ uefa.com 对高频请求 tarpit：页间隔 35-55s，可断点续抓
+                                              #     （缓存 data/local/uefa-cache/，gitignored）；parse 子命令纯本地重解析
+python scripts/build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json + data/uefa-zh.json
+                                              #     译文层合并构建：中文为主、英文原文开关，CI 安全）
+python scripts/build_portal.py                # 12. 生成门户 index.html
+python scripts/build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
+python scripts/build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
+python scripts/verify_videos.py [赛季]        # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
+python scripts/serve.py [端口]                # 本地预览服务（内部以绝对路径起 range_server.py，
+                                              #     支持Range，视频可拖进度条）
+python tests/test_integrity.py                # 收尾：完整性断言（也可 python -m pytest tests/）
 ```
 
 ⚠️ 顺序要点：fix_issue27_merge 必须在 classify 之前（它拆分结构），classify 末尾含赛季特判（2025 第27期 #195 拆分校正、2026 #195 补全对阵）；漏掉任何一步都会导致统计错位。改了前面步骤后按序重跑，最后必须运行 `python scripts/build_all.py`。
 
 规则模块构建依赖（仅 fetch/build_rules 需要，页面运行时零依赖）：
-`pip install -r scripts/requirements-build.txt`（pymupdf / opencc-python-reimplemented / markdown）。
+`pip install -r requirements-build.txt`（pymupdf / opencc-python-reimplemented；也可
+`pip install ".[build]"`，两者读同一份清单）。
+⚠ 该文件第 1 行的 `# -*- coding: utf-8 -*-` 是必需的：pip 无 BOM 时会退回 locale
+编码，Windows 的 GBK 遇到中文注释会以 UnicodeDecodeError 退出码 2 失败。
 新赛季更新规则版本：换 fetch_laws.py 里的 PDF URL → 重跑 fetch_laws + build_rules；术语表 GLOSSARY 在 build_rules.py 内按需增补。
 
 ## 数据 schema 速查
@@ -129,15 +146,18 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 
 ## 队徽体系（当前架构）
 
-- **目录制**：`data/teams.json`（111 个标准队伍）+ `scripts/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
+操作流程与目检清单见 [docs/crest-guide.md](docs/crest-guide.md)，此处只留架构要点：
+
+- **目录制**：`data/teams.json`（111 个标准队伍，当前 verified 39 / fallback 72）+ `scripts/lib/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
+- **两级状态**：`status=verified` 才渲染真实队徽 `<img>`；`fallback` 渲染文字徽章（initials+配色），是**设计内行为而非降级**
 - **采集工具**：`fetch_crests_online.py`（中文维基词条图片，严格限本队词条防跨队误配）与 `fetch_crests_round2.py`（Commons+英文维基）；两者下载后**必须人工目检图片**再算 verified
-- **校验器**：`fetch_crests.py`（build_all 里调用；verified 必须有文件+source_url+source_type）
-- **人工补录路径**：下载 png 到 `assets/crests/{slug}.png` → 在 `data/crest_overrides.json` 登记（含 source_url/source_type）→ 重跑 generate_teams_catalog
+- **校验器**：`fetch_crests.py`（build_all 里调用；verified 必须有文件+`assets/crests/` 路径前缀+source_url+source_type，校验逻辑在 `lib/crest_catalog.validate_catalog()`，与 `tests/test_integrity.py` 共用）
+- **人工成果唯一权威源**：`data/crest_overrides.json`——`generate_teams_catalog.py` 重建 teams.json 时会合并它，所以手改 teams.json 会丢
 - 已知坑：自动采集易采到**更名前旧徽/同名异 club**（曾采到广州富力旧徽当广州豹、永昌旧徽当沧州雄狮、省队语境采俱乐部徽），宁缺毋滥回退 fallback
 
 ## 前端架构（src/theme.css 设计系统 + 四个 builder）
 
-- **设计系统**：`src/theme.css` 是全站唯一权威样式层——视觉风格为暖纸色编辑排版（浅色=米白纸面，深色=暖炭色；陶土色为品牌点缀色，红/绿/黄为判定语义色；标题用衬线字栈 `--font-display`，正文用无衬线 `--font`）、共享组件（topbar/btn/chip/badge/dot/card/modal/team-badge）、SVG 图标与明暗切换。`scripts/theme.py` 提供 `inject_theme()`（注入 CSS + 首帧主题脚本 + 切换脚本，localStorage 键 `cfa.theme`，默认跟随系统）与 `topbar()`（统一顶栏生成器：brand/nav/搜索槽/主题切换，season 页另有 sb_btn/help_btn）
+- **设计系统**：`src/theme.css` 是全站唯一权威样式层——视觉风格为暖纸色编辑排版（浅色=米白纸面，深色=暖炭色；陶土色为品牌点缀色，红/绿/黄为判定语义色；标题用衬线字栈 `--font-display`，正文用无衬线 `--font`）、共享组件（topbar/btn/chip/badge/dot/card/modal/team-badge）、SVG 图标与明暗切换。`scripts/lib/theme.py` 提供 `inject_theme()`（注入 CSS + 首帧主题脚本 + 切换脚本，localStorage 键 `cfa.theme`，默认跟随系统）与 `topbar()`（统一顶栏生成器：brand/nav/搜索槽/主题切换，season 页另有 sb_btn/help_btn）
 - **builder 职责**：四个 builder 的 `<style>` 只写页面专属布局，禁止重定义 tokens/顶栏/组件；颜色一律用 var(--token)
 - **season 页布局**：顶栏 + `.workspace` 三栏 grid（侧栏筛选 276px / 播放列表 356px / 详情自适应），每列独立滚动；**全部筛选收进侧栏**（判定 chips / 我的收藏 chips / 赛事 chips / 球队列表(带徽) / 期数 6 列数字网格 / 教学分类行），`body.sb-off` 收起侧栏
 - **数据以 `const DATA = {...}` 内联注入**；`bySeq` 为判例索引
@@ -161,38 +181,31 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 ## 硬约束（违反会直接出错）
 
 1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG。唯一例外（用户批准）：uefa.html 无内嵌第三方资源，仅以文字+外链方式收录 UEFA 判例（视频受官方 token 门禁与 X-Frame-Options: DENY 限制，无法本地化/嵌入）
-2. **safe_http.py 安全模块**：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib
+2. **safe_http.py 安全模块**（`scripts/lib/safe_http.py`）：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib。⚠ 扩白名单只能写 `from lib import safe_http as S` + `S.ALLOWED_HOSTS |= {...}`；写成 `from lib.safe_http import ALLOWED_HOSTS` 会让 `_validate_url` 看到的仍是原集合，**白名单静默失效**
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且内容不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入
 5. **期数结构坑**：2024 第1期为"结论摘要"式文章（无标准判例结构/无视频，阵容仅在导语中，classify_cases.py 内按原文补全，判例二/三属中甲第1轮）；2025 第27期内嵌第26期补充认定（fix_issue27_merge.py）；2026 第20期判例一无"判例N:"前缀（parse_issues.py 已有无前缀首判例兜底）；2026 第17期判例九沿判例八事件无对阵行（classify_cases.py 内补全）；comp 兜底归一在 parse/builder 双处
 6. **球队名归一是单点**：`generate_teams_catalog.py` 的 `ALIASES`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；impact/scores 里的队名必须是归一化后名字；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
 7. **两 URL 表同步**：fetch_issues.py 的 `ISSUES` 与 parse_issues.py 的 `ISSUE_URL` 是同一套 URL 的两份拷贝，加新期必须同步
-8. **expectation 断言**：verify_project.py 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
+8. **expectation 断言**：`tests/test_integrity.py` 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
 9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。凡指向它的 `<video>` 或 `<a>` 必须带 `referrerpolicy="no-referrer"`（直链再加 `rel="noreferrer"`），否则轻量版直链与完整版在线回退全部失效
 
 ## 扩展任务指南
 
-### 接入 2027 赛季（管线已参数化，照 2026 的先例）
-1. `python scripts/enum_issues.py` 枚举新期 URL → 人工核对
-2. fetch_issues.py `ISSUES["2027"]` 与 parse_issues.py `ISSUE_URL["2027"]` 同步追加
-3. 抓取→解析→检查 comp/无前缀首判例等结构坑 → 逐条通读新建 `CLS_2027`（新文件 classify_cls_2027.py，classify_cases.py 加 import+分支）
-4. 新建 make_impact_2027.py（照 make_impact_2026.py），比分人工查证填 match-scores-2027.json
-5. generate_teams_catalog 自动纳入新队名（赞助冠名往 ALIASES 加）→ build_page/build_stats 的 SEASONS 加配置 → 门户模板加卡片 → verify_project 的 PAGES/EXPECTED 更新
-6. 视频后台下载 + verify_videos 校验
+三份任务指南已拆到 `docs/`，此处只留最易踩的坑，细节以 docs 为准（避免两处漂移）：
 
-### 新增队徽/修正队徽
-- 自动：`fetch_crests_online.py`（维基）→ **人工目检**每张图 → 确认后自动写 teams.json → 重播种 crest_overrides.json
-- 人工：下载 png 到 `assets/crests/{slug}.png` → crest_overrides.json 登记来源 → 重跑 generate_teams_catalog
-- 目检重点：更名前旧徽、赞助商模板、国旗、他队徽；宁缺毋滥（fallback 文字徽章是设计内行为）
+- **接入新赛季** → [docs/add-new-season.md](docs/add-new-season.md)。管线已三赛季参数化，照 2026 先例即可。最容易漏的两处：`fetch_issues.ISSUES` 与 `parse_issues.ISSUE_URL` 是同一套 URL 的**两份拷贝**，必须同步；收尾要更新 `tests/test_integrity.py` 的 `PAGES` 与 `EXPECTED`。
+- **新增/修正队徽** → [docs/crest-guide.md](docs/crest-guide.md)。核心红线：自动采集到的图**必须人工目检**（更名前旧徽、赞助商模板、国旗、他队徽是反复踩过的坑），宁缺毋滥回退 fallback 文字徽章；成果只登记进 `crest_overrides.json`（`teams.json` 会被脚本覆盖）。
+- **仓库结构与路径契约** → [docs/structure.md](docs/structure.md)。哪些目录被写死在数据或断言里、为什么 `site/` 必须自包含、`data/local/` 里放什么。
 
 ### 新增统计维度
 - 在 `build_stats.py` 的 `team_stats()`/`build_matches()` 扩展；数据源缺失时页面必须优雅降级（显示"待补"），参考比分缺失的处理
 
 ## AI 开发自验清单
 
-改动后依次验证：
-- [ ] `python build_portal.py && python build_page.py && python build_stats.py && python build_rules.py` 无报错
-- [ ] `python scripts/verify_project.py` 通过（10页面/三赛季数据/离线资源/队徽目录）
+改动后依次验证（命令一律在仓库根执行）：
+- [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
+- [ ] `python tests/test_integrity.py` 通过（10页面/三赛季数据/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
 - [ ] 浏览器打开 index.html：门户六张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
@@ -200,7 +213,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - [ ] 完整版在线回退：临时改名 site/videos 后刷新 → 自动改用官方直链播放并出提示条；恢复原名后 → 本地播放
 - [ ] stats-2026/2025/2024.html：双视角切换、联赛筛选（含足协杯）、缺失比分显示"待补"、明细链接跳对应赛季页
 - [ ] rules.html：划词出现高亮工具条、三种颜色可标可删、章节笔记自动保存、导出导入
-- [ ] `python verify_videos.py [赛季]`（如动过视频/数据）
+- [ ] `python scripts/verify_videos.py [赛季]`（如动过视频/数据）
 - [ ] 统计口径：2026 错漏判 95、支持原判 121、不予认定 9；2025 错漏判 82、支持 138、不予 7；2024 错漏判 60、支持 99、不予 1（与 cases-*.json 一致）
 
 ## 已知不足（欢迎改进）

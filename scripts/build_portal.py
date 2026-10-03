@@ -49,6 +49,18 @@ def load_scale_stats():
     return {"scenes": scenes, "groups": groups, "videos": scenes}
 
 
+def load_uefa_stats():
+    """UEFA Clear Line 判例库数字从 data/uefa.json 计算。"""
+    p = ROOT / "data" / "uefa.json"
+    cases = groups = 0
+    if p.exists():
+        d = json.loads(p.read_text(encoding="utf-8"))
+        for g in d.get("groups", []):
+            groups += 1
+            cases += len(g.get("items", []))
+    return {"cases": cases, "groups": groups}
+
+
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -210,6 +222,17 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
+    <a class="card c-uefa" href="uefa.html">
+      <div class="icon">__I_PLAY__</div>
+      <h2>欧足联判例库</h2>
+      <p class="desc">UEFA 官方 Clear Line：__U_CASES__ 例真实比赛场景与官方解释（英文原文），逐例跳转官方视频页。</p>
+      <div class="nums">
+        <div><b>__U_CASES__</b><span>判例</span></div>
+        <div><b>__U_GROUPS__</b><span>分组</span></div>
+        <div><b>__I_EXT_S__</b><span>官方视频</span></div>
+      </div>
+      <div class="go">进入学习 __I_RIGHT__</div>
+    </a>
   </section>
 
   <section class="steps">
@@ -285,13 +308,15 @@ __TOPBAR__
 def main():
     s = load_stats()
     sc = load_scale_stats()
+    u = load_uefa_stats()
     tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一",
                 seasons=("2024", "2025", "2026"))
     subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
             "__I_CHART__": icon("chart", 17), "__I_RIGHT__": icon("right", 13),
             "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
             "__I_SEARCH__": icon("search", 13), "__I_DOWN__": icon("download", 13),
-            "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13)}
+            "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13),
+            "__I_EXTERNAL__": icon("external", 20), "__I_EXT_S__": icon("external", 15)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
             .replace("__N26__", str(s["2026"]["n"]))
@@ -312,6 +337,8 @@ def main():
             .replace("__S_SCENES__", str(sc["scenes"]))
             .replace("__S_GROUPS__", str(sc["groups"]))
             .replace("__S_VIDEOS__", str(sc["videos"]))
+            .replace("__U_CASES__", str(u["cases"]))
+            .replace("__U_GROUPS__", str(u["groups"]))
             .replace("__BUILT__", date.today().isoformat()))
     for k, v in subs.items():
         html = html.replace(k, v)

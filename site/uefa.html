@@ -1,0 +1,668 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>欧足联 Clear Line 判例库 · 裁判学习平台</title>
+<style>
+/* ===== uefa 页专属布局 (tokens/组件来自 data-cfa-theme, 布局骨架同 scale 页) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{max-width:1180px;margin:0 auto;padding:22px 16px 16px}
+.page-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
+.page-head .sub{color:var(--muted);font-size:13px}
+.page-head .src{margin-top:8px;font-size:13px}
+.page-head .src a{color:var(--brand);font-weight:600;text-decoration:none}
+.page-head .src a:hover{text-decoration:underline}
+.src-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.src-banner .ic{color:var(--brand)}
+.layout{max-width:1180px;margin:0 auto;padding:18px 16px 60px;display:grid;
+  grid-template-columns:216px minmax(0,1fr);gap:20px;align-items:start}
+.gnavs{position:sticky;top:calc(var(--top-h) + 14px);display:flex;flex-direction:column;gap:4px}
+.gnavs .gh{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:2px 4px 6px}
+.gnav{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:var(--r-sm);
+  color:var(--ink2);text-decoration:none;font-size:13.5px;border:1px solid var(--line);transition:.12s}
+.gnav b{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
+.gnav:hover{background:var(--card2);border-color:var(--brand);color:var(--ink)}
+.gcontent{min-width:0}
+.gsec{margin-bottom:34px}
+.gsec h2{font-family:var(--font-display);font-size:19px;margin:0 0 10px;letter-spacing:.4px}
+.gsec h2 small{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
+.gsec .gintro{font-size:13.5px;color:var(--muted);line-height:1.8;margin:0 0 6px}
+.gcrits{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:10px 0 20px}
+.gcrit{background:var(--card2);border:1px solid var(--line);border-radius:var(--r-md);padding:11px 14px}
+.gcrit h4{margin:0 0 6px;font-size:13.5px;color:var(--brand);line-height:1.5}
+.gcrit ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink2);line-height:1.85}
+.gsec ul.gpoints{margin:8px 0 16px;padding-left:20px;color:var(--ink2);font-size:13.5px;line-height:1.9}
+.hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:16px 18px;margin-bottom:16px}
+.hhead{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.hid{font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--brand);
+  border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2);white-space:nowrap}
+.hhead h3{margin:0;font-size:16px;font-weight:600;line-height:1.5}
+.hnote{font-size:14px;line-height:1.9;margin:8px 0 0}
+.hcap{font-size:13.5px;line-height:1.85;margin:8px 0 0;color:var(--ink2)}
+.watch{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:7px 15px;
+  border-radius:999px;border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
+  font-size:13.5px;font-weight:600;text-decoration:none}
+.watch:hover{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
+.hdate{font-size:12px;color:var(--faint);margin-left:10px}
+.uefa-frame{position:relative;width:100%;max-width:880px;aspect-ratio:16/9;
+  background:#000;border-radius:var(--r-md);overflow:hidden;margin-top:12px}
+.uefa-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+html[data-lite] .uefa-frame{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .gnavs{position:static;flex-direction:row;flex-wrap:wrap}
+  .gnavs .gh{flex-basis:100%}
+}
+</style>
+<style data-cfa-theme>
+/* ============================================================
+   裁判学习平台 · 全站设计系统 (唯一权威样式层)
+   风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
+   衬线大标题/陶土色点缀/发丝线边框/平面卡片
+   - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
+   - 本文件由 scripts/theme.py 内联注入全部生成页 <head>
+   - 各 builder 的 <style> 只允许写页面专属布局, 禁止重定义
+     :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
+   ============================================================ */
+
+/* ---------- 设计 tokens ---------- */
+:root{
+  /* 主题色: 陶土(clay)为品牌色, 红/绿/黄为判定语义色 */
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:rgba(178,58,46,.09); --red-line:rgba(178,58,46,.32);
+  --green:#3e7b49; --green-bg:rgba(62,123,73,.1); --green-line:rgba(62,123,73,.32);
+  --amber:#946d1b; --amber-bg:rgba(148,109,27,.11); --amber-line:rgba(148,109,27,.34);
+  --info:#a3502b; --info-bg:rgba(163,80,43,.09); --info-line:rgba(163,80,43,.3);
+
+  /* 表面与文字 (暖炭深色) */
+  --bg:#191813; --bg2:#201e18; --card:#242219; --card2:#2b2820;
+  --ink:#ece8dd; --ink2:#cfc9ba; --muted:#9c9585; --faint:#6e6759;
+  --line:#3a362c; --line2:#2e2b22;
+  --shadow:0 14px 40px rgba(10,9,6,.5);
+  --shadow-sm:0 2px 10px rgba(10,9,6,.35);
+
+  /* 顶栏 (与页面同底色 + 发丝线, 编辑风导航) */
+  --top-bg:#191813; --top-ink:#ece8dd; --top-muted:#9c9585;
+  --top-line:#3a362c; --top-chip:rgba(236,232,221,.07); --top-chip-on:rgba(224,139,98,.16);
+  --top-input-bg:#242219; --top-input-line:#3a362c;
+
+  /* 几何与字体 */
+  --r-sm:6px; --r-md:10px; --r-lg:13px;
+  --top-h:56px;
+  --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+}
+[data-theme="light"]{
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:#f7e8e2; --red-line:#e6c3b6;
+  --green:#3e7b49; --green-bg:#e8f0e4; --green-line:#c3d6be;
+  --amber:#946d1b; --amber-bg:#f5edda; --amber-line:#e2d3a4;
+  --info:#a3502b; --info-bg:#f4e7dd; --info-line:#e3c8b2;
+
+  --bg:#f3f1ea; --bg2:#eceade; --card:#fbfaf5; --card2:#f1eee3;
+  --ink:#211e1a; --ink2:#46423a; --muted:#7a7466; --faint:#a49d8c;
+  --line:#ddd8ca; --line2:#e9e5d9;
+  --shadow:0 14px 40px rgba(48,42,30,.12);
+  --shadow-sm:0 1px 4px rgba(48,42,30,.06);
+
+  --top-bg:#f3f1ea; --top-ink:#211e1a; --top-muted:#7a7466;
+  --top-line:#ddd8ca; --top-chip:rgba(33,30,26,.05); --top-chip-on:rgba(163,80,43,.12);
+  --top-input-bg:#fbfaf5; --top-input-line:#cfc9b8;
+}
+
+/* ---------- 基础 ---------- */
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:14.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+::selection{background:rgba(163,80,43,.25)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.skip-link{position:absolute;left:-999px;top:0;z-index:200;background:var(--brand);
+  color:var(--on-brand);padding:8px 14px;border-radius:0 0 8px 0}
+.skip-link:focus{left:0}
+h1,h2{font-variant-numeric:tabular-nums}
+
+/* 滚动条 */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 图标 ---------- */
+.ic{vertical-align:-2.5px;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+
+/* ---------- 顶栏(全站统一) ---------- */
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--top-bg);color:var(--top-ink);border-bottom:1px solid var(--top-line);
+  position:sticky;top:0;z-index:60}
+.topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--top-ink);white-space:nowrap;min-width:0}
+.topbar .brand .ic{color:var(--brand)}
+.topbar .brand b{font-family:var(--font-display);font-size:16.5px;letter-spacing:.4px;font-weight:700}
+.topbar .brand .brand-sub{font-size:11.5px;color:var(--top-muted);padding:1px 9px;
+  border:1px solid var(--top-line);border-radius:999px;white-space:nowrap}
+.topbar .nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.topbar .nav::-webkit-scrollbar{display:none}
+.topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;
+  border:1px solid transparent;border-radius:var(--r-sm);background:none;
+  color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
+.topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+.topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
+  border:1px solid var(--top-input-line);border-radius:var(--r-sm);
+  background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
+.topbar .search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:480px;min-width:120px}
+.topbar .search-wrap .ic{position:absolute;left:10px;color:var(--top-muted);pointer-events:none}
+
+/* 主题切换按钮: 图标随主题互换 */
+#btnTheme .when-light{display:none}
+[data-theme="light"] #btnTheme .when-dark{display:none}
+[data-theme="light"] #btnTheme .when-light{display:inline-flex}
+
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* ---------- 通用组件 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.btn.primary:hover{opacity:.88;color:var(--bg)}
+.btn.iconbtn{padding:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;white-space:nowrap;transition:.15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.chip.on b{color:var(--brand)}
+
+/* 判定徽章 */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2.5px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.badge.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line)}
+.badge.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.badge.pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-line);font-weight:500}
+.badge.wrong,.badge.correct,.badge.pending,.badge.info{letter-spacing:.3px}
+
+/* 队徽 (跨页共用, JS 注入) */
+.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:4px;background:#fff}
+.team-dot{display:inline-block;border-radius:3px;vertical-align:-3px;margin-right:4px;flex:none}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:4px;margin-right:4px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.wrong{background:var(--red)}.dot.correct{background:var(--green)}.dot.pending{background:var(--amber)}
+.kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
+
+/* ---------- 弹层 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
+  z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
+.modal-mask.open{display:flex}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
+.modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
+.modal .close:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- 通用响应式辅助 ---------- */
+@media (max-width:760px){
+  .topbar{gap:8px;padding:0 10px}
+  .topbar .brand .brand-sub{display:none}
+  .topbar .tbtn span{display:none}
+  .topbar .tbtn{padding:6px 8px}
+}
+
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1'}catch(e){}</script></head>
+<body class="page-uefa">
+<a class="skip-link" href="#content0">跳到内容</a>
+<header class="topbar"><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">UEFA Clear Line</span></a><nav class="nav" aria-label="站点导航"><a class="tbtn" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025评议</span></a><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026评议</span></a><a class="tbtn" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn cur" aria-current="page" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>欧足联判例</span></a></nav><div class="top-right"><button class="tbtn" id="btnLite" title="切换轻量版：纯文字+官方链接（无视频窗口），适合在线浏览" aria-pressed="false"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>轻量版</span></button><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header>
+<header class="page-head">
+  <div class="wrap">
+    <h1>欧足联 Clear Line 判例库</h1>
+    <div class="sub">UEFA 官方裁判判例宣讲（2026 年 8 月上线）：真实比赛视频场景 + 官方判罚解释 · 内容为英文原文 · 版权归 UEFA 所有</div>
+    <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 视频受 UEFA 版权技术保护（token 门禁），本页提供每例的官方观看链接；<a href="https://www.uefa.com/running-competitions/refereeing/clear-line/" target="_blank" rel="noopener noreferrer">前往 UEFA Clear Line 官方发布页</a></div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="gnavs" aria-label="场景分组" data-navs><a class="gnav" href="#u-0">客观事实判定<b>11</b></a><a class="gnav" href="#u-1">DOGSO 破坏明显进球<b>9</b></a><a class="gnav" href="#u-2">严重犯规<b>7</b></a><a class="gnav" href="#u-3">暴力行为<b>5</b></a><a class="gnav" href="#u-4">两黄变一红<b>3</b></a><a class="gnav" href="#u-5">手球（点球）<b>19</b></a><a class="gnav" href="#u-6">拉拽与推搡<b>9</b></a><a class="gnav" href="#u-7">绊摔<b>3</b></a><a class="gnav" href="#u-8">踩踏<b>4</b></a><a class="gnav" href="#u-9">是否触到球<b>5</b></a><a class="gnav" href="#u-10">守门员<b>5</b></a><a class="gnav" href="#u-11">假摔<b>3</b></a></aside>
+  <div class="gcontent"><section class="gsec" id="u-0"><h2>客观事实判定 <small>Factual decisions</small> <b>11例</b></h2><p class="gintro">Here we cover decisions of fact rather than of judgement. Either the ball was out of play or it was not. Either the offence happened inside the penalty area or outside it. Where the footage answers the question, the VAR informs the referee and the decision is corrected without an on-field review. There are certain objective or factual situations in which the VAR should always intervene and, in most cases, the referee will change the original decision without the need for an on-field review. These include:</p><article class="hcard" id="u-0c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Objective situations: VAR-only review for offside</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21381fdca64f-3a2d59a205aa-1000--video-1-objective-situations-var-only-review-for-offside/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-0c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Objective situations: Goal scored directly from attacking handball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213688cda827-6312b11a08d7-1000--video-2-objective-situations-goal-scored-directly-from-att/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-0c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Objective situations: Attacker scores immediately after handball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213805d7491a-5f1a807b4aa8-1000--video-3-objective-situations-attacker-scores-immediately/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-0c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Objective situations: Foul occurred outside penalty area</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2136896feda3-135f604c50de-1000--video-4-objective-situations-foul-occurred-outside-penalty/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-0c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Objective situations: Corner incorrectly awarded</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21380631b285-96dc178b8dde-1000--video-5-objective-situations-corner-incorrectly-awarded/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-0c6">
+  <div class="hhead"><span class="hid">#6</span><h3>Video 6 – Objective situations: Penalty to be retaken after goalkeeper encroachment</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21368e211b31-517a4c1ff711-1000--video-6-objective-situations-penalty-to-be-retaken-after-goa/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-0c7">
+  <div class="hhead"><span class="hid">#7</span><h3>Video 7 – Objective situations: Penalty to be retaken after accidental double touch</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21368e438576-11d4fa29fd02-1000--video-7-objective-situations-penalty-to-be-retaken-after-acc/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-0c8">
+  <div class="hhead"><span class="hid">#8</span><h3>Video 8 – Objective situations: Penalty to be retaken after defender encroachment</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2138066c2fc7-7a9c8b989153-1000--video-8-objective-situations-penalty-to-be-retaken-after-d/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-0c9">
+  <div class="hhead"><span class="hid">#9</span><h3>Video 9 – Objective situations: Indirect free kick awarded after attacker encroachment and goal scored</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21368e9842c9-d8b450660701-1000--video-9-objective-situations-indirect-free-kick-awarded-aft/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-0c10">
+  <div class="hhead"><span class="hid">#10</span><h3>Video 10 – Objective situations: Goalscorer did not encroach as his foot was touching ground outside area</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21368ec750c5-3bb7e14c3a90-1000--video-10-objective-situations-goalscorer-did-not-encroach/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-0c11">
+  <div class="hhead"><span class="hid">#11</span><h3>Video 11 – Objective situations: Penalty to be retaken due to airborne encroachment by defender, determined by projected position of feet</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21368ee03a6f-16696003c3b2-1000--video-11-objective-situations-penalty-to-be-retaken-due-to/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article></section><section class="gsec" id="u-1"><h2>DOGSO 破坏明显进球 <small>Red cards – Denial of a goal-scoring opportunity</small> <b>9例</b></h2><p class="gintro">When deciding whether an incident involves denying an obvious goal-scoring opportunity (DOGSO), the referee must assess numerous factors. A red card for denying an obvious goal-scoring opportunity is not a judgement about the foul. It is a judgement about what the foul prevented. A red card should be shown when the offence prevented an obvious goal-scoring opportunity. To decide whether this was the case, referees must guide themselves using a set of specific criteria. If the foul was committed inside the penalty area, there are additional considerations.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Four criteria decide whether an incident is a DOGSO.</li><li>the likelihood of the attacker keeping or gaining control of the ball.</li><li>the distance between the offence and the goal.</li><li>the general direction of play.</li><li>the number and position of defenders and attackers.</li></ul></div><div class="gcrit"><h4>Additional considerations for DOGSO offences inside the penalty area:</h4><ul><li>Was the defender attempting to play or challenge for the ball?</li><li>Was the offence a deliberate handball?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a red card</h4><ul><li>All DOGSO criteria are clearly met and one or more of the following situations applies:</li><li>the referee misses an offence (clear handball / tackle / holding / pushing etc). (Video 1)</li><li>the referee identifies the offence but fails to recognise it as a DOGSO. (Video 2)</li><li>the referee penalises a handball but fails to recognise that it was deliberate. (Video 3)</li><li>the referee penalises an offence inside the penalty area but fails to recognise that it was not an attempt to play or challenge for the ball. (Video 4)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a red card</h4><ul><li>One or more of the DOGSO criteria are not satisfied, including where:</li><li>no offence occurred. (Video 5)</li><li>an offence inside the penalty area was committed while the defender attempted to play or challenge for the ball. (Video 6 &amp; 7)</li><li>an attacker did not have, and was unlikely to gain, control of the ball. (Video 8)</li><li>another defender could reach the ball or challenge the attacker. (Video 9)</li><li>the direction of the ball did not support the possibility of an obvious goal-scoring opportunity.</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>If there is doubt regarding one or more of the DOGSO criteria, including:</li><li>whether the attacker had, or was likely to gain, control of the ball.</li><li>whether another defender could have reached the ball or challenged the attacker.</li><li>whether the likelihood of scoring a goal was sufficient to constitute an obvious goal-scoring opportunity.</li><li>A decision standing after a check is not VAR failing to act: it means that VAR found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-1c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – DOGSO: Referee missed clear tripping offence</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349a0b3244-24bab522c1a3-1000--video-1-dogso-referee-missed-clear-tripping-offence/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-1c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – DOGSO: Referee fails to recognise obvious goal-scoring opportunity</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349a86ebe8-6f7e2294f36a-1000--video-2-dogso-referee-fails-to-recognise-obvious-goal-scor/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-1c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – DOGSO: Deliberate handball offence denying a goal</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2138020d6644-0e87830ba670-1000--video-3-dogso-deliberate-handball-offence-denying-a-goal/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-1c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – DOGSO: Referee fails to identify an action was not an attempt to play the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349b2ceba1-c1a753e4f844-1000--video-4-dogso-referee-fails-to-identify-an-action-was-not-an/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-1c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – DOGSO: Attacker is guilty of simulation, indirect free kick and yellow card</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21381ebb18ab-94cd3d89fd16-1000--video-5-dogso-attacker-is-guilty-of-simulation-indirect-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-1c6">
+  <div class="hhead"><span class="hid">#6</span><h3>Video 6 – DOGSO: Player was challenging for ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349c121037-fc840bfac455-1000--video-6-dogso-player-was-challenging-for-ball/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-1c7">
+  <div class="hhead"><span class="hid">#7</span><h3>Video 7 – DOGSO: Player was challenging for ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349c4d7ff8-8c7ae86dda69-1000--video-7-dogso-player-was-challenging-for-ball/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-1c8">
+  <div class="hhead"><span class="hid">#8</span><h3>Video 8 – DOGSO: Attacker has no control of ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349c9a5780-84f53f9e061a-1000--video-8-dogso-attacker-has-no-control-of-ball/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-1c9">
+  <div class="hhead"><span class="hid">#9</span><h3>Video 9 – DOGSO: Another defender is in position to challenge for ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2138027f0186-e473c4d85a04-1000--video-9-dogso-another-defender-is-in-position-to-challeng/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article></section><section class="gsec" id="u-2"><h2>严重犯规 <small>Red cards – Serious foul play</small> <b>7例</b></h2><p class="gintro">Serious foul play covers challenges that endanger the safety of an opponent. Serious foul play and a normal tough challenge sit on the same continuum with the dividing line determined by the risk to the opponent. The referee must ask whether a challenge endangered the safety of another player. The speed and direction of the challenge, the point of contact and the use of studs must all be taken into consideration.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>What was the intensity of the challenge (speed, force, etc.)?</li><li>Was excessive force used, or was an opponent’s safety endangered?</li><li>What were the actions and movement of the player making the challenge (running, jumping, lunging…)?</li><li>What was the player’s intent?</li><li>What was the possibility of playing the ball?</li><li>What was the direction of the challenge (from the front, side or rear)?</li><li>What was the point of contact (foot, ankle, leg, Achilles tendon, knee, face, head, etc)?</li><li>What was the potential consequence of the contact (risk and potential severity of injury, endangering the safety of the opponent, etc)?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a red card</h4><ul><li>A player clearly endangers the safety of the opponent by:</li><li>stepping on an opponent&#39;s Achilles tendon, calf, knee, or leg with excessive force. (Video 1)</li><li>making a challenge or tackle with the studs directed towards an opponent&#39;s leg using excessive force. (Video 2)</li><li>making a &quot;scissors&quot; challenge that endangers the safety of an opponent. (Video 3)</li><li>using the arm as a “weapon” when challenging for the ball, i.e. striking an opponent in the head or face with the elbow, where there is a clear forward and/or backward movement intended to make forceful contact. (Video 4)</li><li>making a high challenge with force and intensity, such as raising the foot or leg and striking an opponent in the chest, torso, neck, or head. (Video 5)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a red card</h4><ul><li>The referee incorrectly assesses the point of impact, nature of contact, force used or manner of the challenge. Examples include:</li><li>a player steps on the opponent’s foot, but the referee incorrectly interprets the contact as being on a more vulnerable area, such as the Achilles tendon, calf or ankle. (Video 6)</li><li>a player makes contact with an opponent’s chest or body, but the referee incorrectly interprets the contact as an elbow strike to the face or head.</li><li>after playing or challenging for the ball, a player withdraws the leg to avoid contact with the opponent&#39;s body or head and any subsequent contact is minimal or does not involve the studs in a manner that endangers the opponent&#39;s safety. (Video 7)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>the incident falls within the referee&#39;s discretionary judgement regarding whether the force used was excessive or not.</li><li>A decision standing after a check is not VAR failing to act: it means that VAR found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-2c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Serious foul play: While challenging for ball, player uses studs to challenge opponent&#39;s leg with excessive force</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213800174192-9730fd64e1a7-1000--video-1-serious-foul-play-while-challenging-for-ball-player/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-2c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Serious foul play: While challenging for ball, player uses studs to challenge opponent&#39;s ankle with excessive force</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2139ee549c05-c9136497a54b-1000--video-2-serious-foul-play-while-challenging-for-ball-pla/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-30</span>
+</article><article class="hcard" id="u-2c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Serious foul play: Player makes scissors challenge, endangering safety of opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213494fbf281-ae7dbd6dab0f-1000--video-3-serious-foul-play-player-makes-scissors-challenge-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-2c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Serious foul play: While challenging for ball, player uses elbow to strike opponent with excessive force</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349539ab67-8cd417632f90-1000--video-4-serious-foul-play-while-challenging-for-ball-player-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-2c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Serious foul play: While challenging for ball, player uses studs to kick opponent in chest with excessive force</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349571c515-70a7e60db60d-1000--video-5-serious-foul-play-while-challenging-for-ball-play/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-2c6">
+  <div class="hhead"><span class="hid">#6</span><h3>Video 6 – Serious foul play: Player steps on opponent&#39;s foot with medium intensity</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213800e233f0-12188aeba9f5-1000--video-6-serious-foul-play-player-steps-on-opponent-s-foot-w/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-2c7">
+  <div class="hhead"><span class="hid">#7</span><h3>Video 7 – Serious foul play: Player withdraws leg after playing ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213495e2ed62-cc924b1f9ea5-1000--video-7-serious-foul-play-player-withdraws-leg-after-playing/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article></section><section class="gsec" id="u-3"><h2>暴力行为 <small>Red cards – Violent conduct</small> <b>5例</b></h2><p class="gintro">Violent conduct covers the use or attempted use of excessive force or brutality when a player is not challenging for the ball. What separates violent conduct from a hard challenge is the ball.</p><article class="hcard" id="u-3c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Violent conduct: Using excessive force, deliberate strike with elbow to face</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213496c23a21-73fed5ebabe2-1000--video-1-violent-conduct-using-excessive-force-deliberate-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-3c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Violent conduct: Player uses head to strike opponent in face with force</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213497fdb715-cec56021a982-1000--video-2-violent-conduct-player-uses-head-to-strike-opponen/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-3c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Violent conduct: Player strikes opponent with hand to face without challenging for ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213497c4dfba-3f9488ea4279-1000--video-3-violent-conduct-player-strikes-opponent-with-hand-t/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-3c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Violent conduct: Player did not use excessive force or brutality</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21380177f966-95e9b0a6a8fb-1000--video-4-violent-conduct-player-did-not-use-excessive-for/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-3c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Violent conduct: Player exaggerates contact that was not in face</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2134987fe962-5e298ca9705c-1000--video-5-violent-conduct-player-exaggerates-contact-that-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article></section><section class="gsec" id="u-4"><h2>两黄变一红 <small>Red cards – Second yellow cards</small> <b>3例</b></h2><p class="gintro">A second yellow card results in an automatic sending-off, placing the decision within the VAR protocol. The review has a single, clear objective: preventing players being sent off for clearly incorrect second yellow cards, when video footage clearly shows that the caution should not have been given. A second yellow card is unusual within the VAR protocol because the offence itself may be minor. It is the consequence which makes the incident reviewable.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>When assessing the severity of the offence:</li><li>Does contact between the players occur?</li><li>Does the player clearly exaggerate contact?</li><li>Can the challenge be deemed reckless?</li><li>When assessing tactical fouls:</li><li>Does the defender commit a foul?</li><li>Was the attacker guilty of simulation?</li><li>In cases of unsporting behaviour:</li><li>Was the referee in control of the incident?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a second yellow card</h4><ul><li>In cases of physical offences:</li><li>contact between the players does not occur.</li><li>the opponent clearly exaggerates the level of contact. (Video 1)</li><li>the foul was clearly not a reckless challenge. (Videos 2 &amp; 3)</li><li>In cases of tactical fouls:</li><li>the attacker is clearly guilty of simulation.</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>If there is doubt whether:</li><li>the offence should be considered careless or reckless.</li><li>the offence stops a promising attack or not.</li><li>A decision standing after a check is not VAR failing to act: it means that VAR found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-4c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Second yellow: Incorrect card, player exaggerates minimal contact with face</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349d9eb9f8-c755bc63192b-1000--video-1-second-yellow-incorrect-card-player-exaggerates-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article><article class="hcard" id="u-4c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Second yellow: Incorrect card, defender clearly plays ball followed by football contact</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21381f5e304d-a30af7eff7cc-1000--video-2-second-yellow-incorrect-card-defender-clearly-play/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-29</span>
+</article><article class="hcard" id="u-4c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Second yellow: Defender clearly plays ball, VAR should intervene if second yellow</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21349e69e7ff-b79dee4c569c-1000--video-3-second-yellow-defender-clearly-plays-ball-var-sho/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-27</span>
+</article></section><section class="gsec" id="u-5"><h2>手球（点球） <small>Penalties – Handball</small> <b>19例</b></h2><p class="gintro">When deciding on a potential handball, match officials must assess several factors that can determine whether an offence has taken place. A defender sliding to block a shot or using an arm to keep their balance may position the arm in a way that looks similar in a still image but can be interpreted quite differently when viewed in motion. This is why match officials must assess the position of the arm in terms of the defender’s movement rather than what happened to the ball.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Was the contact deliberate?</li><li>What was the position of the arm/hand?</li><li>Was there a movement of the arm/hand towards the ball?</li><li>How far was the defender from the shot or pass? Were there any deflections? Was there a chance of avoiding contact?</li><li>Was the ball kicked by a team-mate?</li><li>Did the defender play the ball towards their own arm/hand?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a penalty</h4><ul><li>The defender deliberately touches the ball or there is a movement of the hand/arm towards the ball (Video 1 &amp; 2)</li><li>The hand/arm is held in an unnatural position away from the body (Video 3)</li><li>A defender makes their body unnaturally bigger (Video 4)</li><li>The position of the arm/hand is not justified by the defender’s movement (Video 5)</li><li>A defender blocks or deflects a shot or a cross while sliding, with an arm extended away from the body along the ground, making their body unnaturally bigger (Video 6)</li><li>A defender blocks or deflects a shot or a cross with an arm/hand on the ground (or moving towards the ground), but there is no genuine attempt to play the ball. Rather the player is making their body bigger, creating a larger barrier to block the ball (Video 7)</li><li>A deflected shot still traveling towards the goal is blocked by the defender’s arm/hand, which is clearly held away from the body in an unnatural position (Video 8)</li><li>Following a deflection, the defender blocks a pass with their arm/hand clearly held away from the body in an unnatural position (Video 9)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>The protocol works both ways, meaning the review can also show that a penalty should not stand if:</li><li>there is clear evidence that the ball has not hit the defender’s hand/arm.</li><li>the defender’s arm is positioned close to or against the body. (Video 10)</li><li>the defender’s arm is clearly in a natural position for the specific movement or action. (Video 11)</li><li>the position of the arm and contact with the ball are a natural consequence of a challenge that causes the defender to lose balance and accidentally touch the ball.(Video 12)</li><li>in principle, a defender kicks or heads the ball towards a team-mate&#39;s arm/hand. (Video 13 &amp; 14)</li><li>in principle, a defender plays the ball and it subsequently touches their own arm/hand. (Video 15 &amp; 16)</li><li>a defender’s arm is on the ground or moving towards the ground as a natural consequence of supporting their body to maintain balance while attempting to reach or challenge for the ball. (Video 17)</li><li>in principle, a defender is attempting to block a shot or a pass with any part of the body and a deflection causes the ball to clearly change direction before contacting their arm/hand, which is held in a natural position. This applies when the ball would not have continued travelling towards the goal or in the original direction of the pass. (Video 18 &amp; 19)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>if there is no clear evidence that the ball touched the defender’s arm.</li><li>if the VAR has doubts about whether the arm is held in a natural or unnatural position</li><li>A decision standing after a check is not VAR failing to act, it is VAR finding no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-5c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Penalties – Handball: Intentional movement towards the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2127f79a9df2-bac5c3f331f3-1000--video-1-penalties-handball-intentional-movement-towards-the/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-21</span>
+</article><article class="hcard" id="u-5c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Penalties – Handball: Intentional movement towards the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a1f9e502f-b0c5aea37176-1000--video-2-penalties-handball-intentional-movement-towards-the/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Penalties – Handball: Arm in unnatural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213691191e42-fc94eceefddd-1000--video-3-penalties-handball-arm-in-unnatural-position/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-5c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Penalties – Handball: Player makes body unnaturally bigger</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a307ac189-f43821a77d23-1000--video-4-penalties-handball-player-makes-body-unnaturally-b/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Penalties – Handball: Arm position not justified by player movement</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a313a7ce8-389e76b0bbd5-1000--video-5-penalties-handball-arm-position-not-justified-by-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c6">
+  <div class="hhead"><span class="hid">#6</span><h3>Video 6 – Penalties – Handball: Player blocks cross while sliding with arm extended away from body</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a31ebd0a5-7ff3f4bb78ed-1000--video-6-penalties-handball-player-blocks-cross-while-slidi/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c7">
+  <div class="hhead"><span class="hid">#7</span><h3>Video 7 – Penalties – Handball: Player acting as goalkeeper</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a324e8355-e72eb590342a-1000--video-7-penalties-handball-player-acting-as-goalkeeper/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c8">
+  <div class="hhead"><span class="hid">#8</span><h3>Video 8 – Penalties – Handball: Deflection towards goal with arms in unnatural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a32fd20d4-e8be87df410e-1000--video-8-penalties-handball-deflection-towards-goal-with-a/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c9">
+  <div class="hhead"><span class="hid">#9</span><h3>Video 9 – Penalties – Handball: After deflection, defender blocked pass with arm in unnatural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3365767b-91ecfe50dc73-1000--video-9-penalties-handball-after-deflection-defender-blo/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c10">
+  <div class="hhead"><span class="hid">#10</span><h3>Video 10 – Penalties – Handball: Arm close to body</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a33aeaade-545a4322d2b1-1000--video-10-penalties-handball-arm-close-to-body/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c11">
+  <div class="hhead"><span class="hid">#11</span><h3>Video 11 – Penalties – Handball: Arm is in natural position as consequence of player movement</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a340e624b-bc794713c56e-1000--video-11-penalties-handball-arm-is-in-natural-position-as-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c12">
+  <div class="hhead"><span class="hid">#12</span><h3>Video 12 – Penalties – Handball: Contact with ball is a consequence of challenge from opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a34d6d5e8-2c4e91ab1c1b-1000--video-12-penalties-handball-contact-with-ball-is-a-conseque/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c13">
+  <div class="hhead"><span class="hid">#13</span><h3>Video 13 – Penalties – Handball: Ball comes from team-mate and arm in natural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3558343f-975de813b3dd-1000--video-13-penalties-handball-ball-comes-from-team-mate-an/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c14">
+  <div class="hhead"><span class="hid">#14</span><h3>Video 14 – Penalties – Handball: Ball comes from team-mate and arm in natural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3592c2cf-54d53eda74fd-1000--video-14-penalties-handball-ball-comes-from-team-mate-an/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c15">
+  <div class="hhead"><span class="hid">#15</span><h3>Video 15 – Penalties – Handball: Player played the ball which hits own arm in natural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213691771ba3-b3a0855f2eb9-1000--video-15-penalties-handball-player-played-the-ball-which-hi/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-5c16">
+  <div class="hhead"><span class="hid">#16</span><h3>Video 16 – Penalties – Handball: Player played the ball which hits own arm in natural position</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213691af12ab-ccf226817d5a-1000--video-16-penalties-handball-player-played-the-ball-which-hi/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-5c17">
+  <div class="hhead"><span class="hid">#17</span><h3>Video 17 – Penalties – Handball: Arm supporting body</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a36e03f77-51832d26ca8f-1000--video-17-penalties-handball-arm-supporting-body/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c18">
+  <div class="hhead"><span class="hid">#18</span><h3>Video 18 – Penalties – Handball: Player blocks shot on to arm, ball travelling away from goal</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a37f6a601-3ea1036e48cc-1000--video-18-penalties-handball-player-blocks-shot-on-to-arm-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-5c19">
+  <div class="hhead"><span class="hid">#19</span><h3>Video 19 – Penalties – Handball: Player blocks shot on to arm, ball travelling away from goal</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a38545690-480b73b65654-1000--video-19-penalties-handball-player-blocks-shot-on-to-arm-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section><section class="gsec" id="u-6"><h2>拉拽与推搡 <small>Penalties – Holding/pushing</small> <b>9例</b></h2><p class="gintro">In instances of potential pushing, holding or shirt pulling, the key issues facing officials are the impact on the opponent’s ability to play or reach the ball, the nature of the contact and whether the attacker exaggerates the effect of the contact. Players hold and push each other throughout a match and most of it is part of the game. What turns contact into an offence is its effect. The referee is not asking whether a defender touched the attacker but whether that contact stopped them reaching or playing the ball. That is why how long the hold lasted, whether one arm or two were used and how much the attacker’s movement changed all carry more weight than the contact itself.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>What was the impact on the attacker&#39;s ability to play the ball?</li><li>What was the defender&#39;s intention? Did they have a realistic opportunity to play the ball?</li><li>Was the holding momentary or persistent?</li><li>Were one or both arms used? Two-arm holding is an aggravating factor.</li><li>What was the intensity of the contact?</li><li>Did the attacker use this to exaggerate the effect of the contact or deliberately go to ground?</li><li>In situations where the defender does not use the arms (e.g. charge or shoulder charge), the referee’s assessment should normally prevail.</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a penalty</h4><ul><li>VAR reviews the footage and recommends the referee looks at the footage if:</li><li>a defender is holding an opponent with both arms and not attempting to play the ball.(Video 1, 2 &amp; 3)</li><li>a defender holds or pushes an opponent from behind, with no intention or realistic possibility of playing the ball, while the attacker has control of the ball or a clear opportunity to play it. (Video 4)</li><li>a defender holds or pushes an opponent with one arm, but only where there is sufficient intensity to clearly impact the opponent’s movement or ability to play the ball. (Video 5)</li><li>a defender pulls an opponent and clearly impacts their movement or ability to play the ball. (Video 6)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>The protocol works both ways, meaning the review can also show that a penalty should not stand if:</li><li>there is light contact with no clear impact on the attacker&#39;s ability to play the ball (Video 7)</li><li>there is only momentary holding (Video 8)</li><li>the attacker exaggerates the effect of contact to fall, or there is no clear relationship between the contact and the fall (Video 9)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>It is difficult to assess the impact of holding/pushing/pulling on the attacker&#39;s movement</li><li>There is mutual holding and it is not possible to determine who initiated contact or committed the more punishable offence</li><li>A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-6c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Holding/pushing: Clear holding with two arms, no intention of playing the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a39e38caf-872d3e3f9fd3-1000--video-1-holding-pushing-clear-holding-with-two-arms-no-inte/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Holding/pushing: Clear holding with two arms, no intention of playing the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3a444a6a-023ee8147911-1000--video-2-holding-pushing-clear-holding-with-two-arms-no-inte/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Holding/pushing: Clear holding with two arms, no intention of playing the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3ad8df21-92b07242e0c1-1000--video-3-holding-pushing-clear-holding-with-two-arms-no-inte/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Holding/pushing: Pushing from back with no chance to play ball and clear impact on opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3b9533e0-c142a22fa1f7-1000--video-4-holding-pushing-pushing-from-back-with-no-chance-t/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Holding/pushing: One arm holding but clear impact on opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213692db37be-ec62eb516b73-1000--video-5-holding-pushing-one-arm-holding-but-clear-impact-o/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-6c6">
+  <div class="hhead"><span class="hid">#6</span><h3>Video 6 – Holding/pushing: Clear shirt pull impacting opponent movement</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3c548578-dd83fd87601f-1000--video-6-holding-pushing-clear-shirt-pull-impacting-opponen/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c7">
+  <div class="hhead"><span class="hid">#7</span><h3>Video 7 – Holding/pushing: Soft holding with no clear impact on opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3c96c12d-b04b147859c2-1000--video-7-holding-pushing-soft-holding-with-no-clear-impact-o/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c8">
+  <div class="hhead"><span class="hid">#8</span><h3>Video 8 – Holding/pushing: Momentary holding</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3cdf708e-0bef5786e714-1000--video-8-holding-pushing-momentary-holding/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-6c9">
+  <div class="hhead"><span class="hid">#9</span><h3>Video 9 – Holding/pushing: Player exaggerates holding to fall down</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a3d576e9b-820074cc3b10-1000--video-9-holding-pushing-player-exaggerates-holding-to-fall/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section><section class="gsec" id="u-7"><h2>绊摔 <small>Penalties – Tripping</small> <b>3例</b></h2><p class="gintro">Where there is a potential trip, referees must consider the extent of contact, who initiates it and whether the defender also plays the ball. Legs touch in almost every challenge, so contact alone is not enough to make a decision. The referee must distinguish a challenge that brought the attacker down from one where the ball was played and the players’ legs came together afterwards.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Did the defender place a leg, foot or their body in the path of the attacker, causing them to stumble, lose balance or fall?</li><li>Did the defender place their leg, foot or body in the path of the attacker without playing or legitimately shielding the ball?</li><li>Did the attacker provoke the contact?</li><li>When the defender clearly plays the ball, in principle, any subsequent trip is a result of a natural challenge and normally should not be penalised – unless it is deemed reckless or to have used excessive force. A slight touch or minor deviation of the ball is not automatically considered &quot;clearly playing the ball&quot;.</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a penalty</h4><ul><li>VAR reviews the footage and recommends the referee looks again when:</li><li>a player clearly trips an opponent (Video 1)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>• The protocol works both ways, meaning the review can also show that a penalty should not stand if:</li><li>a defender clearly plays the ball and any subsequent contact with the opponent is not considered reckless, but a natural consequence of the challenge (Video 2)</li><li>an attacker clearly initiates or provokes contact with a defender who has committed no offence (Video 3)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>if there is a leg-to-leg, foot-to-foot or body-to-body contact, but no genuine tripping offence</li><li>if it is difficult to assess the impact of the contact</li><li>A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-7c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Tripping: Clear tripping</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4b7d7cd1-87706bc3a887-1000--video-1-tripping-clear-tripping/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-7c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Tripping: Defender clearly plays ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4bbc1161-db918b0bd690-1000--video-2-tripping-defender-clearly-plays-ball/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-7c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Tripping: Attacker initiates contact</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4be044e0-0e30721ecf8e-1000--video-3-tripping-attacker-initiates-contact/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section><section class="gsec" id="u-8"><h2>踩踏 <small>Penalties – Stepping on foot</small> <b>4例</b></h2><p class="gintro">If a defender steps on an attacker&#39;s foot inside the penalty area, referees must assess the intensity of contact and whether this inhibits the attacking player&#39;s actions. Feet are constantly making contact in a crowded penalty area so a defender stepping on an attacker’s foot is often incidental. To distinguish between an offence and a natural coming together, the referee must assess how firmly the foot was planted and what the attacker was prevented from doing.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Was there a clear or only partial step on the attacker&#39;s foot?</li><li>What was the intensity and speed of the action?</li><li>What was the impact on the attacker&#39;s movement and ability to continue their movement?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a penalty</h4><ul><li>VAR reviews the footage and recommends the referee looks again if:</li><li>a defender steps on the attacker&#39;s foot, impacting their ability to play or challenge for the ball. (Video 1)</li><li>a defender steps on the attacker&#39;s foot with intensity or force. (Video 2)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>The protocol works both ways, meaning the review can also show that a penalty should not stand if:</li><li>there is foot-to-foot contact without a clear impact on the attacker. (Video 3)</li><li>the defender clearly plays the ball and any subsequent contact is accidental and a natural consequence of the challenge. (Video 4)</li><li>an attacker exaggerates the effect of a partial or light step on the foot to fall, with no clear relationship between the contact and the fall.</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>if the extent of contact is not clear.</li><li>if it is difficult to assess the impact of the contact.</li><li>A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-8c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Stepping on foot: Clear impact on attacker&#39;s ability to play the ball</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4cc48860-bca7a8ab30e3-1000--video-1-stepping-on-foot-clear-impact-on-attacker-s-abil/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-8c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Stepping on foot: High intensity or force</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4d0a9b0c-9ff322041350-1000--video-2-stepping-on-foot-high-intensity-or-force/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-8c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Stepping on foot: Foot-to-foot contact without clear impact on opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213694437508-4d6cebcd962f-1000--video-3-stepping-on-foot-foot-to-foot-contact-without-clea/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-8c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Stepping on foot: Defender clearly plays ball and later makes accidental contact</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4da6e0b4-30708ec69f15-1000--video-4-stepping-on-foot-defender-clearly-plays-ball-and-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section><section class="gsec" id="u-9"><h2>是否触到球 <small>Penalties – Who played the ball?</small> <b>5例</b></h2><p class="gintro">When players challenge for the ball inside the penalty area, officials must consider who touches it first, whether that is clear, if the defender&#39;s challenge is reckless or uses excessive force, and whether the attacker has a realistic chance of continuing to compete for the ball. When two players reach the ball simultaneously, assessing who played the ball first is one of the hardest decisions for a referee to make, especially in real-time. Touching the ball first does not make a challenge legal. Arriving second does not make the same challenge an offence.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Who played the ball first? Is it clear, or did the players arrive almost at the same time?</li><li>Was the challenge reckless or using excessive force?</li><li>Did the defender have a realistic possibility of playing the ball?</li><li>Does the attacker have a realistic possibility of playing or continuing to play the ball?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a penalty</h4><ul><li>VAR reviews the footage and recommends the referee looks again if:</li><li>the attacker clearly plays the ball first and the defender arrives late and kicks the opponent&#39;s leg, with no need for frame-by-frame analysis to determine who played the ball first. (Video 1)</li><li>the defender makes a late tackle with significant force or in a reckless manner after the attacker has played the ball. (Video 2)</li><li>the defender plays the ball first but uses significant force, resulting in a high reckless challenge or serious foul play. (Video 3)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>The protocol works both ways, meaning the review can also show that a penalty should not stand if:</li><li>regardless of who plays the ball first, contact between players is considered a normal football collision, to the extent that it does not impact the attacker’s ability to continue playing for the ball, or use reckless or excessive force. (Video 4 &amp; 5)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>it is not clear who played the ball first.</li><li>both players arrive at the ball almost simultaneously, even if one player touches it before the other.</li><li>A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-9c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Who played the ball: Attacker plays the ball first</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213695009523-0fefabd08dc2-1000--video-1-who-played-the-ball-attacker-plays-the-ball-first/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-9c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Who played the ball: Defender does not play ball and makes reckless action</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-21369549de7c-b46a9b7d1d73-1000--video-2-who-played-the-ball-defender-does-not-play-ball-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-9c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Who played the ball: Defender plays ball first but makes clear reckless tackle on leg</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a50193a64-b2e3bb528296-1000--video-3-who-played-the-ball-defender-plays-ball-first-but/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-9c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Who played the ball: Attacker plays ball first and football collision occurs</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-213695b5e3b8-0d4f5e7e3088-1000--video-4-who-played-the-ball-attacker-plays-ball-first-and-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-9c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Who played the ball: Defender plays ball first and football collision occurs</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a50a366a5-d29411d04441-1000--video-5-who-played-the-ball-defender-plays-ball-first-and-/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section><section class="gsec" id="u-10"><h2>守门员 <small>Penalties – Goalkeepers</small> <b>5例</b></h2><p class="gintro">Referees must consider whether the goalkeeper touches the ball, and whether they use reckless or excessive force to impact the attacking player&#39;s ability to play the ball. Whether diving at an attacker’s feet or coming for a cross in the air, a goalkeeper going for the ball almost inevitably leads to contact. The keeper is entitled to go for the ball, and reaching the ball first will usually be the decisive factor for the referee.</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Who played the ball first: the attacker or the goalkeeper?</li><li>Was the goalkeeper’s action reckless or using excessive force?</li><li>What was the attacker’s realistic possibility of continuing to play for the ball?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend a penalty</h4><ul><li>VAR reviews the footage and recommends the referee looks again if:</li><li>the attacker clearly plays the ball first and the goalkeeper makes late contact, with no need for frame-by-frame analysis. (Video 1)</li><li>after the attacker plays the ball, the goalkeeper makes a reckless challenge with significant force or intensity. (Video 2)</li><li>the goalkeeper touches the ball but uses significant force, resulting in a clearly reckless challenge or serious foul play. (Video 3)</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>The protocol works both ways, meaning the review can also show that a penalty should not stand if:</li><li>the attacker plays the ball first and any subsequent contact is considered a normal football collision. (Video 4)</li><li>the goalkeeper touches or deflects the ball first and any subsequent contact is considered a normal football collision. (Video 5)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>it is not clear who played the ball first.</li><li>both players arrive at the ball almost simultaneously, even if one player touches it before the other.</li><li>A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-10c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Goalkeepers: Attacker plays ball first and goalkeeper clearly kicks opponent</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a51126c82-11e08a43c5a7-1000--video-1-goalkeepers-attacker-plays-ball-first-and-goalkeep/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-10c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Goalkeepers: Goalkeeper did not touch ball and makes clear reckless challenge</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a51892974-2029f63e9721-1000--video-2-goalkeepers-goalkeeper-did-not-touch-ball-and-makes/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-10c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Goalkeepers: Goalkeeper touches ball but makes clear reckless challenge</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a51d2a476-86a0de70255a-1000--video-3-goalkeepers-goalkeeper-touches-ball-but-makes-clea/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-10c4">
+  <div class="hhead"><span class="hid">#4</span><h3>Video 4 – Goalkeepers: Attacker plays ball first before normal football collision</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a52403a8e-ccc80e071299-1000--video-4-goalkeepers-attacker-plays-ball-first-before-norma/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-10c5">
+  <div class="hhead"><span class="hid">#5</span><h3>Video 5 – Goalkeepers: Goalkeeper plays ball first before normal football collision</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a527f8e6c-da0c96fc2c8c-1000--video-5-goalkeepers-goalkeeper-plays-ball-first-before-norma/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section><section class="gsec" id="u-11"><h2>假摔 <small>Penalties – Simulation</small> <b>3例</b></h2><p class="gintro">Referees must consider the extent of contact by the defender, who initiates the contact and whether the attacker has faked or exaggerated contact to gain an advantage. If the referee makes the wrong call, it is usually the result of deception. Hence, in cases of potential simulation, VAR is usually answering one question: should a penalty be over-ruled?</p><div class="gcrits"><div class="gcrit"><h4>What referees consider when making a decision</h4><ul><li>Does the defender touch the attacker, committing an offence?</li><li>Did the attacker initiate the contact?</li><li>Did the attacker fake or exaggerate the contact?</li></ul></div><div class="gcrit"><h4>✅ When VAR should recommend cancelling a penalty</h4><ul><li>there is no contact between the two players. (Video 1)</li><li>the contact is clearly initiated by the attacker. (Video 2)</li><li>the attacker exaggerates the effect of a minor or light contact to fall. (Video 3)</li></ul></div><div class="gcrit"><h4>❌ When VAR should not intervene</h4><ul><li>there is doubt as to who initiated the contact.</li><li>there is doubt about the intensity of the contact.</li><li>A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct.</li></ul></div></div><article class="hcard" id="u-11c1">
+  <div class="hhead"><span class="hid">#1</span><h3>Video 1 – Simulation: No contact</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-2136961dff3b-ee1e7087696e-1000--video-1-simulation-no-contact/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-28</span>
+</article><article class="hcard" id="u-11c2">
+  <div class="hhead"><span class="hid">#2</span><h3>Video 2 – Simulation: Contact clearly initiated by attacker</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4e7847bf-c5dd8f42f141-1000--video-2-simulation-contact-clearly-initiated-by-attacker/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article><article class="hcard" id="u-11c3">
+  <div class="hhead"><span class="hid">#3</span><h3>Video 3 – Simulation: Attacker exaggerates contact</h3></div>
+  
+  
+  <a class="watch" href="https://www.uefa.com/news-media/video/02a7-212a4ec10e1d-510c25da0c92-1000--video-3-simulation-attacker-exaggerates-contact/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 在 UEFA 官网观看 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg></a><span class="hdate">2026-07-22</span>
+</article></section></div>
+</div>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
+</html>

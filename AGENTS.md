@@ -4,14 +4,15 @@
 
 ## 项目是什么
 
-「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
+「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例索引+逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**九个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（五张入口卡片 + 浏览模式开关）
+核心交付物是 `site/` 下的**十个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（六张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 - `site/scale.html` 官方统一判罚尺度宣讲（2024–2026 三季 104 例场景视频+判罚决定矩阵；2024 为第三代 EXE+XML 包，走 extract_season_2024 解析）
+- `site/uefa.html` 欧足联 Clear Line 判例库（UEFA 官方判例文字索引+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -70,6 +71,10 @@ python build_scale.py                 # 11. 统一尺度宣讲页（原包在位
                                       #     2026/2025: 仓库外 ../统一尺度宣讲原始包-{2026,2025}；
                                       #     2024: 仓库内 2024-统一尺度-0220(1)/，第三代 XML/GBK 包走
                                       #     extract_season_2024；否则用 data/scale.json 构建 → scale.html）
+python fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Clear Line 判例库 → data/uefa.json
+                                      #     ⚠ uefa.com 对高频请求 tarpit：页间隔 35-55s，可断点续抓
+                                      #     （缓存 data/uefa_cache/，gitignored）；parse 子命令纯本地重解析
+python build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json 构建，CI 安全）
 python build_portal.py                # 12. 生成门户 index.html
 python build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
 python build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
@@ -107,6 +112,11 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - decision 矩阵 chip 顺序由 DECISION_ORDER 排序；2024 的矩阵由 XML decision/level 字段合成（语义=官方 decision_N.png 图卡），`varrule` 为 VAR 介入条件（仅 2024 有）；2024 无场景海报（本机无 ffmpeg，poster 留空，模板按需输出属性）
 - CI 无原包，靠提交的 scale.json 重建 scale.html——**SCALE_SOURCE_URLS 与数据必须同 commit 增删赛季**，否则 build_page KeyError
 
+### uefa.json（欧足联 Clear Line 判例，fetch_uefa.py 产物，提交进仓库）
+- `{source, source_name, fetched, groups: [{key, name_en, name_cn, intro, criteria: [{h, items[]}], items: [{id, title, caption, url(官方视频页), date}]}]}`
+- 数据源为 SSR 页面内嵌的 videoplayer `data-options` JSON；criteria 为每组页面的 ✅/❌ 官方统一尺度准则分节；视频为 Akamai token 门禁 HLS，**不下载**，每例跳官方分享页（实测 X-Frame-Options: DENY，build_uefa.py 的 EMBED=False 纯链接模式）
+- uefa.com 反爬：高频请求 tarpit，fetch_uefa.py 页间隔 35-55s + 完整浏览器头（**Accept-Encoding: identity 会被 tarpit，须 gzip**）+ 120s/300s 退避；CI 不跑 fetch，靠提交的 JSON 重建
+
 ### crest_overrides.json（人工队徽成果登记）
 - `{标准队名: {path, source_url, source_type, status}}`；generate_teams_catalog 重建时合并
 
@@ -143,7 +153,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 
 ## 硬约束（违反会直接出错）
 
-1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG
+1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG。唯一例外（用户批准）：uefa.html 无内嵌第三方资源，仅以文字+外链方式收录 UEFA 判例（视频受官方 token 门禁与 X-Frame-Options: DENY 限制，无法本地化/嵌入）
 2. **safe_http.py 安全模块**：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且内容不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入
@@ -175,11 +185,11 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 
 改动后依次验证：
 - [ ] `python build_portal.py && python build_page.py && python build_stats.py && python build_rules.py` 无报错
-- [ ] `python scripts/verify_project.py` 通过（9页面/三赛季数据/离线资源/队徽目录）
-- [ ] 浏览器打开 index.html：门户五张卡片数字正确、浏览模式分段开关与说明文字正确
+- [ ] `python scripts/verify_project.py` 通过（10页面/三赛季数据/离线资源/队徽目录）
+- [ ] 浏览器打开 index.html：门户六张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
-- [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、顶栏「轻量版」随时切回完整版、刷新记忆保持
+- [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、uefa 页 lite 下隐藏 iframe（如有）只留链接、顶栏「轻量版」随时切回完整版、刷新记忆保持
 - [ ] 完整版在线回退：临时改名 site/videos 后刷新 → 自动改用官方直链播放并出提示条；恢复原名后 → 本地播放
 - [ ] stats-2026/2025/2024.html：双视角切换、联赛筛选（含足协杯）、缺失比分显示"待补"、明细链接跳对应赛季页
 - [ ] rules.html：划词出现高亮工具条、三种颜色可标可删、章节笔记自动保存、导出导入

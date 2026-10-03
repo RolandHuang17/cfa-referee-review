@@ -14,6 +14,7 @@ ALLOWED_HOSTS = {
     "videooss.thecfa.cn",
     "imageoss.thecfa.cn",
     "rest.thecfa.cn",
+    "www.uefa.com",  # UEFA Clear Line 判例库（fetch_uefa.py，节流抓取）
 }
 # DoH解析器固定为IP直连（无DNS依赖）；本机若开TUN代理，系统DNS返回fake-ip，
 # 因此一律走公共DNS取真实公网IP

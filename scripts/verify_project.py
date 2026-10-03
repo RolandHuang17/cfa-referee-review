@@ -12,7 +12,7 @@ ROOT = Path(__file__).resolve().parent.parent
 SITE = ROOT / "site"
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
-         "scale.html"]
+         "scale.html", "uefa.html"]
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
             "2025": (227, 229, {"wrong": 82, "correct": 138, "pending": 7}),

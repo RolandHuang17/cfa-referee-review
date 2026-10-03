@@ -2,6 +2,7 @@ videos/
 site/videos/
 data/laws_raw/
 data/shots/
+data/uefa_cache/
 data/download_log.txt
 data/verify_result.json
 data/download_fail.json

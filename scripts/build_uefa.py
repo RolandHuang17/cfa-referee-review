@@ -1,0 +1,161 @@
+# -*- coding: utf-8 -*-
+"""生成 site/uefa.html：UEFA Clear Line 官方判例库（中文界面 + 英文原文 + 逐例官方视频链接）
+
+数据来自 data/uefa.json（fetch_uefa.py 抓取并提交，CI 无网络依赖照常重建）。
+视频为 Akamai token 门禁 HLS，无法本地化/热链，且官方分享页实测
+X-Frame-Options: DENY（2026-10 探测）→ 卡片为纯文字 + 「在 UEFA 官网观看」外链；
+EMBED 开关保留（若 UEFA 未来放开嵌入，一行切换为卡片内 iframe）。
+"""
+import json
+from pathlib import Path
+
+from theme import inject_theme, topbar, icon
+
+ROOT = Path(__file__).resolve().parent.parent
+SITE = ROOT / "site"
+OUT_JSON = ROOT / "data" / "uefa.json"
+SOURCE_URL = "https://www.uefa.com/running-competitions/refereeing/clear-line/"
+EMBED = False  # UEFA 分享页 X-Frame-Options: DENY（实测），纯链接模式
+
+HTML = r"""<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>欧足联 Clear Line 判例库 · 裁判学习平台</title>
+<style>
+/* ===== uefa 页专属布局 (tokens/组件来自 data-cfa-theme, 布局骨架同 scale 页) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{max-width:1180px;margin:0 auto;padding:22px 16px 16px}
+.page-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
+.page-head .sub{color:var(--muted);font-size:13px}
+.page-head .src{margin-top:8px;font-size:13px}
+.page-head .src a{color:var(--brand);font-weight:600;text-decoration:none}
+.page-head .src a:hover{text-decoration:underline}
+.src-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.src-banner .ic{color:var(--brand)}
+.layout{max-width:1180px;margin:0 auto;padding:18px 16px 60px;display:grid;
+  grid-template-columns:216px minmax(0,1fr);gap:20px;align-items:start}
+.gnavs{position:sticky;top:calc(var(--top-h) + 14px);display:flex;flex-direction:column;gap:4px}
+.gnavs .gh{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:2px 4px 6px}
+.gnav{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:var(--r-sm);
+  color:var(--ink2);text-decoration:none;font-size:13.5px;border:1px solid var(--line);transition:.12s}
+.gnav b{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
+.gnav:hover{background:var(--card2);border-color:var(--brand);color:var(--ink)}
+.gcontent{min-width:0}
+.gsec{margin-bottom:34px}
+.gsec h2{font-family:var(--font-display);font-size:19px;margin:0 0 10px;letter-spacing:.4px}
+.gsec h2 small{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}
+.gsec .gintro{font-size:13.5px;color:var(--muted);line-height:1.8;margin:0 0 6px}
+.gcrits{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin:10px 0 20px}
+.gcrit{background:var(--card2);border:1px solid var(--line);border-radius:var(--r-md);padding:11px 14px}
+.gcrit h4{margin:0 0 6px;font-size:13.5px;color:var(--brand);line-height:1.5}
+.gcrit ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink2);line-height:1.85}
+.gsec ul.gpoints{margin:8px 0 16px;padding-left:20px;color:var(--ink2);font-size:13.5px;line-height:1.9}
+.hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:16px 18px;margin-bottom:16px}
+.hhead{display:flex;align-items:center;gap:9px;margin-bottom:8px}
+.hid{font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--brand);
+  border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2);white-space:nowrap}
+.hhead h3{margin:0;font-size:16px;font-weight:600;line-height:1.5}
+.hnote{font-size:14px;line-height:1.9;margin:8px 0 0}
+.hcap{font-size:13.5px;line-height:1.85;margin:8px 0 0;color:var(--ink2)}
+.watch{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:7px 15px;
+  border-radius:999px;border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
+  font-size:13.5px;font-weight:600;text-decoration:none}
+.watch:hover{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
+.hdate{font-size:12px;color:var(--faint);margin-left:10px}
+.uefa-frame{position:relative;width:100%;max-width:880px;aspect-ratio:16/9;
+  background:#000;border-radius:var(--r-md);overflow:hidden;margin-top:12px}
+.uefa-frame iframe{position:absolute;inset:0;width:100%;height:100%;border:0}
+html[data-lite] .uefa-frame{display:none}
+@media (max-width:900px){
+  .layout{grid-template-columns:minmax(0,1fr)}
+  .gnavs{position:static;flex-direction:row;flex-wrap:wrap}
+  .gnavs .gh{flex-basis:100%}
+}
+</style>
+</head>
+<body class="page-uefa">
+<a class="skip-link" href="#content0">跳到内容</a>
+__TOPBAR__
+<header class="page-head">
+  <div class="wrap">
+    <h1>欧足联 Clear Line 判例库</h1>
+    <div class="sub">UEFA 官方裁判判例宣讲（2026 年 8 月上线）：真实比赛视频场景 + 官方判罚解释 · 内容为英文原文 · 版权归 UEFA 所有</div>
+    <div class="src-banner">__I_EXTERNAL__ 视频受 UEFA 版权技术保护（token 门禁），本页提供每例的官方观看链接；__SOURCE_LINK__</div>
+  </div>
+</header>
+<div class="layout">
+  <aside class="gnavs" aria-label="场景分组" data-navs>__NAVS__</aside>
+  <div class="gcontent">__SECS__</div>
+</div>
+</body>
+</html>
+"""
+
+
+def esc(s):
+    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
+        .replace('"', "&quot;").replace("'", "&#39;")
+
+
+def build_page(data):
+    groups = data.get("groups", [])
+    navs, secs = "", ""
+    for gi, g in enumerate(groups):
+        anchor = f"u-{gi}"
+        navs += (f'<a class="gnav" href="#{anchor}">{esc(g["name_cn"])}'
+                 f'<b>{len(g["items"])}</b></a>')
+        intro = f'<p class="gintro">{esc(g["intro"])}</p>' if g.get("intro") else ""
+        crit = ""
+        if g.get("criteria"):
+            blocks = ""
+            for c in g["criteria"]:
+                lis = "".join(f"<li>{esc(x)}</li>" for x in c["items"])
+                blocks += f'<div class="gcrit"><h4>{esc(c["h"])}</h4><ul>{lis}</ul></div>'
+            crit = f'<div class="gcrits">{blocks}</div>'
+        cards = ""
+        for i, it in enumerate(g["items"], 1):
+            caption = f'<p class="hcap">{esc(it["caption"])}</p>' if it.get("caption") else ""
+            frame = ""
+            if EMBED:
+                frame = (f'<div class="uefa-frame"><iframe src="{esc(it["url"])}" loading="lazy" '
+                         f'allowfullscreen title="{esc(it["title"])}"></iframe></div>')
+            date = f'<span class="hdate">{esc(it.get("date", ""))}</span>' if it.get("date") else ""
+            cards += f"""<article class="hcard" id="{anchor}c{i}">
+  <div class="hhead"><span class="hid">#{i}</span><h3>{esc(it['title'])}</h3></div>
+  {frame}
+  {caption}
+  <a class="watch" href="{esc(it['url'])}" target="_blank" rel="noopener noreferrer">{icon('play', 13)} 在 UEFA 官网观看 {icon('external', 13)}</a>{date}
+</article>"""
+        en = f"<small>{esc(g['name_en'])}</small>" if g.get("name_en") else ""
+        secs += (f'<section class="gsec" id="{anchor}">'
+                 f'<h2>{esc(g["name_cn"])} {en} <b>{len(g["items"])}例</b></h2>'
+                 f'{intro}{crit}{cards}</section>')
+    tb = topbar(active="uefa.html", stats="stats-2026.html", brand_sub="UEFA Clear Line",
+                seasons=("2024", "2025", "2026"), lite_btn=True)
+    src_link = f'<a href="{SOURCE_URL}" target="_blank" rel="noopener noreferrer">前往 UEFA Clear Line 官方发布页</a>'
+    html = inject_theme(HTML
+                        .replace("__TOPBAR__", tb)
+                        .replace("__SOURCE_LINK__", src_link)
+                        .replace("__I_EXTERNAL__", icon("external", 14))
+                        .replace("__NAVS__", navs)
+                        .replace("__SECS__", secs))
+    SITE.mkdir(parents=True, exist_ok=True)
+    (SITE / "uefa.html").write_text(html, encoding="utf-8")
+    n = sum(len(g["items"]) for g in groups)
+    print(f"生成 {SITE / 'uefa.html'}（{len(groups)} 组 / {n} 例，EMBED={EMBED}）")
+
+
+def main():
+    if not OUT_JSON.exists():
+        raise SystemExit(f"缺少 {OUT_JSON}；请先运行 fetch_uefa.py 抓取")
+    data = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+    build_page(data)
+
+
+if __name__ == "__main__":
+    main()

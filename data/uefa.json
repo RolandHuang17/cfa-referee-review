@@ -1,0 +1,1068 @@
+{
+ "source": "https://www.uefa.com/running-competitions/refereeing/clear-line/",
+ "source_name": "UEFA Clear Line 官方判例库",
+ "fetched": "2026-10-03",
+ "groups": [
+  {
+   "key": "factual-decisions",
+   "name_en": "Factual decisions",
+   "name_cn": "客观事实判定",
+   "intro": "Here we cover decisions of fact rather than of judgement. Either the ball was out of play or it was not. Either the offence happened inside the penalty area or outside it. Where the footage answers the question, the VAR informs the referee and the decision is corrected without an on-field review. There are certain objective or factual situations in which the VAR should always intervene and, in most cases, the referee will change the original decision without the need for an on-field review. These include:",
+   "criteria": [],
+   "items": [
+    {
+     "id": "02a7-21381fdca64f-3a2d59a205aa-1000",
+     "title": "Video 1 – Objective situations: VAR-only review for offside",
+     "url": "https://www.uefa.com/news-media/video/02a7-21381fdca64f-3a2d59a205aa-1000--video-1-objective-situations-var-only-review-for-offside/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213688cda827-6312b11a08d7-1000",
+     "title": "Video 2 – Objective situations: Goal scored directly from attacking handball",
+     "url": "https://www.uefa.com/news-media/video/02a7-213688cda827-6312b11a08d7-1000--video-2-objective-situations-goal-scored-directly-from-att/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213805d7491a-5f1a807b4aa8-1000",
+     "title": "Video 3 – Objective situations: Attacker scores immediately after handball",
+     "url": "https://www.uefa.com/news-media/video/02a7-213805d7491a-5f1a807b4aa8-1000--video-3-objective-situations-attacker-scores-immediately/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-2136896feda3-135f604c50de-1000",
+     "title": "Video 4 – Objective situations: Foul occurred outside penalty area",
+     "url": "https://www.uefa.com/news-media/video/02a7-2136896feda3-135f604c50de-1000--video-4-objective-situations-foul-occurred-outside-penalty/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21380631b285-96dc178b8dde-1000",
+     "title": "Video 5 – Objective situations: Corner incorrectly awarded",
+     "url": "https://www.uefa.com/news-media/video/02a7-21380631b285-96dc178b8dde-1000--video-5-objective-situations-corner-incorrectly-awarded/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21368e211b31-517a4c1ff711-1000",
+     "title": "Video 6 – Objective situations: Penalty to be retaken after goalkeeper encroachment",
+     "url": "https://www.uefa.com/news-media/video/02a7-21368e211b31-517a4c1ff711-1000--video-6-objective-situations-penalty-to-be-retaken-after-goa/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21368e438576-11d4fa29fd02-1000",
+     "title": "Video 7 – Objective situations: Penalty to be retaken after accidental double touch",
+     "url": "https://www.uefa.com/news-media/video/02a7-21368e438576-11d4fa29fd02-1000--video-7-objective-situations-penalty-to-be-retaken-after-acc/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-2138066c2fc7-7a9c8b989153-1000",
+     "title": "Video 8 – Objective situations: Penalty to be retaken after defender encroachment",
+     "url": "https://www.uefa.com/news-media/video/02a7-2138066c2fc7-7a9c8b989153-1000--video-8-objective-situations-penalty-to-be-retaken-after-d/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21368e9842c9-d8b450660701-1000",
+     "title": "Video 9 – Objective situations: Indirect free kick awarded after attacker encroachment and goal scored",
+     "url": "https://www.uefa.com/news-media/video/02a7-21368e9842c9-d8b450660701-1000--video-9-objective-situations-indirect-free-kick-awarded-aft/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21368ec750c5-3bb7e14c3a90-1000",
+     "title": "Video 10 – Objective situations: Goalscorer did not encroach as his foot was touching ground outside area",
+     "url": "https://www.uefa.com/news-media/video/02a7-21368ec750c5-3bb7e14c3a90-1000--video-10-objective-situations-goalscorer-did-not-encroach/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21368ee03a6f-16696003c3b2-1000",
+     "title": "Video 11 – Objective situations: Penalty to be retaken due to airborne encroachment by defender, determined by projected position of feet",
+     "url": "https://www.uefa.com/news-media/video/02a7-21368ee03a6f-16696003c3b2-1000--video-11-objective-situations-penalty-to-be-retaken-due-to/",
+     "date": "2026-07-28",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "dogso",
+   "name_en": "Red cards – Denial of a goal-scoring opportunity",
+   "name_cn": "DOGSO 破坏明显进球",
+   "intro": "When deciding whether an incident involves denying an obvious goal-scoring opportunity (DOGSO), the referee must assess numerous factors. A red card for denying an obvious goal-scoring opportunity is not a judgement about the foul. It is a judgement about what the foul prevented. A red card should be shown when the offence prevented an obvious goal-scoring opportunity. To decide whether this was the case, referees must guide themselves using a set of specific criteria. If the foul was committed inside the penalty area, there are additional considerations.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Four criteria decide whether an incident is a DOGSO.",
+      "the likelihood of the attacker keeping or gaining control of the ball.",
+      "the distance between the offence and the goal.",
+      "the general direction of play.",
+      "the number and position of defenders and attackers."
+     ]
+    },
+    {
+     "h": "Additional considerations for DOGSO offences inside the penalty area:",
+     "items": [
+      "Was the defender attempting to play or challenge for the ball?",
+      "Was the offence a deliberate handball?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a red card",
+     "items": [
+      "All DOGSO criteria are clearly met and one or more of the following situations applies:",
+      "the referee misses an offence (clear handball / tackle / holding / pushing etc). (Video 1)",
+      "the referee identifies the offence but fails to recognise it as a DOGSO. (Video 2)",
+      "the referee penalises a handball but fails to recognise that it was deliberate. (Video 3)",
+      "the referee penalises an offence inside the penalty area but fails to recognise that it was not an attempt to play or challenge for the ball. (Video 4)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a red card",
+     "items": [
+      "One or more of the DOGSO criteria are not satisfied, including where:",
+      "no offence occurred. (Video 5)",
+      "an offence inside the penalty area was committed while the defender attempted to play or challenge for the ball. (Video 6 & 7)",
+      "an attacker did not have, and was unlikely to gain, control of the ball. (Video 8)",
+      "another defender could reach the ball or challenge the attacker. (Video 9)",
+      "the direction of the ball did not support the possibility of an obvious goal-scoring opportunity."
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "If there is doubt regarding one or more of the DOGSO criteria, including:",
+      "whether the attacker had, or was likely to gain, control of the ball.",
+      "whether another defender could have reached the ball or challenged the attacker.",
+      "whether the likelihood of scoring a goal was sufficient to constitute an obvious goal-scoring opportunity.",
+      "A decision standing after a check is not VAR failing to act: it means that VAR found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-21349a0b3244-24bab522c1a3-1000",
+     "title": "Video 1 – DOGSO: Referee missed clear tripping offence",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349a0b3244-24bab522c1a3-1000--video-1-dogso-referee-missed-clear-tripping-offence/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349a86ebe8-6f7e2294f36a-1000",
+     "title": "Video 2 – DOGSO: Referee fails to recognise obvious goal-scoring opportunity",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349a86ebe8-6f7e2294f36a-1000--video-2-dogso-referee-fails-to-recognise-obvious-goal-scor/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-2138020d6644-0e87830ba670-1000",
+     "title": "Video 3 – DOGSO: Deliberate handball offence denying a goal",
+     "url": "https://www.uefa.com/news-media/video/02a7-2138020d6644-0e87830ba670-1000--video-3-dogso-deliberate-handball-offence-denying-a-goal/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349b2ceba1-c1a753e4f844-1000",
+     "title": "Video 4 – DOGSO: Referee fails to identify an action was not an attempt to play the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349b2ceba1-c1a753e4f844-1000--video-4-dogso-referee-fails-to-identify-an-action-was-not-an/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21381ebb18ab-94cd3d89fd16-1000",
+     "title": "Video 5 – DOGSO: Attacker is guilty of simulation, indirect free kick and yellow card",
+     "url": "https://www.uefa.com/news-media/video/02a7-21381ebb18ab-94cd3d89fd16-1000--video-5-dogso-attacker-is-guilty-of-simulation-indirect-/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349c121037-fc840bfac455-1000",
+     "title": "Video 6 – DOGSO: Player was challenging for ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349c121037-fc840bfac455-1000--video-6-dogso-player-was-challenging-for-ball/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349c4d7ff8-8c7ae86dda69-1000",
+     "title": "Video 7 – DOGSO: Player was challenging for ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349c4d7ff8-8c7ae86dda69-1000--video-7-dogso-player-was-challenging-for-ball/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349c9a5780-84f53f9e061a-1000",
+     "title": "Video 8 – DOGSO: Attacker has no control of ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349c9a5780-84f53f9e061a-1000--video-8-dogso-attacker-has-no-control-of-ball/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-2138027f0186-e473c4d85a04-1000",
+     "title": "Video 9 – DOGSO: Another defender is in position to challenge for ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-2138027f0186-e473c4d85a04-1000--video-9-dogso-another-defender-is-in-position-to-challeng/",
+     "date": "2026-07-29",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "serious-foul-play",
+   "name_en": "Red cards – Serious foul play",
+   "name_cn": "严重犯规",
+   "intro": "Serious foul play covers challenges that endanger the safety of an opponent. Serious foul play and a normal tough challenge sit on the same continuum with the dividing line determined by the risk to the opponent. The referee must ask whether a challenge endangered the safety of another player. The speed and direction of the challenge, the point of contact and the use of studs must all be taken into consideration.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "What was the intensity of the challenge (speed, force, etc.)?",
+      "Was excessive force used, or was an opponent’s safety endangered?",
+      "What were the actions and movement of the player making the challenge (running, jumping, lunging…)?",
+      "What was the player’s intent?",
+      "What was the possibility of playing the ball?",
+      "What was the direction of the challenge (from the front, side or rear)?",
+      "What was the point of contact (foot, ankle, leg, Achilles tendon, knee, face, head, etc)?",
+      "What was the potential consequence of the contact (risk and potential severity of injury, endangering the safety of the opponent, etc)?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a red card",
+     "items": [
+      "A player clearly endangers the safety of the opponent by:",
+      "stepping on an opponent's Achilles tendon, calf, knee, or leg with excessive force. (Video 1)",
+      "making a challenge or tackle with the studs directed towards an opponent's leg using excessive force. (Video 2)",
+      "making a \"scissors\" challenge that endangers the safety of an opponent. (Video 3)",
+      "using the arm as a “weapon” when challenging for the ball, i.e. striking an opponent in the head or face with the elbow, where there is a clear forward and/or backward movement intended to make forceful contact. (Video 4)",
+      "making a high challenge with force and intensity, such as raising the foot or leg and striking an opponent in the chest, torso, neck, or head. (Video 5)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a red card",
+     "items": [
+      "The referee incorrectly assesses the point of impact, nature of contact, force used or manner of the challenge. Examples include:",
+      "a player steps on the opponent’s foot, but the referee incorrectly interprets the contact as being on a more vulnerable area, such as the Achilles tendon, calf or ankle. (Video 6)",
+      "a player makes contact with an opponent’s chest or body, but the referee incorrectly interprets the contact as an elbow strike to the face or head.",
+      "after playing or challenging for the ball, a player withdraws the leg to avoid contact with the opponent's body or head and any subsequent contact is minimal or does not involve the studs in a manner that endangers the opponent's safety. (Video 7)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "the incident falls within the referee's discretionary judgement regarding whether the force used was excessive or not.",
+      "A decision standing after a check is not VAR failing to act: it means that VAR found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-213800174192-9730fd64e1a7-1000",
+     "title": "Video 1 – Serious foul play: While challenging for ball, player uses studs to challenge opponent's leg with excessive force",
+     "url": "https://www.uefa.com/news-media/video/02a7-213800174192-9730fd64e1a7-1000--video-1-serious-foul-play-while-challenging-for-ball-player/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-2139ee549c05-c9136497a54b-1000",
+     "title": "Video 2 – Serious foul play: While challenging for ball, player uses studs to challenge opponent's ankle with excessive force",
+     "url": "https://www.uefa.com/news-media/video/02a7-2139ee549c05-c9136497a54b-1000--video-2-serious-foul-play-while-challenging-for-ball-pla/",
+     "date": "2026-07-30",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213494fbf281-ae7dbd6dab0f-1000",
+     "title": "Video 3 – Serious foul play: Player makes scissors challenge, endangering safety of opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-213494fbf281-ae7dbd6dab0f-1000--video-3-serious-foul-play-player-makes-scissors-challenge-/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349539ab67-8cd417632f90-1000",
+     "title": "Video 4 – Serious foul play: While challenging for ball, player uses elbow to strike opponent with excessive force",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349539ab67-8cd417632f90-1000--video-4-serious-foul-play-while-challenging-for-ball-player-/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349571c515-70a7e60db60d-1000",
+     "title": "Video 5 – Serious foul play: While challenging for ball, player uses studs to kick opponent in chest with excessive force",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349571c515-70a7e60db60d-1000--video-5-serious-foul-play-while-challenging-for-ball-play/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213800e233f0-12188aeba9f5-1000",
+     "title": "Video 6 – Serious foul play: Player steps on opponent's foot with medium intensity",
+     "url": "https://www.uefa.com/news-media/video/02a7-213800e233f0-12188aeba9f5-1000--video-6-serious-foul-play-player-steps-on-opponent-s-foot-w/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213495e2ed62-cc924b1f9ea5-1000",
+     "title": "Video 7 – Serious foul play: Player withdraws leg after playing ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-213495e2ed62-cc924b1f9ea5-1000--video-7-serious-foul-play-player-withdraws-leg-after-playing/",
+     "date": "2026-07-27",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "violent-conduct",
+   "name_en": "Red cards – Violent conduct",
+   "name_cn": "暴力行为",
+   "intro": "Violent conduct covers the use or attempted use of excessive force or brutality when a player is not challenging for the ball. What separates violent conduct from a hard challenge is the ball.",
+   "criteria": [],
+   "items": [
+    {
+     "id": "02a7-213496c23a21-73fed5ebabe2-1000",
+     "title": "Video 1 – Violent conduct: Using excessive force, deliberate strike with elbow to face",
+     "url": "https://www.uefa.com/news-media/video/02a7-213496c23a21-73fed5ebabe2-1000--video-1-violent-conduct-using-excessive-force-deliberate-/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213497fdb715-cec56021a982-1000",
+     "title": "Video 2 – Violent conduct: Player uses head to strike opponent in face with force",
+     "url": "https://www.uefa.com/news-media/video/02a7-213497fdb715-cec56021a982-1000--video-2-violent-conduct-player-uses-head-to-strike-opponen/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213497c4dfba-3f9488ea4279-1000",
+     "title": "Video 3 – Violent conduct: Player strikes opponent with hand to face without challenging for ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-213497c4dfba-3f9488ea4279-1000--video-3-violent-conduct-player-strikes-opponent-with-hand-t/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21380177f966-95e9b0a6a8fb-1000",
+     "title": "Video 4 – Violent conduct: Player did not use excessive force or brutality",
+     "url": "https://www.uefa.com/news-media/video/02a7-21380177f966-95e9b0a6a8fb-1000--video-4-violent-conduct-player-did-not-use-excessive-for/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-2134987fe962-5e298ca9705c-1000",
+     "title": "Video 5 – Violent conduct: Player exaggerates contact that was not in face",
+     "url": "https://www.uefa.com/news-media/video/02a7-2134987fe962-5e298ca9705c-1000--video-5-violent-conduct-player-exaggerates-contact-that-/",
+     "date": "2026-07-27",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "second-yellow",
+   "name_en": "Red cards – Second yellow cards",
+   "name_cn": "两黄变一红",
+   "intro": "A second yellow card results in an automatic sending-off, placing the decision within the VAR protocol. The review has a single, clear objective: preventing players being sent off for clearly incorrect second yellow cards, when video footage clearly shows that the caution should not have been given. A second yellow card is unusual within the VAR protocol because the offence itself may be minor. It is the consequence which makes the incident reviewable.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "When assessing the severity of the offence:",
+      "Does contact between the players occur?",
+      "Does the player clearly exaggerate contact?",
+      "Can the challenge be deemed reckless?",
+      "When assessing tactical fouls:",
+      "Does the defender commit a foul?",
+      "Was the attacker guilty of simulation?",
+      "In cases of unsporting behaviour:",
+      "Was the referee in control of the incident?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a second yellow card",
+     "items": [
+      "In cases of physical offences:",
+      "contact between the players does not occur.",
+      "the opponent clearly exaggerates the level of contact. (Video 1)",
+      "the foul was clearly not a reckless challenge. (Videos 2 & 3)",
+      "In cases of tactical fouls:",
+      "the attacker is clearly guilty of simulation."
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "If there is doubt whether:",
+      "the offence should be considered careless or reckless.",
+      "the offence stops a promising attack or not.",
+      "A decision standing after a check is not VAR failing to act: it means that VAR found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-21349d9eb9f8-c755bc63192b-1000",
+     "title": "Video 1 – Second yellow: Incorrect card, player exaggerates minimal contact with face",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349d9eb9f8-c755bc63192b-1000--video-1-second-yellow-incorrect-card-player-exaggerates-/",
+     "date": "2026-07-27",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21381f5e304d-a30af7eff7cc-1000",
+     "title": "Video 2 – Second yellow: Incorrect card, defender clearly plays ball followed by football contact",
+     "url": "https://www.uefa.com/news-media/video/02a7-21381f5e304d-a30af7eff7cc-1000--video-2-second-yellow-incorrect-card-defender-clearly-play/",
+     "date": "2026-07-29",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21349e69e7ff-b79dee4c569c-1000",
+     "title": "Video 3 – Second yellow: Defender clearly plays ball, VAR should intervene if second yellow",
+     "url": "https://www.uefa.com/news-media/video/02a7-21349e69e7ff-b79dee4c569c-1000--video-3-second-yellow-defender-clearly-plays-ball-var-sho/",
+     "date": "2026-07-27",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "handball",
+   "name_en": "Penalties – Handball",
+   "name_cn": "手球（点球）",
+   "intro": "When deciding on a potential handball, match officials must assess several factors that can determine whether an offence has taken place. A defender sliding to block a shot or using an arm to keep their balance may position the arm in a way that looks similar in a still image but can be interpreted quite differently when viewed in motion. This is why match officials must assess the position of the arm in terms of the defender’s movement rather than what happened to the ball.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Was the contact deliberate?",
+      "What was the position of the arm/hand?",
+      "Was there a movement of the arm/hand towards the ball?",
+      "How far was the defender from the shot or pass? Were there any deflections? Was there a chance of avoiding contact?",
+      "Was the ball kicked by a team-mate?",
+      "Did the defender play the ball towards their own arm/hand?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a penalty",
+     "items": [
+      "The defender deliberately touches the ball or there is a movement of the hand/arm towards the ball (Video 1 & 2)",
+      "The hand/arm is held in an unnatural position away from the body (Video 3)",
+      "A defender makes their body unnaturally bigger (Video 4)",
+      "The position of the arm/hand is not justified by the defender’s movement (Video 5)",
+      "A defender blocks or deflects a shot or a cross while sliding, with an arm extended away from the body along the ground, making their body unnaturally bigger (Video 6)",
+      "A defender blocks or deflects a shot or a cross with an arm/hand on the ground (or moving towards the ground), but there is no genuine attempt to play the ball. Rather the player is making their body bigger, creating a larger barrier to block the ball (Video 7)",
+      "A deflected shot still traveling towards the goal is blocked by the defender’s arm/hand, which is clearly held away from the body in an unnatural position (Video 8)",
+      "Following a deflection, the defender blocks a pass with their arm/hand clearly held away from the body in an unnatural position (Video 9)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "The protocol works both ways, meaning the review can also show that a penalty should not stand if:",
+      "there is clear evidence that the ball has not hit the defender’s hand/arm.",
+      "the defender’s arm is positioned close to or against the body. (Video 10)",
+      "the defender’s arm is clearly in a natural position for the specific movement or action. (Video 11)",
+      "the position of the arm and contact with the ball are a natural consequence of a challenge that causes the defender to lose balance and accidentally touch the ball.(Video 12)",
+      "in principle, a defender kicks or heads the ball towards a team-mate's arm/hand. (Video 13 & 14)",
+      "in principle, a defender plays the ball and it subsequently touches their own arm/hand. (Video 15 & 16)",
+      "a defender’s arm is on the ground or moving towards the ground as a natural consequence of supporting their body to maintain balance while attempting to reach or challenge for the ball. (Video 17)",
+      "in principle, a defender is attempting to block a shot or a pass with any part of the body and a deflection causes the ball to clearly change direction before contacting their arm/hand, which is held in a natural position. This applies when the ball would not have continued travelling towards the goal or in the original direction of the pass. (Video 18 & 19)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "if there is no clear evidence that the ball touched the defender’s arm.",
+      "if the VAR has doubts about whether the arm is held in a natural or unnatural position",
+      "A decision standing after a check is not VAR failing to act, it is VAR finding no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-2127f79a9df2-bac5c3f331f3-1000",
+     "title": "Video 1 – Penalties – Handball: Intentional movement towards the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-2127f79a9df2-bac5c3f331f3-1000--video-1-penalties-handball-intentional-movement-towards-the/",
+     "date": "2026-07-21",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a1f9e502f-b0c5aea37176-1000",
+     "title": "Video 2 – Penalties – Handball: Intentional movement towards the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a1f9e502f-b0c5aea37176-1000--video-2-penalties-handball-intentional-movement-towards-the/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213691191e42-fc94eceefddd-1000",
+     "title": "Video 3 – Penalties – Handball: Arm in unnatural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-213691191e42-fc94eceefddd-1000--video-3-penalties-handball-arm-in-unnatural-position/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a307ac189-f43821a77d23-1000",
+     "title": "Video 4 – Penalties – Handball: Player makes body unnaturally bigger",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a307ac189-f43821a77d23-1000--video-4-penalties-handball-player-makes-body-unnaturally-b/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a313a7ce8-389e76b0bbd5-1000",
+     "title": "Video 5 – Penalties – Handball: Arm position not justified by player movement",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a313a7ce8-389e76b0bbd5-1000--video-5-penalties-handball-arm-position-not-justified-by-/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a31ebd0a5-7ff3f4bb78ed-1000",
+     "title": "Video 6 – Penalties – Handball: Player blocks cross while sliding with arm extended away from body",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a31ebd0a5-7ff3f4bb78ed-1000--video-6-penalties-handball-player-blocks-cross-while-slidi/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a324e8355-e72eb590342a-1000",
+     "title": "Video 7 – Penalties – Handball: Player acting as goalkeeper",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a324e8355-e72eb590342a-1000--video-7-penalties-handball-player-acting-as-goalkeeper/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a32fd20d4-e8be87df410e-1000",
+     "title": "Video 8 – Penalties – Handball: Deflection towards goal with arms in unnatural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a32fd20d4-e8be87df410e-1000--video-8-penalties-handball-deflection-towards-goal-with-a/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3365767b-91ecfe50dc73-1000",
+     "title": "Video 9 – Penalties – Handball: After deflection, defender blocked pass with arm in unnatural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3365767b-91ecfe50dc73-1000--video-9-penalties-handball-after-deflection-defender-blo/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a33aeaade-545a4322d2b1-1000",
+     "title": "Video 10 – Penalties – Handball: Arm close to body",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a33aeaade-545a4322d2b1-1000--video-10-penalties-handball-arm-close-to-body/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a340e624b-bc794713c56e-1000",
+     "title": "Video 11 – Penalties – Handball: Arm is in natural position as consequence of player movement",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a340e624b-bc794713c56e-1000--video-11-penalties-handball-arm-is-in-natural-position-as-/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a34d6d5e8-2c4e91ab1c1b-1000",
+     "title": "Video 12 – Penalties – Handball: Contact with ball is a consequence of challenge from opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a34d6d5e8-2c4e91ab1c1b-1000--video-12-penalties-handball-contact-with-ball-is-a-conseque/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3558343f-975de813b3dd-1000",
+     "title": "Video 13 – Penalties – Handball: Ball comes from team-mate and arm in natural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3558343f-975de813b3dd-1000--video-13-penalties-handball-ball-comes-from-team-mate-an/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3592c2cf-54d53eda74fd-1000",
+     "title": "Video 14 – Penalties – Handball: Ball comes from team-mate and arm in natural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3592c2cf-54d53eda74fd-1000--video-14-penalties-handball-ball-comes-from-team-mate-an/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213691771ba3-b3a0855f2eb9-1000",
+     "title": "Video 15 – Penalties – Handball: Player played the ball which hits own arm in natural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-213691771ba3-b3a0855f2eb9-1000--video-15-penalties-handball-player-played-the-ball-which-hi/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213691af12ab-ccf226817d5a-1000",
+     "title": "Video 16 – Penalties – Handball: Player played the ball which hits own arm in natural position",
+     "url": "https://www.uefa.com/news-media/video/02a7-213691af12ab-ccf226817d5a-1000--video-16-penalties-handball-player-played-the-ball-which-hi/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a36e03f77-51832d26ca8f-1000",
+     "title": "Video 17 – Penalties – Handball: Arm supporting body",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a36e03f77-51832d26ca8f-1000--video-17-penalties-handball-arm-supporting-body/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a37f6a601-3ea1036e48cc-1000",
+     "title": "Video 18 – Penalties – Handball: Player blocks shot on to arm, ball travelling away from goal",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a37f6a601-3ea1036e48cc-1000--video-18-penalties-handball-player-blocks-shot-on-to-arm-/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a38545690-480b73b65654-1000",
+     "title": "Video 19 – Penalties – Handball: Player blocks shot on to arm, ball travelling away from goal",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a38545690-480b73b65654-1000--video-19-penalties-handball-player-blocks-shot-on-to-arm-/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "holding-pushing",
+   "name_en": "Penalties – Holding/pushing",
+   "name_cn": "拉拽与推搡",
+   "intro": "In instances of potential pushing, holding or shirt pulling, the key issues facing officials are the impact on the opponent’s ability to play or reach the ball, the nature of the contact and whether the attacker exaggerates the effect of the contact. Players hold and push each other throughout a match and most of it is part of the game. What turns contact into an offence is its effect. The referee is not asking whether a defender touched the attacker but whether that contact stopped them reaching or playing the ball. That is why how long the hold lasted, whether one arm or two were used and how much the attacker’s movement changed all carry more weight than the contact itself.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "What was the impact on the attacker's ability to play the ball?",
+      "What was the defender's intention? Did they have a realistic opportunity to play the ball?",
+      "Was the holding momentary or persistent?",
+      "Were one or both arms used? Two-arm holding is an aggravating factor.",
+      "What was the intensity of the contact?",
+      "Did the attacker use this to exaggerate the effect of the contact or deliberately go to ground?",
+      "In situations where the defender does not use the arms (e.g. charge or shoulder charge), the referee’s assessment should normally prevail."
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a penalty",
+     "items": [
+      "VAR reviews the footage and recommends the referee looks at the footage if:",
+      "a defender is holding an opponent with both arms and not attempting to play the ball.(Video 1, 2 & 3)",
+      "a defender holds or pushes an opponent from behind, with no intention or realistic possibility of playing the ball, while the attacker has control of the ball or a clear opportunity to play it. (Video 4)",
+      "a defender holds or pushes an opponent with one arm, but only where there is sufficient intensity to clearly impact the opponent’s movement or ability to play the ball. (Video 5)",
+      "a defender pulls an opponent and clearly impacts their movement or ability to play the ball. (Video 6)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "The protocol works both ways, meaning the review can also show that a penalty should not stand if:",
+      "there is light contact with no clear impact on the attacker's ability to play the ball (Video 7)",
+      "there is only momentary holding (Video 8)",
+      "the attacker exaggerates the effect of contact to fall, or there is no clear relationship between the contact and the fall (Video 9)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "It is difficult to assess the impact of holding/pushing/pulling on the attacker's movement",
+      "There is mutual holding and it is not possible to determine who initiated contact or committed the more punishable offence",
+      "A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-212a39e38caf-872d3e3f9fd3-1000",
+     "title": "Video 1 – Holding/pushing: Clear holding with two arms, no intention of playing the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a39e38caf-872d3e3f9fd3-1000--video-1-holding-pushing-clear-holding-with-two-arms-no-inte/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3a444a6a-023ee8147911-1000",
+     "title": "Video 2 – Holding/pushing: Clear holding with two arms, no intention of playing the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3a444a6a-023ee8147911-1000--video-2-holding-pushing-clear-holding-with-two-arms-no-inte/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3ad8df21-92b07242e0c1-1000",
+     "title": "Video 3 – Holding/pushing: Clear holding with two arms, no intention of playing the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3ad8df21-92b07242e0c1-1000--video-3-holding-pushing-clear-holding-with-two-arms-no-inte/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3b9533e0-c142a22fa1f7-1000",
+     "title": "Video 4 – Holding/pushing: Pushing from back with no chance to play ball and clear impact on opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3b9533e0-c142a22fa1f7-1000--video-4-holding-pushing-pushing-from-back-with-no-chance-t/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213692db37be-ec62eb516b73-1000",
+     "title": "Video 5 – Holding/pushing: One arm holding but clear impact on opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-213692db37be-ec62eb516b73-1000--video-5-holding-pushing-one-arm-holding-but-clear-impact-o/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3c548578-dd83fd87601f-1000",
+     "title": "Video 6 – Holding/pushing: Clear shirt pull impacting opponent movement",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3c548578-dd83fd87601f-1000--video-6-holding-pushing-clear-shirt-pull-impacting-opponen/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3c96c12d-b04b147859c2-1000",
+     "title": "Video 7 – Holding/pushing: Soft holding with no clear impact on opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3c96c12d-b04b147859c2-1000--video-7-holding-pushing-soft-holding-with-no-clear-impact-o/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3cdf708e-0bef5786e714-1000",
+     "title": "Video 8 – Holding/pushing: Momentary holding",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3cdf708e-0bef5786e714-1000--video-8-holding-pushing-momentary-holding/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a3d576e9b-820074cc3b10-1000",
+     "title": "Video 9 – Holding/pushing: Player exaggerates holding to fall down",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a3d576e9b-820074cc3b10-1000--video-9-holding-pushing-player-exaggerates-holding-to-fall/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "tripping",
+   "name_en": "Penalties – Tripping",
+   "name_cn": "绊摔",
+   "intro": "Where there is a potential trip, referees must consider the extent of contact, who initiates it and whether the defender also plays the ball. Legs touch in almost every challenge, so contact alone is not enough to make a decision. The referee must distinguish a challenge that brought the attacker down from one where the ball was played and the players’ legs came together afterwards.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Did the defender place a leg, foot or their body in the path of the attacker, causing them to stumble, lose balance or fall?",
+      "Did the defender place their leg, foot or body in the path of the attacker without playing or legitimately shielding the ball?",
+      "Did the attacker provoke the contact?",
+      "When the defender clearly plays the ball, in principle, any subsequent trip is a result of a natural challenge and normally should not be penalised – unless it is deemed reckless or to have used excessive force. A slight touch or minor deviation of the ball is not automatically considered \"clearly playing the ball\"."
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a penalty",
+     "items": [
+      "VAR reviews the footage and recommends the referee looks again when:",
+      "a player clearly trips an opponent (Video 1)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "• The protocol works both ways, meaning the review can also show that a penalty should not stand if:",
+      "a defender clearly plays the ball and any subsequent contact with the opponent is not considered reckless, but a natural consequence of the challenge (Video 2)",
+      "an attacker clearly initiates or provokes contact with a defender who has committed no offence (Video 3)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "if there is a leg-to-leg, foot-to-foot or body-to-body contact, but no genuine tripping offence",
+      "if it is difficult to assess the impact of the contact",
+      "A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-212a4b7d7cd1-87706bc3a887-1000",
+     "title": "Video 1 – Tripping: Clear tripping",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4b7d7cd1-87706bc3a887-1000--video-1-tripping-clear-tripping/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a4bbc1161-db918b0bd690-1000",
+     "title": "Video 2 – Tripping: Defender clearly plays ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4bbc1161-db918b0bd690-1000--video-2-tripping-defender-clearly-plays-ball/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a4be044e0-0e30721ecf8e-1000",
+     "title": "Video 3 – Tripping: Attacker initiates contact",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4be044e0-0e30721ecf8e-1000--video-3-tripping-attacker-initiates-contact/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "step-on-foot",
+   "name_en": "Penalties – Stepping on foot",
+   "name_cn": "踩踏",
+   "intro": "If a defender steps on an attacker's foot inside the penalty area, referees must assess the intensity of contact and whether this inhibits the attacking player's actions. Feet are constantly making contact in a crowded penalty area so a defender stepping on an attacker’s foot is often incidental. To distinguish between an offence and a natural coming together, the referee must assess how firmly the foot was planted and what the attacker was prevented from doing.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Was there a clear or only partial step on the attacker's foot?",
+      "What was the intensity and speed of the action?",
+      "What was the impact on the attacker's movement and ability to continue their movement?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a penalty",
+     "items": [
+      "VAR reviews the footage and recommends the referee looks again if:",
+      "a defender steps on the attacker's foot, impacting their ability to play or challenge for the ball. (Video 1)",
+      "a defender steps on the attacker's foot with intensity or force. (Video 2)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "The protocol works both ways, meaning the review can also show that a penalty should not stand if:",
+      "there is foot-to-foot contact without a clear impact on the attacker. (Video 3)",
+      "the defender clearly plays the ball and any subsequent contact is accidental and a natural consequence of the challenge. (Video 4)",
+      "an attacker exaggerates the effect of a partial or light step on the foot to fall, with no clear relationship between the contact and the fall."
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "if the extent of contact is not clear.",
+      "if it is difficult to assess the impact of the contact.",
+      "A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-212a4cc48860-bca7a8ab30e3-1000",
+     "title": "Video 1 – Stepping on foot: Clear impact on attacker's ability to play the ball",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4cc48860-bca7a8ab30e3-1000--video-1-stepping-on-foot-clear-impact-on-attacker-s-abil/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a4d0a9b0c-9ff322041350-1000",
+     "title": "Video 2 – Stepping on foot: High intensity or force",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4d0a9b0c-9ff322041350-1000--video-2-stepping-on-foot-high-intensity-or-force/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213694437508-4d6cebcd962f-1000",
+     "title": "Video 3 – Stepping on foot: Foot-to-foot contact without clear impact on opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-213694437508-4d6cebcd962f-1000--video-3-stepping-on-foot-foot-to-foot-contact-without-clea/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a4da6e0b4-30708ec69f15-1000",
+     "title": "Video 4 – Stepping on foot: Defender clearly plays ball and later makes accidental contact",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4da6e0b4-30708ec69f15-1000--video-4-stepping-on-foot-defender-clearly-plays-ball-and-/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "who-played-the-ball",
+   "name_en": "Penalties – Who played the ball?",
+   "name_cn": "是否触到球",
+   "intro": "When players challenge for the ball inside the penalty area, officials must consider who touches it first, whether that is clear, if the defender's challenge is reckless or uses excessive force, and whether the attacker has a realistic chance of continuing to compete for the ball. When two players reach the ball simultaneously, assessing who played the ball first is one of the hardest decisions for a referee to make, especially in real-time. Touching the ball first does not make a challenge legal. Arriving second does not make the same challenge an offence.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Who played the ball first? Is it clear, or did the players arrive almost at the same time?",
+      "Was the challenge reckless or using excessive force?",
+      "Did the defender have a realistic possibility of playing the ball?",
+      "Does the attacker have a realistic possibility of playing or continuing to play the ball?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a penalty",
+     "items": [
+      "VAR reviews the footage and recommends the referee looks again if:",
+      "the attacker clearly plays the ball first and the defender arrives late and kicks the opponent's leg, with no need for frame-by-frame analysis to determine who played the ball first. (Video 1)",
+      "the defender makes a late tackle with significant force or in a reckless manner after the attacker has played the ball. (Video 2)",
+      "the defender plays the ball first but uses significant force, resulting in a high reckless challenge or serious foul play. (Video 3)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "The protocol works both ways, meaning the review can also show that a penalty should not stand if:",
+      "regardless of who plays the ball first, contact between players is considered a normal football collision, to the extent that it does not impact the attacker’s ability to continue playing for the ball, or use reckless or excessive force. (Video 4 & 5)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "it is not clear who played the ball first.",
+      "both players arrive at the ball almost simultaneously, even if one player touches it before the other.",
+      "A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-213695009523-0fefabd08dc2-1000",
+     "title": "Video 1 – Who played the ball: Attacker plays the ball first",
+     "url": "https://www.uefa.com/news-media/video/02a7-213695009523-0fefabd08dc2-1000--video-1-who-played-the-ball-attacker-plays-the-ball-first/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-21369549de7c-b46a9b7d1d73-1000",
+     "title": "Video 2 – Who played the ball: Defender does not play ball and makes reckless action",
+     "url": "https://www.uefa.com/news-media/video/02a7-21369549de7c-b46a9b7d1d73-1000--video-2-who-played-the-ball-defender-does-not-play-ball-/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a50193a64-b2e3bb528296-1000",
+     "title": "Video 3 – Who played the ball: Defender plays ball first but makes clear reckless tackle on leg",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a50193a64-b2e3bb528296-1000--video-3-who-played-the-ball-defender-plays-ball-first-but/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-213695b5e3b8-0d4f5e7e3088-1000",
+     "title": "Video 4 – Who played the ball: Attacker plays ball first and football collision occurs",
+     "url": "https://www.uefa.com/news-media/video/02a7-213695b5e3b8-0d4f5e7e3088-1000--video-4-who-played-the-ball-attacker-plays-ball-first-and-/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a50a366a5-d29411d04441-1000",
+     "title": "Video 5 – Who played the ball: Defender plays ball first and football collision occurs",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a50a366a5-d29411d04441-1000--video-5-who-played-the-ball-defender-plays-ball-first-and-/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "goalkeepers",
+   "name_en": "Penalties – Goalkeepers",
+   "name_cn": "守门员",
+   "intro": "Referees must consider whether the goalkeeper touches the ball, and whether they use reckless or excessive force to impact the attacking player's ability to play the ball. Whether diving at an attacker’s feet or coming for a cross in the air, a goalkeeper going for the ball almost inevitably leads to contact. The keeper is entitled to go for the ball, and reaching the ball first will usually be the decisive factor for the referee.",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Who played the ball first: the attacker or the goalkeeper?",
+      "Was the goalkeeper’s action reckless or using excessive force?",
+      "What was the attacker’s realistic possibility of continuing to play for the ball?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend a penalty",
+     "items": [
+      "VAR reviews the footage and recommends the referee looks again if:",
+      "the attacker clearly plays the ball first and the goalkeeper makes late contact, with no need for frame-by-frame analysis. (Video 1)",
+      "after the attacker plays the ball, the goalkeeper makes a reckless challenge with significant force or intensity. (Video 2)",
+      "the goalkeeper touches the ball but uses significant force, resulting in a clearly reckless challenge or serious foul play. (Video 3)"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "The protocol works both ways, meaning the review can also show that a penalty should not stand if:",
+      "the attacker plays the ball first and any subsequent contact is considered a normal football collision. (Video 4)",
+      "the goalkeeper touches or deflects the ball first and any subsequent contact is considered a normal football collision. (Video 5)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "it is not clear who played the ball first.",
+      "both players arrive at the ball almost simultaneously, even if one player touches it before the other.",
+      "A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-212a51126c82-11e08a43c5a7-1000",
+     "title": "Video 1 – Goalkeepers: Attacker plays ball first and goalkeeper clearly kicks opponent",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a51126c82-11e08a43c5a7-1000--video-1-goalkeepers-attacker-plays-ball-first-and-goalkeep/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a51892974-2029f63e9721-1000",
+     "title": "Video 2 – Goalkeepers: Goalkeeper did not touch ball and makes clear reckless challenge",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a51892974-2029f63e9721-1000--video-2-goalkeepers-goalkeeper-did-not-touch-ball-and-makes/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a51d2a476-86a0de70255a-1000",
+     "title": "Video 3 – Goalkeepers: Goalkeeper touches ball but makes clear reckless challenge",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a51d2a476-86a0de70255a-1000--video-3-goalkeepers-goalkeeper-touches-ball-but-makes-clea/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a52403a8e-ccc80e071299-1000",
+     "title": "Video 4 – Goalkeepers: Attacker plays ball first before normal football collision",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a52403a8e-ccc80e071299-1000--video-4-goalkeepers-attacker-plays-ball-first-before-norma/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a527f8e6c-da0c96fc2c8c-1000",
+     "title": "Video 5 – Goalkeepers: Goalkeeper plays ball first before normal football collision",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a527f8e6c-da0c96fc2c8c-1000--video-5-goalkeepers-goalkeeper-plays-ball-first-before-norma/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  },
+  {
+   "key": "simulation",
+   "name_en": "Penalties – Simulation",
+   "name_cn": "假摔",
+   "intro": "Referees must consider the extent of contact by the defender, who initiates the contact and whether the attacker has faked or exaggerated contact to gain an advantage. If the referee makes the wrong call, it is usually the result of deception. Hence, in cases of potential simulation, VAR is usually answering one question: should a penalty be over-ruled?",
+   "criteria": [
+    {
+     "h": "What referees consider when making a decision",
+     "items": [
+      "Does the defender touch the attacker, committing an offence?",
+      "Did the attacker initiate the contact?",
+      "Did the attacker fake or exaggerate the contact?"
+     ]
+    },
+    {
+     "h": "✅ When VAR should recommend cancelling a penalty",
+     "items": [
+      "there is no contact between the two players. (Video 1)",
+      "the contact is clearly initiated by the attacker. (Video 2)",
+      "the attacker exaggerates the effect of a minor or light contact to fall. (Video 3)"
+     ]
+    },
+    {
+     "h": "❌ When VAR should not intervene",
+     "items": [
+      "there is doubt as to who initiated the contact.",
+      "there is doubt about the intensity of the contact.",
+      "A decision standing after a check is not VAR failing to act. It means VAR has found no clear and obvious error to correct."
+     ]
+    }
+   ],
+   "items": [
+    {
+     "id": "02a7-2136961dff3b-ee1e7087696e-1000",
+     "title": "Video 1 – Simulation: No contact",
+     "url": "https://www.uefa.com/news-media/video/02a7-2136961dff3b-ee1e7087696e-1000--video-1-simulation-no-contact/",
+     "date": "2026-07-28",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a4e7847bf-c5dd8f42f141-1000",
+     "title": "Video 2 – Simulation: Contact clearly initiated by attacker",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4e7847bf-c5dd8f42f141-1000--video-2-simulation-contact-clearly-initiated-by-attacker/",
+     "date": "2026-07-22",
+     "caption": ""
+    },
+    {
+     "id": "02a7-212a4ec10e1d-510c25da0c92-1000",
+     "title": "Video 3 – Simulation: Attacker exaggerates contact",
+     "url": "https://www.uefa.com/news-media/video/02a7-212a4ec10e1d-510c25da0c92-1000--video-3-simulation-attacker-exaggerates-contact/",
+     "date": "2026-07-22",
+     "caption": ""
+    }
+   ]
+  }
+ ]
+}

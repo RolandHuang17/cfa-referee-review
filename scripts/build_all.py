@@ -28,6 +28,7 @@ def main():
     run("build_page.py")
     run("build_stats.py")
     run("build_scale.py")
+    run("build_uefa.py")
     site_assets = SITE / "assets"
     if site_assets.exists():
         shutil.rmtree(site_assets)

@@ -115,6 +115,10 @@ h1,h2{font-variant-numeric:tabular-nums}
 html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
   box-shadow:inset 0 0 0 1px var(--brand)}
 
+/* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
 /* ---------- 通用组件 ---------- */
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
   padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);

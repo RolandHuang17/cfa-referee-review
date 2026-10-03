@@ -6,13 +6,14 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**十个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+核心交付物是 `site/` 下的**十一个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（六张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 - `site/scale.html` 官方统一判罚尺度宣讲（2024–2026 三季 104 例场景视频+判罚决定矩阵；2024 为第三代 EXE+XML 包，走 extract_season_2024 解析）
 - `site/uefa.html` 欧足联 Clear Line 判例库（中文译制+英文原文开关+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
+- `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题随机出卷：判罚决定/纪律处分/复核结论作答判分，错题本 localStorage 记忆错选，支持练习/考试两种模式与错题重练）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -135,6 +136,12 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 数据源为 SSR 页面内嵌的 videoplayer `data-options` JSON；criteria 为每组页面的 ✅/❌ 官方统一尺度准则分节；视频为 Akamai token 门禁 HLS，**不下载**，每例跳官方分享页（实测 X-Frame-Options: DENY，build_uefa.py 的 EMBED=False 纯链接模式）
 - uefa.com 反爬：高频请求 tarpit，fetch_uefa.py 页间隔 35-55s + 完整浏览器头（**Accept-Encoding: identity 会被 tarpit，须 gzip**）+ 120s/300s 退避；CI 不跑 fetch，靠提交的 JSON 重建
 
+### quiz-answers.json（考题答案库，gen_quiz_answers.py 产物 + 人工校对，提交进仓库）
+- `{version, rLabels, cLabels, answers: {"{season}-{seq}": {r?, c?, auto, reviewed, conf?}}}`——r=判罚决定（playon/directfk/indirectfk/penalty/retake/goal_valid/goal_invalid），c=纪律处分（none/yellow/red）
+- 由脚本对认定原文按句极性起草（auto=true），**人工校对后 reviewed 才为 true**；`scripts/build_quiz.py` 只对 reviewed 条目出「判罚决定/纪律处分」两问，未复核题只出「复核结论」一问
+- 校对工作流：`gen_quiz_answers.py` 生成 `data/local/quiz-review/review.tsv` 全量对照表 → 人工复核写 `approved.txt`（认可）/`overrides.tsv`（修正，r/c 为 "-" 表示删除该轴）→ `gen_quiz_answers.py --apply-review` 回写；`--recheck` 只重建未 reviewed 条目，`--approve-high` 批量认可 high 条目
+- 错题本键 `cfa.quiz.wrong`（quiz 页 localStorage）：`{key: {t, s, your(上次错选), correct, star, wrong, last, done}}`
+
 ### uefa-zh.json（UEFA 判例中文译制层，与 uefa.json 并存，提交进仓库）
 - `{note, translated, terms{英:中译名表}, groups: {组key: {intro, criteria: [{h, items[]}]}}, items: {判例id: {title}}}`——只存译文，不存链接等英文数据
 - **绝不能把译文写进 uefa.json**（fetch_uefa.py parse 会整体覆写丢失）；build_uefa.py 构建时合并：组按 key 匹配、criteria 与英文**按块序严格对齐**（块数或条数不符该组回退英文并告警）、判例按 id 匹配；未命中/多余的译文键构建时打印 ⚠ 警告
@@ -155,10 +162,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - **人工成果唯一权威源**：`data/crest_overrides.json`——`generate_teams_catalog.py` 重建 teams.json 时会合并它，所以手改 teams.json 会丢
 - 已知坑：自动采集易采到**更名前旧徽/同名异 club**（曾采到广州富力旧徽当广州豹、永昌旧徽当沧州雄狮、省队语境采俱乐部徽），宁缺毋滥回退 fallback
 
-## 前端架构（src/theme.css 设计系统 + 四个 builder）
+## 前端架构（src/theme.css 设计系统 + 五个 builder）
 
 - **设计系统**：`src/theme.css` 是全站唯一权威样式层——视觉风格为暖纸色编辑排版（浅色=米白纸面，深色=暖炭色；陶土色为品牌点缀色，红/绿/黄为判定语义色；标题用衬线字栈 `--font-display`，正文用无衬线 `--font`）、共享组件（topbar/btn/chip/badge/dot/card/modal/team-badge）、SVG 图标与明暗切换。`scripts/lib/theme.py` 提供 `inject_theme()`（注入 CSS + 首帧主题脚本 + 切换脚本，localStorage 键 `cfa.theme`，默认跟随系统）与 `topbar()`（统一顶栏生成器：brand/nav/搜索槽/主题切换，season 页另有 sb_btn/help_btn）
-- **builder 职责**：四个 builder 的 `<style>` 只写页面专属布局，禁止重定义 tokens/顶栏/组件；颜色一律用 var(--token)
+- **builder 职责**：五个 builder 的 `<style>` 只写页面专属布局，禁止重定义 tokens/顶栏/组件；颜色一律用 var(--token)
 - **season 页布局**：顶栏 + `.workspace` 三栏 grid（侧栏筛选 276px / 播放列表 356px / 详情自适应），每列独立滚动；**全部筛选收进侧栏**（判定 chips / 我的收藏 chips / 赛事 chips / 球队列表(带徽) / 期数 6 列数字网格 / 教学分类行），`body.sb-off` 收起侧栏
 - **数据以 `const DATA = {...}` 内联注入**；`bySeq` 为判例索引
 - **状态对象** `state = {cat, v(判定), issue, q(搜索), sel(选中seq), vIdx(多视频序号), fav(收藏筛选), comp(赛事), team(球队)}`
@@ -167,6 +174,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - **视频内存策略**：详情区只有一个 `<video>`，`select()` 时替换 src（视频路径已含赛季前缀）。**绝不要**恢复为列表内联 video 元素——几百个播放器会让浏览器内存膨胀到 4-5GB（已经踩过并修复的坑）
 - **响应式断点（唯一一套）**：1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）
 - 收藏/笔记存 localStorage：键 `cfa2026.fav/notes`、`cfa2025.fav/notes`、`cfa2024.fav/notes`（按赛季隔离，且按 origin 隔离，file:// 与 http:// 不同源，故有导出/导入 JSON 功能）
+- **quiz 页（build_quiz.py）**：客户端渲染三屏（开始/答题/结果）；题库 DATA 内联（判例+尺度场景两种题型）；判分「复核结论 1 分 + 判罚决定 1 分 + 纪律处分 1 分」（无答案库轴不出题）、尺度矩阵多选满分 2 分；错题本键 `cfa.quiz.wrong`；season 页隐藏答案模式开关 `#btnHideAns`（`cfa.hideans`，`html[data-hideans]` CSS 门控 + `.d-card.revealed` 逐题揭示，切题自动重隐）
 - **轻量版模式（cfa.lite）**：全局浏览模式开关——门户分段控件（`#modeFull/#modeLite`）+ season/scale 顶栏 `#btnLite`（theme.py `_TOGGLE_JS` 统一处理：写 `cfa.lite`、切 `html[data-lite]`、派发 `cfa:lite` 事件；`_EARLY_JS` 首帧前设置防闪烁）。开启后（build_page.py）：`select()` 走 LITE 分支，无任何视频逻辑，`#srcActions` 渲染「打开官方评议页」（`issues[].url`，按期跳转）+ 每条 `video_urls` 官方直链（新标签页在线播放）；scale 页 CSS 隐藏全部场景视频 `.hvideo` 并显示官方发布页横幅（`SCALE_SOURCE_URLS` 按赛季随页签切换，官方材料为 zip 发布无逐例链接）。筛选/收藏/笔记/锚点两模式共用同一套（同一 localStorage 键，笔记本用法核心）。完整版遇本地视频 404 自动改用官方直链（`vidsMissing` 会话级直连，`ossTried` 防循环），彻底失败且未开轻量时弹 `#vfailTip` 一次性提示条（sessionStorage `cfa.vfail` 记忆关闭）
 - **锚点**：`season-*.html#case-<seq>` 打开时自动选中对应判例（stats-*.html 明细链接依赖此；初始化代码必须在 applyFilter **之前**捕获 hash——`initialHashSeq`，否则会被自动选中的 replaceState 覆盖——已踩过）
 - 搜索框监听 `input` 和 `search` 事件（后者是 type=search ✕ 清空按钮触发）；`esc()` 必须转义引号（用于 data-* 属性）
@@ -205,7 +213,9 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 改动后依次验证（命令一律在仓库根执行）：
 - [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
-- [ ] `python tests/test_integrity.py` 通过（10页面/三赛季数据/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] `python tests/test_integrity.py` 通过（11页面/三赛季数据/考题池基准/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
+- [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题
 - [ ] 浏览器打开 index.html：门户六张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放

@@ -232,6 +232,17 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
+    <a class="card c-quiz" href="quiz.html">
+      <div class="icon">__I_QUIZ__</div>
+      <h2>考题模式</h2>
+      <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>
+      <div class="nums">
+        <div><b>__Q_TOTAL__</b><span>题库</span></div>
+        <div><b>__Q_CASES__</b><span>判例</span></div>
+        <div><b>__Q_SCALE__</b><span>尺度场景</span></div>
+      </div>
+      <div class="go">开始答题 __I_RIGHT__</div>
+    </a>
   </section>
 
   <section class="steps">
@@ -308,6 +319,10 @@ def main():
     s = load_stats()
     sc = load_scale_stats()
     u = load_uefa_stats()
+    from build_quiz import build_bank  # 与 quiz 页同一题库口径
+    bank, _, _ = build_bank()
+    q_case = sum(1 for b in bank if b["t"] == "case")
+    q_scale = sum(1 for b in bank if b["t"] == "scale")
     tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一",
                 seasons=("2024", "2025", "2026"))
     subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
@@ -315,6 +330,7 @@ def main():
             "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
             "__I_SEARCH__": icon("search", 13), "__I_DOWN__": icon("download", 13),
             "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13),
+            "__I_QUIZ__": icon("quiz", 20),
             "__I_EXTERNAL__": icon("external", 20), "__I_EXT_S__": icon("external", 15)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
@@ -338,6 +354,9 @@ def main():
             .replace("__S_VIDEOS__", str(sc["videos"]))
             .replace("__U_CASES__", str(u["cases"]))
             .replace("__U_GROUPS__", str(u["groups"]))
+            .replace("__Q_TOTAL__", str(q_case + q_scale))
+            .replace("__Q_CASES__", str(q_case))
+            .replace("__Q_SCALE__", str(q_scale))
             .replace("__BUILT__", date.today().isoformat()))
     for k, v in subs.items():
         html = html.replace(k, v)

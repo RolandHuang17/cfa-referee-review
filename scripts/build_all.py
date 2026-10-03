@@ -26,6 +26,7 @@ def main():
     run("build_stats.py")
     run("build_scale.py")
     run("build_uefa.py")
+    run("build_quiz.py")
     if SITE_ASSETS.exists():
         shutil.rmtree(SITE_ASSETS)
     shutil.copytree(ASSETS, SITE_ASSETS)

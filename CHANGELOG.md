@@ -6,6 +6,15 @@
 [语义化版本](https://semver.org/lang/zh-CN/)。仓库尚未打过 tag，首次切分发布时会
 把 `Unreleased` 段落并入对应版本号并补上对比链接。
 
+## 2026-10-04
+
+### 新增
+- **考题模式 quiz.html**（新页面 + `scripts/build_quiz.py` builder）：三赛季 592 道判例题 + 97 道统一尺度场景题随机出卷；练习（即时反馈）/考试（统一出分）两种模式；判例题三问制（复核结论/判罚决定/纪律处分，有答案库才出②③问），尺度场景官方 decision 矩阵多选；错题本 localStorage `cfa.quiz.wrong` 自动记入未满分题并记忆上次错选，支持收藏星标、错题重练与导出/导入 JSON。
+- **考题答案库 `data/quiz-answers.json`**（新数据 + `scripts/gen_quiz_answers.py`）：从评议认定原文按句极性起草判罚决定/纪律处分答案，575 条全部人工校对（reviewed），校对工作流与回写机制见 AGENTS.md。
+- **隐藏答案模式**（三赛季评议页顶栏新开关 `#btnHideAns`，localStorage `cfa.hideans`）：开启后详情只显示事件与申诉，评议认定/判定徽章/分类要点/标签隐藏，列表判定圆点隐去；「显示本题答案」逐题揭示，切题自动重隐。
+- 全站导航与门户新增「考题模式」入口；`tests/test_integrity.py` 新增考题池回归基准（2024:141 / 2025:227 / 2026:224 + 尺度场景 97）。
+
+
 ## Unreleased
 
 ### Changed

@@ -98,7 +98,7 @@ exist_ok=True)`**——新 clone 时该目录不存在。
   `download_videos_parallel.py`、`verify_videos.py` 与全部页面的相对路径里。gitignored。
 - **`src/theme.css`** — `lib/theme.py` 在 **import 时**就 `read_text()` 它（`THEME`
   常量被 `inject_theme()` 消费，没有惰性路径）。文件缺失或路径写错会在 import 期
-  `FileNotFoundError`，一次放倒全部 6 个 builder、`build_all.py` 和 CI。
+  `FileNotFoundError`，一次放倒全部 7 个 builder、`build_all.py` 和 CI。
 - **`scripts/`** — 三处硬编码：`build_all.py` 用 `SCRIPTS / script` 拼子进程命令，
   `serve.py` 以绝对路径拉起 `range_server.py`，`启动合集网页.bat` 第 18 行执行
   `python scripts/serve.py 8808`。重命名这个目录要同时改这三处。

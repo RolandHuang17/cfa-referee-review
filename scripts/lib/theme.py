@@ -32,6 +32,9 @@ _E = {
     "play": '<polygon points="6 3 20 12 6 21 6 3"/>',
     "external": '<path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/>',
     "sliders": '<line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/>',
+    "eye-off": '<path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/>',
+    "quiz": '<path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/>',
+    "check": '<polyline points="20 6 9 17 4 12"/>',
 }
 _FILLED = {"star-f"}
 
@@ -48,7 +51,8 @@ def js_icons():
     import json
     return json.dumps({k: icon(k, 13) for k in ("star", "star-f", "note", "up", "down", "search",
                                                 "help", "x", "left", "right", "play", "upload",
-                                                "download", "chev-d", "menu", "external")},
+                                                "download", "chev-d", "menu", "external",
+                                                "eye-off", "quiz", "check")},
                       ensure_ascii=False, separators=(",", ":"))
 
 
@@ -61,7 +65,8 @@ def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=(
     for s in seasons:
         items.append((f"season-{s}.html", f"{s}评议", "film"))
     items += [(stats, "得失盘点", "chart"), ("rules.html", "竞赛规则", "book"),
-              ("scale.html", "统一尺度", "sliders"), ("uefa.html", "欧足联判例", "play")]
+              ("scale.html", "统一尺度", "sliders"), ("uefa.html", "欧足联判例", "play"),
+              ("quiz.html", "考题模式", "quiz")]
     nav = ""
     for href, label, ic in items:
         cur = ' class="tbtn cur" aria-current="page"' if href == active else ' class="tbtn"'
@@ -82,11 +87,12 @@ def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=(
             f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>')
 
 
-# 首帧前设置主题与轻量版标记,避免明暗闪跳/布局闪跳
+# 首帧前设置主题与轻量版/隐藏答案标记,避免明暗闪跳/布局闪跳
 _EARLY_JS = ("<script>try{var t=localStorage.getItem('cfa.theme');"
              "if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';"
              "document.documentElement.dataset.theme=t;"
-             "if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1'"
+             "if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';"
+             "if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'"
              "}catch(e){}</script>")
 # 主题/轻量版切换按钮的全局点击处理(所有页面通用;#btnLite 切换后派发 cfa:lite 事件供页面重渲染)
 _TOGGLE_JS = ("<script>document.addEventListener('click',function(e){"

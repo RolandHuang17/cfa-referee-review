@@ -302,6 +302,23 @@ html[data-lite] .txt{font-size:15.5px;line-height:1.95}
 html[data-lite] .txt .concl{font-size:16px}
 html[data-lite] .notewrap textarea{min-height:180px;font-size:14.5px;line-height:1.8}
 
+/* ---- 隐藏答案模式(html[data-hideans])：先思考后揭示，仅当前题可见 ---- */
+.ans-gate{display:none;align-items:center;gap:12px;margin:12px auto 0;max-width:960px;
+  padding:12px 16px;border:1px dashed var(--amber-line);background:var(--amber-bg);
+  border-radius:var(--r-md)}
+.ans-gate .ag-txt{display:flex;flex-direction:column;gap:2px;font-size:13px;color:var(--ink2);min-width:0}
+.ans-gate .ag-txt b{font-size:13.5px;color:var(--amber)}
+.ans-gate .ic{color:var(--amber);flex:none}
+.ans-gate button{margin-left:auto;flex:none}
+html[data-hideans] .ans-gate{display:flex}
+html[data-hideans] .d-card.revealed .ans-gate{display:none}
+html[data-hideans] .d-card:not(.revealed) .d-head .badge{display:none}
+html[data-hideans] .d-card:not(.revealed) .txt .concl{display:none}
+html[data-hideans] .d-card:not(.revealed) #dCatNote,
+html[data-hideans] .d-card:not(.revealed) #dTags{display:none}
+html[data-hideans] .prow .dot{background:var(--line)!important}
+html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
+
 /* ---- 统计矩阵 / 帮助 / 回顶 ---- */
 .matrix table{border-collapse:collapse;width:100%;font-size:13.5px}
 .matrix th,.matrix td{border-bottom:1px solid var(--line2);padding:6px 10px;text-align:center}
@@ -388,6 +405,7 @@ __TOPBAR__
       <div class="vsw-row" id="vswRow" style="display:none"></div>
       <p class="d-note" id="dNote"></p>
       <div class="txt" id="dText"></div>
+      <div class="ans-gate" id="ansGate">__I_EYEOFF_B__<div class="ag-txt"><b>隐藏答案模式已开启</b><span>先看视频、读完事件经过，自己做出判断后再揭示官方认定。切换判例后重新隐藏。</span></div><button class="btn primary" id="ansRevealBtn">显示本题答案</button></div>
       <details class="d-note-box" id="dCatNote"><summary></summary><div></div></details>
       <div class="favtags" id="favTags" style="display:none"></div>
       <div class="notewrap" id="noteWrap" style="display:none">
@@ -439,6 +457,8 @@ DATA.cases.forEach(c => bySeq[c.seq] = c);
 const initialHashSeq = (location.hash.match(/^#case-(\d+)$/)||[])[1];
 // 轻量版（cfa.lite，theme.py 首帧前设置 dataset.lite）：纯文字+官方链接笔记本模式，无视频窗口
 let LITE = document.documentElement.dataset.lite === "1";
+// 隐藏答案模式（cfa.hideans，theme.py 首帧前设置 dataset.hideans）：先思考后逐题揭示
+let HIDE = document.documentElement.dataset.hideans === "1";
 
 // ---------- 收藏与笔记（localStorage 持久化，键按赛季隔离） ----------
 const CFG = DATA.cfg;
@@ -584,7 +604,7 @@ function renderList(){
       return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" aria-current="${state.sel===c.seq}">
         <span class="dot ${c.v}"></span>
         <span class="ptxt"><b>${crest(c.home,16,true)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16,true)}${esc(c.away)}</b>
-        <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · ${VN[c.v]}</i></span>
+        <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · <span class="rvn">${VN[c.v]}</span></i></span>
         <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}</span>
         ${varChip}</div>`;
     }).join("")).join("");
@@ -682,6 +702,22 @@ function goLite(){
 }
 document.addEventListener("cfa:lite", applyLite);  // theme.py 顶栏 #btnLite 切换时派发
 
+// ---------- 隐藏答案模式切换（CSS 门控显隐；揭示只对当前题生效，切题自动重隐） ----------
+document.getElementById("btnHideAns").onclick = ()=>{
+  const r = document.documentElement, on = r.dataset.hideans !== "1";
+  if (on) r.dataset.hideans = "1"; else r.removeAttribute("data-hideans");
+  HIDE = on;
+  document.getElementById("btnHideAns").setAttribute("aria-pressed", on ? "true" : "false");
+  try { localStorage.setItem("cfa.hideans", on ? "1" : "0"); } catch(_) {}
+  document.getElementById("dcard").classList.remove("revealed");
+};
+document.getElementById("ansRevealBtn").onclick = ()=>{
+  document.getElementById("dcard").classList.add("revealed");
+  const concl = document.querySelector("#dcard .txt .concl");
+  if (concl) concl.scrollIntoView({behavior:"smooth", block:"nearest"});
+};
+document.getElementById("btnHideAns").setAttribute("aria-pressed", HIDE ? "true" : "false");
+
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
@@ -691,6 +727,8 @@ function select(seq, scrollRow=true){
   const iss = DATA.issues[c.issue];
   document.getElementById("detailEmpty").style.display = "none";
   document.getElementById("dcard").style.display = "block";
+  // 隐藏答案模式：切题后重新隐藏，需再次点击「显示本题答案」揭示
+  document.getElementById("dcard").classList.toggle("revealed", !HIDE);
   const match = [c.comp, c.round, (c.home&&c.away)?`${c.home} VS ${c.away}`:"", c.minute?`第${c.minute}分钟`:""]
     .filter(Boolean).join(" · ");
   const matchHTML = match
@@ -1024,6 +1062,7 @@ const hasPen = t => (t||[]).includes("点球");
     <p><b>操作方法：</b>左侧自上而下：判定 → 我的收藏（按标签筛选）→ 赛事（中超/中甲/中乙等）→ 球队（跨赛事聚合，如广州豹同时列出其中甲与足协杯判例）→ 期数（按原网页一期一期浏览，选中后列表头显示该期官方标题）→ 教学分类；中间列表点选判例，右侧大屏学习；<span class="kbd">↑</span><span class="kbd">↓</span> 键切换上一个/下一个判例，<span class="kbd">/</span> 聚焦搜索，<span class="kbd">Esc</span> 关闭弹层；顶栏按钮可收起侧栏获得更宽画面，右上角可切换明暗主题。</p>
     <p><b>收藏与笔记：</b>在详情区点「☆ 收藏」收藏判例并可打多个标签（精选/有疑问/尺度标杆/易错点/课堂讨论/自定义），笔记自动保存。收藏的判例在列表中显示★，可通过左侧「我的收藏」按标签筛选。数据存于浏览器 localStorage；用「导出/导入」按钮可在不同浏览器或 file:// 与 http:// 两种打开方式之间同步。</p>
     <p><b>轻量版模式：</b>门户首页的分段开关或顶栏「轻量版」按钮可切换（自动记忆）。轻量版去掉视频窗口，详情变为纯文字阅读 + 加大的笔记区，并提供「打开官方评议页」（按期跳转官方文章）与每条判例的官方视频直链（新标签页在线播放，官方 videooss 服务器支持拖进度条）——适合纯在线访问、不下载视频的用法。收藏与笔记在两种模式下共用同一份。</p>
+    <p><b>隐藏答案模式：</b>顶栏「隐藏答案」按钮开启（自动记忆，三赛季页共用）。开启后详情只显示比赛事件与申诉意见，评议组认定、判定徽章、分类要点与标签全部隐藏，列表中的判定圆点与判定文字也会隐去——先看视频自己判断，再点「显示本题答案」逐题揭示；切换判例后重新隐藏，适合自测式学习。判定筛选与统计总表仍可正常使用。</p>
     <p><b>视频播放：</b>完整版优先播放本地 videos 文件夹；在线访问（如 GitHub Pages）本地视频缺失时，会自动改用官方直链在线播放，离线用户不受任何影响。</p>
     <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，${CFG.issueDesc}。每条判例附原文链接。</p>
     <p><b>期数口径注释：</b>${issNotes ? issNotes + "。" : ""}其余各期与官方标题认定数一致。</p>
@@ -1073,11 +1112,14 @@ def build_season(season):
     data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
     search_html = (f'<div class="search-wrap">{icon("search")}'
                    f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>')
-    tb = topbar(active=cfg["out"], right=search_html, stats=cfg["stats"],
+    hideans_btn = (f'<button class="tbtn" id="btnHideAns" title="隐藏答案模式：先看视频自己判断，再揭示官方认定" '
+                   f'aria-pressed="false">{icon("eye-off")}<span>隐藏答案</span></button>')
+    tb = topbar(active=cfg["out"], right=hideans_btn + search_html, stats=cfg["stats"],
                 brand_sub=f"{season}赛季 · {len(data['cases'])}判例", seasons=tuple(sorted(SEASONS)),
                 sb_btn=True, help_btn=True, lite_btn=True)
     sub = {"__I_UP__": icon("up"), "__I_DOWN__": icon("down"), "__I_LEFT__": icon("left", 14),
-           "__I_CHART__": icon("chart", 14), "__I_FILM_B__": icon("film", 30)}
+           "__I_CHART__": icon("chart", 14), "__I_FILM_B__": icon("film", 30),
+           "__I_EYEOFF_B__": icon("eye-off", 20)}
     html = inject_theme(HTML
             .replace("__DATA__", data_js)
             .replace("__ICONS__", js_icons())
@@ -1086,6 +1128,7 @@ def build_season(season):
             .replace("__STATS__", cfg["stats"])
             .replace("__BRAND__", cfg["brand"])
             .replace("__I_FILM_B__", sub["__I_FILM_B__"])
+            .replace("__I_EYEOFF_B__", sub["__I_EYEOFF_B__"])
             .replace("__I_CHART__", sub["__I_CHART__"])
             .replace("__I_LEFT__", sub["__I_LEFT__"])
             .replace("__I_DOWN__", sub["__I_DOWN__"])

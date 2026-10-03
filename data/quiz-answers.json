@@ -1,0 +1,4014 @@
+{
+ "version": 1,
+ "generated": "2026-10-04",
+ "note": "考题答案库（判例轴）：r=判罚决定 c=纪律处分，取值见 rLabels/cLabels；auto=脚本起草，reviewed=人工已校对（quiz 页只对 reviewed 条目出②③问）",
+ "rLabels": {
+  "playon": "不犯规（比赛继续）",
+  "directfk": "直接任意球",
+  "indirectfk": "间接任意球",
+  "penalty": "罚球点球",
+  "retake": "重罚球点球",
+  "goal_valid": "进球有效",
+  "goal_invalid": "进球无效"
+ },
+ "cLabels": {
+  "none": "不出牌",
+  "yellow": "黄牌",
+  "red": "红牌"
+ },
+ "answers": {
+  "2024-19": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-20": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-21": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-22": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-23": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-24": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-25": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-26": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-27": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-28": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-29": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-30": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-31": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-32": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-33": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-34": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-35": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-36": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-37": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-38": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-39": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-40": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-41": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-42": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-43": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-44": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-45": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-46": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-47": {
+   "r": "penalty",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-48": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-49": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-50": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-51": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-52": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-53": {
+   "r": "indirectfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-54": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-55": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-56": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-57": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-58": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-59": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-60": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-61": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-62": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-63": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-64": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-65": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-66": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-67": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-68": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-69": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-70": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-71": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-72": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-73": {
+   "r": "indirectfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-74": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-75": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-76": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-77": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-78": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-79": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-80": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-81": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-82": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-83": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-84": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-85": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-86": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-87": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-88": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-89": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-90": {
+   "r": "indirectfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-91": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-92": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-93": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-94": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-95": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-96": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-97": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-98": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-99": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-100": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-101": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-102": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-103": {
+   "r": "indirectfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-104": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-105": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-106": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-107": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-108": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-109": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-110": {
+   "r": "goal_valid",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-111": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-113": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-114": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-115": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-116": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-117": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-118": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-119": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-120": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-122": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-123": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-124": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-125": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-126": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-127": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-128": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-129": {
+   "r": null,
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-130": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-131": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-132": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-133": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-134": {
+   "r": "directfk",
+   "auto": true,
+   "reviewed": true
+  },
+  "2024-135": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-136": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-137": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-138": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-139": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-140": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-141": {
+   "r": "directfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-142": {
+   "r": "retake",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-143": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-144": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-145": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-146": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-147": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-148": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-149": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-150": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-151": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-152": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-153": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-154": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-155": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-156": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-157": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2024-158": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2024-159": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2024-160": {
+   "r": null,
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-1": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-2": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-3": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-4": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-5": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-6": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-7": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-8": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-9": {
+   "r": "penalty",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-10": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-11": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-12": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-13": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-14": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-15": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-16": {
+   "r": "penalty",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-17": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-18": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-19": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-20": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-21": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-22": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-23": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-24": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-25": {
+   "r": "penalty",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-26": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-27": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-28": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-29": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-30": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-31": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-32": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-33": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-34": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-35": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-36": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-37": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-38": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-39": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-40": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-41": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-42": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-43": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-44": {
+   "r": "directfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-45": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-46": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-48": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-49": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-50": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-51": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-52": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-53": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-54": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-55": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-56": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-57": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-58": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-59": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-60": {
+   "r": null,
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-61": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-62": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-63": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-64": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-65": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-66": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-67": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-68": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-69": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-70": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-71": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-72": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-73": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-74": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-75": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-76": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-77": {
+   "r": "penalty",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-78": {
+   "r": "indirectfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-79": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-80": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-81": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-82": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-83": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-84": {
+   "r": "directfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-85": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-86": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-87": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-88": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-89": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-90": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-91": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-92": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-93": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-94": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-95": {
+   "r": null,
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-96": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-97": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-98": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-99": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-100": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-101": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-102": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-104": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-105": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-106": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-107": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-108": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-109": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-110": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-111": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-112": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-113": {
+   "r": null,
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-114": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-115": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-116": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-117": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-118": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-119": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-120": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-121": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-122": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-123": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-124": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-125": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-126": {
+   "r": "directfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-127": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-128": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-129": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-131": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-132": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-133": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-134": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-135": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-136": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-137": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-138": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-139": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-140": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-141": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-142": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-144": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-145": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-146": {
+   "r": "goal_invalid",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-147": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-148": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-149": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-150": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-151": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-152": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-153": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-154": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-155": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-156": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-157": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-158": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-159": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-160": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-161": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-162": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-163": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-164": {
+   "r": "playon",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-165": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-166": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-167": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-168": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-169": {
+   "r": "playon",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-170": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-171": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-172": {
+   "r": "indirectfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-173": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-174": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-175": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-176": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-177": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-178": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-179": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-180": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-181": {
+   "r": "goal_valid",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-182": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-183": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-184": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-185": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-186": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-187": {
+   "r": "playon",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-188": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-189": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-190": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-191": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-192": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-193": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-194": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-195": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-196": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-197": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-199": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2025-200": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-201": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-202": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-203": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-204": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-205": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-206": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-207": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-208": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-209": {
+   "r": "playon",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-210": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-211": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-212": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-213": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2025-214": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-216": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-217": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-218": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2025-219": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-220": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-221": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-222": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-223": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-225": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-226": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2025-227": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-1": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-2": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-3": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-4": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-5": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-6": {
+   "r": "playon",
+   "c": null,
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-7": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-8": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-9": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-10": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-11": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-12": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-13": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-14": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-15": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-16": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-17": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-18": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-19": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-20": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-22": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-23": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-24": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-25": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-26": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-27": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-28": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-29": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-30": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-31": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-33": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-34": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-35": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-37": {
+   "r": "retake",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-39": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-40": {
+   "r": "directfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-41": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-42": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-43": {
+   "r": "indirectfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-44": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-45": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-46": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-47": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-48": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-49": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-50": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-51": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-52": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-53": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-54": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-55": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-56": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-57": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-58": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-59": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-60": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-61": {
+   "r": "playon",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-62": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-63": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-64": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-65": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-66": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-67": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-68": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-69": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-70": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-71": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-72": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-73": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-74": {
+   "r": "playon",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-75": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-76": {
+   "r": "goal_valid",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-77": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-78": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-79": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-80": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-81": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-82": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-83": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-84": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-85": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-87": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-88": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-89": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-90": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-91": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-92": {
+   "r": "playon",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-93": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-94": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-95": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-96": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-97": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-98": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-99": {
+   "r": "indirectfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-100": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-102": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-103": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-104": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-105": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-106": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-107": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-108": {
+   "r": "playon",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-109": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-110": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-111": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-112": {
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-113": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-114": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-115": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-116": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-117": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-118": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-119": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-120": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-121": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-122": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-123": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-124": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-125": {
+   "r": "directfk",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-126": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-127": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-128": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-129": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-130": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-131": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-132": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-133": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-134": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-135": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-136": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-137": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-138": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-139": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-140": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-141": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-142": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-143": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-144": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-145": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-146": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-147": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-148": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-149": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-150": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-151": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-152": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-153": {
+   "r": "retake",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-154": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-155": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-156": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-157": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-158": {
+   "r": "indirectfk",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-159": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-160": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-161": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-162": {
+   "r": "playon",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-163": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-164": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-165": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-166": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-167": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-168": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-169": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-170": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-172": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-173": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-174": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-175": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-176": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-177": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-178": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-179": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-180": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-181": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-182": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-184": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-185": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-186": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-187": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-188": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-189": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-190": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-191": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-192": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-193": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-195": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-196": {
+   "r": null,
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-197": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-198": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-199": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-200": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-201": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-202": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-203": {
+   "r": null,
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-204": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "low"
+  },
+  "2026-205": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-206": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-208": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-209": {
+   "r": "directfk",
+   "c": "red",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-210": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-211": {
+   "r": "penalty",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-212": {
+   "r": "directfk",
+   "c": null,
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-213": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-214": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-215": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-216": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-217": {
+   "r": "goal_valid",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  },
+  "2026-218": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-219": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-220": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-221": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-222": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-223": {
+   "r": "directfk",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true
+  },
+  "2026-224": {
+   "r": "penalty",
+   "c": "yellow",
+   "auto": true,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-225": {
+   "r": "playon",
+   "c": "none",
+   "auto": true,
+   "reviewed": true,
+   "conf": "medium"
+  }
+ }
+}

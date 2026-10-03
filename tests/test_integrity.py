@@ -23,12 +23,14 @@ from lib.paths import DATA, SITE  # noqa: E402
 
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
-         "scale.html", "uefa.html"]
+         "scale.html", "uefa.html", "quiz.html"]
 SEASONS = ("2024", "2025", "2026")
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
             "2025": (227, 229, {"wrong": 82, "correct": 138, "pending": 7}),
             "2026": (225, 224, {"wrong": 95, "correct": 121, "pending": 9})}
+# 考题模式题库基准：每季「有视频且有认定原文」的判例数 + 尺度场景数（改口径需同步）
+EXPECTED_QUIZ = {"2024": 141, "2025": 227, "2026": 224}
 
 FAILURES = []
 
@@ -105,9 +107,54 @@ def test_crest_files_and_provenance():
     _finish(validate_catalog(load_catalog()))
 
 
+def test_quiz_bank_pool():
+    """考题模式题库回归基准：判例池（有视频+认定原文）与尺度场景池计数。"""
+    problems = []
+    bank_path = SITE / "quiz.html"
+    if not bank_path.exists():
+        problems.append("缺少 site/quiz.html")
+        _finish(problems)
+        return
+    per_season = {s: 0 for s in SEASONS}
+    for season in SEASONS:
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+        per_season[season] = sum(1 for c in data["cases"]
+                                 if c.get("video_files") and (c.get("conclusion") or "").strip())
+    text = bank_path.read_text(encoding="utf-8")
+    m = re.search(r'"meta":\{"case":(\d+),"scale":(\d+)\}', text)
+    if not m:
+        problems.append("quiz.html 缺少 meta 题库统计（case/scale）")
+    else:
+        n_case, n_scale = int(m.group(1)), int(m.group(2))
+        if n_case != sum(per_season.values()):
+            problems.append(f"考题判例池不符: quiz={n_case}，期望 {sum(per_season.values())}（{per_season}）")
+        scale_total = 0
+        if (DATA / "scale.json").exists():
+            sd = json.loads((DATA / "scale.json").read_text(encoding="utf-8"))
+            for yd in sd.values():
+                if not isinstance(yd, dict):
+                    continue
+                for sec in yd.get("sections", []):
+                    for g in sec.get("groups", []):
+                        for it in g.get("items", []):
+                            dec = it.get("decision") or []
+                            if dec and not any(x.get("label") == "VAR 机制讲解" for x in dec) \
+                                    and it.get("video"):
+                                scale_total += 1
+        if n_scale != scale_total:
+            problems.append(f"考题尺度场景池不符: quiz={n_scale}，期望 {scale_total}")
+        for season, expected in EXPECTED_QUIZ.items():
+            if per_season[season] != expected:
+                problems.append(f"{season}考题判例池 {per_season[season]} != 基准 {expected}")
+    _finish(problems)
+    print(f"考题题库校验通过: 判例 {sum(per_season.values())} + 尺度场景 "
+          f"{int(m.group(2)) if m else '?'} 题")
+
+
 CHECKS = [
     test_pages_exist_and_are_self_contained,
     test_season_case_counts,
+    test_quiz_bank_pool,
     test_internal_links_resolve,
     test_team_catalog_complete,
     test_crest_files_and_provenance,

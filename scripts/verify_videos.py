@@ -6,13 +6,12 @@
 """
 import json
 import sys
-from pathlib import Path
 
 from safe_http import head_size
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import DATA, SITE_VIDEOS
 SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"
-VID = ROOT / "site" / "videos" / SEASON
+VID = SITE_VIDEOS / SEASON
 
 
 def rename_legacy():
@@ -32,7 +31,7 @@ def rename_legacy():
 
 def main():
     rename_legacy()
-    data = json.loads((ROOT / "data" / f"cases-{SEASON}.json").read_text(encoding="utf-8"))
+    data = json.loads((DATA / f"cases-{SEASON}.json").read_text(encoding="utf-8"))
     need = {}
     for c in data["cases"]:
         for f in c["video_files"]:
@@ -60,7 +59,7 @@ def main():
     if size_mismatch:
         print("大小不符:", size_mismatch)
         print("-> 删除对应 .mp4 后重跑下载脚本修复")
-    (ROOT / "data" / "verify_result.json").write_text(
+    (DATA / "verify_result.json").write_text(
         json.dumps({"missing": missing, "mismatch": size_mismatch, "ok": ok},
                    ensure_ascii=False, indent=1), encoding="utf-8")
 

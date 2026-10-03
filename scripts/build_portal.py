@@ -4,16 +4,15 @@
 """
 import json
 from datetime import date
-from pathlib import Path
+
 from theme import inject_theme, icon, topbar
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+from lib.paths import DATA, LAWS_JSON, SCALE_JSON, SITE, UEFA_JSON
 
 
 def load_stats():
     def season_stats(season):
-        d = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+        d = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         cases = d["cases"]
         return {
             "n": len(cases),
@@ -22,7 +21,7 @@ def load_stats():
             "correct": sum(1 for c in cases if c["referee_verdict"] == "correct"),
             "videos": sum(len(c["video_files"]) for c in cases),
         }
-    laws = json.loads((ROOT / "data" / "laws.json").read_text(encoding="utf-8"))
+    laws = json.loads(LAWS_JSON.read_text(encoding="utf-8"))
     secs = laws["sections"] if isinstance(laws, dict) else laws
     return {
         "2026": season_stats("2026"),
@@ -35,7 +34,7 @@ def load_stats():
 
 def load_scale_stats():
     """统一尺度页数字从 data/scale.json 计算（场景/分组/视频=例数）。"""
-    p = ROOT / "data" / "scale.json"
+    p = SCALE_JSON
     scenes = groups = 0
     if p.exists():
         d = json.loads(p.read_text(encoding="utf-8"))
@@ -51,7 +50,7 @@ def load_scale_stats():
 
 def load_uefa_stats():
     """UEFA Clear Line 判例库数字从 data/uefa.json 计算。"""
-    p = ROOT / "data" / "uefa.json"
+    p = UEFA_JSON
     cases = groups = 0
     if p.exists():
         d = json.loads(p.read_text(encoding="utf-8"))

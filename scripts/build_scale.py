@@ -19,13 +19,11 @@ from urllib.parse import unquote
 
 from theme import inject_theme, topbar, icon
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
-OUT_JSON = ROOT / "data" / "scale.json"
-VID_OUT = ROOT / "site" / "videos" / "scale"
-IMG_OUT = ROOT / "assets" / "scale"  # build_all 会整目录重建 site/assets，海报须放根 assets/
+from lib.paths import ROOT, SCALE_JSON, SCALE_POSTERS, SITE, SITE_VIDEOS
+
+SCALE_VIDEOS = SITE_VIDEOS / "scale"
 def PKG_IMG(year):
-    return IMG_OUT  # 海报平铺: assets/scale/{year}-{cat}-{series}-{id}.png
+    return SCALE_POSTERS  # 海报平铺: assets/scale/{year}-{cat}-{series}-{id}.png
 
 PACKAGES = {
     "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
@@ -153,8 +151,8 @@ def extract_season_2024(year: str, pkg: Path):
                 matrix = [{"label": "VAR 机制讲解", "active": True}]
             else:
                 matrix = _matrix24(decision, level, offside=(decision.lower() == "y" or cat == "越位"))
-            (VID_OUT / year).mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, VID_OUT / year / f"highlights-{hl_id}.mp4")
+            (SCALE_VIDEOS / year).mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, SCALE_VIDEOS / year / f"highlights-{hl_id}.mp4")
             if cat not in groups:
                 groups[cat] = {"name": cat, "items": []}
                 order[cat] = len(order)
@@ -245,7 +243,7 @@ def parse_highlight(path: Path, year: str, cat: str, series: str):
 
 
 def PKG_VID(year):
-    return VID_OUT / year
+    return SCALE_VIDEOS / year
 
 
 def extract_season(year: str, pkg: Path):
@@ -265,8 +263,8 @@ def extract_season(year: str, pkg: Path):
                 if series == "var" and re.match(r"^场景 \d+$", gkey):
                     gkey = "视频助理裁判"
                     item["title"] = f"VAR 场景 {p.stem}"
-                (VID_OUT / year).mkdir(parents=True, exist_ok=True)
-                (IMG_OUT).mkdir(parents=True, exist_ok=True)
+                (SCALE_VIDEOS / year).mkdir(parents=True, exist_ok=True)
+                (SCALE_POSTERS).mkdir(parents=True, exist_ok=True)
                 src_mp4 = series_dir / f"{p.stem}.mp4"
                 src_png = series_dir / f"{p.stem}.png"
                 if src_mp4.exists():
@@ -285,22 +283,22 @@ def extract_season(year: str, pkg: Path):
 
 def legacy_migrate():
     """旧 v1 数据/文件迁移到按年分目录结构"""
-    if OUT_JSON.exists():
-        d = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+    if SCALE_JSON.exists():
+        d = json.loads(SCALE_JSON.read_text(encoding="utf-8"))
         if "sections" not in d.get("2026", {}):
-            OUT_JSON.unlink()
-    for flat in VID_OUT.glob("*.mp4"):  # 旧平铺 2026 视频 → 2026/
-        (VID_OUT / "2026").mkdir(parents=True, exist_ok=True)
-        flat.rename(VID_OUT / "2026" / f"highlights-{flat.stem}.mp4")
+            SCALE_JSON.unlink()
+    for flat in SCALE_VIDEOS.glob("*.mp4"):  # 旧平铺 2026 视频 → 2026/
+        (SCALE_VIDEOS / "2026").mkdir(parents=True, exist_ok=True)
+        flat.rename(SCALE_VIDEOS / "2026" / f"highlights-{flat.stem}.mp4")
     # 旧海报拍平为 {year}- 前缀（含历史遗留的年份子目录）
-    for old in list(IMG_OUT.glob("fouls-misconduct-*.png")):
-        old.rename(IMG_OUT / f"2026-{old.name}")
+    for old in list(SCALE_POSTERS.glob("fouls-misconduct-*.png")):
+        old.rename(SCALE_POSTERS / f"2026-{old.name}")
     for sub in ("2026", "2025"):
-        d = IMG_OUT / sub
+        d = SCALE_POSTERS / sub
         if d.is_dir():
             for f in d.iterdir():
                 name = f.name if f.name.startswith(sub) else f"{sub}-{f.name}"
-                f.rename(IMG_OUT / name)
+                f.rename(SCALE_POSTERS / name)
             d.rmdir()
 
 
@@ -468,8 +466,8 @@ def build_page(data):
 def main():
     legacy_migrate()
     data = {}
-    if OUT_JSON.exists():
-        d = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+    if SCALE_JSON.exists():
+        d = json.loads(SCALE_JSON.read_text(encoding="utf-8"))
         data = {k: v for k, v in d.items() if isinstance(v, dict) and "sections" in v}
     for year, pkg in PACKAGES.items():
         if pkg.exists():
@@ -479,7 +477,7 @@ def main():
     for year in data:  # 组排序
         for sec in data[year]["sections"]:
             sec["groups"] = sort_groups(sec["groups"])
-    OUT_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    SCALE_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     build_page(data)
 
 

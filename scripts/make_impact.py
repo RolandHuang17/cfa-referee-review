@@ -14,9 +14,8 @@
   wrong_offside_self         本队被误判越位
 """
 import json
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import DATA
 
 IMPACT = {
     1:   [{"team": "长春亚泰", "type": "missed_red_opponent", "note": "上海申花4号踩踏守门员小腿属严重犯规，回看后仅出示黄牌"}],
@@ -132,7 +131,7 @@ MATCH_NOTES = {
 
 
 def main():
-    data = json.loads((ROOT / "data" / "cases-2025.json").read_text(encoding="utf-8"))
+    data = json.loads((DATA / "cases-2025.json").read_text(encoding="utf-8"))
     cases = {c["seq"]: c for c in data["cases"]}
 
     # 修正 #48 的赛事字段（"中超第7轮"未带"联赛"导致提取为空）
@@ -195,7 +194,7 @@ def main():
         for v in out["impacts"].values():
             if (v["league"], str(v["round"]), v["home"], v["away"]) == (lg, rd, h, a):
                 v["match_note"] = note
-    (ROOT / "data" / "impact.json").write_text(
+    (DATA / "impact.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # 汇总

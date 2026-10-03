@@ -17,13 +17,9 @@ import re
 import sys
 import time
 import zlib
-from pathlib import Path
-
 from safe_http import safe_request
 
-ROOT = Path(__file__).resolve().parent.parent
-CACHE = ROOT / "data" / "uefa_cache"
-OUT_JSON = ROOT / "data" / "uefa.json"
+from lib.paths import UEFA_CACHE, UEFA_JSON
 BASE = "https://www.uefa.com"
 START = BASE + "/running-competitions/refereeing/clear-line/"
 SEED_SLUGS = ["factual-decisions", "red-cards", "red-cards/dogso",
@@ -126,14 +122,14 @@ def clear_line_links(page: str) -> list:
 
 
 def fetch_all():
-    CACHE.mkdir(parents=True, exist_ok=True)
+    UEFA_CACHE.mkdir(parents=True, exist_ok=True)
     queue, seen = [START] + [BASE + f"/running-competitions/refereeing/clear-line/{s}/" for s in SEED_SLUGS], set()
     while queue:
         url = queue.pop(0)
         if url in seen:
             continue
         seen.add(url)
-        cache_f = CACHE / f"{slug_of(url)}.html"
+        cache_f = UEFA_CACHE / f"{slug_of(url)}.html"
         if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
             print(f"缓存命中: {cache_f.name}", flush=True)
             page = cache_f.read_text(encoding="utf-8", errors="replace")
@@ -148,7 +144,7 @@ def fetch_all():
         for u in clear_line_links(page):
             if u not in seen:
                 queue.append(u)
-    print(f"fetch 完成，缓存页数: {len(list(CACHE.glob('*.html')))}", flush=True)
+    print(f"fetch 完成，缓存页数: {len(list(UEFA_CACHE.glob('*.html')))}", flush=True)
 
 
 def parse_videos(page: str) -> list:
@@ -226,7 +222,7 @@ def parse_page_meta(page: str) -> dict:
 
 def parse_all():
     groups = []
-    for f in sorted(CACHE.glob("*.html")):
+    for f in sorted(UEFA_CACHE.glob("*.html")):
         page = f.read_text(encoding="utf-8", errors="replace")
         items = parse_videos(page)
         if not items:
@@ -248,9 +244,9 @@ def parse_all():
             "source_name": "UEFA Clear Line 官方判例库",
             "fetched": time.strftime("%Y-%m-%d"),
             "groups": groups}
-    OUT_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    UEFA_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     n = sum(len(g["items"]) for g in groups)
-    print(f"parse 完成: {len(groups)} 组 / {n} 例 → {OUT_JSON}", flush=True)
+    print(f"parse 完成: {len(groups)} 组 / {n} 例 → {UEFA_JSON}", flush=True)
 
 
 def main():

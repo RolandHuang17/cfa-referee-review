@@ -12,13 +12,11 @@
 import json
 import sys
 from datetime import date
-from pathlib import Path
 
 from crest_catalog import load_catalog
 from theme import inject_theme, icon, js_icons, topbar
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+from lib.paths import DATA, SITE
 
 SEASONS = {
     "2026": {
@@ -80,9 +78,9 @@ TYPE_ORDER = ["denied_goal", "opp_goal_should_disallow", "missed_penalty",
 
 def load(season):
     cfg = SEASONS[season]
-    cases = json.loads((ROOT / "data" / cfg["cases"]).read_text(encoding="utf-8"))
-    impact = json.loads((ROOT / "data" / cfg["impact"]).read_text(encoding="utf-8"))
-    scores = json.loads((ROOT / "data" / cfg["scores"]).read_text(encoding="utf-8"))["scores"]
+    cases = json.loads((DATA / cfg["cases"]).read_text(encoding="utf-8"))
+    impact = json.loads((DATA / cfg["impact"]).read_text(encoding="utf-8"))
+    scores = json.loads((DATA / cfg["scores"]).read_text(encoding="utf-8"))["scores"]
     cmap = {c["seq"]: c for c in cases["cases"]}
     return impact, scores, cmap
 
@@ -211,7 +209,7 @@ def build_data(season):
 
     issues = {i["no"]: i for i in impact.get("issues", [])} if "issues" in impact else {}
     # 补充期数信息用于链接展示
-    cases = json.loads((ROOT / "data" / SEASONS[season]["cases"]).read_text(encoding="utf-8"))["cases"]
+    cases = json.loads((DATA / SEASONS[season]["cases"]).read_text(encoding="utf-8"))["cases"]
     cmap2 = {c["seq"]: c for c in cases}
     for view_teams in (victims, benefits):
         for t in view_teams.values():
@@ -257,7 +255,7 @@ def build_data(season):
         "victims": victims,
         "benefits": benefits,
         "crests": {}, "teams": teams,
-        "scoreSource": json.loads((ROOT / "data" / SEASONS[season]["scores"])
+        "scoreSource": json.loads((DATA / SEASONS[season]["scores"])
                                   .read_text(encoding="utf-8"))["note"],
     }
 

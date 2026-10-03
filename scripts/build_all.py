@@ -3,21 +3,18 @@
 import shutil
 import subprocess
 import sys
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+from lib.paths import ASSETS, IFAB_PDF, ROOT, SCRIPTS, SITE, SITE_ASSETS
 
 
 def run(script, *args):
-    command = [sys.executable, str(ROOT / "scripts" / script), *args]
+    command = [sys.executable, str(SCRIPTS / script), *args]
     subprocess.run(command, cwd=ROOT, check=True)
 
 
 def main():
     SITE.mkdir(parents=True, exist_ok=True)
-    law_pdf = ROOT / "data" / "laws_raw" / "lotg-202627-tc-single.pdf"
-    if law_pdf.exists():
+    if IFAB_PDF.exists():
         run("build_rules.py")
     elif not (SITE / "rules.html").exists():
         raise SystemExit("缺少规则 PDF，且 site/rules.html 不存在；请先运行 fetch_laws.py")
@@ -29,10 +26,9 @@ def main():
     run("build_stats.py")
     run("build_scale.py")
     run("build_uefa.py")
-    site_assets = SITE / "assets"
-    if site_assets.exists():
-        shutil.rmtree(site_assets)
-    shutil.copytree(ROOT / "assets", site_assets)
+    if SITE_ASSETS.exists():
+        shutil.rmtree(SITE_ASSETS)
+    shutil.copytree(ASSETS, SITE_ASSETS)
     notice = ROOT / "NOTICE.md"
     if notice.exists():
         shutil.copy2(notice, SITE / notice.name)

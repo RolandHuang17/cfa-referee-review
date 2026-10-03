@@ -11,14 +11,12 @@ X-Frame-Options: DENY（2026-10 探测）→ 卡片为纯文字 + 「在 UEFA �
 EMBED 开关保留（若 UEFA 未来放开嵌入，一行切换为卡片内 iframe）。
 """
 import json
-from pathlib import Path
 
 from theme import inject_theme, topbar, icon
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
-OUT_JSON = ROOT / "data" / "uefa.json"
-ZH_JSON = ROOT / "data" / "uefa-zh.json"
+from lib.paths import DATA, SITE, UEFA_JSON
+
+ZH_JSON = DATA / "uefa-zh.json"
 SOURCE_URL = "https://www.uefa.com/running-competitions/refereeing/clear-line/"
 EMBED = False  # UEFA 分享页 X-Frame-Options: DENY（实测），纯链接模式
 
@@ -271,9 +269,9 @@ def build_page(data):
 
 
 def main():
-    if not OUT_JSON.exists():
-        raise SystemExit(f"缺少 {OUT_JSON}；请先运行 fetch_uefa.py 抓取")
-    data = json.loads(OUT_JSON.read_text(encoding="utf-8"))
+    if not UEFA_JSON.exists():
+        raise SystemExit(f"缺少 {UEFA_JSON}；请先运行 fetch_uefa.py 抓取")
+    data = json.loads(UEFA_JSON.read_text(encoding="utf-8"))
     apply_zh(data, load_zh())
     build_page(data)
 

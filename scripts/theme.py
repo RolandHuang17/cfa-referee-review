@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 """共享视觉系统:设计 tokens/组件 CSS + 统一顶栏 + 明暗主题切换,注入全部生成页。
 页面专属布局写在各 builder 的 <style>;颜色/顶栏/按钮等一律走本模块。"""
-from pathlib import Path
+from lib.paths import THEME_CSS
 
-ROOT = Path(__file__).resolve().parent.parent
-THEME = (ROOT / "src" / "theme.css").read_text(encoding="utf-8")
+THEME = THEME_CSS.read_text(encoding="utf-8")
 
 # feather 风格描边图标 (stroke=currentColor, 24 viewBox)
 _E = {

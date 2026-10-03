@@ -7,9 +7,8 @@ has been manually verified; pages therefore use the safe text badge for them.
 import json
 import re
 from urllib.parse import quote
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import CRESTS_JSON, CREST_OVERRIDES_JSON, DATA, TEAMS_JSON
 ALIASES = {
     "广东广州豹": "广州豹", "河南俱乐部酒祖杜康": "河南俱乐部",
     "河南酒祖杜康": "河南俱乐部", "浙江俱乐部": "浙江俱乐部绿城",
@@ -23,14 +22,13 @@ ALIASES = {
     "延边龙鼎可喜安": "延边龙鼎", "杭州临江吴越": "杭州临平吴越",
 }
 OLD = None  # 旧 crests.json 兼容保留已废弃: verified 状态唯一来源是 crest_overrides.json
-OVERRIDES_PATH = ROOT / "data" / "crest_overrides.json"
 # 人工核验的队徽成果登记在 crest_overrides.json，重建目录时不丢失
-OVERRIDES = json.loads(OVERRIDES_PATH.read_text(encoding="utf-8")) if OVERRIDES_PATH.exists() else {}
+OVERRIDES = json.loads(CREST_OVERRIDES_JSON.read_text(encoding="utf-8")) if CREST_OVERRIDES_JSON.exists() else {}
 # 同一俱乐部更名链：新名 parent 指向旧名（山西崇德荣海 2025-03 由西安崇德荣海迁址更名，两赛季各自用名正确）
 PARENT = {"山西崇德荣海": "西安崇德荣海"}
 teams = {}
 for season in ("2024", "2025", "2026"):
-    data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+    data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
     for case in data["cases"]:
         for raw in (case.get("home"), case.get("away")):
             if not raw:
@@ -60,7 +58,7 @@ for index, name in enumerate(sorted(teams)):
 payload = {"version": 1,
           "generated_from": ["cases-2024.json", "cases-2025.json", "cases-2026.json", "crest_overrides.json"],
           "teams": result}
-(ROOT / "data" / "teams.json").write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
 compat = {item["name"]: item["path"] for item in result.values() if item.get("path")}
-(ROOT / "data" / "crests.json").write_text(json.dumps(compat, ensure_ascii=False, indent=1), encoding="utf-8")
+CRESTS_JSON.write_text(json.dumps(compat, ensure_ascii=False, indent=1), encoding="utf-8")
 print(f"生成队伍目录: {len(result)} 个标准队名，全部使用可审计兜底状态")

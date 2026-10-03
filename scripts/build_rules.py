@@ -6,18 +6,15 @@
 """
 import json
 import re
-from pathlib import Path
+
 from theme import inject_theme, icon, js_icons, topbar
 
 import pymupdf
 import opencc
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
-PDF = ROOT / "data" / "laws_raw" / "lotg-202627-tc-single.pdf"
-OUT = ROOT / "data" / "laws.json"
+from lib.paths import IFAB_PDF, LAWS_JSON, RULES_IMG_DIR, SITE
+
 RULES_HTML = SITE / "rules.html"
-IMG_DIR = ROOT / "assets" / "rules"
 
 CC = opencc.OpenCC("t2s")
 
@@ -830,7 +827,7 @@ def build_html_page(sections):
 
 
 def main():
-    doc = pymupdf.open(str(PDF))
+    doc = pymupdf.open(str(IFAB_PDF))
     starts = find_law_starts(doc)
     print("章起始页:", dict(sorted(starts.items())))
     missing = [n for n in LAW_TITLES if n not in starts]
@@ -838,14 +835,14 @@ def main():
 
     # 图表页（人工核定的图形/信号页：文字提取必然破碎，渲染为图片才可读）
     diagrams = set(DIAGRAM_PAGES)
-    IMG_DIR.mkdir(parents=True, exist_ok=True)
+    RULES_IMG_DIR.mkdir(parents=True, exist_ok=True)
     for pno in sorted(diagrams):
-        png = IMG_DIR / f"p{pno}.png"
+        png = RULES_IMG_DIR / f"p{pno}.png"
         if not png.exists():
             pix = doc[pno - 1].get_pixmap(matrix=pymupdf.Matrix(1.6, 1.6))
             pix.save(str(png))
     for pno, (t, b) in sorted(PARTIAL_DIAGRAMS.items()):  # 图文混排页的区域裁剪图
-        png = IMG_DIR / f"p{pno}.png"
+        png = RULES_IMG_DIR / f"p{pno}.png"
         if not png.exists():
             page = doc[pno - 1]
             r = page.rect
@@ -879,10 +876,10 @@ def main():
                 s["html"], n = re.subn(pat, repl, s["html"], flags=re.S)
                 assert n == 1, f"测量表替换未命中: {pat}"
 
-    OUT.write_text(json.dumps({"season": "2026/27", "sections": sections},
+    LAWS_JSON.write_text(json.dumps({"season": "2026/27", "sections": sections},
                               ensure_ascii=False, indent=1), encoding="utf-8")
     total = sum(len(s["html"]) for s in sections)
-    print(f"共 {len(sections)} 节, 正文 {total/1000:.0f}K 字符 -> {OUT}")
+    print(f"共 {len(sections)} 节, 正文 {total/1000:.0f}K 字符 -> {LAWS_JSON}")
     build_html_page(sections)
 
 

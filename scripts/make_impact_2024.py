@@ -2,9 +2,8 @@
 """2024赛季错漏判影响标注 -> data/impact-2024.json（仅男子中超/中甲/中乙）"""
 import json
 import re
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import DATA
 
 IMPACT = {
     4:   [{"team": "青岛海牛", "type": "missed_yellow_opponent", "note": "西海岸33号向后挥手击打裆部，应黄牌（非体育行为）"}],
@@ -85,7 +84,7 @@ OUT_OF_SCOPE = {
 
 
 def main():
-    src = json.loads((ROOT / "data" / "cases-2024.json").read_text(encoding="utf-8"))
+    src = json.loads((DATA / "cases-2024.json").read_text(encoding="utf-8"))
     cases = {c["seq"]: c for c in src["cases"]}
     NV = {
         "河南俱乐部酒祖杜康": "河南俱乐部", "河南酒祖杜康": "河南俱乐部",
@@ -138,7 +137,7 @@ def main():
             "issue": c["issue"], "case_no": c["no"], "match_note": "",
             "items": norm}
     assert not skipped, skipped
-    path = ROOT / "data" / "impact-2024.json"
+    path = DATA / "impact-2024.json"
     path.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     from collections import Counter
     matches = sorted({(v["league"], v["round"], v["home"], v["away"])

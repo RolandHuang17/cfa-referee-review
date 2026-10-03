@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 """检查人工队徽目录，不再自动猜测 Wikipedia 图片。"""
 import json
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "data" / "teams.json"
+from lib.paths import CRESTS_JSON, ROOT, TEAMS_JSON
 
 
 def main():
-    payload = json.loads(CATALOG.read_text(encoding="utf-8"))
+    payload = json.loads(TEAMS_JSON.read_text(encoding="utf-8"))
     verified, fallback = 0, 0
     compat = {}
     for item in payload["teams"].values():
@@ -29,7 +27,7 @@ def main():
             fallback += 1
         else:
             raise SystemExit(f"未知队徽状态: {item['name']} -> {status}")
-    (ROOT / "data" / "crests.json").write_text(
+    CRESTS_JSON.write_text(
         json.dumps(compat, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"队徽目录检查完成: verified={verified}, fallback={fallback}")
 

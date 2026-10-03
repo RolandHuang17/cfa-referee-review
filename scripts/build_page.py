@@ -7,13 +7,11 @@
 import json
 import sys
 from datetime import date
-from pathlib import Path
 
 from crest_catalog import load_catalog, normalize_team
 from theme import inject_theme, icon, js_icons, topbar
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+from lib.paths import DATA, SITE
 
 # 赛季配置（输出文件/存储键/期数/统计页链接）
 SEASONS = {
@@ -107,7 +105,7 @@ VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
 def build_data(season):
-    data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+    data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
     cases = []
     for c in data["cases"]:
         comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))

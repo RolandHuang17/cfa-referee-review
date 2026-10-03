@@ -13,9 +13,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import safe_http as S
 
-ROOT = Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "data" / "teams.json"
-OUT = ROOT / "assets" / "crests"
+from lib.paths import CRESTS_DIR, TEAMS_JSON
 S.ALLOWED_HOSTS |= {"zh.wikipedia.org", "en.wikipedia.org", "commons.wikimedia.org",
                     "upload.wikimedia.org", "thumb.wikimedia.org"}
 PREFER = re.compile(r"logo|crest|队徽|徽标|shield|football.?club|\.fc\b|\.f\.c", re.I)
@@ -100,7 +98,7 @@ def image_url(host, title):
 
 
 def main():
-    payload = json.loads(CATALOG.read_text(encoding="utf-8"))
+    payload = json.loads(TEAMS_JSON.read_text(encoding="utf-8"))
     updated = 0
     for item in payload["teams"].values():
         if item.get("status") == "verified":
@@ -120,7 +118,7 @@ def main():
             if not url or not url.startswith("https://"):
                 continue
             filename = f"{item['slug']}.png"
-            dest = OUT / filename
+            dest = CRESTS_DIR / filename
             _, size = S.download(url, dest, timeout=20, retries=1)
             if size < 1500:
                 dest.unlink(missing_ok=True)
@@ -132,8 +130,8 @@ def main():
             print(f"OK {item['name']} <- {title}")
         except Exception as exc:
             print(f"SKIP {item['name']}: {exc}")
-        CATALOG.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-    CATALOG.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"第二轮自动补充完成: 新增 {updated} 个候选(待人工目检)")
 
 

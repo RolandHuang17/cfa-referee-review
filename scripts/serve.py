@@ -3,15 +3,14 @@
 import os
 import subprocess
 import sys
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import SCRIPTS, SITE
 
 
 def main():
     port = sys.argv[1] if len(sys.argv) > 1 else "8808"
-    subprocess.run([sys.executable, str(ROOT / "scripts" / "range_server.py"), port],
-                   cwd=ROOT / "site", check=False)
+    subprocess.run([sys.executable, str(SCRIPTS / "range_server.py"), port],
+                   cwd=SITE, check=False)
 
 
 if __name__ == "__main__":

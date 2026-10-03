@@ -6,9 +6,8 @@
 """
 import json
 import re
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import DATA, ISSUES
 
 CN_NUM = {"一": 1, "两": 2, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7,
           "八": 8, "九": 9, "十": 10}
@@ -205,7 +204,7 @@ def classify(conc: str):
 
 
 def parse_season(season: str):
-    raw = ROOT / "data" / "issues_raw" / season
+    raw = ISSUES / season
     urls = ISSUE_URL[season]
     issues, cases, seq = [], [], 0
     for n in sorted(urls):
@@ -284,7 +283,7 @@ def main():
     import sys
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
     data = parse_season(season)
-    out = ROOT / "data" / f"cases-{season}.json"
+    out = DATA / f"cases-{season}.json"
     out.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     cases = data["cases"]
     print(f"共 {len(cases)} 判例")

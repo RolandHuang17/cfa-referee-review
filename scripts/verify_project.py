@@ -8,8 +8,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from crest_catalog import load_catalog, normalize_team
 
-ROOT = Path(__file__).resolve().parent.parent
-SITE = ROOT / "site"
+from lib.paths import DATA, ROOT, SITE
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
          "scale.html", "uefa.html"]
@@ -35,7 +34,7 @@ def main():
             fail(f"存在外部脚本或CDN引用: site/{name}")
 
     for season, (case_count, video_count, verdicts) in EXPECTED.items():
-        data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         cases = data["cases"]
         actual = {key: sum(1 for case in cases if case["referee_verdict"] == key)
                   for key in verdicts}
@@ -57,7 +56,7 @@ def main():
     names = {item["name"] for item in catalog.values()}
     raw_names = set()
     for season in ("2024", "2025", "2026"):
-        data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         for case in data["cases"]:
             raw_names.update(filter(None, (case.get("home"), case.get("away"))))
     for raw in raw_names:

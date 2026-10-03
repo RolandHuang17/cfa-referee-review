@@ -12,9 +12,7 @@ if hasattr(sys.stdout, "reconfigure"):
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import safe_http as S
 
-ROOT = Path(__file__).resolve().parent.parent
-CATALOG = ROOT / "data" / "teams.json"
-OUT = ROOT / "assets" / "crests"
+from lib.paths import CRESTS_DIR, TEAMS_JSON
 S.ALLOWED_HOSTS |= {"zh.wikipedia.org", "upload.wikimedia.org", "commons.wikimedia.org", "thumb.wikimedia.org"}
 PREFER = re.compile(r"logo|crest|队徽|徽标|shield|football.?club|\.fc\b|\.f\.c", re.I)
 NOISE = re.compile(r"flag|kit|stadium|map|icon|commons|wikimedia|nike|adidas|ball|sponsor", re.I)
@@ -94,18 +92,18 @@ def image_url(title):
 
 
 def main():
-    payload = json.loads(CATALOG.read_text(encoding="utf-8"))
+    payload = json.loads(TEAMS_JSON.read_text(encoding="utf-8"))
     updated = 0
     for item in payload["teams"].values():
         if item.get("status") == "verified":
             continue
-        existing = OUT / f"{item['slug']}.png"
+        existing = CRESTS_DIR / f"{item['slug']}.png"
         if existing.exists() and existing.stat().st_size > 1500:
             item.update({"path": f"assets/crests/{existing.name}", "status": "verified",
                          "source_url": f"https://zh.wikipedia.org/wiki/{S.safe_urlencode(item['name'])}",
                          "source_type": "wikipedia-image"})
             print(f"OK {item['name']} <- existing downloaded image")
-            CATALOG.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
             continue
         try:
             picked = candidate(item["name"])
@@ -116,7 +114,7 @@ def main():
             if not url or not url.startswith("https://"):
                 continue
             filename = f"{item['slug']}.png"
-            dest = OUT / filename
+            dest = CRESTS_DIR / filename
             _, size = S.download(url, dest, timeout=20, retries=1)
             if size < 1500:
                 dest.unlink(missing_ok=True)
@@ -128,9 +126,9 @@ def main():
             print(f"OK {item['name']} <- {picked[1]}")
         except Exception as exc:  # 网络波动只跳过当前队伍
             print(f"SKIP {item['name']}: {exc}")
-        CATALOG.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
         time.sleep(.1)
-    CATALOG.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+    TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"在线补充完成: 新增 {updated} 个队徽")
 
 

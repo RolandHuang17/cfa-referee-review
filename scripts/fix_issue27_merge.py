@@ -2,10 +2,10 @@
 """一次性修正：拆分第27期判例2（误合并了26期两个判例的补充认定），
 把补充认定文本与补充视频归还给 #183(期26判例2手球) 和 #188(期26判例7头撞)"""
 import json
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
-path = ROOT / "data" / "cases-2025.json"
+from lib.paths import DATA
+
+path = DATA / "cases-2025.json"
 data = json.loads(path.read_text(encoding="utf-8"))
 cases = {c["seq"]: c for c in data["cases"]}
 

@@ -15,11 +15,11 @@ VAR判定: correct / wrong / none(未涉及)
 """
 
 # 2024赛季分类表（160条，人工逐条复核）
-import sys  # noqa: E402
-from pathlib import Path  # noqa: E402
+import sys
 
-from classify_cls_2024 import CLS_2024  # noqa: E402
-from classify_cls_2026 import CLS_2026  # noqa: E402
+from classify_cls_2024 import CLS_2024
+from classify_cls_2026 import CLS_2026
+from lib.paths import DATA
 
 CLS_2025 = {
     # 期01
@@ -318,8 +318,7 @@ def main():
     from collections import Counter
 
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
-    root = Path(__file__).resolve().parent.parent
-    path = root / "data" / f"cases-{season}.json"
+    path = DATA / f"cases-{season}.json"
     data = json.loads(path.read_text(encoding="utf-8"))
     cases = data["cases"]
     table = {"2025": CLS_2025, "2024": CLS_2024, "2026": CLS_2026}[season]

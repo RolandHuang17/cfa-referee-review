@@ -7,13 +7,12 @@ import sys
 import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
-from pathlib import Path
 
 from safe_http import download
 
-ROOT = Path(__file__).resolve().parent.parent
-VID_DIR = ROOT / "site" / "videos"
-LOG = ROOT / "data" / "download_log.txt"
+from lib.paths import DATA, SITE_VIDEOS
+
+LOG = DATA / "download_log.txt"
 LOCK = threading.Lock()
 
 
@@ -26,7 +25,7 @@ def log(msg):
 
 def main():
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
-    data = json.loads((ROOT / "data" / f"cases-{season}.json").read_text(encoding="utf-8"))
+    data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
     jobs, seen = [], {}
     for c in data["cases"]:
         for url, fname in zip(c["video_urls"], c["video_files"]):
@@ -37,7 +36,7 @@ def main():
 
     def job(url, fname):
         t0 = time.time()
-        status, size = download(url, VID_DIR / fname, timeout=90, retries=5)
+        status, size = download(url, SITE_VIDEOS / fname, timeout=90, retries=5)
         rate = size / max(time.time() - t0, 0.1) / 1e6
         return fname, size, rate
 
@@ -56,7 +55,7 @@ def main():
                 log(f"FAIL {fname}: {e}")
             time.sleep(0.1)
     log(f"[{season}] 完成。成功{done} 失败{len(fails)} 总计{total_size/1e9:.2f}GB 失败清单:{fails}")
-    (ROOT / "data" / f"download-fail-{season}.json").write_text(
+    (DATA / f"download-fail-{season}.json").write_text(
         json.dumps(fails, ensure_ascii=False), encoding="utf-8")
 
 

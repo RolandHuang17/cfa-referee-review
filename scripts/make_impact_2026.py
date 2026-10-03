@@ -6,9 +6,8 @@
 """
 import json
 import re
-from pathlib import Path
 
-ROOT = Path(__file__).resolve().parent.parent
+from lib.paths import DATA
 
 IMPACT = {
     # 期01
@@ -156,7 +155,7 @@ SWING = {"denied_goal": 1, "opp_goal_should_disallow": -1}
 
 
 def main():
-    data = json.loads((ROOT / "data" / "cases-2026.json").read_text(encoding="utf-8"))
+    data = json.loads((DATA / "cases-2026.json").read_text(encoding="utf-8"))
     cases = {c["seq"]: c for c in data["cases"]}
 
     out = {"scope": ["中超联赛", "中甲联赛", "中乙联赛"],
@@ -190,7 +189,7 @@ def main():
             "items": norm_items,
         }
     assert not skipped or all(cases[s]["comp"] not in out["scope"] for s in skipped), skipped
-    (ROOT / "data" / "impact-2026.json").write_text(
+    (DATA / "impact-2026.json").write_text(
         json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
 
     from collections import Counter

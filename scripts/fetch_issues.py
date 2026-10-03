@@ -6,13 +6,12 @@
 import re
 import sys
 import time
-from pathlib import Path
 
 from safe_http import fetch_text
 
+from lib.paths import ISSUES
+
 BASE = "https://www.thecfa.cn"
-ROOT = Path(__file__).resolve().parent.parent
-RAW = ROOT / "data" / "issues_raw"
 
 # 期数 -> (URL路径, 预期发布日期)
 ISSUES = {
@@ -114,7 +113,7 @@ def main():
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
     issues = ISSUES[season]
     only = [int(x) for x in sys.argv[2:]] or sorted(issues)
-    outdir = RAW / season
+    outdir = ISSUES / season
     outdir.mkdir(parents=True, exist_ok=True)
     fails = []
     for n in only:

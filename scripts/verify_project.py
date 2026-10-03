@@ -2,12 +2,8 @@
 """Check generated site structure, data counts, paths, and offline constraints."""
 import json
 import re
-from pathlib import Path
 
-import sys
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-from crest_catalog import load_catalog, normalize_team
-
+from lib.crest_catalog import load_catalog, normalize_team
 from lib.paths import DATA, ROOT, SITE
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",

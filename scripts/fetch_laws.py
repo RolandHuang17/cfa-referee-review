@@ -2,12 +2,7 @@
 """下载 IFAB 官方 2026-27 竞赛规则繁体中文单页版 PDF
 来源: downloads.theifab.com（该URL直接返回PDF文件体）
 """
-import sys
-from pathlib import Path
-
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import safe_http as S
-
+from lib import safe_http as S
 from lib.paths import IFAB_PDF
 
 S.ALLOWED_HOSTS |= {"downloads.theifab.com", "theifab.com", "www.theifab.com"}

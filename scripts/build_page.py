@@ -8,8 +8,8 @@ import json
 import sys
 from datetime import date
 
-from crest_catalog import load_catalog, normalize_team
-from theme import inject_theme, icon, js_icons, topbar
+from lib.crest_catalog import load_catalog, normalize_team
+from lib.theme import inject_theme, icon, js_icons, topbar
 
 from lib.paths import DATA, SITE
 

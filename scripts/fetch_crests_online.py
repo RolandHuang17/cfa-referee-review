@@ -4,14 +4,11 @@ import json
 import re
 import sys
 import time
-from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(errors="replace")
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import safe_http as S
-
+from lib import safe_http as S
 from lib.paths import CRESTS_DIR, TEAMS_JSON
 S.ALLOWED_HOSTS |= {"zh.wikipedia.org", "upload.wikimedia.org", "commons.wikimedia.org", "thumb.wikimedia.org"}
 PREFER = re.compile(r"logo|crest|队徽|徽标|shield|football.?club|\.fc\b|\.f\.c", re.I)

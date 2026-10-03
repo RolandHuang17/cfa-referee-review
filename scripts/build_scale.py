@@ -17,7 +17,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import unquote
 
-from theme import inject_theme, topbar, icon
+from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import ROOT, SCALE_JSON, SCALE_POSTERS, SITE, SITE_VIDEOS
 

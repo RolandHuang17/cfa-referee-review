@@ -7,7 +7,7 @@ import re
 import sys
 import time
 
-from safe_http import fetch_text
+from lib.safe_http import fetch_text
 
 from lib.paths import ISSUES
 

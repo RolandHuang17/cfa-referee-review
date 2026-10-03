@@ -17,8 +17,8 @@ VAR判定: correct / wrong / none(未涉及)
 # 2024赛季分类表（160条，人工逐条复核）
 import sys
 
-from classify_cls_2024 import CLS_2024
-from classify_cls_2026 import CLS_2026
+from lib.classify_cls_2024 import CLS_2024
+from lib.classify_cls_2026 import CLS_2026
 from lib.paths import DATA
 
 CLS_2025 = {

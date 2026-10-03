@@ -7,7 +7,7 @@
 import json
 import re
 
-from theme import inject_theme, icon, js_icons, topbar
+from lib.theme import inject_theme, icon, js_icons, topbar
 
 import pymupdf
 import opencc

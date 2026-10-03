@@ -5,7 +5,7 @@
 import json
 from datetime import date
 
-from theme import inject_theme, icon, topbar
+from lib.theme import inject_theme, icon, topbar
 
 from lib.paths import DATA, LAWS_JSON, SCALE_JSON, SITE, UEFA_JSON
 

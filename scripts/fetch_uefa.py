@@ -17,7 +17,7 @@ import re
 import sys
 import time
 import zlib
-from safe_http import safe_request
+from lib.safe_http import safe_request
 
 from lib.paths import UEFA_CACHE, UEFA_JSON
 BASE = "https://www.uefa.com"

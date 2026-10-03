@@ -5,12 +5,10 @@ fetch_issues.py 的 ISSUES 表与 parse_issues.py 的 ISSUE_URL 表（两处同�
 """
 import re
 import sys
-from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(errors="replace")
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import safe_http as S
+from lib import safe_http as S
 
 BASE = "https://www.thecfa.cn"
 ITEM_RE = re.compile(r'href="(/cppy/\d{8}/\d+\.html)"[^>]*>([^<]*评议[^<]*)<')

@@ -5,14 +5,11 @@ import json
 import re
 import sys
 import time
-from pathlib import Path
 
 if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(errors="replace")
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
-import safe_http as S
-
+from lib import safe_http as S
 from lib.paths import CRESTS_DIR, TEAMS_JSON
 S.ALLOWED_HOSTS |= {"zh.wikipedia.org", "en.wikipedia.org", "commons.wikimedia.org",
                     "upload.wikimedia.org", "thumb.wikimedia.org"}

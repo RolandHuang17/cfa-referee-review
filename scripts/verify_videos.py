@@ -7,7 +7,7 @@
 import json
 import sys
 
-from safe_http import head_size
+from lib.safe_http import head_size
 
 from lib.paths import DATA, SITE_VIDEOS
 SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"

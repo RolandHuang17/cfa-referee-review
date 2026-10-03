@@ -8,7 +8,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-from safe_http import download
+from lib.safe_http import download
 
 from lib.paths import DATA, SITE_VIDEOS
 

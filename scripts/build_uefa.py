@@ -12,7 +12,7 @@ EMBED 开关保留（若 UEFA 未来放开嵌入，一行切换为卡片内 ifra
 """
 import json
 
-from theme import inject_theme, topbar, icon
+from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import DATA, SITE, UEFA_JSON
 

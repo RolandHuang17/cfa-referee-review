@@ -1,0 +1,30 @@
+# 本文件把 EOL 与二进制处理策略显式钉死，不再依赖每个贡献者本机的 core.autocrlf。
+# 加入时对已提交字节零影响（见下方各条说明）。
+
+# Windows 启动脚本。仓库 blob 保持 LF 归一化、工作区取 CRLF（cmd.exe 的 label/goto 需要
+# CRLF）。这与 core.autocrlf=true 当前产生的行为逐字节相同（git ls-files --eol 报
+# i/lf w/crlf），所以加它不改任何已提交字节、git status 保持干净。同时修掉一个潜在 bug：
+# autocrlf=false 的贡献者或 Linux/macOS 检出会拿到纯 LF 的 .bat，cmd.exe 处理 goto 会出错。
+#
+# 故意不写 working-tree-encoding=GBK：已提交的 blob 是裸 GBK 字节而非 UTF-8。声明工作区
+# 编码会让 git 在 add 时转码 GBK->UTF-8（没人编辑却重写 blob），并在 checkout 时把 GBK
+# 字节当 UTF-8 解码，产出 U+FFFD 乱码。
+# 故意不写 -text / binary：那会关掉本文件当前依赖的 CRLF->LF clean filter，立刻显示为已修改。
+*.bat text eol=crlf
+
+# 二进制载荷：永不做 EOL 转换、不做文本 diff、不做文本 merge。这些资源 blob 已被 git
+# 自动识别为 i/-text w/-text，此处只是把结论钉死，免受二进制启发式变化影响。零字节变化。
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.webp binary
+*.pdf binary
+*.mp4 binary
+*.woff binary
+*.woff2 binary
+
+# 故意不写 `* text=auto`：它虽是常规最佳实践，但属于仓库级行为变更，会把当前 110 个
+# i/lf w/crlf 文件全部 renormalize，无法在不完整重检出的情况下证明零 diff。若要引入，
+# 应作为独立提交配合 `git add --renormalize .` 与完整审查。

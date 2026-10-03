@@ -4,7 +4,7 @@
 
 ## 项目是什么
 
-「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例索引+逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
+「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**十个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（六张入口卡片 + 浏览模式开关）
@@ -12,7 +12,7 @@
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 - `site/scale.html` 官方统一判罚尺度宣讲（2024–2026 三季 104 例场景视频+判罚决定矩阵；2024 为第三代 EXE+XML 包，走 extract_season_2024 解析）
-- `site/uefa.html` 欧足联 Clear Line 判例库（UEFA 官方判例文字索引+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
+- `site/uefa.html` 欧足联 Clear Line 判例库（中文译制+英文原文开关+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -74,7 +74,8 @@ python build_scale.py                 # 11. 统一尺度宣讲页（原包在位
 python fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Clear Line 判例库 → data/uefa.json
                                       #     ⚠ uefa.com 对高频请求 tarpit：页间隔 35-55s，可断点续抓
                                       #     （缓存 data/uefa_cache/，gitignored）；parse 子命令纯本地重解析
-python build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json 构建，CI 安全）
+python build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json + data/uefa-zh.json
+                                      #     译文层合并构建：中文为主、英文原文开关，CI 安全）
 python build_portal.py                # 12. 生成门户 index.html
 python build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
 python build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
@@ -116,6 +117,12 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - `{source, source_name, fetched, groups: [{key, name_en, name_cn, intro, criteria: [{h, items[]}], items: [{id, title, caption, url(官方视频页), date}]}]}`
 - 数据源为 SSR 页面内嵌的 videoplayer `data-options` JSON；criteria 为每组页面的 ✅/❌ 官方统一尺度准则分节；视频为 Akamai token 门禁 HLS，**不下载**，每例跳官方分享页（实测 X-Frame-Options: DENY，build_uefa.py 的 EMBED=False 纯链接模式）
 - uefa.com 反爬：高频请求 tarpit，fetch_uefa.py 页间隔 35-55s + 完整浏览器头（**Accept-Encoding: identity 会被 tarpit，须 gzip**）+ 120s/300s 退避；CI 不跑 fetch，靠提交的 JSON 重建
+
+### uefa-zh.json（UEFA 判例中文译制层，与 uefa.json 并存，提交进仓库）
+- `{note, translated, terms{英:中译名表}, groups: {组key: {intro, criteria: [{h, items[]}]}}, items: {判例id: {title}}}`——只存译文，不存链接等英文数据
+- **绝不能把译文写进 uefa.json**（fetch_uefa.py parse 会整体覆写丢失）；build_uefa.py 构建时合并：组按 key 匹配、criteria 与英文**按块序严格对齐**（块数或条数不符该组回退英文并告警）、判例按 id 匹配；未命中/多余的译文键构建时打印 ⚠ 警告
+- 页面中文为主、英文为辅：默认纯中文，页头「英文原文」开关（localStorage `cfa.uefa-en`，html[data-uefa-en] 控制所有 .en 元素显隐）
+- **官方新增判例的工作流**：fetch → 新 item 无译文自动英文显示（构建警告提示 id）→ 在 uefa-zh.json 补译（术语对照 terms 表 + data/cases-*.json / scale.json 足协语料，如 DOGSO=破坏明显进球得分机会、reckless=鲁莽）→ build_uefa 重建至零警告
 
 ### crest_overrides.json（人工队徽成果登记）
 - `{标准队名: {path, source_url, source_type, status}}`；generate_teams_catalog 重建时合并

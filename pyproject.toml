@@ -1,0 +1,53 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cfa-referee-review"
+version = "1.0.0"
+description = "中国足协裁判评议判例归档与静态站点生成器（生成的页面运行时零第三方依赖）"
+readme = "README.md"
+license = { file = "LICENSE" }
+requires-python = ">=3.9"
+authors = [{ name = "Roland Huang" }]
+keywords = ["football", "referee", "static-site", "github-pages", "cfa"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Environment :: Console",
+    "Intended Audience :: Education",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Documentation",
+    "Topic :: Education",
+]
+
+# 依赖故意不写在这里：requirements-build.txt 是构建依赖的唯一权威源，下面的 build
+# extra 通过 [tool.setuptools.dynamic] 动态读取它。CI 装 requirements-build.txt，
+# 开发者装 ".[build]"，两条路径读的是同一个文件，版本永远不会漂移。
+dynamic = ["optional-dependencies"]
+
+[project.urls]
+Homepage = "https://rolandhuang17.github.io/cfa-referee-review/"
+Repository = "https://github.com/RolandHuang17/cfa-referee-review"
+Issues = "https://github.com/RolandHuang17/cfa-referee-review/issues"
+Changelog = "https://github.com/RolandHuang17/cfa-referee-review/blob/main/CHANGELOG.md"
+
+# 这是一套管线脚本，不是可导入的库：scripts/ 靠 sys.path[0] 直接执行，从不被 pip 安装。
+# 显式声明零模块，否则 setuptools 的 flat-layout 自动发现会扫到 scripts/ site/ data/
+# assets/ tests/ .github/，要么报 "Multiple top-level packages discovered in a
+# flat-layout"，要么把 site/ 和 data/ 打进 wheel。
+[tool.setuptools]
+py-modules = []
+
+[tool.setuptools.dynamic]
+optional-dependencies = { build = { file = ["requirements-build.txt"] } }
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+addopts = "-ra --strict-markers"

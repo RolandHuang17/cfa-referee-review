@@ -1,0 +1,14 @@
+# -*- coding: utf-8 -*-
+# 规则模块构建依赖（仅 fetch_laws.py / build_rules.py 需要；生成的页面运行时零依赖）
+# 安装: pip install -r requirements-build.txt
+#
+# 第 1 行的编码声明是必需的，不是装饰：pip 读 requirements 文件时若无 BOM，会退回
+# locale.getpreferredencoding()——Windows 上是 GBK，下面这些中文注释会直接让
+# pip 以 UnicodeDecodeError 退出码 2 失败（这个 bug 在本仓库存在已久，只因 CI 跑在
+# UTF-8 的 ubuntu 上而从未暴露）。pip 的 auto_decode 会识别前两行注释里的
+# coding[:=] 声明，显式写明即可跨平台一致。
+#
+# 本文件是构建依赖的唯一权威源：CI 直接安装它，pyproject.toml 的 build extra 也
+# 通过 [tool.setuptools.dynamic] 读它，因此两条安装路径的版本永远不会漂移。
+pymupdf>=1.24
+opencc-python-reimplemented>=0.1.7

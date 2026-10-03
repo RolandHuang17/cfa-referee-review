@@ -96,12 +96,12 @@ python scripts/download_videos_parallel.py 2024
 
 ## 重新生成或扩展
 
-依赖 Python 3.8+；规则页构建需要 `scripts/requirements-build.txt` 中的依赖。标准构建命令：
+依赖 Python 3.9+；规则页构建需要 `requirements-build.txt` 中的依赖。标准构建命令：
 
 ```bash
-python -m pip install -r scripts/requirements-build.txt
+python -m pip install -r requirements-build.txt
 python scripts/build_all.py
-python scripts/verify_project.py
+python tests/test_integrity.py
 python scripts/serve.py
 ```
 

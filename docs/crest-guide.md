@@ -4,8 +4,9 @@
 上海申花的队徽错配到佛山南狮/湖北青年星/温州/嘉定汇龙），此后改成「自动采集只作候选，
 必须人工目检，宁缺毋滥回退文字徽章」。这条红线优先于覆盖率。
 
-当前状态：111 支标准队伍中 39 支有已核验的真实队徽，72 支显示文字徽章（女足与中乙
-新军为主）。**72 不是待修的 bug，是设计内的可接受状态。**
+当前状态：111 支标准队伍中 72 支有已核验的真实队徽，39 支显示文字徽章（历史队、
+女足与全运会省队为主）。**人工补录已于 2026-10 止步，39 是设计内终态，不是待修的
+bug。**
 
 ## 体系构成
 
@@ -58,7 +59,11 @@ python scripts/fetch_crests_round2.py     # Commons + 英文维基
    ```
    `path` 必须以 `assets/crests/` 开头——这个前缀被写死在 `teams.json` 与
    `validate_catalog()` 的断言里。`source_url` 与 `source_type` 缺一个就校验失败。
-3. 重建并校验：
+   用户人工投图而无公开来源页时，`source_type` 记 `manual`、`source_url` 记
+   `manual:user-provided-<日期>`，不要编造 URL。
+3. **B 队不单独找图**：直接复用母队 `path`，并在 `source_url` 注明「B队复用母队徽」
+   （先例：山东泰山B队、成都蓉城B队、大连英博B队、成都蓉城希拉谷、山东泰山金钢山）。
+4. 重建并校验：
    ```bash
    python scripts/generate_teams_catalog.py
    python scripts/fetch_crests.py

@@ -148,7 +148,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 操作流程与目检清单见 [docs/crest-guide.md](docs/crest-guide.md)，此处只留架构要点：
 
-- **目录制**：`data/teams.json`（111 个标准队伍，当前 verified 39 / fallback 72）+ `scripts/lib/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
+- **目录制**：`data/teams.json`（111 个标准队伍，当前 verified 72 / fallback 39）+ `scripts/lib/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
 - **两级状态**：`status=verified` 才渲染真实队徽 `<img>`；`fallback` 渲染文字徽章（initials+配色），是**设计内行为而非降级**
 - **采集工具**：`fetch_crests_online.py`（中文维基词条图片，严格限本队词条防跨队误配）与 `fetch_crests_round2.py`（Commons+英文维基）；两者下载后**必须人工目检图片**再算 verified
 - **校验器**：`fetch_crests.py`（build_all 里调用；verified 必须有文件+`assets/crests/` 路径前缀+source_url+source_type，校验逻辑在 `lib/crest_catalog.validate_catalog()`，与 `tests/test_integrity.py` 共用）
@@ -219,7 +219,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 ## 已知不足（欢迎改进）
 
 - 2026 赛季进行中：持续跑 fetch→parse→classify→impact 增量更新；影响统计的 79 场比分已核 19 场（确定得失球场次优先），其余"待补"
-- 111 支标准队伍中 72 支无可靠来源队徽（女足/中乙新军为主），显示文字徽章；维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽，需人工补录
+- 111 支标准队伍中 39 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽
 - 官方标题认定数与合集口径存在差异（漏判黄牌/低级别联赛/本轮中超口径），已在页面"说明"弹层按期注释（ISSUE_NOTES）
 - 2026 判例的判定与影响标注为按同一方法论复核（非官方逐条人工背书），把握度低的判 pending 并注释
 - 收藏/笔记仅存浏览器本地，无云同步（导出/导入 JSON 作为迁移方案）

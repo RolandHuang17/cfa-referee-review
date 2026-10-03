@@ -4,14 +4,14 @@
 
 ## 项目是什么
 
-「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2026+2025 两季 58 例场景视频+判罚决定）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
+「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**九个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（五张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
-- `site/scale.html` 官方统一判罚尺度宣讲（2026+2025 两季 58 例场景视频+判罚决定矩阵）
+- `site/scale.html` 官方统一判罚尺度宣讲（2024–2026 三季 104 例场景视频+判罚决定矩阵；2024 为第三代 EXE+XML 包，走 extract_season_2024 解析）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -66,8 +66,10 @@ python generate_teams_catalog.py      # 7. 队伍目录重建（读全部 cases-
 python fetch_crests.py                # 8. 队徽目录校验（校验器，不联网）
 python fetch_laws.py                  # 9. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/laws_raw/
 python build_rules.py                 # 10. 规则提取+繁转简+术语表 → data/laws.json + rules.html
-python build_scale.py                 # 11. 统一尺度宣讲页（原包在仓库外 ../统一尺度宣讲原始包-2026 时
-                                      #     重新解码提取；否则用 data/scale.json 构建 → scale.html）
+python build_scale.py                 # 11. 统一尺度宣讲页（原包在位时重新解码提取：
+                                      #     2026/2025: 仓库外 ../统一尺度宣讲原始包-{2026,2025}；
+                                      #     2024: 仓库内 2024-统一尺度-0220(1)/，第三代 XML/GBK 包走
+                                      #     extract_season_2024；否则用 data/scale.json 构建 → scale.html）
 python build_portal.py                # 12. 生成门户 index.html
 python build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
 python build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
@@ -100,6 +102,11 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - `parent` 表达同一俱乐部更名链（如 山西崇德荣海→西安崇德荣海）
 - **由 generate_teams_catalog.py 生成，勿手改**；verified 成果登记在 crest_overrides.json（重建不丢）
 
+### scale.json（统一尺度宣讲内容，build_scale.py 产物）
+- `{year: {sections: [{key, name, groups: [{name, items: [{id, series, title, note, decision: [{label, active}], reason, video, poster, varrule?}]}]}]}}`
+- decision 矩阵 chip 顺序由 DECISION_ORDER 排序；2024 的矩阵由 XML decision/level 字段合成（语义=官方 decision_N.png 图卡），`varrule` 为 VAR 介入条件（仅 2024 有）；2024 无场景海报（本机无 ffmpeg，poster 留空，模板按需输出属性）
+- CI 无原包，靠提交的 scale.json 重建 scale.html——**SCALE_SOURCE_URLS 与数据必须同 commit 增删赛季**，否则 build_page KeyError
+
 ### crest_overrides.json（人工队徽成果登记）
 - `{标准队名: {path, source_url, source_type, status}}`；generate_teams_catalog 重建时合并
 
@@ -123,7 +130,7 @@ python range_server.py [端口]         # 本地预览服务（支持Range，视
 - **视频内存策略**：详情区只有一个 `<video>`，`select()` 时替换 src（视频路径已含赛季前缀）。**绝不要**恢复为列表内联 video 元素——几百个播放器会让浏览器内存膨胀到 4-5GB（已经踩过并修复的坑）
 - **响应式断点（唯一一套）**：1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）
 - 收藏/笔记存 localStorage：键 `cfa2026.fav/notes`、`cfa2025.fav/notes`、`cfa2024.fav/notes`（按赛季隔离，且按 origin 隔离，file:// 与 http:// 不同源，故有导出/导入 JSON 功能）
-- **轻量版模式（cfa.lite）**：全局浏览模式开关——门户分段控件（`#modeFull/#modeLite`）+ season/scale 顶栏 `#btnLite`（theme.py `_TOGGLE_JS` 统一处理：写 `cfa.lite`、切 `html[data-lite]`、派发 `cfa:lite` 事件；`_EARLY_JS` 首帧前设置防闪烁）。开启后（build_page.py）：`select()` 走 LITE 分支，无任何视频逻辑，`#srcActions` 渲染「打开官方评议页」（`issues[].url`，按期跳转）+ 每条 `video_urls` 官方直链（新标签页在线播放）；scale 页 CSS 隐藏 58 个 `.hvideo` 并显示官方发布页横幅（`SCALE_SOURCE_URLS` 按赛季随页签切换，官方材料为 zip 发布无逐例链接）。筛选/收藏/笔记/锚点两模式共用同一套（同一 localStorage 键，笔记本用法核心）。完整版遇本地视频 404 自动改用官方直链（`vidsMissing` 会话级直连，`ossTried` 防循环），彻底失败且未开轻量时弹 `#vfailTip` 一次性提示条（sessionStorage `cfa.vfail` 记忆关闭）
+- **轻量版模式（cfa.lite）**：全局浏览模式开关——门户分段控件（`#modeFull/#modeLite`）+ season/scale 顶栏 `#btnLite`（theme.py `_TOGGLE_JS` 统一处理：写 `cfa.lite`、切 `html[data-lite]`、派发 `cfa:lite` 事件；`_EARLY_JS` 首帧前设置防闪烁）。开启后（build_page.py）：`select()` 走 LITE 分支，无任何视频逻辑，`#srcActions` 渲染「打开官方评议页」（`issues[].url`，按期跳转）+ 每条 `video_urls` 官方直链（新标签页在线播放）；scale 页 CSS 隐藏全部场景视频 `.hvideo` 并显示官方发布页横幅（`SCALE_SOURCE_URLS` 按赛季随页签切换，官方材料为 zip 发布无逐例链接）。筛选/收藏/笔记/锚点两模式共用同一套（同一 localStorage 键，笔记本用法核心）。完整版遇本地视频 404 自动改用官方直链（`vidsMissing` 会话级直连，`ossTried` 防循环），彻底失败且未开轻量时弹 `#vfailTip` 一次性提示条（sessionStorage `cfa.vfail` 记忆关闭）
 - **锚点**：`season-*.html#case-<seq>` 打开时自动选中对应判例（stats-*.html 明细链接依赖此；初始化代码必须在 applyFilter **之前**捕获 hash——`initialHashSeq`，否则会被自动选中的 replaceState 覆盖——已踩过）
 - 搜索框监听 `input` 和 `search` 事件（后者是 type=search ✕ 清空按钮触发）；`esc()` 必须转义引号（用于 data-* 属性）
 

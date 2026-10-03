@@ -1,15 +1,19 @@
 # -*- coding: utf-8 -*-
-"""解码官方"统一判罚尺度"宣讲包（2025/2026）→ data/scale.json + site/scale.html
+"""解码官方"统一判罚尺度"宣讲包（2024/2025/2026）→ data/scale.json + site/scale.html
 原包 highlight 页为 document.write(unescape("%...")) 编码; 解码后提取:
   编号/场景名, 视频文件, 视频说明, 判罚决定矩阵(激活项), Reason
-两代包的矩阵激活标记不同: 2026 用 <p style="color:grey">(灰=未激活),
+两代 HTML 包的矩阵激活标记不同: 2026 用 <p style="color:grey">(灰=未激活),
 2025 用前置图标 <img .../t.jpg>=激活 / c.jpg=未激活; 2025 VAR 页判罚为英文标签。
+2024 为第三代 EXE+XML 包(无 HTML): 场景在 medias/chinese/xml/{n}.xml(UTF-8-BOM/GBK 混合),
+判罚为 decision 编号(官方图卡 decision_N.png: 1=不犯规 2=间接任意球 3=直接任意球 4=罚球点球)
++ level(Y/R/N 牌; 越位系为 干扰对方/获得利益), 见 extract_season_2024。
 视频复制到 site/videos/scale/{year}/, 海报到 assets/scale/{year}-*.png。
 原包路径见 PACKAGES; 不在仓库内(第三方库会被安全钩子拦截), 缺失时复用已提取的 data/scale.json。
 """
 import json
 import re
 import shutil
+import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import unquote
 
@@ -25,18 +29,147 @@ def PKG_IMG(year):
 
 PACKAGES = {
     "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
-    "2025": ROOT / "2025-中国足球协会判罚统一尺度（Win版）",
+    "2025": ROOT.parent / "统一尺度宣讲原始包-2025",
+    "2024": ROOT / "2024-统一尺度-0220(1)",
 }
 # 官方发布页（zip 压缩包的下载/观看入口；轻量版横幅按赛季页签跳转）
 SCALE_SOURCE_URLS = {
     "2026": "https://www.thecfa.cn/cpwjxz/20260305/37380.html",
     "2025": "https://www.thecfa.cn/cpwjxz/20250224/35659.html",
+    "2024": "https://www.thecfa.cn/cpwjxz/20240229/33785.html",
 }
 SERIES_NAMES = {"highlights": "判罚案例", "reckless": "纪律处罚", "var": "VAR 视频助理裁判",
                 "tam": "战术犯规"}
 EN2CN = {"No Foul": "不犯规", "No Card": "不出牌", "Indirect Free Kick": "间接任意球",
          "Direct Free Kick": "直接任意球", "Penalty Kick": "罚球点球", "Yellow Card": "黄牌",
          "Red Card": "红牌", "Goal": "进球", "Penalty": "罚球点球"}
+
+
+# ---------- 2024（第三代 EXE+XML 包）提取 ----------
+# 判罚语义（官方图卡 imagenes/decision_N.png 高亮条证实）:
+#   decision 1=不犯规 2=间接任意球 3=直接任意球 4=罚球点球; 'y'=越位犯规;
+#   '原来恢复比赛方式'=官方未标注恢复方式(不亮恢复方式 chip);
+#   level Y/R/N=黄牌/红牌/不出牌; 越位系 level 为 干扰对方/获得利益;
+#   视频助理裁判系 decision/level 为空, 是 VAR 机制教学片段(静默查看/OFR/OVR/延迟举旗等)。
+D24_DECISION = {"1": "不犯规", "2": "间接任意球", "3": "直接任意球", "4": "罚球点球"}
+D24_CARDS = {"N": "不出牌", "Y": "黄牌", "R": "红牌"}
+D24_OFFSIDE = {"干扰对方": "干扰对方队员", "获得利益": "越位位置获得利益"}
+D24_MAX_XML = 2_000_000  # XML 体积上限(实际每个仅几 KB), 防异常输入
+
+
+def _read_flex(path: Path) -> str:
+    """2024 包内 XML/文本为 UTF-8-BOM 与 GBK 混合编码, 逐级探测解码。"""
+    raw = path.read_bytes()
+    if raw.startswith(b"\xef\xbb\xbf"):
+        return raw.decode("utf-8-sig", errors="replace")
+    for enc in ("utf-8", "gbk"):
+        try:
+            return raw.decode(enc)
+        except UnicodeDecodeError:
+            continue
+    return raw.decode("gbk", errors="replace")
+
+
+def _parse_textos(path: Path) -> dict:
+    """textos/{n}_textos.txt 为 &key=value& 格式(GBK), 取分类标题等。"""
+    return {m.group(1): m.group(2).strip()
+            for m in re.finditer(r"&(\w+)=(.*?)&", _read_flex(path), re.S)}
+
+
+def _parse_xml24(text: str):
+    """解析前拒绝 DOCTYPE/ENTITY(防 XML 实体扩展)。"""
+    if "<!DOCTYPE" in text or "<!ENTITY" in text:
+        raise ValueError("XML 含 DOCTYPE/ENTITY, 拒绝解析")
+    return ET.fromstring(re.sub(r"<\?xml[^>]*\?>", "", text).strip())
+
+
+def _matrix24(restart: str, level: str, offside: bool) -> list:
+    """合成与现有 schema 一致的判罚决定矩阵(chip 展示顺序沿用 DECISION_ORDER)。"""
+    if offside:
+        labels = ["不越位犯规", "干扰比赛", "越位犯规", "干扰对方队员", "越位位置获得利益"]
+        active = {"越位犯规"} if restart.lower() == "y" else set()
+        if level in D24_OFFSIDE:
+            active.add(D24_OFFSIDE[level])
+    else:
+        labels = DECISION_ORDER[:7]  # 不犯规/间接任意球/直接任意球/罚球点球/不出牌/黄牌/红牌
+        active = set()
+        if restart in D24_DECISION:
+            active.add(D24_DECISION[restart])
+        if level in D24_CARDS:
+            active.add(D24_CARDS[level])
+    return [{"label": x, "active": x in active} for x in labels]
+
+
+def _varrule24(var: str, rule: str) -> str:
+    """rule 与 VAR 字段均为"VAR 介入条件"表述, 合并; 过滤占位符。"""
+    parts = []
+    for t in (var, rule):
+        t = (t or "").strip()
+        if t and t != "0" and t.lower() != "rule":
+            parts.append(t)
+    return "；".join(dict.fromkeys(parts))  # 去重保序
+
+
+def extract_season_2024(year: str, pkg: Path):
+    hits = sorted(pkg.glob("medias/chinese/xml")) + sorted(pkg.glob("*/medias/chinese/xml"))
+    if not hits:
+        raise SystemExit(f"2024 包内未找到 medias/chinese/xml: {pkg}")
+    xml_dir = hits[0]
+    textos_dir = xml_dir.parent / "textos"
+    flv_dir = xml_dir.parent.parent / "flv"
+    groups, order = {}, {}
+    for xf in sorted(xml_dir.glob("*.xml"), key=lambda p: int(p.stem) if p.stem.isdigit() else 999):
+        if xf.stat().st_size > D24_MAX_XML:
+            print(f"跳过 {xf.name}: 体积超限")
+            continue
+        meta_p = textos_dir / f"{xf.stem}_textos.txt"
+        cat = _parse_textos(meta_p).get("subtitulo", "") if meta_p.exists() else ""
+        try:
+            root = _parse_xml24(_read_flex(xf))
+        except (ET.ParseError, ValueError) as e:
+            print(f"跳过 {xf.name}: XML 解析失败 {e}")
+            continue
+        qs = list(root.iter("pregunta"))
+        if not qs:
+            continue
+        if not cat:
+            cat = f"分类{xf.stem}"
+        for q in qs:
+            th = (q.get("th") or "").strip()  # th 是 pregunta 的属性(th/A1.jpg), 非子元素
+            if not th:
+                continue
+            hl_id = Path(th).stem
+            flv = (q.findtext("flv") or "").strip()
+            src = flv_dir / Path(flv).name if flv else None
+            if src is None or not src.exists():  # 文件名大小写兜底
+                alt = flv_dir / Path(flv).name.lower() if flv else None
+                src = alt if (alt and alt.exists()) else None
+            if src is None:
+                print(f"跳过 2024 {hl_id}: 视频缺失({flv})")
+                continue
+            decision = (q.findtext("decision") or "").strip()
+            level = (q.findtext("level") or "").strip()
+            if cat == "视频助理裁判" and not decision and not level:
+                matrix = [{"label": "VAR 机制讲解", "active": True}]
+            else:
+                matrix = _matrix24(decision, level, offside=(decision.lower() == "y" or cat == "越位"))
+            (VID_OUT / year).mkdir(parents=True, exist_ok=True)
+            shutil.copy2(src, VID_OUT / year / f"highlights-{hl_id}.mp4")
+            if cat not in groups:
+                groups[cat] = {"name": cat, "items": []}
+                order[cat] = len(order)
+            item = {"id": hl_id, "series": "highlights", "title": cat,
+                    "note": clean(q.findtext("explanation") or ""),
+                    "decision": matrix, "reason": "",
+                    "video": f"videos/scale/{year}/highlights-{hl_id}.mp4",
+                    "poster": ""}
+            vr = _varrule24(q.findtext("VAR"), q.findtext("rule"))
+            if vr:
+                item["varrule"] = vr
+            groups[cat]["items"].append(item)
+    return {"sections": [{"key": "fouls-misconduct", "name": "犯规与不正当行为",
+                          "groups": [groups[k] for k in sorted(order, key=order.get)]}]}
+
 
 # 分组排序（同组按场景名聚合）
 
@@ -305,10 +438,11 @@ def build_page(data):
                                         if x["label"] in DECISION_ORDER else 99))
                     cards += f"""<article class="hcard" id="h{s}-{h['series']}-{h['id']}">
   <div class="hhead"><span class="hid">{h['id']}</span><h3>{h['title']}</h3></div>
-  <div class="hvideo"><video controls preload="none" poster="{h['poster']}"><source src="{h['video']}" type="video/mp4"></video></div>
+  <div class="hvideo"><video controls preload="none"{f' poster="{h["poster"]}"' if h['poster'] else ''}><source src="{h['video']}" type="video/mp4"></video></div>
   <p class="hnote">{h['note']}</p>
   <div class="drow"><span class="dlbl">判罚决定</span>{chips}</div>
   {f'<p class="hreason">Reason: {h["reason"]}</p>' if h['reason'] else ''}
+  {f'<p class="hreason">⚖ VAR 介入：{h["varrule"]}</p>' if h.get('varrule') else ''}
 </article>"""
                 sec += (f'<section class="gsec" id="{anchor}">'
                         f'<h2>{g["name"]} <b>{len(g["items"])}例</b></h2>{cards}</section>')
@@ -339,7 +473,7 @@ def main():
         data = {k: v for k, v in d.items() if isinstance(v, dict) and "sections" in v}
     for year, pkg in PACKAGES.items():
         if pkg.exists():
-            data[year] = extract_season(year, pkg)
+            data[year] = extract_season_2024(year, pkg) if year == "2024" else extract_season(year, pkg)
         elif year not in data:
             print(f"跳过 {year}: 原包缺失且无已提取数据")
     for year in data:  # 组排序

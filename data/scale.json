@@ -2301,5 +2301,1662 @@
     ]
    }
   ]
+ },
+ "2024": {
+  "sections": [
+   {
+    "key": "fouls-misconduct",
+    "name": "犯规与不正当行为",
+    "groups": [
+     {
+      "name": "争抢",
+      "items": [
+       {
+        "id": "A1",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "红色16号队员鲁莽地使用手臂击打到对方队员的面部，必须出示黄牌警告该鲁莽行为。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A1.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示红牌，介入。"
+       },
+       {
+        "id": "A2",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "白色19号队员使用过分力量，左手臂由前向后摆动，肘关节击打到对方队员的面部，应红牌罚令出场。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A2.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示红牌，不介入。"
+       },
+       {
+        "id": "A3",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "红色2号队员左脚清晰地将球踢出，随后由于惯性左脚触及对方队员，该次接触是双方队员共同造成，是比赛中的意外接触，无法避免，不构成犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A3.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有出示红牌，应介入。；如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "A4",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "黄色进攻队员在对方队员身后变向的过程中，缺乏注意力和预防措施，绊摔对方队员，致使对方摔倒在地，构成草率的犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A4.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有出示红牌，应介入。；如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "A5",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "在对方队员处于其前方时，红色5号队员倒地滑铲，右脚将球踢走，随后使用了附加的动作，上扬的右脚鞋钉触及对方队员的脚部，中等强度的抢截，构成鲁莽犯规，必须出示黄牌警告。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A5.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有出示红牌，应介入。；如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "A6",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "蓝色10号队员使用右脚鞋钉，直腿蹬踹在对方队员的腿部，构成严重犯规，必须红牌罚令出场。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A6.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "A7",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "白蓝色32号队员在争抢前，已观察到对方队员，随后双方朝向球移动，在争抢空中球时，32号队员使用鞋底触及对方队员的头部，虽有曲腿回收行为，但在该种情况下，依然危及了对方队员的安全，构成严重犯规，应红牌罚令出场。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A7.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "A8",
+        "series": "highlights",
+        "title": "争抢",
+        "note": "红色13号队员在争抢前，已观察到对方队员，随后双方朝向球移动，在争抢空中球时，13号队员使用鞋底触及对方队员的面部，虽有曲腿回收行为，但在该种情况下，依然危及了对方队员的安全，构成严重犯规，应红牌罚令出场。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-A8.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       }
+      ]
+     },
+     {
+      "name": "战术犯规",
+      "items": [
+       {
+        "id": "C1",
+        "series": "highlights",
+        "title": "战术犯规",
+        "note": "蓝色4号队员粗鲁的拉扯对方队员，这个犯规视为非体育行为，考虑球的控制、开放的空间、处理球的选择、队员的位置和人数也将认定为破坏有希望的进攻机会。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-C1.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有判罚球点球，应介入。"
+       },
+       {
+        "id": "C2",
+        "series": "highlights",
+        "title": "战术犯规",
+        "note": "白色28号队员拉扯对方队员犯规，考虑到球的控制、开放的空间、处理球的选择、队员的位置和人数，该次犯规将认定为破坏有希望的进攻机会。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-C2.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有判罚球点球，介入。"
+       },
+       {
+        "id": "C3",
+        "series": "highlights",
+        "title": "战术犯规",
+        "note": "红色3号队员倒地抢截对方队员犯规，考虑到球的控制、比赛发展的大致方向，犯规地点距离球门的距离及守方队员的位置与人数，将被认定为破坏对方明显进球得分机会。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-C3.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有判罚球点球，介入。"
+       },
+       {
+        "id": "C4",
+        "series": "highlights",
+        "title": "战术犯规",
+        "note": "蓝色4号队员手球犯规，考虑到球的控制、比赛发展的大致方向，犯规地点距离球门的距离及守方队员的位置与人数，将被认定为破坏对方明显进球得分机会。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-C4.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，应介入。；如果裁判员没有判罚球点球，介入。"
+       },
+       {
+        "id": "C5",
+        "series": "highlights",
+        "title": "战术犯规",
+        "note": "23号守门员在本方罚球区外犯规，综合考虑距离、进攻方向、控球的可能性及防守队员的人数和位置，结合守门员出击后身后是空门的特定情况，这是一个破坏对方明显得分机会的犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-C5.mp4",
+        "poster": "",
+        "varrule": "如果裁判员没有判罚球点球，介入。"
+       }
+      ]
+     },
+     {
+      "name": "手球",
+      "items": [
+       {
+        "id": "B1",
+        "series": "highlights",
+        "title": "手球",
+        "note": "红色20号队员因失去重心，双手撑地，在撑地起身的过程中，球击中手臂，是一种意外情况，不构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B1.mp4",
+        "poster": ""
+       },
+       {
+        "id": "B2",
+        "series": "highlights",
+        "title": "手球",
+        "note": "黄色2号队员在倒地争抢球的过程中，右手向下移动，是争抢球动作形成的正当结果，是可以理解和解释的，不构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B2.mp4",
+        "poster": ""
+       },
+       {
+        "id": "B3",
+        "series": "highlights",
+        "title": "手球",
+        "note": "白色2号队员左手臂所处位置是争抢球时的正当结果或合理位置，不属于不自然扩大，球被拦截后改变方向打到了他的手臂上，，不构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B3.mp4",
+        "poster": ""
+       },
+       {
+        "id": "B4",
+        "series": "highlights",
+        "title": "手球",
+        "note": "黄色6号队员在倒地过程中，左手臂展开，处于不自然扩大位置，被球击中，构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": true
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B4.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "B5",
+        "series": "highlights",
+        "title": "手球",
+        "note": "黄色20号队员在拦截过程中，左手臂展开是一种冒险行为，处于不自然扩大位置，被球击中，构成手球犯规，并因破坏有希望的进攻机会出示黄牌警告。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": true
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B5.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "B6",
+        "series": "highlights",
+        "title": "手球",
+        "note": "白色96号队员在拦截过程中，球击中身体，再从地面反弹至展开的右手臂，并无附加故意动作，手臂触球是意外，不构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B6.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "B7",
+        "series": "highlights",
+        "title": "手球",
+        "note": "蓝色17号队员在拦截过程中，球击中其腿部，变向反弹回来，触及展开的右手臂，并无附加故意动作，手臂触球是意外，不构成手球犯规；如果球击中腿部，没有明显变向，折射到17号队员展开的左手臂，将构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B7.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "B8",
+        "series": "highlights",
+        "title": "手球",
+        "note": "红色4号队员在拦截过程中，球击中其腿部，球明显变向，再触及展开的右手臂，不构成手球犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-B8.mp4",
+        "poster": ""
+       }
+      ]
+     },
+     {
+      "name": "罚球区事件",
+      "items": [
+       {
+        "id": "D1",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "白色2号队员右手臂触及对方队员的肩部，这样的接触不足以致使对方队员摔倒在地，是足球比赛的一部分，不构成犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D1.mp4",
+        "poster": "",
+        "varrule": "如果裁判员判罚球点球，介入。"
+       },
+       {
+        "id": "D2",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "白色23号队员与对方20号队员双方手臂有接触，这样的接触不足以致使对方队员摔倒在地，是足球比赛的一部分，不构成犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D2.mp4",
+        "poster": "",
+        "varrule": "如果裁判员判罚球点球，介入。"
+       },
+       {
+        "id": "D3",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "蓝色6号队员和橙色10号队员双方有身体接触，这样的接触不构成犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D3.mp4",
+        "poster": "",
+        "varrule": "如果裁判员判罚球点球，应介入。；如果裁判员判罚球点球，介入。"
+       },
+       {
+        "id": "D4",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "红色11号队员将自己的身体置于对方队员与球之间，对随后可能发生的身体接触是有预期的，白色18号队员并无其他附加动作，这样的接触不构成犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": true
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D4.mp4",
+        "poster": "",
+        "varrule": "如果裁判员判罚球点球，介入。"
+       },
+       {
+        "id": "D5",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "白色55号队员在对方14号队员身后，变向意图获得更佳的防守位置，变向过程中，白色55号队员的右腿触及对方14号队员的左脚，致使其摔倒在地，构成草率的绊摔犯规。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": true
+         },
+         {
+          "label": "不出牌",
+          "active": true
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D5.mp4",
+        "poster": ""
+       },
+       {
+        "id": "D6",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "红色19号队员鲁莽地抢截对方队员犯规，判罚球点球，并出示黄牌警告。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": true
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D6.mp4",
+        "poster": ""
+       },
+       {
+        "id": "D7",
+        "series": "highlights",
+        "title": "罚球区事件",
+        "note": "橙色1号守门员在争抢空中球时，动作慢于对方队员，在对方20号头球后，双手击打到其面部，构成鲁莽的犯规，判罚球点球，并出示黄牌警告。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": true
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-D7.mp4",
+        "poster": ""
+       }
+      ]
+     },
+     {
+      "name": "越位",
+      "items": [
+       {
+        "id": "H1",
+        "series": "highlights",
+        "title": "越位",
+        "note": "处于越位位置的白色29号队员使用身体接触了对方队员，影响了对方队员处理球的能力，构成干扰对方的越位犯规。",
+        "decision": [
+         {
+          "label": "不越位犯规",
+          "active": false
+         },
+         {
+          "label": "干扰比赛",
+          "active": false
+         },
+         {
+          "label": "越位犯规",
+          "active": true
+         },
+         {
+          "label": "干扰对方队员",
+          "active": true
+         },
+         {
+          "label": "越位位置获得利益",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-H1.mp4",
+        "poster": "",
+        "varrule": "如果判罚进球得分，需要介入。"
+       },
+       {
+        "id": "H2",
+        "series": "highlights",
+        "title": "越位",
+        "note": "蓝色11号队员处于越位位置，在球的运行路线中，球从其胯下经过，其抬脚的动作影响了对方守门员处理球的能力，构成了干扰对方的越位犯规。",
+        "decision": [
+         {
+          "label": "不越位犯规",
+          "active": false
+         },
+         {
+          "label": "干扰比赛",
+          "active": false
+         },
+         {
+          "label": "越位犯规",
+          "active": true
+         },
+         {
+          "label": "干扰对方队员",
+          "active": true
+         },
+         {
+          "label": "越位位置获得利益",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-H2.mp4",
+        "poster": "",
+        "varrule": "如果判罚进球得分，需要介入。"
+       },
+       {
+        "id": "H3",
+        "series": "highlights",
+        "title": "越位",
+        "note": "绿队11号队员射门时，同队的21号队员处于越位位置，21号队员与防守队员发生身体接触，做出影响对方队员处理球能力的明显举动，构成干扰对方的越位犯规。",
+        "decision": [
+         {
+          "label": "不越位犯规",
+          "active": false
+         },
+         {
+          "label": "干扰比赛",
+          "active": false
+         },
+         {
+          "label": "越位犯规",
+          "active": true
+         },
+         {
+          "label": "干扰对方队员",
+          "active": true
+         },
+         {
+          "label": "越位位置获得利益",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-H3.mp4",
+        "poster": ""
+       },
+       {
+        "id": "H4",
+        "series": "highlights",
+        "title": "越位",
+        "note": "攻方队员处于越位位置，球被守方2号队员跳起触及，考虑到来球速度、距离及空中，2号队员起跳动作受限，该次触球属于非有意触球，处于越位位置的攻方队员触及，构成获得利益的越位犯规。",
+        "decision": [
+         {
+          "label": "不越位犯规",
+          "active": false
+         },
+         {
+          "label": "干扰比赛",
+          "active": false
+         },
+         {
+          "label": "越位犯规",
+          "active": true
+         },
+         {
+          "label": "干扰对方队员",
+          "active": false
+         },
+         {
+          "label": "越位位置获得利益",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-H4.mp4",
+        "poster": "",
+        "varrule": "如果判罚进球得分，需要介入。"
+       },
+       {
+        "id": "H5",
+        "series": "highlights",
+        "title": "越位",
+        "note": "橙色21号队员处于越位位置，同队9号队员与对方15号队员争抢，球触及15号队员，反弹至橙色21号队员脚下，15号队员的该次触球属于非有意触球，处于越位位置的攻方队员触及，构成获得利益的越位犯规。",
+        "decision": [
+         {
+          "label": "不越位犯规",
+          "active": false
+         },
+         {
+          "label": "干扰比赛",
+          "active": false
+         },
+         {
+          "label": "越位犯规",
+          "active": true
+         },
+         {
+          "label": "干扰对方队员",
+          "active": false
+         },
+         {
+          "label": "越位位置获得利益",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-H5.mp4",
+        "poster": ""
+       },
+       {
+        "id": "H6",
+        "series": "highlights",
+        "title": "越位",
+        "note": "在和同队队员争抢的情况下，防守队员不具备控球的能力，做出一个受限的踢球动作，应视为非有意触球，处于越位位置的进攻队员触球构成越位犯规。",
+        "decision": [
+         {
+          "label": "不越位犯规",
+          "active": false
+         },
+         {
+          "label": "干扰比赛",
+          "active": false
+         },
+         {
+          "label": "越位犯规",
+          "active": true
+         },
+         {
+          "label": "干扰对方队员",
+          "active": false
+         },
+         {
+          "label": "越位位置获得利益",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-H6.mp4",
+        "poster": ""
+       }
+      ]
+     },
+     {
+      "name": "比赛管理",
+      "items": [
+       {
+        "id": "G1",
+        "series": "highlights",
+        "title": "比赛管理",
+        "note": "以语言或行动表示异议，包括： - 扔/踢饮料瓶或其他物品。 - 做出明显对比赛官员缺乏尊重的行为。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-G1.mp4",
+        "poster": "",
+        "varrule": "如果裁判员判罚球点球，介入。"
+       },
+       {
+        "id": "G2",
+        "series": "highlights",
+        "title": "比赛管理",
+        "note": "清晰/持续地违反技术区域的限制。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-G2.mp4",
+        "poster": "",
+        "varrule": "如果裁判员判罚球点球，介入。"
+       },
+       {
+        "id": "G3",
+        "series": "highlights",
+        "title": "比赛管理",
+        "note": "进入比赛场地并且： - 与比赛官员进行对抗（包括在半场及全场比赛结束时）。 - 干扰比赛、对方队员或比赛官员。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-G3.mp4",
+        "poster": ""
+       },
+       {
+        "id": "G4",
+        "series": "highlights",
+        "title": "比赛管理",
+        "note": "_",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": false
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": false
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-G4.mp4",
+        "poster": ""
+       }
+      ]
+     },
+     {
+      "name": "视频助理裁判",
+      "items": [
+       {
+        "id": "F1",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "未出现“清晰且明显的错误或严重的遗漏事件”时，VAR检查后无需与裁判员联络，此过程为“静默查看”。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F1.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示红牌，介入。"
+       },
+       {
+        "id": "F2",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "当VAR需要更多的时间对某个“疑似事件”进行进一步查看时，应联络裁判员；裁判员需要手指耳麦，另一只手臂外伸，已表明VAR正在查看疑似事件，裁判员正在接受VAR提供的信息。此过程为“查看”。",
+        "decision": [
+         {
+          "label": "不犯规",
+          "active": false
+         },
+         {
+          "label": "间接任意球",
+          "active": false
+         },
+         {
+          "label": "直接任意球",
+          "active": true
+         },
+         {
+          "label": "罚球点球",
+          "active": false
+         },
+         {
+          "label": "不出牌",
+          "active": false
+         },
+         {
+          "label": "黄牌",
+          "active": true
+         },
+         {
+          "label": "红牌",
+          "active": false
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F2.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示红牌，介入。"
+       },
+       {
+        "id": "F3",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "裁判员做出最终决定前，需自行到回看分析区观看比赛视频片段，此过程为“在场回看分析”-OFR。通常是事件需要做出主观判断，如：犯规的程度、手臂位置是否自然等。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F3.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示红牌，介入。"
+       },
+       {
+        "id": "F4",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "仅涉及客观性事实的决定，如：犯规的位置、队员是否处于越位位置、球是否出界等，裁判员仅需根据VAR提供的信息发起回看分析，并做出最终决定。此过程为“在线回看分析”-OVR。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F4.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌警告，介入。"
+       },
+       {
+        "id": "F5",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "如果进攻队员已经在一个良好的进球位置直接向罚球区或在罚球区内“不受限制的跑动”时，即潜在的破坏明显进球得分情景，助理裁判员应延迟举旗。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F5.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "F6",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "如果助理裁判员做出了毫厘之间/不清晰的越位/犯规/球出界的示意决定，而后队员即将完成得分，裁判员应延迟鸣哨，直至进球。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F6.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "F7",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "在进球、点球事件或破坏明显进球得分机会的犯规发生前可回看分析的阶段为“控球进攻阶段”。是从形成进球、点球事件或破坏明显进球得分犯规的进攻发展的起点开始。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F7.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       },
+       {
+        "id": "F8",
+        "series": "highlights",
+        "title": "视频助理裁判",
+        "note": "进球有效。判定APP犯规时，应像判定“破坏明显进球得分机会”和“破坏有希望的进攻机会”一样去考虑，如果对防守这次进攻的行动并未造成直接干扰或影响的攻方犯规，VAR无需介入。",
+        "decision": [
+         {
+          "label": "VAR 机制讲解",
+          "active": true
+         }
+        ],
+        "reason": "",
+        "video": "videos/scale/2024/highlights-F8.mp4",
+        "poster": "",
+        "varrule": "如果裁判员出示黄牌，介入。"
+       }
+      ]
+     }
+    ]
+   }
+  ]
  }
 }

@@ -33,6 +33,22 @@ def load_stats():
     }
 
 
+def load_scale_stats():
+    """统一尺度页数字从 data/scale.json 计算（场景/分组/视频=例数）。"""
+    p = ROOT / "data" / "scale.json"
+    scenes = groups = 0
+    if p.exists():
+        d = json.loads(p.read_text(encoding="utf-8"))
+        for yd in d.values():
+            if not isinstance(yd, dict):
+                continue
+            for sec in yd.get("sections", []):
+                for g in sec.get("groups", []):
+                    groups += 1
+                    scenes += len(g.get("items", []))
+    return {"scenes": scenes, "groups": groups, "videos": scenes}
+
+
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
@@ -186,11 +202,11 @@ __TOPBAR__
     <a class="card c-scale" href="scale.html">
       <div class="icon">__I_SHIELD__</div>
       <h2>统一判罚尺度宣讲</h2>
-      <p class="desc">中国足协官方《统一判罚尺度》2026+2025 两季：58 例典型场景视频、官方说明与判罚决定对照。</p>
+      <p class="desc">中国足协官方《统一判罚尺度》2024–2026 三季：__S_SCENES__ 例典型场景视频、官方说明与判罚决定对照。</p>
       <div class="nums">
-        <div><b>58</b><span>场景</span></div>
-        <div><b>17</b><span>分组</span></div>
-        <div><b>58</b><span>视频</span></div>
+        <div><b>__S_SCENES__</b><span>场景</span></div>
+        <div><b>__S_GROUPS__</b><span>分组</span></div>
+        <div><b>__S_VIDEOS__</b><span>视频</span></div>
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
@@ -268,6 +284,7 @@ __TOPBAR__
 
 def main():
     s = load_stats()
+    sc = load_scale_stats()
     tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一",
                 seasons=("2024", "2025", "2026"))
     subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
@@ -292,6 +309,9 @@ def main():
             .replace("__N24_ISSUES__", str(s["2024"]["issues"]))
             .replace("__NRL__", str(s["rules"]["sections"]))
             .replace("__NLAW__", str(s["rules"]["laws"]))
+            .replace("__S_SCENES__", str(sc["scenes"]))
+            .replace("__S_GROUPS__", str(sc["groups"]))
+            .replace("__S_VIDEOS__", str(sc["videos"]))
             .replace("__BUILT__", date.today().isoformat()))
     for k, v in subs.items():
         html = html.replace(k, v)

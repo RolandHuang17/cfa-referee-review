@@ -9,6 +9,8 @@ data/local/
 __pycache__/
 *.pyc
 *.egg-info/
+# pytest 会自己在缓存目录里写 .gitignore，但那不可依赖（旧版本没有、被删就失效）
+.pytest_cache/
 
 # 编辑器/工具状态
 .mimosa/

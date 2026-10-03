@@ -35,8 +35,8 @@
   因此 `pip install ".[build]"` 与 CI 装的是同一份清单，版本不会漂移。
 - 新增 `.gitattributes`，把 EOL 与二进制处理策略显式钉死（此前依赖每台机器的
   `core.autocrlf`；同时修掉 Linux/macOS 检出拿到纯 LF `.bat` 导致 cmd.exe 处理
-  `goto`/`label` 出错的隐患）。`.gitignore` 从 25 行收敛到 16 行，删除 5 条永不
-  匹配的死规则。
+  `goto`/`label` 出错的隐患）。`.gitignore` 从 25 行收敛到 18 行，删除 5 条永不
+  匹配的死规则，新增 `*.egg-info/` 与 `.pytest_cache/`。
 
 ### Removed
 

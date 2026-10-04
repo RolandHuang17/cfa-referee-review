@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """错漏判影响标注：data/impact-2025.json
-范围：仅男子中超/中甲/中乙的官方认定错漏判（67例）
+范围：男子中超/中甲/中乙/足协杯的官方认定错漏判（68例，女超/女甲/全运会排除）
 每例 items[].type（受损队视角）:
   denied_goal                漏判进球（本队进球被误判无效，确定+1球）
   opp_goal_should_disallow   对方进球被误判有效（应无效，确定-1球）
@@ -14,8 +14,10 @@
   wrong_offside_self         本队被误判越位
 """
 import json
+import re
 
 from lib.paths import DATA
+from lib.team_names import normalize_name
 
 IMPACT = {
     1:   [{"team": "长春亚泰", "type": "missed_red_opponent", "note": "上海申花4号踩踏守门员小腿属严重犯规，回看后仅出示黄牌"}],
@@ -36,6 +38,7 @@ IMPACT = {
     29:  [{"team": "云南玉昆", "type": "missed_yellow_opponent", "note": "上海申花23号铲球后接触腿部属鲁莽犯规，漏判犯规和黄牌"}],
     36:  [{"team": "上海嘉定汇龙", "type": "missed_penalty", "note": "南京城市4号踩到其脚部，应判点球"}],
     40:  [{"team": "成都蓉城B队", "type": "missed_penalty", "note": "广西恒宸33号拉扯致失去控球权，应判点球"}],
+    44:  [{"team": "广东广州豹", "type": "wrong_red_self", "note": "守门员鲁莽冲撞不构成明显进球得分机会，红牌错误、应黄牌（足协杯）"}],
     48:  [{"team": "山东泰山", "type": "missed_red_opponent", "note": "青岛西海岸56号鞋钉踩踏小腿跟腱属严重犯规，回看后仍仅黄牌"}],
     49:  [{"team": "大连英博", "type": "missed_yellow_opponent", "note": "深圳新鹏城27号挥臂属鲁莽犯规，漏判犯规和黄牌"}],
     51:  [{"team": "南通支云", "type": "wrong_offside_self", "note": "越位误判致进攻被终止；其后守门员犯规发生在比赛停止后，进球不予讨论认定"}],
@@ -100,14 +103,6 @@ IMPACT = {
           {"team": "上海嘉定汇龙", "type": "missed_yellow_opponent", "note": "广西平果5号持续拉扯抱摔，应黄牌警告"}],
 }
 
-TEAM_NORMALIZE = {
-    "河南酒祖杜康": "河南俱乐部",
-    "河南队": "河南俱乐部",
-    "陕西联合月亮泊": "陕西联合",
-    "广西平果国晶": "广西平果",
-    "浙江俱乐部": "浙江俱乐部绿城",
-}
-
 TYPE_LABEL = {
     "denied_goal": "漏判进球（应有效）",
     "opp_goal_should_disallow": "对方进球应无效",
@@ -129,6 +124,13 @@ MATCH_NOTES = {
     "中甲|1|深圳青年人|佛山南狮": "评估文写第1轮，赛程记录为第2轮（3月16日），为同一场首次交锋",
 }
 
+# 范围排除：女子赛事与全运会（与 AGENTS 口径一致），不做影响标注
+OUT_OF_SCOPE = {
+    12: "女超", 13: "女超", 15: "女超", 104: "女超", 137: "女超", 192: "女超",
+    121: "女甲", 122: "女甲",
+    102: "全运会", 106: "全运会", 107: "全运会", 220: "全运会", 221: "全运会", 226: "全运会",
+}
+
 
 def main():
     data = json.loads((DATA / "cases-2025.json").read_text(encoding="utf-8"))
@@ -138,9 +140,8 @@ def main():
     c48 = cases[48]
     c48["comp"] = "中超联赛"
 
-    out = {"scope": ["中超联赛", "中甲联赛", "中乙联赛"],
+    out = {"scope": ["中超联赛", "中甲联赛", "中乙联赛", "中国足协杯"],
            "type_labels": TYPE_LABEL, "swing": SWING,
-           "team_normalize": TEAM_NORMALIZE,
            "match_notes": MATCH_NOTES,
            "impacts": {}}
 
@@ -153,10 +154,6 @@ def main():
             missing.append(seq)
             continue
         rnd = c.get("round", "")
-        m = None
-        for ch in "0123456789":
-            pass
-        import re
         rm = re.search(r"第(\d+)轮", rnd or "")
         round_no = int(rm.group(1)) if rm else None
         if round_no is None:
@@ -174,11 +171,11 @@ def main():
                     a, _, b = s.partition("十")
                     round_no = cn.get(a, 0) * 10 + (cn.get(b, 0) if b else 0)
         assert round_no, (seq, rnd)
-        home = TEAM_NORMALIZE.get(c["home"], c["home"])
-        away = TEAM_NORMALIZE.get(c["away"], c["away"])
+        home = normalize_name(c["home"])
+        away = normalize_name(c["away"])
         norm_items = []
         for it in items:
-            team = TEAM_NORMALIZE.get(it["team"], it["team"])
+            team = normalize_name(it["team"])
             assert team in (home, away), (seq, team, home, away)
             norm_items.append({"team": team, "type": it["type"],
                                "swing": SWING.get(it["type"], 0), "note": it["note"]})
@@ -188,6 +185,11 @@ def main():
             "items": norm_items,
         }
     assert not missing, missing
+    # 覆盖率护栏：范围内每条 wrong 判例必须被 IMPACT / OUT_OF_SCOPE 覆盖
+    inscope = {c["seq"] for c in data["cases"]
+               if c["referee_verdict"] == "wrong" and c["comp"] in out["scope"]}
+    covered = set(IMPACT) | set(OUT_OF_SCOPE)
+    assert inscope <= covered, sorted(inscope - covered)
     # 调赛备注挂到对应比赛
     for key, note in MATCH_NOTES.items():
         lg, rd, h, a = key.split("|")

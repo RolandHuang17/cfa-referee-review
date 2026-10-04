@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
-"""2024赛季错漏判影响标注 -> data/impact-2024.json（仅男子中超/中甲/中乙）"""
+"""2024赛季错漏判影响标注 -> data/impact-2024.json（男子中超/中甲/中乙/足协杯）"""
 import json
 import re
 
 from lib.paths import DATA
+from lib.team_names import normalize_name
 
 IMPACT = {
     4:   [{"team": "青岛海牛", "type": "missed_yellow_opponent", "note": "西海岸33号向后挥手击打裆部，应黄牌（非体育行为）"}],
@@ -54,6 +55,8 @@ IMPACT = {
     109: [{"team": "广西蓝航", "type": "wrong_penalty_against", "note": "守门员先触球无犯规，点球错判"},
           {"team": "广西蓝航", "type": "wrong_yellow_self", "note": "守门员无犯规不应黄牌"}],
     110: [{"team": "广西蓝航", "type": "missed_yellow_opponent", "note": "守门员罚点球时提前离线缺乏尊重，漏判黄牌"}],
+    117: [{"team": "深圳新鹏城", "type": "missed_penalty", "note": "海牛26号防守接触致突破队员倒地属草率犯规，发生在罚球区内漏判点球"},
+          {"team": "深圳新鹏城", "type": "missed_foul_called", "note": "犯规本身漏判，VAR未介入错误"}],
     127: [{"team": "黑龙江冰城", "type": "missed_foul_called", "note": "侧后方冲撞漏判犯规（地点在罚球区外应直接任意球）"},
           {"team": "黑龙江冰城", "type": "missed_yellow_opponent", "note": "该犯规阻止有希望的进攻应黄牌"}],
     128: [{"team": "大连英博", "type": "missed_penalty", "note": "铁人5号手臂不自然扩大手球，漏判点球（VAR角度所限）"}],
@@ -69,32 +72,28 @@ IMPACT = {
     144: [{"team": "泰安天贶", "type": "missed_red_opponent", "note": "泉州亚新26号抢截犯规满足DOGSO四要素，漏判红牌"},
           {"team": "泰安天贶", "type": "missed_foul_called", "note": "犯规本身漏判"}],
     145: [{"team": "成都蓉城", "type": "wrong_foul_called_self", "note": "正常争抢接触，判攻方蓉城31号犯规错误（足协杯半决赛）"}],
-    145: [{"team": "成都蓉城", "type": "wrong_foul_called_self", "note": "正常争抢接触，判攻方蓉城31号犯规错误（足协杯半决赛）"}],
     150: [{"team": "北京理工", "type": "wrong_penalty_against", "note": "守门员铲球清晰触球无附加动作，点球错判"}],
     151: [{"team": "浙江俱乐部", "type": "missed_red_opponent", "note": "三镇23号踩踏脚踝构成严重犯规，漏判红牌"}],
     156: [{"team": "赣州瑞狮", "type": "opp_goal_should_disallow", "note": "北理工52号越位位置进球，漏判越位"}],
     158: [{"team": "大连英博", "type": "denied_goal", "note": "球未触手臂进球有效，VAR错误介入致进球被取消"}],
 }
 
-# 2024赛季男子三级联赛以外的错漏判（女超/女甲/足协杯女子/三大球），不纳入影响统计
+# 2024赛季男子三级联赛及足协杯以外的错漏判（女超/女甲/足协杯女子/三大球），不纳入影响统计
 OUT_OF_SCOPE = {
     47: "女超", 55: "女超", 60: "女甲", 88: "女超", 92: "足协杯（女子）",
     159: "三大球运动会", 160: "三大球运动会",
+}
+
+# 范围内但无法归因受损队：第1期为"结论摘要"式文章，判例三原文未载明对阵与防守方，
+# 强行归因会编造数据；待官方逐例材料或人工比对视频后再补
+UNATTRIBUTABLE = {
+    3: "第1期结论摘要式文章未写明防守方，无法归因受损队",
 }
 
 
 def main():
     src = json.loads((DATA / "cases-2024.json").read_text(encoding="utf-8"))
     cases = {c["seq"]: c for c in src["cases"]}
-    NV = {
-        "河南俱乐部酒祖杜康": "河南俱乐部", "河南酒祖杜康": "河南俱乐部",
-        "浙江俱乐部": "浙江俱乐部绿城", "陕西联合月亮泊": "陕西联合",
-        "广西平果国晶": "广西平果", "大连英博海发": "大连英博",
-        "温州俱乐部中胤": "温州俱乐部",
-        # 2024赛季特有写法
-        "浙江": "浙江俱乐部绿城",
-        "广西平果哈嘹": "广西平果",
-    }
     TYPE_LABEL = {
         "denied_goal": "漏判进球（应有效）",
         "opp_goal_should_disallow": "对方进球应无效",
@@ -112,7 +111,7 @@ def main():
 
     out = {"scope": ["中超联赛", "中甲联赛", "中乙联赛", "中国足协杯"],
            "type_labels": TYPE_LABEL, "swing": SWING,
-           "team_normalize": NV, "match_notes": {}, "impacts": {}}
+           "match_notes": {}, "impacts": {}}
     skipped = []
     for seq, items in IMPACT.items():
         c = cases[seq]
@@ -123,12 +122,13 @@ def main():
             continue
         rnd = c.get("round", "")
         rm = re.search(r"第(\d+)轮", rnd or "")
-        round_no = int(rm.group(1)) if rm else 0
-        home = NV.get(c["home"], c["home"])
-        away = NV.get(c["away"], c["away"])
+        # 无"第X轮"格式的杯赛轮次（如足协杯"半决赛"）保留原文，比分键才能对上
+        round_no = int(rm.group(1)) if rm else (rnd or 0)
+        home = normalize_name(c["home"])
+        away = normalize_name(c["away"])
         norm = []
         for it in items:
-            team = NV.get(it["team"], it["team"])
+            team = normalize_name(it["team"])
             assert team in (home, away), (seq, team, home, away)
             norm.append({"team": team, "type": it["type"],
                          "swing": SWING.get(it["type"], 0), "note": it["note"]})
@@ -137,6 +137,11 @@ def main():
             "issue": c["issue"], "case_no": c["no"], "match_note": "",
             "items": norm}
     assert not skipped, skipped
+    # 覆盖率护栏：范围内每条 wrong 判例必须被 IMPACT / OUT_OF_SCOPE / UNATTRIBUTABLE 之一覆盖
+    inscope = {c["seq"] for c in src["cases"]
+               if c["referee_verdict"] == "wrong" and c["comp"] in out["scope"]}
+    covered = set(IMPACT) | set(OUT_OF_SCOPE) | set(UNATTRIBUTABLE)
+    assert inscope <= covered, sorted(inscope - covered)
     path = DATA / "impact-2024.json"
     path.write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     from collections import Counter

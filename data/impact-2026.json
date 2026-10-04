@@ -2,7 +2,8 @@
  "scope": [
   "中超联赛",
   "中甲联赛",
-  "中乙联赛"
+  "中乙联赛",
+  "中国足协杯"
  ],
  "type_labels": {
   "denied_goal": "漏判进球（应有效）",
@@ -19,10 +20,6 @@
  "swing": {
   "denied_goal": 1,
   "opp_goal_should_disallow": -1
- },
- "team_normalize": {
-  "广东广州豹": "广州豹",
-  "大连英博海发": "大连英博"
  },
  "match_notes": {},
  "impacts": {
@@ -69,14 +66,14 @@
   "3": {
    "league": "中超联赛",
    "round": 3,
-   "home": "河南俱乐部彩陶坊",
+   "home": "河南俱乐部",
    "away": "武汉三镇",
    "issue": 2,
    "case_no": 1,
    "match_note": "",
    "items": [
     {
-     "team": "河南俱乐部彩陶坊",
+     "team": "河南俱乐部",
      "type": "missed_penalty",
      "swing": 0,
      "note": "武汉三镇8号犯规接触点在罚球区内，应判点球"
@@ -86,7 +83,7 @@
   "4": {
    "league": "中超联赛",
    "round": 4,
-   "home": "辽宁铁人楠波湾",
+   "home": "辽宁铁人",
    "away": "北京国安",
    "issue": 2,
    "case_no": 2,
@@ -819,7 +816,7 @@
    "league": "中超联赛",
    "round": 13,
    "home": "天津津门虎",
-   "away": "河南俱乐部彩陶坊",
+   "away": "河南俱乐部",
    "issue": 8,
    "case_no": 2,
    "match_note": "",
@@ -828,7 +825,7 @@
      "team": "天津津门虎",
      "type": "missed_penalty",
      "swing": 0,
-     "note": "河南俱乐部彩陶坊22号手臂向球移动触球，应判点球"
+     "note": "河南俱乐部22号手臂向球移动触球，应判点球"
     }
    ]
   },
@@ -1425,7 +1422,7 @@
   "179": {
    "league": "中甲联赛",
    "round": 17,
-   "home": "延边龙鼎可喜安",
+   "home": "延边龙鼎",
    "away": "南京城市",
    "issue": 16,
    "case_no": 7,
@@ -1442,14 +1439,14 @@
   "181": {
    "league": "中甲联赛",
    "round": 17,
-   "home": "延边龙鼎可喜安",
+   "home": "延边龙鼎",
    "away": "南京城市",
    "issue": 16,
    "case_no": 9,
    "match_note": "",
    "items": [
     {
-     "team": "延边龙鼎可喜安",
+     "team": "延边龙鼎",
      "type": "missed_yellow_opponent",
      "swing": 0,
      "note": "南京城市9号违规使用手臂属鲁莽犯规，漏判犯规和黄牌"

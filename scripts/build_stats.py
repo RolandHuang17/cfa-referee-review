@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-"""生成错漏判影响统计页 stats-2025.html / stats-2024.html（单文件离线可用）
-用法: python build_stats.py [2025] [2024]   # 不带参数=两个赛季都构建
+"""生成错漏判影响统计页 stats-2026.html / stats-2025.html / stats-2024.html（单文件离线可用）
+用法: python build_stats.py [赛季]   # 不带参数=三个赛季都构建
 数据: data/cases-{s}.json + data/impact-{s}.json + data/match-scores-{s}.json
 口径:
   - 确定得失球修正仅含进球判定类错误（漏判进球/对方进球应无效）
@@ -14,6 +14,7 @@ import sys
 from datetime import date
 
 from lib.crest_catalog import load_catalog
+from lib.team_names import normalize_name
 from lib.theme import inject_theme, icon, js_icons, topbar
 
 from lib.paths import DATA, SITE
@@ -69,7 +70,9 @@ TYPE_LABEL_BENEFIT = {
     "missed_foul_called": "漏判本队犯规（获益）",
 }
 LEAGUE_SHORT = {"中超联赛": "中超", "中甲联赛": "中甲", "中乙联赛": "中乙",
-                "中国足协杯": "足协杯", "足协杯": "足协杯"}
+                "中国足协杯": "足协杯", "足协杯": "足协杯",
+                "女超联赛": "女超", "女甲联赛": "女甲",
+                "全运会": "全运会", "三大球运动会": "三大球"}
 TYPE_ORDER = ["denied_goal", "opp_goal_should_disallow", "missed_penalty",
               "wrong_penalty_against", "missed_red_opponent", "wrong_red_self",
               "missed_yellow_opponent", "wrong_yellow_self",
@@ -94,14 +97,17 @@ def build_matches(impact, scores, cmap):
     matches = {}
     for seq_s, imp in impact["impacts"].items():
         seq = int(seq_s)
-        key = f"{imp['league']}|{imp['round']}|{imp['home']}|{imp['away']}"
+        # 归一化兜底：数据层应已存标准名（test_integrity 强制），这里再保一道，
+        # 防未来泄漏导致页面查不到队徽、与 season 页队名不一致
+        home, away = normalize_name(imp["home"]), normalize_name(imp["away"])
+        key = f"{imp['league']}|{imp['round']}|{home}|{away}"
         m = matches.setdefault(key, {
-            "league": imp["league"], "round": imp["round"], "home": imp["home"],
-            "away": imp["away"], "match_note": imp.get("match_note", ""),
+            "league": imp["league"], "round": imp["round"], "home": home,
+            "away": away, "match_note": imp.get("match_note", ""),
             "cases": [], "items": [], "seqs": [],
         })
         for it in imp["items"]:
-            it = dict(it, seq=seq)
+            it = dict(it, seq=seq, team=normalize_name(it["team"]))
             m["items"].append(it)
         m["seqs"].append(seq)
         m["cases"].append(f"期{imp['issue']:02d}判例{imp['case_no']}")
@@ -195,7 +201,9 @@ def team_stats(matches, view):
         for st in t["match_status"].values():
             t["result"][st] += 1
         del t["match_status"]
-        t["detail"].sort(key=lambda d: (d["league"], d["round"], d["seq"]))
+        t["detail"].sort(key=lambda d: (d["league"],
+                                        d["round"] if isinstance(d["round"], int) else 9999,
+                                        d["seq"]))
     return teams
 
 
@@ -207,7 +215,6 @@ def build_data(season):
     catalog = load_catalog()
     teams = {item["name"]: item for item in catalog.values()}
 
-    issues = {i["no"]: i for i in impact.get("issues", [])} if "issues" in impact else {}
     # 补充期数信息用于链接展示
     cases = json.loads((DATA / SEASONS[season]["cases"]).read_text(encoding="utf-8"))["cases"]
     cmap2 = {c["seq"]: c for c in cases}
@@ -302,9 +309,6 @@ main{padding:20px 0 60px}
 .thead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;cursor:pointer;user-select:none}
 .thead h3{margin:0;font-size:18px;display:flex;align-items:center}
 .thead .crest{background:#fff;border-radius:4px;height:24px}
-.team-badge{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
-  border-radius:5px;margin-right:6px;vertical-align:-6px;font-size:10px;font-weight:700;
-  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
 .thead .lg{font-size:12.5px;color:var(--brand);background:var(--info-bg);border-radius:6px;padding:1px 9px}
 .thead .tot{color:var(--muted);font-size:13.5px}
 .thead .arrow{margin-left:auto;color:var(--faint);transition:transform .15s;font-size:12px}
@@ -347,6 +351,7 @@ footer a{color:var(--brand)}
   .teamcard{padding:12px 13px}
   .thead h3{font-size:16px}
 }
+</style>
 </head>
 <body class="page-stats">
 __TOPBAR__
@@ -456,7 +461,7 @@ function renderTeam(name, t){
     }
     const label = (curView==='benefits'?TLB:TL)[d.type];
     return `<div class="drow">
-      <span class="badge">${d.league}第${d.round}轮</span>
+      <span class="badge">${d.league}${typeof d.round==="number" ? "第"+d.round+"轮" : "·"+d.round}</span>
       <span class="mt">${esc(d.home)} ${d.score?d.score.h+" : "+d.score.a:"—"} ${esc(d.away)}</span>
       ${d.match_note?`<span class="badge">${esc(d.match_note)}</span>`:""}
       ${corrLine}
@@ -470,7 +475,7 @@ function renderTeam(name, t){
   const team = DATA.teams && DATA.teams[name];
   const crest = team && team.status === 'verified' && team.path
     ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
-    : `<span class="team-dot" style="width:22px;height:22px;--badge-fg:${(team&&team.fg)||'#0b4c8c'};--badge-bg:${(team&&team.bg)||'#e9f2fb'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
+    : `<span class="team-dot" style="width:22px;height:22px;background:${(team&&team.bg)||'#e9f2fb'};border:1px solid ${(team&&team.fg)||'#0b4c8c'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
   return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'}">
     <div class="thead" onclick="this.parentElement.classList.toggle('open')">
       <h3>${crest}${esc(name)}</h3>
@@ -534,7 +539,8 @@ def build_season(season):
     tb = topbar(active=cfg["out"], stats=cfg["out"], brand_sub=f"{season}赛季 · 得失盘点",
                 seasons=tuple(sorted(SEASONS)))
     html = inject_theme(HTML.replace("__DATA__",
-                        json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+                        # "</" 转义为合法 JSON 的 "<\/"，防正文提前闭合 </script>
+                        json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
                         .replace("__ICONS__", js_icons())
                         .replace("__TOPBAR__", tb))
     html = (html.replace("__SEASON__", season)

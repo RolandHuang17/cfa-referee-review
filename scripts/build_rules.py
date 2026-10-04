@@ -814,10 +814,12 @@ def build_html_page(sections):
              f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'
              f'<button class="tbtn" id="fsMinus" title="缩小字号">A－</button>'
              f'<button class="tbtn" id="fsPlus" title="放大字号">A＋</button>')
-    tb = topbar(active="rules.html", right=right, brand_sub="2026/27 · 简体中文", sb_btn=True,
+    tb = topbar(active="rules.html", right=right, stats="stats-2026.html",
+                brand_sub="2026/27 · 简体中文", sb_btn=True,
                 seasons=("2024", "2025", "2026"))
     html = inject_theme(RULES_TEMPLATE.replace("__DATA__",
-        json.dumps(data, ensure_ascii=False, separators=(",", ":")))
+        # "</" 转义为合法 JSON 的 "<\/"，防正文提前闭合 </script>
+        json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)
         .replace("__I_BOOK__", icon("book", 30)))

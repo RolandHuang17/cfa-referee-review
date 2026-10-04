@@ -285,7 +285,8 @@ def legacy_migrate():
     """旧 v1 数据/文件迁移到按年分目录结构"""
     if SCALE_JSON.exists():
         d = json.loads(SCALE_JSON.read_text(encoding="utf-8"))
-        if "sections" not in d.get("2026", {}):
+        # 仅当是旧版单季结构（不含任何赛季键）才整体迁移，防止只重提单季数据时误删
+        if not (set(d.keys()) & {"2024", "2025", "2026"}):
             SCALE_JSON.unlink()
     for flat in SCALE_VIDEOS.glob("*.mp4"):  # 旧平铺 2026 视频 → 2026/
         (SCALE_VIDEOS / "2026").mkdir(parents=True, exist_ok=True)
@@ -398,14 +399,38 @@ __TOPBAR__
   var tabs = document.querySelectorAll(".season-tab");
   var blocks = document.querySelectorAll(".sblock");
   var banners = document.querySelectorAll(".lite-banner .lb-item");
+  function activate(t){
+    tabs.forEach(function(x){
+      var on = x === t;
+      x.classList.toggle("on", on);
+      x.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+    banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+  }
   tabs.forEach(function(t){
     t.addEventListener("click", function(){
-      tabs.forEach(function(x){ x.classList.toggle("on", x === t); });
-      blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
-      banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+      activate(t);
       try { history.replaceState(null, "", "#s" + t.dataset.season); } catch(_) {}
     });
   });
+  // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
+  // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
+  (function(){
+    var h = decodeURIComponent(location.hash || "").slice(1);
+    if (!h) return;
+    var season = null, isCard = false;
+    if (/^s\d{4}$/.test(h)) season = h.slice(1);
+    else if (/^h\d{4}-/.test(h)) { season = h.slice(1, 5); isCard = true; }
+    else return;
+    var t = Array.prototype.filter.call(tabs, function(x){ return x.dataset.season === season; })[0];
+    if (!t) return;
+    activate(t);
+    if (isCard) {
+      var target = document.getElementById(h);
+      if (target) requestAnimationFrame(function(){ target.scrollIntoView({block: "start"}); });
+    }
+  })();
 })();
 </script>
 </body>

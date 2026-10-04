@@ -316,9 +316,12 @@ function crest(team, h, mark){
 let wrong = {};
 try { wrong = JSON.parse(localStorage.getItem(CFG.wrongKey) || "{}") || {}; } catch(_) { wrong = {}; }
 function persistWrong(){ try { localStorage.setItem(CFG.wrongKey, JSON.stringify(wrong)); } catch(_) {} }
-function recordWrong(q, your, correct, maxScore){
+function recordWrong(q, your, score){
   const e = wrong[q.k] || {t:q.t, s:q.s, star:false, wrong:0};
-  e.t = q.t; e.s = q.s; e.your = your; e.correct = correct;
+  // 记下正确答案文本，错题本才能对照复盘（旧版本条目无此字段，渲染时兼容）
+  e.correct = score && score.detail
+    ? score.detail.map(d=>d.right).join(q.t==="case" ? " + " : "、") : "";
+  e.t = q.t; e.s = q.s; e.your = your;
   e.wrong = (e.wrong||0) + 1; e.last = Date.now(); e.done = false;
   wrong[q.k] = e; persistWrong();
 }
@@ -365,9 +368,10 @@ function renderWbList(){
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
     const q = BANK[k]; if (!q) return "";
     const yourTxt = e.t==="case" ? axisText(e.your) : (e.your||[]).join("、") || "（未作答）";
+    const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
     return `<div class="wbitem">
       <div class="wbm"><div>${qTitle(q)}</div>
-      <div class="wbyour">上次错选：${esc(yourTxt)}${e.done?" · 已掌握":""}</div></div>
+      <div class="wbyour">上次错选：${esc(yourTxt)}${corrTxt?` · 正确：${esc(corrTxt)}`:""}${e.done?" · 已掌握":""}</div></div>
       <button class="btn wbbtn" data-star="${k}">${e.star?"★":"☆"}</button>
       <button class="btn wbbtn" data-del="${k}">移除</button>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a>
@@ -447,7 +451,12 @@ function renderQuestion(){
   // 视频接线（本地 404 → 官方直链）
   if (!LITE){
     const v = document.getElementById("qvid");
-    if (q.t==="case" && vidsMissing && (q.vurls||[])[0]) v.src = q.vurls[0];
+    const tip = document.getElementById("vidTip");
+    if (q.t==="case" && vidsMissing && (q.vurls||[])[0]){
+      v.dataset.oss = "1";
+      v.src = q.vurls[0];
+      if (tip){ tip.textContent = "本地视频缺失，已自动改用官方直链在线播放。"; tip.style.display = ""; }
+    }
     else if (q.t==="case") v.src = "videos/"+q.videos[0];
     else v.src = q.video;
   }
@@ -562,7 +571,7 @@ function submitAnswer(){
       const a = currentAnswer();
       const s = q.t==="case" ? scoreCase(q, a) : scoreScale(q, a);
       round.answers[round.i] = a; round.scores[round.i] = s;
-      if (s.got < s.max) recordWrong(q, a, null, s.max);
+      if (s.got < s.max) recordWrong(q, a, s);
       else if (wrong[q.k]){ wrong[q.k].done = true; persistWrong(); }
       round.locked = true;
       renderFeedback(q, a);
@@ -583,19 +592,25 @@ function finishExam(){
     const a = round.answers[i] || (q.t==="case" ? {v:null,r:null,c:null} : []);
     const s = q.t==="case" ? scoreCase(q, a) : scoreScale(q, a);
     round.scores[i] = s;
-    if (s.got < s.max) recordWrong(q, a, null, s.max);
+    if (s.got < s.max) recordWrong(q, a, s);
     else if (wrong[q.k]){ wrong[q.k].done = true; }
   });
   persistWrong();
   showResult();
 }
-function gotoPrev(){ if (round.i>0){ round.i--; renderQuestion(); } }
+function gotoPrev(){
+  if (round.i>0){
+    // 暂存当前作答再离开：考试模式来回查看、练习模式未提交返回都不丢
+    if (round.scores[round.i] == null) round.answers[round.i] = currentAnswer();
+    round.i--; renderQuestion();
+  }
+}
 function skipQuestion(){
   const q = round.qs[round.i];
   const a = q.t==="case" ? {v:null,r:null,c:null} : [];
   const s = q.t==="case" ? scoreCase(q, a) : scoreScale(q, a);
   round.answers[round.i] = a; round.scores[round.i] = s;
-  recordWrong(q, a, null, s.max);
+  recordWrong(q, a, s);
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else showResult();
 }
@@ -644,8 +659,9 @@ document.getElementById("seasonChips").addEventListener("click", e=>{
   if (!s){ sel.seasons.clear(); }
   else if (sel.seasons.has(s)) sel.seasons.delete(s);
   else sel.seasons.add(s);
+  // 高亮跟随 sel.seasons 状态（多选可同时亮多个），不能只亮最后点击的一个
   document.querySelectorAll("#seasonChips .chip").forEach(x=>
-    x.classList.toggle("on", x===b || (!s && x.dataset.s==="")));
+    x.classList.toggle("on", (!x.dataset.s && !sel.seasons.size) || sel.seasons.has(x.dataset.s)));
   updatePoolTip();
 });
 document.getElementById("btnStart").onclick = ()=>startRound(pool());
@@ -722,16 +738,27 @@ document.getElementById("qCard").addEventListener("error", e=>{
   if (!q || q.t !== "case") return;
   const url = (q.vurls||[])[0];
   const v = document.getElementById("qvid");
+  const tip = document.getElementById("vidTip");
   if (url && v.dataset.oss !== "1"){
     v.dataset.oss = "1"; vidsMissing = true;
     v.src = url;
-    const tip = document.getElementById("vidTip");
     if (tip){ tip.textContent = "本地视频缺失，已自动改用官方直链在线播放。"; tip.style.display = ""; }
+  } else if (v.dataset.oss === "1" && tip){
+    // 官方直链也失败：不再无提示地静默卡死
+    tip.textContent = "官方直链播放失败，可从判例页打开官方评议页观看。";
+    tip.style.display = "";
   }
 }, true);
 
 // ---------- 初始化 ----------
-document.addEventListener("cfa:lite", ()=>{ LITE = document.documentElement.dataset.lite==="1"; });
+document.addEventListener("cfa:lite", ()=>{
+  LITE = document.documentElement.dataset.lite==="1";
+  // 答题中途切轻量版：暂存当前作答并重渲染，让视频窗口按新模式显隐
+  if (round && document.getElementById("scrQuiz").style.display !== "none"){
+    if (round.scores[round.i] == null) round.answers[round.i] = currentAnswer();
+    renderQuestion();
+  }
+});
 renderSeasonChips(); renderWbStats(); updatePoolTip();
 </script>
 </body>
@@ -741,7 +768,8 @@ renderSeasonChips(); renderWbStats(); updatePoolTip();
 
 def main():
     data = build_data()
-    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    # "</" 转义为合法 JSON 的 "<\/"，防正文里出现 </script> 提前闭合注入点
+    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     tb = topbar(active="quiz.html", stats="stats-2026.html", brand_sub="考题模式",
                 seasons=("2024", "2025", "2026"), help_btn=False, lite_btn=True)
     html = inject_theme(HTML

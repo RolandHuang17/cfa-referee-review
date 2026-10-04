@@ -66,8 +66,8 @@ html[data-lite] .hvideo{display:none}
    风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
    衬线大标题/陶土色点缀/发丝线边框/平面卡片
    - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
-   - 本文件由 scripts/theme.py 内联注入全部生成页 <head>
-   - 各 builder 的 <style> 只允许写页面专属布局, 禁止重定义
+   - 本文件由 scripts/lib/theme.py 以 style 标签内联注入全部生成页 head
+   - 各 builder 的页面 style 块只允许写页面专属布局, 禁止重定义
      :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
    ============================================================ */
 
@@ -989,14 +989,38 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   var tabs = document.querySelectorAll(".season-tab");
   var blocks = document.querySelectorAll(".sblock");
   var banners = document.querySelectorAll(".lite-banner .lb-item");
+  function activate(t){
+    tabs.forEach(function(x){
+      var on = x === t;
+      x.classList.toggle("on", on);
+      x.setAttribute("aria-selected", on ? "true" : "false");
+    });
+    blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+    banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+  }
   tabs.forEach(function(t){
     t.addEventListener("click", function(){
-      tabs.forEach(function(x){ x.classList.toggle("on", x === t); });
-      blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
-      banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
+      activate(t);
       try { history.replaceState(null, "", "#s" + t.dataset.season); } catch(_) {}
     });
   });
+  // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
+  // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
+  (function(){
+    var h = decodeURIComponent(location.hash || "").slice(1);
+    if (!h) return;
+    var season = null, isCard = false;
+    if (/^s\d{4}$/.test(h)) season = h.slice(1);
+    else if (/^h\d{4}-/.test(h)) { season = h.slice(1, 5); isCard = true; }
+    else return;
+    var t = Array.prototype.filter.call(tabs, function(x){ return x.dataset.season === season; })[0];
+    if (!t) return;
+    activate(t);
+    if (isCard) {
+      var target = document.getElementById(h);
+      if (target) requestAnimationFrame(function(){ target.scrollIntoView({block: "start"}); });
+    }
+  })();
 })();
 </script>
 <script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>

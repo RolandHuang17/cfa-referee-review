@@ -95,28 +95,28 @@ HTML = r"""<!DOCTYPE html>
 .mp-desc{margin:0;font-size:12.5px;color:var(--muted);max-width:720px;text-align:center;line-height:1.7}
 
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.card{position:relative;display:flex;flex-direction:column;text-decoration:none;
+.ecard{position:relative;display:flex;flex-direction:column;text-decoration:none;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:22px 22px 18px;overflow:hidden;color:var(--ink);
   transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease}
-.card:hover{transform:translateY(-4px);border-color:var(--brand);box-shadow:var(--shadow)}
-.card .icon{width:42px;height:42px;border-radius:var(--r-md);display:flex;align-items:center;
+.ecard:hover{transform:translateY(-4px);border-color:var(--brand);box-shadow:var(--shadow)}
+.ecard .icon{width:42px;height:42px;border-radius:var(--r-md);display:flex;align-items:center;
   justify-content:center;background:var(--info-bg);color:var(--brand)}
-.card.c-rules .icon{background:var(--amber-bg);color:var(--amber)}
-.card.c-2024 .icon{background:var(--green-bg);color:var(--green)}
-.card h2{margin:13px 0 4px;font-family:var(--font-display);font-size:19.5px;letter-spacing:.3px}
-.card .desc{margin:0;color:var(--muted);font-size:13.5px;min-height:64px;line-height:1.7}
-.card .nums{display:flex;gap:20px;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
-.card .nums div b{display:block;font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
-.card.c-rules .nums div b{color:var(--amber)}
-.card.c-2024 .nums div b{color:var(--green)}
-.card.c-2026 .nums div b{color:var(--red)}
-.card .nums div span{font-size:12px;color:var(--muted)}
-.card .go{margin-top:14px;font-size:13px;color:var(--brand);font-weight:600;display:flex;align-items:center;gap:5px}
-.card::after{content:"";position:absolute;inset:0;
+.ecard.c-rules .icon{background:var(--amber-bg);color:var(--amber)}
+.ecard.c-2024 .icon{background:var(--green-bg);color:var(--green)}
+.ecard h2{margin:13px 0 4px;font-family:var(--font-display);font-size:19.5px;letter-spacing:.3px}
+.ecard .desc{margin:0;color:var(--muted);font-size:13.5px;min-height:64px;line-height:1.7}
+.ecard .nums{display:flex;gap:20px;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
+.ecard .nums div b{display:block;font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
+.ecard.c-rules .nums div b{color:var(--amber)}
+.ecard.c-2024 .nums div b{color:var(--green)}
+.ecard.c-2026 .nums div b{color:var(--red)}
+.ecard .nums div span{font-size:12px;color:var(--muted)}
+.ecard .go{margin-top:14px;font-size:13px;color:var(--brand);font-weight:600;display:flex;align-items:center;gap:5px}
+.ecard::after{content:"";position:absolute;inset:0;
   background:linear-gradient(120deg,transparent 30%,rgba(148,178,214,.08) 48%,transparent 62%);
   transform:translateX(-100%);transition:.5s}
-.card:hover::after{transform:translateX(100%)}
+.ecard:hover::after{transform:translateX(100%)}
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
 .steps div{display:grid;grid-template-columns:40px 1fr;column-gap:10px;align-items:center;
@@ -166,7 +166,7 @@ __TOPBAR__
   </section>
 
   <section class="grid">
-    <a class="card c-2026" href="season-2026.html">
+    <a class="ecard c-2026" href="season-2026.html">
       <div class="icon">__I_FILM__</div>
       <h2>2026赛季评议</h2>
       <p class="desc">进行中的最新赛季，已收录 __N26_ISSUES__ 期评议，随官方发布持续更新。</p>
@@ -177,7 +177,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="card c-2025" href="season-2025.html">
+    <a class="ecard c-2025" href="season-2025.html">
       <div class="icon">__I_FILM__</div>
       <h2>2025赛季评议</h2>
       <p class="desc">最新赛季全部 __N25_ISSUES__ 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
@@ -188,7 +188,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="card c-2024" href="season-2024.html">
+    <a class="ecard c-2024" href="season-2024.html">
       <div class="icon">__I_FILM__</div>
       <h2>2024赛季评议</h2>
       <p class="desc">上赛季全部 __N24_ISSUES__ 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
@@ -199,7 +199,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="card c-rules" href="rules.html">
+    <a class="ecard c-rules" href="rules.html">
       <div class="icon">__I_BOOK__</div>
       <h2>足球竞赛规则 2026-27</h2>
       <p class="desc">IFAB 官方最新版全文（简体中文），支持划词高亮、章节笔记、全文搜索——备赛案头工具。</p>
@@ -210,7 +210,7 @@ __TOPBAR__
       </div>
       <div class="go">打开规则 __I_RIGHT__</div>
     </a>
-    <a class="card c-scale" href="scale.html">
+    <a class="ecard c-scale" href="scale.html">
       <div class="icon">__I_SHIELD__</div>
       <h2>统一判罚尺度宣讲</h2>
       <p class="desc">中国足协官方《统一判罚尺度》2024–2026 三季：__S_SCENES__ 例典型场景视频、官方说明与判罚决定对照。</p>
@@ -221,7 +221,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="card c-uefa" href="uefa.html">
+    <a class="ecard c-uefa" href="uefa.html">
       <div class="icon">__I_PLAY__</div>
       <h2>欧足联判例库</h2>
       <p class="desc">UEFA 官方 Clear Line：__U_CASES__ 例真实比赛场景与官方解释（英文原文），逐例跳转官方视频页。</p>
@@ -232,7 +232,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="card c-quiz" href="quiz.html">
+    <a class="ecard c-quiz" href="quiz.html">
       <div class="icon">__I_QUIZ__</div>
       <h2>考题模式</h2>
       <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>
@@ -323,15 +323,14 @@ def main():
     bank, _, _ = build_bank()
     q_case = sum(1 for b in bank if b["t"] == "case")
     q_scale = sum(1 for b in bank if b["t"] == "scale")
-    tb = topbar(active="index.html", stats="stats-2025.html", brand_sub="评议 · 规则 · 尺度统一",
+    tb = topbar(active="index.html", stats="stats-2026.html", brand_sub="评议 · 规则 · 尺度统一",
                 seasons=("2024", "2025", "2026"))
     subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
             "__I_CHART__": icon("chart", 17), "__I_RIGHT__": icon("right", 13),
             "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
             "__I_SEARCH__": icon("search", 13), "__I_DOWN__": icon("download", 13),
             "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13),
-            "__I_QUIZ__": icon("quiz", 20),
-            "__I_EXTERNAL__": icon("external", 20), "__I_EXT_S__": icon("external", 15)}
+            "__I_QUIZ__": icon("quiz", 20), "__I_EXT_S__": icon("external", 15)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
             .replace("__N26__", str(s["2026"]["n"]))

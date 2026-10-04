@@ -40,9 +40,10 @@ _FILLED = {"star-f"}
 
 
 def icon(name, size=15):
-    fill = ' fill="currentColor" stroke="none"' if name in _FILLED else ""
-    return (f'<svg class="ic{" f" if name in _FILLED else ""}" width="{size}" height="{size}" '
-            f'viewBox="0 0 24 24"{fill} fill="none" stroke="currentColor" stroke-width="2" '
+    filled = name in _FILLED
+    fill = ' fill="currentColor" stroke="none"' if filled else ' fill="none" stroke="currentColor"'
+    return (f'<svg class="ic{" f" if filled else ""}" width="{size}" height="{size}" '
+            f'viewBox="0 0 24 24"{fill} stroke-width="2" '
             f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{_E[name]}</svg>')
 
 
@@ -56,7 +57,7 @@ def js_icons():
                       ensure_ascii=False, separators=(",", ":"))
 
 
-def topbar(active="", right="", stats="stats-2025.html", brand_sub="", seasons=("2024", "2025"),
+def topbar(active="", right="", stats="stats-2026.html", brand_sub="", seasons=("2026", "2025", "2024"),
            sb_btn=False, help_btn=False, lite_btn=False):
     """统一顶栏。active=当前页 href;right=页面临有控件(搜索框等)HTML;
     sb_btn=侧栏开关(#btnSb, season 页用);help_btn=说明按钮(#btnHelp, season 页用);

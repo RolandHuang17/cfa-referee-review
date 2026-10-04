@@ -138,6 +138,7 @@ def build_data(season):
     return {"cfg": {"season": season, "favKey": cfg["favKey"], "noteKey": cfg["noteKey"],
                     "issueCount": cfg["issueCount"], "issueDesc": cfg["issueDesc"],
                     "stats": cfg["stats"]},
+            "meta": {"n_cases": len(cases), "n_issues": len(issues)},
             "cases": cases, "issues": issues, "crests": {}, "teams": teams,
             "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
             "notes": CATEGORY_NOTES, "issueNotes": ISSUE_NOTES.get(season, {}),
@@ -586,7 +587,7 @@ function renderSidebar(){
 function renderList(){
   const list = visibleCases();
   const issueTitle = document.getElementById("issueTitle");
-  if (state.issue) {
+  if (state.issue && DATA.issues[state.issue]) {
     const iss = DATA.issues[state.issue];
     issueTitle.innerHTML = `第${state.issue}期 · ${esc(iss.title)} · ${iss.date.slice(0,4)}-${iss.date.slice(4,6)}-${iss.date.slice(6,8)}发布 · `;
   } else {
@@ -767,6 +768,7 @@ function select(seq, scrollRow=true){
     srcActs.style.display = "none"; srcActs.innerHTML = "";
     vfail.style.display = "none";
     if (!hasVideos(c)) {
+      stopVideo();
       dvidWrap.style.display = "none";
       vsr.style.display = "none"; vsr.innerHTML = "";
       document.getElementById("dNote").textContent = "该判例无视频片段";
@@ -798,7 +800,7 @@ function select(seq, scrollRow=true){
   document.getElementById("dTags").innerHTML =
     (c.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("");
   document.getElementById("dFoot").innerHTML =
-    `来源：<a href="${iss.url}" target="_blank" rel="noopener">${esc(iss.title)}</a>（${iss.date.slice(0,4)}-${iss.date.slice(4,6)}-${iss.date.slice(6,8)}发布）`;
+    `来源：<a href="${esc(iss.url)}" target="_blank" rel="noopener">${esc(iss.title)}</a>（${iss.date.slice(0,4)}-${iss.date.slice(4,6)}-${iss.date.slice(6,8)}发布）`;
   document.getElementById("detail").scrollTop = 0;
   // 列表高亮
   document.querySelectorAll(".prow.sel").forEach(e=>e.classList.remove("sel"));
@@ -824,13 +826,13 @@ function toggleFav(seq){
   persistFav();
   renderFavUI(c); renderFavList();
   const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-  if (row) row.textContent = (isFav(seq)?"★":"") + (hasNote(seq)?"📝":"");
+  if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
 }
 function renderFavUI(c){
   const btn = document.getElementById("favBtn");
   if (!btn) return;
   btn.classList.toggle("on", isFav(c.seq));
-  btn.innerHTML = isFav(c.seq) ? "★ 已收藏" : "☆ 收藏";
+  btn.innerHTML = isFav(c.seq) ? `${IC["star-f"]} 已收藏` : `${IC.star} 收藏`;
   const box = document.getElementById("favTags");
   if (!isFav(c.seq)) { box.style.display = "none"; return; }
   box.style.display = "flex";
@@ -936,6 +938,9 @@ document.getElementById("importFile").addEventListener("change", e=>{
   rd.onload = () => {
     try {
       const d = JSON.parse(rd.result);
+      if (d.app !== "cfa-referee-review-" + CFG.season) {
+        alert("导入失败：这不是当前赛季导出的收藏与笔记文件"); return;
+      }
       let n = 0;
       for (const [s, v] of Object.entries(d.fav||{})) {
         if (!fav[s] || (v.ts||0) > (fav[s].ts||0)) { fav[s] = v; n++; }
@@ -1109,7 +1114,8 @@ window.addEventListener("hashchange", () => {
 def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
-    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":"))
+    # "</" 转义为合法 JSON 的 "<\/"，防正文里出现 </script> 提前闭合注入点
+    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
     search_html = (f'<div class="search-wrap">{icon("search")}'
                    f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>')
     hideans_btn = (f'<button class="tbtn" id="btnHideAns" title="隐藏答案模式：先看视频自己判断，再揭示官方认定" '
@@ -1125,8 +1131,6 @@ def build_season(season):
             .replace("__ICONS__", js_icons())
             .replace("__TOPBAR__", tb)
             .replace("__TITLE__", cfg["title"])
-            .replace("__STATS__", cfg["stats"])
-            .replace("__BRAND__", cfg["brand"])
             .replace("__I_FILM_B__", sub["__I_FILM_B__"])
             .replace("__I_EYEOFF_B__", sub["__I_EYEOFF_B__"])
             .replace("__I_CHART__", sub["__I_CHART__"])

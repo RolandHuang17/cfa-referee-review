@@ -138,7 +138,9 @@ def fetch_text(url: str, headers=None, timeout=30, retries=3):
             charset = "utf-8"
             ctype = hdrs.get("content-type", "")
             if "charset=" in ctype:
-                charset = ctype.split("charset=")[-1].strip()
+                # 报头可能带尾部分号或引号（charset=utf-8; / charset="utf-8"），剥掉防 LookupError
+                charset = (ctype.split("charset=")[-1].split(";")[0]
+                           .strip().strip('"').strip("'"))
             return status, data.decode(charset, errors="replace")
         except Exception as e:  # noqa: BLE001
             last = e
@@ -161,7 +163,7 @@ def head_size(url: str, timeout=30):
     return None
 
 
-def download(url: str, dest: Path, headers=None, expected_size=None, timeout=60,
+def download(url: str, dest: Path, headers=None, timeout=60,
              retries=5, progress=False):
     """断点续传下载。返回 (status, final_size)。已完整则跳过。"""
     import os
@@ -171,8 +173,6 @@ def download(url: str, dest: Path, headers=None, expected_size=None, timeout=60,
     if dest.exists() and not tmp.exists():
         return 200, dest.stat().st_size  # 之前已完整下载
     have = tmp.stat().st_size if tmp.exists() else 0
-    if expected_size and have and have == expected_size and dest.exists():
-        return 200, dest.stat().st_size
     for attempt in range(1, retries + 1):
         try:
             have = tmp.stat().st_size if tmp.exists() else 0
@@ -182,8 +182,9 @@ def download(url: str, dest: Path, headers=None, expected_size=None, timeout=60,
             status, hdrs, resp, conn = safe_request(url, headers=h, timeout=timeout)
             if status == 416:  # 已下载完整但未改名
                 resp.close(); conn.close()
+                size = tmp.stat().st_size  # 先取大小再改名，replace 后 tmp 不存在
                 os.replace(tmp, dest)
-                return 200, tmp.stat().st_size
+                return 200, size
             if status not in (200, 206):
                 resp.close(); conn.close()
                 raise RuntimeError(f"HTTP {status}")

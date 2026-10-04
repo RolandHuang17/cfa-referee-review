@@ -50,8 +50,8 @@ def main():
             print(f"  ? {f}: 无法获取远端大小(本地{local/1e6:.1f}MB)")
             ok += 1
         else:
+            print(f"  √ {f} {local/1e6:.1f}MB")
             ok += 1
-        print(f"  √ {f} {local/1e6:.1f}MB")
     print(f"\n校验完成: 完整{ok} 缺失{len(missing)} 大小不符{len(size_mismatch)}")
     if missing:
         print("缺失:", missing)

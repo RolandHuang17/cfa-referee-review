@@ -18,13 +18,13 @@ NOISE = re.compile(r"flag|kit|stadium|map|icon|commons|wikimedia|nike|adidas|bal
 def api(params):
     query = "&".join(f"{k}={S.safe_urlencode(v)}" for k, v in params.items())
     last = None
-    for attempt in range(5):  # 429 限流退避：2/6/12/24/48s
+    for attempt in range(5):  # 429 限流退避：2/6/18/54s，末次固定 48s
         status, text = S.fetch_text(f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=1)
         if status == 200 and text.startswith("{"):
             time.sleep(.6)
             return json.loads(text)
         last = f"Wikipedia API {status}"
-        if status in (429, 503) or status is None:
+        if status in (429, 503):
             time.sleep(2 * 3 ** attempt if attempt < 4 else 48)
             continue
         raise RuntimeError(last)

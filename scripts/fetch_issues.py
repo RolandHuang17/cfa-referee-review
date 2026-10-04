@@ -120,12 +120,18 @@ def main():
         path, _ = issues[n]
         out = outdir / f"issue_{n:02d}.html"
         if out.exists() and out.stat().st_size > 10000:
-            print(f"[{season}-{n:02d}] 已存在，跳过")
-            continue
+            head = out.read_text(encoding="utf-8", errors="replace")[:400]
+            if "upgrade" not in head:  # 历史坏档（301升级维护页）重新抓取
+                print(f"[{season}-{n:02d}] 已存在，跳过")
+                continue
         try:
             status, html = fetch_text(BASE + path)
             if status != 200:
                 raise RuntimeError(f"HTTP {status}")
+            # thecfa.cn 没有 404：失效 URL 301 到"升级维护"页仍返回 200，
+            # 必须按内容判活（与 enum_issues.fetch 一致），否则坏页会被当成功存档
+            if "upgrade" in (html or "")[:400]:
+                raise RuntimeError("失效页（升级维护 301）")
             m = re.search(r"<title>(.*?)</title>", html, re.S)
             title = strip_tags(m.group(1)) if m else ""
             out.write_text(html, encoding="utf-8")

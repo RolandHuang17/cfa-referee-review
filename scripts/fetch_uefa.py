@@ -86,7 +86,9 @@ def _decode_body(resp, hdrs: dict) -> str:
     charset = "utf-8"
     ctype = hdrs.get("content-type", "")
     if "charset=" in ctype:
-        charset = ctype.split("charset=")[-1].strip()
+        # 报头可能带尾部分号或引号（charset=utf-8;），剥掉防 LookupError
+        charset = (ctype.split("charset=")[-1].split(";")[0]
+                   .strip().strip('"').strip("'"))
     return data.decode(charset, errors="replace")
 
 

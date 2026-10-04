@@ -26,11 +26,11 @@ import sys
 from datetime import date
 from pathlib import Path
 
-from lib.paths import DATA
+from lib.paths import DATA, LOCAL
 
 SEASONS = ("2024", "2025", "2026")
 OUT = DATA / "quiz-answers.json"
-REVIEW_DIR = DATA / "local" / "quiz-review"
+REVIEW_DIR = LOCAL / "quiz-review"
 
 R_LABELS = {"playon": "不犯规（比赛继续）", "directfk": "直接任意球", "indirectfk": "间接任意球",
             "penalty": "罚球点球", "retake": "重罚球点球", "goal_valid": "进球有效", "goal_invalid": "进球无效"}

@@ -37,6 +37,9 @@ class RangeHandler(SimpleHTTPRequestHandler):
         size = os.fstat(f.fileno()).st_size
         s, e = m.group(1), m.group(2)
         if s == "":  # bytes=-N 后缀区间
+            if not e:  # "bytes=-" 两组均空属非法 Range，按 200 全量处理
+                f.close()
+                return super().send_head()
             length = min(int(e), size)
             start, end = size - length, size - 1
         else:

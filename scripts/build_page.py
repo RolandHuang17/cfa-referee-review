@@ -215,8 +215,8 @@ body.sb-off .sidebar{display:none}
   color:var(--ink);background:var(--card2);border-bottom:1px solid var(--line2)}
 .ph b{color:var(--brand);font-weight:600}
 .prow{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;
-  border-bottom:1px solid var(--line2);transition:background .12s}
-.prow:hover{background:var(--card2)}
+  border-bottom:1px solid var(--line2);transition:background .12s, transform .18s var(--ease)}
+.prow:hover{background:var(--card2);transform:translateX(2px)}
 .prow.sel{background:var(--info-bg);box-shadow:inset 3px 0 0 var(--brand)}
 .prow .ptxt{flex:1;min-width:0}
 .prow .ptxt b{display:flex;align-items:center;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden}
@@ -232,6 +232,7 @@ body.sb-off .sidebar{display:none}
 /* ---- 详情区 ---- */
 .detail{min-width:0;min-height:0;overflow-y:auto;padding:16px 20px 44px}
 .detail-empty{height:70vh;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;color:var(--faint);font-size:14.5px}
+#detail.d-enter{animation:fadeIn .22s var(--ease)}
 .d-card{max-width:1120px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:18px 22px 16px;box-shadow:var(--shadow-sm)}
 .d-head{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:2px}
@@ -284,13 +285,15 @@ body.sb-off .sidebar{display:none}
 .mobile-back{display:none}
 
 /* ---- 轻量版(html[data-lite]) 与 视频回退提示 ---- */
-.src-actions{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:11px auto 0;max-width:960px}
+.src-actions{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:11px auto 0;max-width:960px;
+  animation:fadeUp var(--t-med) var(--ease)}
 .src-actions .srcbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:999px;
   border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
   font-size:13.5px;font-weight:600;text-decoration:none}
 .src-actions .srcbtn:hover{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
 .src-actions .srcsub{font-size:12px;color:var(--muted)}
 .vfail-tip{display:none;flex-wrap:wrap;align-items:center;gap:9px;margin:13px auto 0;max-width:960px;
+  animation:fadeUp var(--t-med) var(--ease);
   padding:9px 14px;border:1px solid var(--amber-line);background:var(--amber-bg);
   border-radius:var(--r-md);font-size:13px;color:var(--ink2)}
 .vfail-tip button{padding:4px 13px;border-radius:999px;border:1px solid var(--brand);
@@ -317,6 +320,10 @@ html[data-hideans] .d-card:not(.revealed) .d-head .badge{display:none}
 html[data-hideans] .d-card:not(.revealed) .txt .concl{display:none}
 html[data-hideans] .d-card:not(.revealed) #dCatNote,
 html[data-hideans] .d-card:not(.revealed) #dTags{display:none}
+/* 揭示瞬间内容淡入引导视线 */
+html[data-hideans] .d-card.revealed .txt .concl,
+html[data-hideans] .d-card.revealed #dCatNote,
+html[data-hideans] .d-card.revealed #dTags{animation:fadeUp var(--t-med) var(--ease)}
 html[data-hideans] .prow .dot{background:var(--line)!important}
 html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
 
@@ -808,6 +815,9 @@ function select(seq, scrollRow=true){
   if (row && scrollRow) row.scrollIntoView({block:"nearest"});
   if (row) row.classList.add("sel");
   history.replaceState(null, "", "#case-"+seq);
+  // 详情内容淡入重触发（opacity-only，滚动容器上不用 transform 以免影响内部定位）
+  const dsec = document.getElementById("detail");
+  dsec.classList.remove("d-enter"); void dsec.offsetWidth; dsec.classList.add("d-enter");
 }
 
 function step(dir){

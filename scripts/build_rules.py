@@ -447,7 +447,8 @@ mark.hl.hr{background:#ffc2b8;color:#7a1d10}
 .searchbox{position:fixed;top:calc(var(--top-h) + 8px);left:308px;right:24px;z-index:55;display:none;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);box-shadow:var(--shadow);
   max-height:55vh;overflow-y:auto;padding:8px}
-.searchbox.open{display:block}
+.searchbox.open{display:block;animation:fadeIn var(--t-fast) var(--ease)}
+#secHtml>*{animation:fadeUp var(--t-med) var(--ease) backwards}
 .sr{display:block;width:100%;text-align:left;padding:8px 12px;border:none;background:none;
   cursor:pointer;border-bottom:1px solid var(--line2);font-size:13.5px;font-family:inherit;color:var(--ink)}
 .sr:hover{background:var(--card2)}

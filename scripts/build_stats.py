@@ -284,7 +284,12 @@ HTML = r"""<!DOCTYPE html>
 .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
 .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:16px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
-  padding:10px 14px;box-shadow:var(--shadow-sm)}
+  padding:10px 14px;box-shadow:var(--shadow-sm);
+  animation:fadeUp .4s var(--ease) backwards}
+.stat:nth-child(2){animation-delay:40ms}.stat:nth-child(3){animation-delay:80ms}
+.stat:nth-child(4){animation-delay:120ms}.stat:nth-child(5){animation-delay:160ms}
+.stat:nth-child(6){animation-delay:200ms}.stat:nth-child(7){animation-delay:240ms}
+.stat:nth-child(8){animation-delay:280ms}
 .stat b{display:block;font-family:var(--font-display);font-size:22px;line-height:1.3;color:var(--brand);font-variant-numeric:tabular-nums}
 .stat.hot b{color:var(--red)}
 .stat span{font-size:12px;color:var(--muted)}
@@ -304,7 +309,8 @@ main{padding:20px 0 60px}
   padding:10px 14px;color:var(--ink2);font-size:13.5px;line-height:1.9;margin-bottom:20px}
 .note b{color:var(--brand)}
 .teamcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:15px 18px;margin-bottom:13px;box-shadow:var(--shadow-sm);transition:border-color .15s}
+  padding:15px 18px;margin-bottom:13px;box-shadow:var(--shadow-sm);transition:border-color .15s;
+  animation:fadeUp .4s var(--ease) backwards;animation-delay:calc(var(--i,0)*30ms)}
 .teamcard:hover{border-color:var(--brand)}
 .thead{display:flex;flex-wrap:wrap;gap:10px;align-items:baseline;cursor:pointer;user-select:none}
 .thead h3{margin:0;font-size:18px;display:flex;align-items:center}
@@ -327,7 +333,7 @@ main{padding:20px 0 60px}
 .r-nochange{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
 .r-pending{background:var(--card2);color:var(--muted);border:1px solid var(--line)}
 .detail{display:none;margin-top:14px;border-top:1px dashed var(--line);padding-top:12px}
-.teamcard.open .detail{display:block}
+.teamcard.open .detail{display:block;animation:fadeUp var(--t-med) var(--ease)}
 .drow{padding:9px 0;border-bottom:1px solid var(--line2);font-size:14px;display:flex;flex-wrap:wrap;gap:4px 8px;align-items:baseline}
 .drow:last-child{border-bottom:none}
 .drow .mt{font-weight:600}
@@ -417,6 +423,18 @@ document.getElementById("statbar").innerHTML = [
   `<div class="stat"><b>${DATA.overview.changed}</b><span>结果或被改变的判定</span></div>`,
   `<div class="stat"><b>${DATA.overview.possible}</b><span>存在影响可能</span></div>`,
 ].join("");
+// 数字滚动: 只滚纯数字项 (reduced-motion 直出终值; CSS 全局熄火再兜底)
+const _rm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+document.querySelectorAll("#statbar .stat b").forEach(el=>{
+  const txt = el.textContent;
+  if (_rm || !/^\d+$/.test(txt)) return;
+  const end = parseInt(txt, 10), t0 = performance.now(), dur = 650;
+  (function tick(t){
+    const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = String(Math.round(end * e));
+    if (p < 1) requestAnimationFrame(tick); else el.textContent = txt;
+  })(t0);
+});
 document.getElementById("scoreNote").innerHTML = "<b>比分来源说明：</b>" + DATA.scoreSource;
 
 const TC = {
@@ -443,7 +461,7 @@ function chip(t, n, benefit){
   return `<span class="tchip ${TC[t]}">${label} ×${n}</span>`;
 }
 
-function renderTeam(name, t){
+function renderTeam(name, t, idx){
   const chips = ORDER.map(k=>chip(k, t.types[k]||0, curView==='benefits')).join("");
   const r = t.result;
   const rbadges = [
@@ -476,7 +494,7 @@ function renderTeam(name, t){
   const crest = team && team.status === 'verified' && team.path
     ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
     : `<span class="team-dot" style="width:22px;height:22px;background:${(team&&team.bg)||'#e9f2fb'};border:1px solid ${(team&&team.fg)||'#0b4c8c'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
-  return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'}">
+  return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'};--i:${Math.min(idx||0,12)}">
     <div class="thead" onclick="this.parentElement.classList.toggle('open')">
       <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
@@ -496,7 +514,7 @@ function render(){
     return (B.swing*1000+B.cases) - (A.swing*1000+A.cases) || a.localeCompare(b);
   });
   document.getElementById("teamList").innerHTML =
-    names.map(n=>renderTeam(n, data[n])).join("") ||
+    names.map((n,idx)=>renderTeam(n, data[n], idx)).join("") ||
     `<div class="noresult">该联赛下没有数据。</div>`;
 }
 

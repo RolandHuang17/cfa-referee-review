@@ -75,7 +75,9 @@ html[data-uefa-en] ul.en{display:block}
 .gcrit ul{margin:0;padding-left:18px;font-size:13px;color:var(--ink2);line-height:1.85}
 .gsec ul.gpoints{margin:8px 0 16px;padding-left:20px;color:var(--ink2);font-size:13.5px;line-height:1.9}
 .hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:16px 18px;margin-bottom:16px}
+  padding:16px 18px;margin-bottom:16px;
+  transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
+.hcard:hover{transform:translateY(-2px);border-color:var(--brand)}
 .hhead{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .hid{font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--brand);
   border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2);white-space:nowrap}

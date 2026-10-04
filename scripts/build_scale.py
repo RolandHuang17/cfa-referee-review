@@ -335,7 +335,7 @@ HTML = r"""<!DOCTYPE html>
 .layout{max-width:1180px;margin:0 auto;padding:18px 16px 60px;display:grid;
   grid-template-columns:216px minmax(0,1fr);gap:20px;align-items:start}
 .sblock{display:none}
-.sblock.on{display:block}
+.sblock.on{display:block;animation:fadeIn var(--t-med) var(--ease)}
 .gnavs{position:sticky;top:calc(var(--top-h) + 14px);display:flex;flex-direction:column;gap:4px}
 .gnavs .gh{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:2px 4px 6px}
 .gnav{display:flex;align-items:center;gap:7px;padding:7px 10px;border-radius:var(--r-sm);
@@ -347,7 +347,9 @@ HTML = r"""<!DOCTYPE html>
 .gsec h2{font-family:var(--font-display);font-size:19px;margin:0 0 12px;letter-spacing:.4px}
 .gsec h2 b{font-size:13px;color:var(--brand);font-weight:600;margin-left:6px}
 .hcard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:16px 18px;margin-bottom:16px}
+  padding:16px 18px;margin-bottom:16px;
+  transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
+.hcard:hover{transform:translateY(-2px);border-color:var(--brand)}
 .hhead{display:flex;align-items:center;gap:9px;margin-bottom:10px}
 .hid{font-family:var(--font-display);font-size:13px;font-weight:700;color:var(--brand);
   border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2)}

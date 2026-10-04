@@ -117,6 +117,11 @@ HTML = r"""<!DOCTYPE html>
   background:linear-gradient(120deg,transparent 30%,rgba(148,178,214,.08) 48%,transparent 62%);
   transform:translateX(-100%);transition:.5s}
 .ecard:hover::after{transform:translateX(100%)}
+/* 入场级联 (backwards 填充: 结束后释放 transform, 不锁 hover 抬升) */
+.hero{animation:fadeUp .45s var(--ease) backwards}
+.mode-pick{animation:fadeUp .45s var(--ease) 80ms backwards}
+.ecard{animation:fadeUp .5s var(--ease) backwards;animation-delay:calc(var(--i,0)*60ms + 120ms)}
+.steps{animation:fadeUp .45s var(--ease) 480ms backwards}
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
 .steps div{display:grid;grid-template-columns:40px 1fr;column-gap:10px;align-items:center;
@@ -166,7 +171,7 @@ __TOPBAR__
   </section>
 
   <section class="grid">
-    <a class="ecard c-2026" href="season-2026.html">
+    <a class="ecard c-2026" style="--i:0" href="season-2026.html">
       <div class="icon">__I_FILM__</div>
       <h2>2026赛季评议</h2>
       <p class="desc">进行中的最新赛季，已收录 __N26_ISSUES__ 期评议，随官方发布持续更新。</p>
@@ -177,7 +182,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-2025" href="season-2025.html">
+    <a class="ecard c-2025" style="--i:1" href="season-2025.html">
       <div class="icon">__I_FILM__</div>
       <h2>2025赛季评议</h2>
       <p class="desc">最新赛季全部 __N25_ISSUES__ 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
@@ -188,7 +193,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-2024" href="season-2024.html">
+    <a class="ecard c-2024" style="--i:2" href="season-2024.html">
       <div class="icon">__I_FILM__</div>
       <h2>2024赛季评议</h2>
       <p class="desc">上赛季全部 __N24_ISSUES__ 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
@@ -199,7 +204,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-rules" href="rules.html">
+    <a class="ecard c-rules" style="--i:3" href="rules.html">
       <div class="icon">__I_BOOK__</div>
       <h2>足球竞赛规则 2026-27</h2>
       <p class="desc">IFAB 官方最新版全文（简体中文），支持划词高亮、章节笔记、全文搜索——备赛案头工具。</p>
@@ -210,7 +215,7 @@ __TOPBAR__
       </div>
       <div class="go">打开规则 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-scale" href="scale.html">
+    <a class="ecard c-scale" style="--i:4" href="scale.html">
       <div class="icon">__I_SHIELD__</div>
       <h2>统一判罚尺度宣讲</h2>
       <p class="desc">中国足协官方《统一判罚尺度》2024–2026 三季：__S_SCENES__ 例典型场景视频、官方说明与判罚决定对照。</p>
@@ -221,7 +226,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-uefa" href="uefa.html">
+    <a class="ecard c-uefa" style="--i:5" href="uefa.html">
       <div class="icon">__I_PLAY__</div>
       <h2>欧足联判例库</h2>
       <p class="desc">UEFA 官方 Clear Line：__U_CASES__ 例真实比赛场景与官方解释（英文原文），逐例跳转官方视频页。</p>
@@ -232,7 +237,7 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-quiz" href="quiz.html">
+    <a class="ecard c-quiz" style="--i:6" href="quiz.html">
       <div class="icon">__I_QUIZ__</div>
       <h2>考题模式</h2>
       <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>

@@ -55,6 +55,11 @@
   background:linear-gradient(120deg,transparent 30%,rgba(148,178,214,.08) 48%,transparent 62%);
   transform:translateX(-100%);transition:.5s}
 .ecard:hover::after{transform:translateX(100%)}
+/* 入场级联 (backwards 填充: 结束后释放 transform, 不锁 hover 抬升) */
+.hero{animation:fadeUp .45s var(--ease) backwards}
+.mode-pick{animation:fadeUp .45s var(--ease) 80ms backwards}
+.ecard{animation:fadeUp .5s var(--ease) backwards;animation-delay:calc(var(--i,0)*60ms + 120ms)}
+.steps{animation:fadeUp .45s var(--ease) 480ms backwards}
 
 .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
 .steps div{display:grid;grid-template-columns:40px 1fr;column-gap:10px;align-items:center;
@@ -120,6 +125,10 @@
   --top-h:56px;
   --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
   --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
 }
 [data-theme="light"]{
   --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
@@ -244,12 +253,22 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
 .kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
   border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
 
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
 /* ---------- 弹层 ---------- */
 .modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
   z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
-.modal-mask.open{display:flex}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
 .modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
 .modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
 .modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
   border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
@@ -284,7 +303,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   </section>
 
   <section class="grid">
-    <a class="ecard c-2026" href="season-2026.html">
+    <a class="ecard c-2026" style="--i:0" href="season-2026.html">
       <div class="icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div>
       <h2>2026赛季评议</h2>
       <p class="desc">进行中的最新赛季，已收录 22 期评议，随官方发布持续更新。</p>
@@ -295,7 +314,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       </div>
       <div class="go">进入学习 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </a>
-    <a class="ecard c-2025" href="season-2025.html">
+    <a class="ecard c-2025" style="--i:1" href="season-2025.html">
       <div class="icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div>
       <h2>2025赛季评议</h2>
       <p class="desc">最新赛季全部 32 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
@@ -306,7 +325,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       </div>
       <div class="go">进入学习 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </a>
-    <a class="ecard c-2024" href="season-2024.html">
+    <a class="ecard c-2024" style="--i:2" href="season-2024.html">
       <div class="icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg></div>
       <h2>2024赛季评议</h2>
       <p class="desc">上赛季全部 27 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
@@ -317,7 +336,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       </div>
       <div class="go">进入学习 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </a>
-    <a class="ecard c-rules" href="rules.html">
+    <a class="ecard c-rules" style="--i:3" href="rules.html">
       <div class="icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg></div>
       <h2>足球竞赛规则 2026-27</h2>
       <p class="desc">IFAB 官方最新版全文（简体中文），支持划词高亮、章节笔记、全文搜索——备赛案头工具。</p>
@@ -328,7 +347,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       </div>
       <div class="go">打开规则 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </a>
-    <a class="ecard c-scale" href="scale.html">
+    <a class="ecard c-scale" style="--i:4" href="scale.html">
       <div class="icon"><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg></div>
       <h2>统一判罚尺度宣讲</h2>
       <p class="desc">中国足协官方《统一判罚尺度》2024–2026 三季：104 例典型场景视频、官方说明与判罚决定对照。</p>
@@ -339,7 +358,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       </div>
       <div class="go">进入学习 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </a>
-    <a class="ecard c-uefa" href="uefa.html">
+    <a class="ecard c-uefa" style="--i:5" href="uefa.html">
       <div class="icon"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg></div>
       <h2>欧足联判例库</h2>
       <p class="desc">UEFA 官方 Clear Line：83 例真实比赛场景与官方解释（英文原文），逐例跳转官方视频页。</p>
@@ -350,7 +369,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       </div>
       <div class="go">进入学习 <svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg></div>
     </a>
-    <a class="ecard c-quiz" href="quiz.html">
+    <a class="ecard c-quiz" style="--i:6" href="quiz.html">
       <div class="icon"><svg class="ic" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></div>
       <h2>考题模式</h2>
       <p class="desc">689 道题随机出卷（判例 592 + 尺度场景 97）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>

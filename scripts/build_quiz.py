@@ -160,6 +160,17 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 /* 反馈 */
 .fb{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px;display:none}
 .fb.on{display:block}
+/* ---- 动效 (backwards 填充: 结束后释放 transform; reduced-motion 由 theme 全局熄火) ---- */
+#scrStart,#scrQuiz,#scrResult{animation:fadeUp .35s var(--ease)}
+.qhead,.qtext,.qappeal{animation:fadeUp var(--t-med) var(--ease) backwards}
+#qForm .axis{animation:fadeUp var(--t-med) var(--ease) backwards}
+#qForm .axis:nth-child(2){animation-delay:50ms}
+#qForm .axis:nth-child(3){animation-delay:100ms}
+.opt.on{animation:optPop .18s var(--ease-spring)}
+.fb.fb-ok{animation:pulseOk .6s var(--ease)}
+.fb.fb-part{animation:fadeUp var(--t-med) var(--ease)}
+.fb.fb-miss{animation:shake .4s var(--ease)}
+.rrow{animation:fadeUp .35s var(--ease) backwards;animation-delay:calc(var(--i,0)*40ms)}
 .fb .verdict{margin-bottom:8px}
 .fb .fitem{display:flex;gap:8px;font-size:13.5px;margin:5px 0;flex-wrap:wrap}
 .fb .ok{color:var(--green);font-weight:700}
@@ -552,7 +563,9 @@ function renderFeedback(q, a){
     ${wrong[q.k]&&wrong[q.k].wrong>1?`<span style="font-size:12px;color:var(--muted)">已错 ${wrong[q.k].wrong} 次</span>`:""}
   </div>`;
   const fb = document.getElementById("qFb");
-  fb.innerHTML = h; fb.classList.add("on");
+  fb.classList.remove("fb-ok", "fb-part", "fb-miss");
+  fb.innerHTML = h;
+  fb.classList.add("on", s.got===s.max ? "fb-ok" : s.got>0 ? "fb-part" : "fb-miss");
   document.getElementById("fbStar").onclick = ()=>toggleStar(q.k);
 }
 function toggleStar(k){
@@ -614,12 +627,22 @@ function skipQuestion(){
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else showResult();
 }
+function countUp(el, got, max){
+  if (matchMedia("(prefers-reduced-motion: reduce)").matches) return; // 文本已是终值
+  const t0 = performance.now(), dur = 700;
+  (function tick(t){
+    const p = Math.min(1, (t - t0) / dur), e = 1 - Math.pow(1 - p, 3);
+    el.textContent = `${Math.round(got * e)} / ${max}`;
+    if (p < 1) requestAnimationFrame(tick);
+  })(t0);
+}
 function showResult(){
   stopVideo();
   const totalGot = round.scores.reduce((s,x)=>s+(x?x.got:0),0);
   const totalMax = round.scores.reduce((s,x)=>s+(x?x.max:0),0);
   const pct = totalMax ? Math.round(totalGot/totalMax*100) : 0;
   document.getElementById("rScore").textContent = `${totalGot} / ${totalMax}`;
+  countUp(document.getElementById("rScore"), totalGot, totalMax);
   document.getElementById("rPct").textContent = `得分率 ${pct}%`;
   document.getElementById("rRate").textContent =
     pct>=90 ? "优秀——尺度把握扎实，继续保持！" :
@@ -631,7 +654,7 @@ function showResult(){
     const a = round.answers[i];
     const allOk = s.got===s.max;
     const missTxt = s.detail.filter(d=>!d.ok).map(d=>`${d.name}：正确 ${d.right}`).join("；");
-    return `<div class="rrow"><span class="rmark ${allOk?"hit":"miss"}">${allOk?"✓":s.got>0?"△":"✗"}</span>
+    return `<div class="rrow" style="--i:${Math.min(i,12)}"><span class="rmark ${allOk?"hit":"miss"}">${allOk?"✓":s.got>0?"△":"✗"}</span>
       <div class="rmain"><div>${qTitle(q)}</div>
       <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a></div>`;

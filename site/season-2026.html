@@ -67,8 +67,8 @@ body.sb-off .sidebar{display:none}
   color:var(--ink);background:var(--card2);border-bottom:1px solid var(--line2)}
 .ph b{color:var(--brand);font-weight:600}
 .prow{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;
-  border-bottom:1px solid var(--line2);transition:background .12s}
-.prow:hover{background:var(--card2)}
+  border-bottom:1px solid var(--line2);transition:background .12s, transform .18s var(--ease)}
+.prow:hover{background:var(--card2);transform:translateX(2px)}
 .prow.sel{background:var(--info-bg);box-shadow:inset 3px 0 0 var(--brand)}
 .prow .ptxt{flex:1;min-width:0}
 .prow .ptxt b{display:flex;align-items:center;font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden}
@@ -84,6 +84,7 @@ body.sb-off .sidebar{display:none}
 /* ---- 详情区 ---- */
 .detail{min-width:0;min-height:0;overflow-y:auto;padding:16px 20px 44px}
 .detail-empty{height:70vh;display:flex;flex-direction:column;gap:12px;align-items:center;justify-content:center;color:var(--faint);font-size:14.5px}
+#detail.d-enter{animation:fadeIn .22s var(--ease)}
 .d-card{max-width:1120px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:18px 22px 16px;box-shadow:var(--shadow-sm)}
 .d-head{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:2px}
@@ -136,13 +137,15 @@ body.sb-off .sidebar{display:none}
 .mobile-back{display:none}
 
 /* ---- 轻量版(html[data-lite]) 与 视频回退提示 ---- */
-.src-actions{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:11px auto 0;max-width:960px}
+.src-actions{display:none;flex-wrap:wrap;align-items:center;gap:8px;margin:11px auto 0;max-width:960px;
+  animation:fadeUp var(--t-med) var(--ease)}
 .src-actions .srcbtn{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:999px;
   border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
   font-size:13.5px;font-weight:600;text-decoration:none}
 .src-actions .srcbtn:hover{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
 .src-actions .srcsub{font-size:12px;color:var(--muted)}
 .vfail-tip{display:none;flex-wrap:wrap;align-items:center;gap:9px;margin:13px auto 0;max-width:960px;
+  animation:fadeUp var(--t-med) var(--ease);
   padding:9px 14px;border:1px solid var(--amber-line);background:var(--amber-bg);
   border-radius:var(--r-md);font-size:13px;color:var(--ink2)}
 .vfail-tip button{padding:4px 13px;border-radius:999px;border:1px solid var(--brand);
@@ -169,6 +172,10 @@ html[data-hideans] .d-card:not(.revealed) .d-head .badge{display:none}
 html[data-hideans] .d-card:not(.revealed) .txt .concl{display:none}
 html[data-hideans] .d-card:not(.revealed) #dCatNote,
 html[data-hideans] .d-card:not(.revealed) #dTags{display:none}
+/* 揭示瞬间内容淡入引导视线 */
+html[data-hideans] .d-card.revealed .txt .concl,
+html[data-hideans] .d-card.revealed #dCatNote,
+html[data-hideans] .d-card.revealed #dTags{animation:fadeUp var(--t-med) var(--ease)}
 html[data-hideans] .prow .dot{background:var(--line)!important}
 html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
 
@@ -246,6 +253,10 @@ html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
   --top-h:56px;
   --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
   --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
 }
 [data-theme="light"]{
   --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
@@ -370,12 +381,22 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
 .kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
   border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
 
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
 /* ---------- 弹层 ---------- */
 .modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
   z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
-.modal-mask.open{display:flex}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
 .modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
 .modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
 .modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
   border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
@@ -840,6 +861,9 @@ function select(seq, scrollRow=true){
   if (row && scrollRow) row.scrollIntoView({block:"nearest"});
   if (row) row.classList.add("sel");
   history.replaceState(null, "", "#case-"+seq);
+  // 详情内容淡入重触发（opacity-only，滚动容器上不用 transform 以免影响内部定位）
+  const dsec = document.getElementById("detail");
+  dsec.classList.remove("d-enter"); void dsec.offsetWidth; dsec.classList.add("d-enter");
 }
 
 function step(dir){

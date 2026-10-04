@@ -99,12 +99,15 @@ python scripts/verify_videos.py 2027              # 大小 vs 服务器 HEAD
 
 ## 8. 收尾：更新回归基准并全量重建 ⚠️
 
-`tests/test_integrity.py` 里两处必须改，否则 CI 会拦下你的 PR：
+`tests/test_integrity.py` 里四处必须改。注意：`SEASONS`/`EXPECTED_QUIZ` 漏加新季只是
+**静默跳过该季检查**，真正会挂 CI 的是 `EXPECTED_QUIZ` 不更新导致的 quiz meta 总数不符、
+以及页面内联数据与 data JSON 不同步的 stale-build 护栏——所以每处都要手动同步：
 
 ```python
-PAGES = [..., "season-2027.html", "stats-2027.html"]      # 页面清单
+PAGES = [..., "season-2027.html", "stats-2027.html"]      # 页面清单（漏加=新页不被检查）
 EXPECTED = {..., "2027": (判例数, 视频数, {"wrong": N, "correct": N, "pending": N})}
 SEASONS = (..., "2027")
+EXPECTED_QUIZ = {..., "2027": 判例池基准}                  # 「有视频且有认定原文」的判例数
 ```
 
 `EXPECTED` 是**人工复核后的基准**，不是「跑一遍把输出抄进去」——先独立数清官方认定的

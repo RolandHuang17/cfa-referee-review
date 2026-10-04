@@ -14,6 +14,27 @@
 - **隐藏答案模式**（三赛季评议页顶栏新开关 `#btnHideAns`，localStorage `cfa.hideans`）：开启后详情只显示事件与申诉，评议认定/判定徽章/分类要点/标签隐藏，列表判定圆点隐去；「显示本题答案」逐题揭示，切题自动重隐。
 - 全站导航与门户新增「考题模式」入口；`tests/test_integrity.py` 新增考题池回归基准（2024:141 / 2025:227 / 2026:224 + 尺度场景 97）。
 
+### 修复（全面维护审计）
+- **stats 三页丢失全部设计 token**：`build_stats.py` 页面模板 `<style>` 缺闭合标签，页面 CSS 把主题 `<style data-cfa-theme>` 吞进同一 raw-text 块，`:root` 规则被整条丢弃（暗色塌白、圆角/字体/顶栏高度失效）。补 `</style>`，并新增 11 页面 `<style>`/`<script>` 配平护栏防复发。
+- **重跑 2025 管线会静默写坏视频路径**：`fix_issue27_merge.py` 写入的 `video_files` 缺 `2025/` 赛季前缀且断言因前缀恒真。改为从既有数据推导前缀、断言按去前缀比较；#195 的归类/判定校正只保留在 `classify_cases.py`（消除双份漂移源）。
+- **impact/scores 数据泄漏未归一化队名**：`河南俱乐部彩陶坊`/`辽宁铁人楠波湾`/`延边龙鼎可喜安`/`广东广州豹` 共 6 处数据 + 3 个比分键，导致 stats 页这些队查不到队徽、与 season 页队名不一致。已修复数据并收口队名归一单点（见下）。
+- **quiz 三处交互 bug**：赛季多选 chips 高亮只亮最后点击的一个；错题本 `correct` 恒为空（无法对照正确答案复盘）；「上一题」不暂存当前作答（考试模式来回查看会静默清答案记 0 分）。
+- **统一尺度页深链失效**：scale.html 无任何 hash 初始化，quiz 错题本/结果页的 `scale.html#h2025-…` 链接落在 `display:none` 的赛季块上无法定位。新增 `#s2025` 页签恢复与 `#h*` 场景滚动定位，页签同步 `aria-selected`。
+- **season 页切到无视频判例不停止播放**：上一判例的 `<video>` 被隐藏后继续出声，补 `stopVideo()`。
+- **stats 页 fallback 球队徽章透明不可见**：内联只设 `--badge-fg/--badge-bg` 而 `.team-dot` 无背景/边框规则，改为直接设 `background/border`（与评议页一致），并删除该页对共享组件 `.team-badge` 的重定义。
+- **safe_http 下载器 416 分支必抛错**：`os.replace` 之后才 `tmp.stat()`，必发 FileNotFoundError 被当失败重试、整文件重下；charset 解析遇 `charset=utf-8;` 形式报头会 LookupError（safe_http 与 fetch_uefa 两处）；移除无人使用的 `expected_size` 死参数。
+- **fetch_issues.py 判活违反「thecfa.cn 没有 404」约束**：失效 URL 301 到升级维护页仍按 200 存档；对齐 enum_issues 的内容判活，缓存跳过也复检历史坏档。
+- 其余：2024 足协杯半决赛轮次不再静默回退 `round=0`（保留"半决赛"原文，排序/渲染兼容）；verify_videos 重复输出、range_server 非法 `Range: bytes=-` 500、fetch_crests_online 退避注释漂移、make_impact 死代码与重复键等清理。
+
+### 变更
+- **队名归一收口单点**：新增 `scripts/lib/team_names.py`（`ALIASES`/`normalize_name`/`PARENT`），generate_teams_catalog 与三个 make_impact 脚本统一 import（各脚本私有映射删除）；build_stats 构建时兜底归一；generate_teams_catalog 加 `main()` 守卫（原 import 即重写 teams.json）。
+- **影响统计口径对齐**：2025 补入足协杯（seq44 广州豹守门员红牌错误）+ 2024 补录 seq117（漏判点球+VAR未介入），2024 影响标注 53→54 例、2025 67→68 例；各 make_impact 脚本新增 OUT_OF_SCOPE 排除表与**覆盖率断言**（范围内每条 wrong 必须被标注或显式排除）；2024 第1期判例三（seq3）因原文未载明防守方无法归因，显式登记 UNATTRIBUTABLE。
+- **`site/assets/` 取消 git 跟踪**：它是构建中间态（build_all 每次 rmtree+copytree 从 `assets/` 重新生成，docs/structure.md 早已说明"会被冲掉"），误跟踪让仓库 pack 体积翻倍。克隆后跑一次 `python scripts/build_all.py` 复原；CI 不受影响。
+- 门户入口卡片类名 `.card`→`.ecard`（不再重定义主题共享组件）；主题注入 `<style data-cfa-theme>` 后页面数据 JSON 的 `</` 统一转义为 `<\/`（防 `</script>` 提前闭合）；topbar 默认赛季/盘点链接更新为 2026；quiz 视频两级回退补直链失败提示与 lite 切换重渲染。
+
+### 护栏
+- `tests/test_integrity.py` 新增：11 页面 `<style>`/`<script>` 标签配平；impact/scores 一致性（键⊆wrong 判例、items 属对阵双方、队名已归一化、比分键无孤儿）；stale-build 护栏（season 页 `DATA.meta` 与 stats 页 `overview.cases` 内联计数必须与 data JSON 一致）；官方页面存档按期完整性；内部链接检查跳过 query/根绝对路径。
+
 
 ## Unreleased
 

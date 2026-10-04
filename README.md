@@ -99,10 +99,11 @@
 
 ## 从 GitHub 克隆后如何使用
 
-视频体积太大（三赛季约 30GB）不进仓库。克隆后：
+视频体积太大（三赛季约 30GB）不进仓库，`site/assets/`（队徽+尺度海报，构建中间态）同样不入库。克隆后先跑一次构建复原完整站点：
 
 ```bash
-python scripts/download_videos_parallel.py 2026
+python scripts/build_all.py        # 纯标准库，几秒钟；把 assets/ 复制进 site/
+python scripts/download_videos_parallel.py 2026   # 需要离线视频再跑（可中断续传）
 python scripts/download_videos_parallel.py 2025
 python scripts/download_videos_parallel.py 2024
 ```

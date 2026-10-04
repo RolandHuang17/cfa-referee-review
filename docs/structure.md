@@ -9,8 +9,9 @@
 ```
 ├── site/                   ← GitHub Pages 发布根（pages.yml 的 path: site）。全部由
 │   │                          脚本重建，**勿手改**；必须自包含才能离线双击打开
-│   ├── *.html              ← 10 个页面（CSS/JS/数据全部内联）
-│   ├── assets/             ← 构建时从根 assets/ 整目录 copytree 而来
+│   ├── *.html              ← 11 个页面（CSS/JS/数据全部内联）
+│   ├── assets/             ← 构建时从根 assets/ 整目录 copytree 而来（gitignored：
+│   │                          CI 每次重建，clone 后跑一次 build_all.py 复原）
 │   └── videos/{2024,2025,2026,scale}/ ← 本地视频，gitignored（三赛季约 30GB）
 ├── src/
 │   └── theme.css           ← 全站设计系统**唯一权威源**：tokens + 组件 + 明暗主题
@@ -34,13 +35,14 @@
 │       ├── shots/          ← 页面截图
 │       ├── logs/           ← 下载日志、校验结果、人工复核文本
 │       └── scale-2024/     ← 2024 官方统一尺度材料包（3.3GB）
-├── scripts/                ← **可执行入口脚本**（25 个）：凡直接在本层的都能 python 跑
-│   ├── lib/                ← **只被 import，永不直接执行**（7 个模块）
+├── scripts/                ← **可执行入口脚本**（27 个）：凡直接在本层的都能 python 跑
+│   ├── lib/                ← **只被 import，永不直接执行**（8 个模块）
 │   │   ├── __init__.py     ← 必需：否则 lib 成为 PEP 420 命名空间包，跨 sys.path 合并
 │   │   ├── paths.py        ← 路径常量**唯一权威源**
 │   │   ├── theme.py        ← inject_theme() / topbar()；import 时即读 src/theme.css
 │   │   ├── safe_http.py    ← 所有对外请求的安全层（白名单 + 强制 https + DoH + IP 钉扎）
 │   │   ├── crest_catalog.py← 队徽目录读写与校验
+│   │   ├── team_names.py   ← 队名归一**唯一权威源**（ALIASES/normalize_name）
 │   │   └── classify_cls_{2024,2026}.py ← 纯数据分类表（无 I/O、无 __main__）
 │   └── build_all.py        ← 一键重建全站
 ├── tests/test_integrity.py ← 完整性断言（裸跑 / pytest 皆可，fail-collecting）
@@ -77,7 +79,7 @@ exist_ok=True)`**——新 clone 时该目录不存在。
 | 仓库内路径常量 | `scripts/lib/paths.py` |
 | 全站样式（tokens/组件/主题） | `src/theme.css` |
 | 构建依赖 | `requirements-build.txt` |
-| 队名归一（赞助冠名/笔误变体） | `generate_teams_catalog.py` 的 `ALIASES` |
+| 队名归一（赞助冠名/笔误变体） | `scripts/lib/team_names.py` 的 `ALIASES` |
 | 人工核验的队徽成果 | `data/crest_overrides.json` |
 | 判定计数回归基准 | `tests/test_integrity.py` 的 `EXPECTED` |
 
@@ -91,7 +93,9 @@ exist_ok=True)`**——新 clone 时该目录不存在。
 
 - **`site/`** — GitHub Pages 发布根，由 `.github/workflows/pages.yml` 的 `path: site`
   钉死。必须自包含：`assets/` 在构建时从根目录整目录 `copytree` 进来，所以尺度海报
-  等新增图片要放**根 `assets/`**，直接放 `site/assets/` 会在下次构建被冲掉。
+  等新增图片要放**根 `assets/`**，直接放 `site/assets/` 会在下次构建被冲掉——因此
+  `site/assets/` 本身 **gitignored 不入库**（曾误跟踪导致仓库体积翻倍），CI 每次构建
+  重新生成，clone 后跑一次 `python scripts/build_all.py` 复原。
 - **`assets/crests/`** — 这个字符串前缀写死在 `data/teams.json` 的每个 `path` 字段里，
   并被 `lib/crest_catalog.validate_catalog()` 断言。改目录名要同步重写整个 teams.json。
 - **`site/videos/{season}/`** — 用户下载约 30GB 视频的约定位置，写死在

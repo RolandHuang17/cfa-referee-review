@@ -7,7 +7,7 @@
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**十一个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（六张入口卡片 + 浏览模式开关）
+- `site/index.html` 门户首页（七张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
@@ -24,21 +24,25 @@
 - Python 3.9+（`pyproject.toml` 的 `requires-python`；CI 锁 3.11），**零第三方依赖**（规则模块构建除外）
 - Windows 优先（脚本在 Windows 上开发；`启动合集网页.bat` 仅支持 Windows，**必须存 GBK**）
 - 视频不进仓库（三赛季约 30GB），clone 后运行 `python scripts/download_videos_parallel.py [赛季]` 重新下载（断点续传、可中断重跑）
+- `site/assets/`（队徽+尺度海报）也不入库（构建中间态，与 `assets/` 重复）：clone 后先跑一次 `python scripts/build_all.py` 复原完整站点（纯标准库，几秒）
 
 ## 目录结构
 
 ```
 ├── site/                   ← 生成站点与 GitHub Pages 发布目录（勿手改）
 │   ├── index.html / season-*.html / stats-*.html / rules.html / scale.html / uefa.html
-│   └── videos/             ← 视频按赛季分目录（git忽略）
+│   ├── assets/             ← 构建时从 assets/ 复制的队徽+尺度海报（gitignored；
+│   │                          clone 后跑一次 build_all.py 自动复原）
+│   └── videos/             ← 视频按赛季分目录（2024/2025/2026/scale，git忽略）
 ├── src/
 │   ├── theme.css           ← 全站设计系统（唯一权威样式层：tokens+组件+明暗主题）
 │   └── README.md
 ├── assets/crests/          ← 球队队徽 png（仅 verified 状态被页面使用）
 ├── data/                   ← 入库数据（本机产物一律进 data/local/，见下）
 │   ├── cases-{2024,2025,2026}.json ← 核心：各赛季判例（issues + cases）
-│   ├── impact-{2024,2025,2026}.json ← 错漏判影响标注
+│   ├── impact-{2024,2025,2026}.json ← 错漏判影响标注（make_impact*.py 产物，勿手改）
 │   ├── match-scores-{2024,2025,2026}.json ← 比分（人工查证）
+│   ├── quiz-answers.json   ← 考题答案库（gen_quiz_answers.py 产物+人工校对）
 │   ├── teams.json          ← 队伍统一目录（generate_teams_catalog.py 产物，勿手改）
 │   ├── crest_overrides.json ← 人工核验的队徽成果（重建目录时不丢失的唯一权威源）
 │   ├── crests.json         ← 兼容映射（generate_teams_catalog.py 产物）
@@ -51,6 +55,7 @@
 ├── scripts/                ← 可执行入口脚本（凡直接在本层的都能 python 跑）
 │   └── lib/                ← **只被 import，永不直接执行**：paths.py（路径常量唯一
 │                             权威源）/ theme.py / safe_http.py / crest_catalog.py /
+│                             team_names.py（队名归一唯一权威源，硬约束6）/
 │                             classify_cls_{2024,2026}.py
 ├── tests/test_integrity.py ← 完整性断言（裸跑或 pytest 皆可，fail-collecting）
 ├── docs/                   ← 结构说明 / 新赛季接入 / 队徽指南
@@ -89,9 +94,9 @@ python scripts/fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Cle
                                               #     （缓存 data/local/uefa-cache/，gitignored）；parse 子命令纯本地重解析
 python scripts/build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json + data/uefa-zh.json
                                               #     译文层合并构建：中文为主、英文原文开关，CI 安全）
-python scripts/build_portal.py                # 12. 生成门户 index.html
-python scripts/build_page.py                  # 13. 生成 season-2026/2025/2024.html（可带赛季参数）
-python scripts/build_stats.py                 # 14. 生成 stats-2026/2025/2024.html（可带赛季参数）
+python scripts/build_portal.py                # 13. 生成门户 index.html
+python scripts/build_page.py                  # 14. 生成 season-2026/2025/2024.html（可带赛季参数）
+python scripts/build_stats.py                 # 15. 生成 stats-2026/2025/2024.html（可带赛季参数）
 python scripts/verify_videos.py [赛季]        # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
 python scripts/serve.py [端口]                # 本地预览服务（内部以绝对路径起 range_server.py，
                                               #     支持Range，视频可拖进度条）
@@ -118,7 +123,8 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - `impacts[seq]`: `{league, round, home, away, items:[{team(受损队), type, swing, note}]}`
 - type ∈ denied_goal/opp_goal_should_disallow/missed_penalty/wrong_penalty_against/missed_red_opponent/wrong_red_self/missed_yellow_opponent/wrong_yellow_self/wrong_foul_called_self/wrong_offside_self
 - `swing`: 仅进球判定类错误有值（denied_goal=+1, opp_goal_should_disallow=-1），点球是机会不折算进球
-- 范围：仅男子中超/中甲/中乙（女超/女甲/全运会排除）
+- 范围：男子中超/中甲/中乙及足协杯（女超/女甲/全运会排除）；各 make_impact 脚本内有
+  OUT_OF_SCOPE/UNATTRIBUTABLE 排除表 + 覆盖率断言（范围内每条 wrong 必须被标注或显式排除）
 
 ### teams.json（队伍统一目录，crest_catalog.py 消费）
 - `{version, generated_from, teams: {team-NNN: {name, aliases[], slug, path, source_url, source_type, status(verified/fallback), initials, fg, bg, parent}}}`
@@ -172,7 +178,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 筛选统一走 `visibleCases()` → `renderList()` → `applyFilter()`（选中项被筛掉时自动跳到第一条）
 - **JS 分层契约**：逻辑层（state/baseMatch/存储/锚点/键盘/单播放器）与渲染层（render* 函数 + innerHTML 模板）分离；事件委托挂在容器 ID 上，**重写渲染层时保持容器 ID 与 `data-*` 属性契约**（data-seq/data-cat/data-v/data-comp/data-team/data-issue/data-fav/data-tag/data-i）
 - **视频内存策略**：详情区只有一个 `<video>`，`select()` 时替换 src（视频路径已含赛季前缀）。**绝不要**恢复为列表内联 video 元素——几百个播放器会让浏览器内存膨胀到 4-5GB（已经踩过并修复的坑）
-- **响应式断点（唯一一套）**：1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）
+- **响应式断点**：season 页唯一一套 1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）。其余页面另有自己的断点（topbar 压缩 760px、rules/scale/uefa 抽屉 900px、portal 960px），不与 season 页共用
 - 收藏/笔记存 localStorage：键 `cfa2026.fav/notes`、`cfa2025.fav/notes`、`cfa2024.fav/notes`（按赛季隔离，且按 origin 隔离，file:// 与 http:// 不同源，故有导出/导入 JSON 功能）
 - **quiz 页（build_quiz.py）**：客户端渲染三屏（开始/答题/结果）；题库 DATA 内联（判例+尺度场景两种题型）；判分「复核结论 1 分 + 判罚决定 1 分 + 纪律处分 1 分」（无答案库轴不出题）、尺度矩阵多选满分 2 分；错题本键 `cfa.quiz.wrong`；season 页隐藏答案模式开关 `#btnHideAns`（`cfa.hideans`，`html[data-hideans]` CSS 门控 + `.d-card.revealed` 逐题揭示，切题自动重隐）
 - **轻量版模式（cfa.lite）**：全局浏览模式开关——门户分段控件（`#modeFull/#modeLite`）+ season/scale 顶栏 `#btnLite`（theme.py `_TOGGLE_JS` 统一处理：写 `cfa.lite`、切 `html[data-lite]`、派发 `cfa:lite` 事件；`_EARLY_JS` 首帧前设置防闪烁）。开启后（build_page.py）：`select()` 走 LITE 分支，无任何视频逻辑，`#srcActions` 渲染「打开官方评议页」（`issues[].url`，按期跳转）+ 每条 `video_urls` 官方直链（新标签页在线播放）；scale 页 CSS 隐藏全部场景视频 `.hvideo` 并显示官方发布页横幅（`SCALE_SOURCE_URLS` 按赛季随页签切换，官方材料为 zip 发布无逐例链接）。筛选/收藏/笔记/锚点两模式共用同一套（同一 localStorage 键，笔记本用法核心）。完整版遇本地视频 404 自动改用官方直链（`vidsMissing` 会话级直连，`ossTried` 防循环），彻底失败且未开轻量时弹 `#vfailTip` 一次性提示条（sessionStorage `cfa.vfail` 记忆关闭）
@@ -193,7 +199,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且内容不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入
 5. **期数结构坑**：2024 第1期为"结论摘要"式文章（无标准判例结构/无视频，阵容仅在导语中，classify_cases.py 内按原文补全，判例二/三属中甲第1轮）；2025 第27期内嵌第26期补充认定（fix_issue27_merge.py）；2026 第20期判例一无"判例N:"前缀（parse_issues.py 已有无前缀首判例兜底）；2026 第17期判例九沿判例八事件无对阵行（classify_cases.py 内补全）；comp 兜底归一在 parse/builder 双处
-6. **球队名归一是单点**：`generate_teams_catalog.py` 的 `ALIASES`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；impact/scores 里的队名必须是归一化后名字；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
+6. **球队名归一是单点**：`scripts/lib/team_names.py` 的 `ALIASES`/`normalize_name`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；generate_teams_catalog 与 make_impact* 都从这里取，build_stats 构建时兜底再归一一次；impact/scores 里的队名必须是归一化后名字（test_integrity 强制）；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
 7. **两 URL 表同步**：fetch_issues.py 的 `ISSUES` 与 parse_issues.py 的 `ISSUE_URL` 是同一套 URL 的两份拷贝，加新期必须同步
 8. **expectation 断言**：`tests/test_integrity.py` 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
 9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。凡指向它的 `<video>` 或 `<a>` 必须带 `referrerpolicy="no-referrer"`（直链再加 `rel="noreferrer"`），否则轻量版直链与完整版在线回退全部失效
@@ -213,10 +219,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 改动后依次验证（命令一律在仓库根执行）：
 - [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
-- [ ] `python tests/test_integrity.py` 通过（11页面/三赛季数据/考题池基准/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] `python tests/test_integrity.py` 通过（11页面/三赛季数据/impact一致性/页面-数据同步/考题池基准/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
 - [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
 - [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题
-- [ ] 浏览器打开 index.html：门户六张卡片数字正确、浏览模式分段开关与说明文字正确
+- [ ] 浏览器打开 index.html：门户七张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
 - [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、uefa 页 lite 下隐藏 iframe（如有）只留链接、顶栏「轻量版」随时切回完整版、刷新记忆保持
@@ -228,7 +234,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 ## 已知不足（欢迎改进）
 
-- 2026 赛季进行中：持续跑 fetch→parse→classify→impact 增量更新；影响统计的 79 场比分已核 19 场（确定得失球场次优先），其余"待补"
+- 2026 赛季进行中：持续跑 fetch→parse→classify→impact 增量更新；影响统计的 79 场比分已核 19 场（确定得失球场次优先），其余"待补"；2024 第1期判例三（seq3）因原文未载明对阵与防守方无法归因受损队，未纳入影响统计（make_impact_2024.py UNATTRIBUTABLE 有注）
 - 111 支标准队伍中 39 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽
 - 官方标题认定数与合集口径存在差异（漏判黄牌/低级别联赛/本轮中超口径），已在页面"说明"弹层按期注释（ISSUE_NOTES）
 - 2026 判例的判定与影响标注为按同一方法论复核（非官方逐条人工背书），把握度低的判 pending 并注释

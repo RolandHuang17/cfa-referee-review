@@ -1,6 +1,10 @@
 # 判例视频（三赛季约 30GB，用户按需 download_videos_parallel.py 下载）
 site/videos/
 
+# site/assets/ 是 build_all.py 每次 rmtree+copytree 从 assets/ 重新生成的构建中间态
+# （曾误跟踪导致仓库体积翻倍）；clone 后跑一次 build_all.py 复原，CI 部署不受影响
+site/assets/
+
 # 本机专用原始材料与运行时产物：IFAB 规则 PDF、抓取缓存、页面截图、下载/校验日志、
 # 官方统一尺度材料包（3.3GB）。clone 下来此目录不存在，脚本各自负责 mkdir。
 data/local/

@@ -20,6 +20,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from lib.crest_catalog import load_catalog, normalize_team, validate_catalog  # noqa: E402
 from lib.paths import DATA, SITE  # noqa: E402
+from lib.team_names import ALIASES  # noqa: E402
 
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
@@ -29,7 +30,8 @@ SEASONS = ("2024", "2025", "2026")
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
             "2025": (227, 229, {"wrong": 82, "correct": 138, "pending": 7}),
             "2026": (225, 224, {"wrong": 95, "correct": 121, "pending": 9})}
-# 考题模式题库基准：每季「有视频且有认定原文」的判例数 + 尺度场景数（改口径需同步）
+# 考题模式题库基准：每季「有视频且有认定原文」的判例数 + 尺度场景数（改口径需同步）。
+# 注意 2024 第1期为"结论摘要"式文章，无认定原文的判例（如 seq3）本就不入判例池，属设计内
 EXPECTED_QUIZ = {"2024": 141, "2025": 227, "2026": 224}
 
 FAILURES = []
@@ -52,6 +54,13 @@ def test_pages_exist_and_are_self_contained():
             problems.append(f"存在模板占位符: site/{name}")
         if re.search(r"<script\s+src=|fonts\.googleapis|cdnjs|unpkg|jsdelivr", text, re.I):
             problems.append(f"存在外部脚本或CDN引用: site/{name}")
+        # 标签配平护栏：未闭合的 <style>/<script> 会把后续文档吞进 raw-text 块，
+        # 造成 token 丢失/页面半瘫（stats 页曾因缺 </style> 丢掉全部 :root tokens）
+        for tag in ("style", "script"):
+            opened = len(re.findall(rf"<{tag}[\s>]", text))
+            closed = text.count(f"</{tag}>")
+            if opened != closed:
+                problems.append(f"site/{name} <{tag}> 标签不配平: {opened} 开 / {closed} 闭")
     _finish(problems)
 
 
@@ -66,6 +75,14 @@ def test_season_case_counts():
         if (len(cases), videos, actual) != (case_count, video_count, verdicts):
             problems.append(f"{season}数据统计不符: cases={len(cases)} videos={videos} "
                             f"verdicts={actual}，期望 {case_count}/{video_count}/{verdicts}")
+        # 存档完整性：cases 引用的每期都应有官方页面存档
+        issues_dir = DATA / "issues" / season
+        if issues_dir.is_dir():
+            archived = {int(mm.group(1)) for f in issues_dir.glob("issue_*.html")
+                        for mm in [re.match(r"issue_(\d+)\.html", f.name)] if mm}
+            case_issues = {c["issue"] for c in cases}
+            if not case_issues <= archived:
+                problems.append(f"{season} 官方页面存档缺期: {sorted(case_issues - archived)}")
     _finish(problems)
 
 
@@ -73,11 +90,13 @@ def test_internal_links_resolve():
     problems = []
     for path in SITE.glob("*.html"):
         for target in re.findall(r"(?:href|src)=\"([^\"]+)\"", path.read_text(encoding="utf-8")):
-            if target.startswith(("#", "http://", "https://", "data:", "mailto:")) or "${" in target:
+            if target.startswith(("#", "http://", "https://", "data:", "mailto:", "//", "/")) or "${" in target:
                 continue
             if target.startswith("videos/"):
                 continue  # 视频为本地 gitignored 资产，线上按需提供
             stem = target.split("#", 1)[0]
+            if "?" in stem:
+                continue  # 带 query 的链接不经文件系统解析
             if stem and not (path.parent / stem).resolve().exists():
                 problems.append(f"{path.name} 引用了不存在的路径: {target}")
     _finish(problems)
@@ -151,9 +170,76 @@ def test_quiz_bank_pool():
           f"{int(m.group(2)) if m else '?'} 题")
 
 
+def test_impact_and_scores_consistency():
+    """impact/scores 数据护栏：键落在 wrong 判例、items 属对阵双方、队名已归一化、比分键无孤儿。
+
+    队名归一是 AGENTS 硬约束 6：impact/scores 必须存标准名（未归一名会让 stats 页
+    查不到队徽、与 season 页队名不一致）。覆盖缺口由各 make_impact 脚本的覆盖率断言负责。
+    """
+    problems = []
+    for season in SEASONS:
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+        wrong = {c["seq"] for c in data["cases"] if c["referee_verdict"] == "wrong"}
+        imp = json.loads((DATA / f"impact-{season}.json").read_text(encoding="utf-8"))
+        match_keys = set()
+        for seq_s, rec in imp["impacts"].items():
+            seq = int(seq_s)
+            where = f"impact-{season} seq{seq}"
+            if seq not in wrong:
+                problems.append(f"{where} 不是 wrong 判例")
+                continue
+            match_keys.add(f"{rec['league']}|{rec['round']}|{rec['home']}|{rec['away']}")
+            if rec["league"] != next(c["comp"] for c in data["cases"] if c["seq"] == seq):
+                problems.append(f"{where} league 与 cases 不符")
+            for n in (rec["home"], rec["away"]):
+                if n in ALIASES:
+                    problems.append(f"{where} 队名未归一化: {n}")
+            for it in rec["items"]:
+                if it["team"] not in (rec["home"], rec["away"]):
+                    problems.append(f"{where} items 队名不属于对阵双方: {it['team']}")
+        sc = json.loads((DATA / f"match-scores-{season}.json").read_text(encoding="utf-8"))
+        for key in sc.get("scores", {}):
+            for n in key.split("|")[2:]:
+                if n in ALIASES:
+                    problems.append(f"match-scores-{season} 队名未归一化: {key}")
+            if key not in match_keys:
+                problems.append(f"match-scores-{season} 孤儿比分键（impact 无对应场次）: {key}")
+    _finish(problems)
+    print("impact/scores 一致性校验通过")
+
+
+def test_site_pages_in_sync_with_data():
+    """stale-build 护栏：site 页内联 meta 计数必须与 data JSON 一致（改数据必须重建页面）。"""
+    problems = []
+    for season in SEASONS:
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+        page = SITE / f"season-{season}.html"
+        if page.exists():
+            m = re.search(r'"meta":\{"n_cases":(\d+),"n_issues":(\d+)\}',
+                          page.read_text(encoding="utf-8"))
+            if not m:
+                problems.append(f"season-{season}.html 缺少 meta 计数（页面过旧，需重建）")
+            elif (int(m.group(1)), int(m.group(2))) != (len(data["cases"]), len(data["issues"])):
+                problems.append(f"season-{season}.html 内联数据过期: meta={m.groups()}，"
+                                f"实际 cases={len(data['cases'])} issues={len(data['issues'])}，需重建页面")
+        imp = json.loads((DATA / f"impact-{season}.json").read_text(encoding="utf-8"))
+        spage = SITE / f"stats-{season}.html"
+        if spage.exists():
+            m2 = re.search(r'"overview":\{"cases":(\d+)', spage.read_text(encoding="utf-8"))
+            if not m2:
+                problems.append(f"stats-{season}.html 缺少 overview 计数（页面过旧，需重建）")
+            elif int(m2.group(1)) != len(imp["impacts"]):
+                problems.append(f"stats-{season}.html 内联数据过期: 影响 {m2.group(1)} != "
+                                f"{len(imp['impacts'])}，需重建页面")
+    _finish(problems)
+    print("site 页面与 data JSON 同步")
+
+
 CHECKS = [
     test_pages_exist_and_are_self_contained,
     test_season_case_counts,
+    test_impact_and_scores_consistency,
+    test_site_pages_in_sync_with_data,
     test_quiz_bank_pool,
     test_internal_links_resolve,
     test_team_catalog_complete,

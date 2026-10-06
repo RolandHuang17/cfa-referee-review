@@ -6,6 +6,15 @@
 [语义化版本](https://semver.org/lang/zh-CN/)。仓库尚未打过 tag，首次切分发布时会
 把 `Unreleased` 段落并入对应版本号并补上对比链接。
 
+## 2026-10-06
+
+### 新增（第五批：周更节目判例库 + IFAB 统一尺度译制）
+- **全球周更评议节目判例库 weekly.html**（新页面 + `scripts/fetch_weekly.py` + 数据 `data/weekly.json` / `data/weekly-zh.json`）：七档官方评议节目的**结构化期目索引 221 期**——苏格兰 SFA《The VAR Review》（19，官方播放列表×2）、土耳其 TFF《VAR Kayıtları》（81，四个赛季播放列表）、日本 J 联赛《シンレポ》（49，官方播放列表）、英格兰《Match Officials: Mic'd Up》（3，Sky 频道内检索）、墨西哥裁判委员会《VAR Review》（8，官方频道全量）、阿根廷 LPF《VAR Revisión》（36，官方播放列表+频道检索）、俄罗斯 РФС ТВ《Судейский разбор》（25，频道内检索）。抓取双通道：YouTube RSS（精确日期 + 完整官方说明 + 播放量，≤15 条/源）为主，播放列表/频道检索页 `ytInitialData`（新版 lockupViewModel 与旧版 renderer 双兼容）做存量回补，相对时间（含 `1mo ago` 紧凑式）按抓取日近似并标 `≈`；按 videoId 字段级增量合并（重跑只增不减）。页面：节目筛选 chips + 搜索（标题/译注/说明）+ 年份分组 + 逐期卡片（官方观看直链、中文译注优先、原文说明折叠）。⚠ YouTube 视频受官方条款约束不下载不内嵌——纯链接模式（uefa/pro 先例，用户批准例外）；SOURCES 注册表 ID 已逐一人工核验（注意 `@TFF`、`@ScottishFA` 句柄有撞车/空壳陷阱，一律用频道 ID 直访）。
+- **IFAB 统一尺度译制 ifab.html**（新页面 + `scripts/fetch_ifab.py` + 数据 `data/ifab.json` / `data/ifab-zh.json`）：IFAB《Laws of the Game》**VAR protocol 官方全文中文译制**——1 原则 / 2 可回看的判定与事件 / 3 实务安排 / 4 程序 四大节（11 子节 / 92 条款）+ **12 条官方 FAQ 判例**全译，中文为主、页头「英文原文」开关（`html[data-ifab-en]` + localStorage `cfa.ifab-en`，同 uefa.html 机制），译文按 section id / block 英文标题 / FAQ id 平铺匹配（rfef-zh 同构，构建零缺口告警），页尾配套材料区（PDF 下载门户 / Practical Guidelines / 站内 rules.html、scale.html 互链）。解析锚点：accordion h2（button+span 编号）、h3 子节、p/li（li 内嵌 p 整体吞并防重复）、FAQ 的 `QuestionAndAnswer__StyledQuestion/Answer` 容器；`clean()` 处理块尾未闭合标签防杂质。
+- **intl.html 策展扩充**：9 → **23 项资源**（新增「VAR 音频透明化」组：巴西 CBF Áudios do VAR / 阿根廷 LPF；新增「官方课程与规则测验」组 12 项：英格兰/北爱/爱尔兰/荷兰/丹麦/比利时/瑞士/法国/加拿大/澳/OF C/AFC）；已在 weekly.html 建立索引的节目逐条标注并互链；`related` 补 weekly/ifab/conmebol 三个站内入口。
+- 门户第十三、十四张卡片「周更评议」「IFAB 统一尺度」（考题卡顺延 --i:13）；顶栏导航新增「周更评议」（tv 图标）「IFAB」（file-text 图标）两项，`theme.py` 新增 `tv`/`file-text` 两个 feather 图标；`safe_http` 白名单新增 `www.youtube.com`、`www.theifab.com`；`paths.py` 新增 `WEEKLY_JSON`/`WEEKLY_ZH_JSON`/`WEEKLY_CACHE`/`IFAB_JSON`/`IFAB_ZH_JSON`/`IFAB_CACHE`；`build_all.py` 挂入 build_weekly/build_ifab；测试 `PAGES` 扩至 **18 页**并新增 `test_weekly_ifab_data_sanity`（期目字段/译注层键对齐/FAQ 覆盖断言）全绿。
+- fetch_weekly 安全注记：YouTube RSS 属不可信输入，解析前拒绝 DTD/实体并限输入大小（防 XML 实体扩展）；随机数仅用于请求间隔礼貌延时（与既有 fetcher 一致，非安全用途）。
+
 ## 2026-10-05
 
 ### 新增（第四批：CONMEBOL 深度整合 + RFEF 视频齐备）

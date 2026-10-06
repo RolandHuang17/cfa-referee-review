@@ -1,8 +1,8 @@
 {
- "checked": "2026-10-05",
+ "checked": "2026-10-06",
  "intro_cn": [
-  "除本站已深度整合的资源外（UEFA Clear Line / RAP / 西班牙 RFEF / 美国 PRO），全球主要足协与联赛还有一批公开的裁判评议节目。它们形态各异——官方视频节目、逐轮文字认定、YouTube 频道——但共同点是：用真实比赛片段讲解统一判罚尺度，与本站「看片段→自己判→对认定」的训练法同构。",
-  "本页为人工核验的资源导航：标注语言、更新频率、内容形态与注意事项。YouTube 型频道建议直接订阅；文字型周更适合配合机器翻译跟读。"
+  "除本站已深度整合的资源外（UEFA Clear Line / RAP / 西班牙 RFEF / 美国 PRO / 南美 CONMEBOL / 周更节目判例库），全球主要足协与联赛还有一批公开的裁判评议与教学资源。它们形态各异——官方视频节目、逐轮文字认定、课程与测验——但共同点是：用真实比赛片段讲解统一判罚尺度，与本站「看片段→自己判→对认定」的训练法同构。",
+  "本页为人工核验的资源导航：标注语言、更新频率、内容形态与注意事项。已在 weekly.html 建立结构化期目索引的节目会特别标注；其余 YouTube 型频道建议直接订阅，文字型周更适合配合机器翻译跟读。"
  ],
  "groups": [
   {
@@ -17,10 +17,11 @@
      "lang": "英语",
      "update": "随比赛日",
      "form": "官方视频评议节目",
-     "status_cn": "在更",
-     "note_cn": "裁判总监 Collum 用真实比赛日主裁-VAR 通话音频逐案复盘（已验证 16 期）。注意：其文字版 KMI 独立小组已于 2026 年废除、旧结果页 404，本节目是目前唯一公开渠道。",
+     "status_cn": "在更 · 本站已收录",
+     "note_cn": "裁判总监 Collum 用真实比赛日主裁-VAR 通话音频逐案复盘。注意：其文字版 KMI 独立小组已于 2026 年废除、旧结果页 404，本节目是目前唯一公开渠道。19 期结构化索引已入 weekly.html。",
      "links": [
-      {"label": "The VAR Review 播放列表", "url": "https://www.scottishfa.co.uk/en/video/playlists/the-var-review"}
+      {"label": "The VAR Review 播放列表", "url": "https://www.scottishfa.co.uk/en/video/playlists/the-var-review"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
      ]
     },
     {
@@ -57,10 +58,11 @@
      "lang": "西语 / 葡语",
      "update": "随赛事",
      "form": "逐案分析文章",
-     "status_cn": "在更",
-     "note_cn": "逐案视频判例分析文章（比赛/分钟/情境逐条），覆盖世预赛与解放者杯/南美杯，另发布 VAR 音频。",
+     "status_cn": "在更 · 本站已收录",
+     "note_cn": "逐案视频判例分析文章（比赛/分钟/情境逐条），覆盖世预赛与解放者杯/南美杯，另发布 VAR 音频。60 案已深度整合至本站 conmebol.html。",
      "links": [
-      {"label": "VAR 分析专栏", "url": "https://www.conmebol.com/sistema-asistencia-arbitral-por-video/"}
+      {"label": "VAR 分析专栏", "url": "https://www.conmebol.com/sistema-asistencia-arbitral-por-video/"},
+      {"label": "本站判例页（conmebol.html）", "url": "conmebol.html"}
      ]
     }
    ]
@@ -68,7 +70,7 @@
   {
    "key": "youtube",
    "name_cn": "官方 YouTube 频道型（视频节目）",
-   "desc_cn": "以官方 YouTube 频道/播放列表为载体的评议节目，建议直接订阅跟更。",
+   "desc_cn": "以官方 YouTube 频道/播放列表为载体的评议节目；其中四档已在本站 weekly.html 建立期目索引。",
    "resources": [
     {
      "id": "england",
@@ -77,11 +79,12 @@
      "lang": "英语",
      "update": "月更",
      "form": "现场收音 + VAR 音频复盘",
-     "status_cn": "在更",
-     "note_cn": "Howard Webb 携现场收音与 VAR 音频逐案复盘——内容深度最高。注意：英超独立 KMI 评议小组存在但结论从不公开；PL 另有 VAR 专页。",
+     "status_cn": "在更 · 本站部分收录",
+     "note_cn": "Howard Webb 携现场收音与 VAR 音频逐案复盘——内容深度最高。注意：英超独立 KMI 评议小组存在但结论从不公开；完整正片分散在 Sky 频道，本站 weekly.html 收录按标题匹配到的官方内容。",
      "links": [
       {"label": "PL 官网 VAR 专页", "url": "https://www.premierleague.com/var"},
-      {"label": "Sky Sports（Mic'd Up 发布渠道）", "url": "https://www.youtube.com/@SkySportsPremierLeague"}
+      {"label": "Sky Sports（Mic'd Up 发布渠道）", "url": "https://www.youtube.com/@SkySportsPremierLeague"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
      ]
     },
     {
@@ -91,10 +94,11 @@
      "lang": "西语",
      "update": "按 Jornada 周更",
      "form": "视频判例评析",
-     "status_cn": "在更（音频暂停）",
-     "note_cn": "按 Jornada 周更视频判例评析。注意：VAR 音频的定期公开已于 2025 年底暂停。",
+     "status_cn": "在更（音频暂停）· 本站已收录",
+     "note_cn": "按 Jornada 周更视频判例评析。注意：VAR 音频的定期公开已于 2025 年底暂停；官方频道约 16 支视频已全量入 weekly.html。",
      "links": [
-      {"label": "官方 YouTube 频道（视频页）", "url": "https://www.youtube.com/@ComisiondeArbitrosMX/videos"}
+      {"label": "官方 YouTube 频道（视频页）", "url": "https://www.youtube.com/@ComisiondeArbitrosMX/videos"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
      ]
     },
     {
@@ -104,10 +108,11 @@
      "lang": "土耳其语",
      "update": "周更",
      "form": "VAR 休息室音频+画面",
-     "status_cn": "在更",
-     "note_cn": "每周整体公开上轮关键判罚的 VAR 休息室音频+画面——透明度最高的联赛节目之一。",
+     "status_cn": "在更 · 本站已收录",
+     "note_cn": "每周整体公开上轮关键判罚的 VAR 休息室音频+画面——透明度最高的联赛节目之一。四个赛季播放列表（2023-24 至 2026-27）已入 weekly.html。",
      "links": [
-      {"label": "TFF 官网（入口）", "url": "https://www.tff.org"}
+      {"label": "TFF 官网（入口）", "url": "https://www.tff.org"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
      ]
     },
     {
@@ -117,11 +122,12 @@
      "lang": "日语",
      "update": "周更",
      "form": "视频判例 + 官方解说",
-     "status_cn": "在更",
-     "note_cn": "公开视频判例 + 官方解说，含 VAR 室原声还原判罚。另：JFA「レフェリングトピックス」判例专题在 jfa.jp/referee，但需 JFA 注册裁判登录。",
+     "status_cn": "在更 · 本站已收录",
+     "note_cn": "公开视频判例 + 官方解说，含 VAR 室原声还原判罚。官方播放列表已入 weekly.html。另：JFA「レフェリングトピックス」判例专题需 JFA 注册裁判登录。",
      "links": [
       {"label": "Jリーグ官方 YouTube 频道", "url": "https://www.youtube.com/@jleaguechannel"},
-      {"label": "JFA 裁判页", "url": "https://www.jfa.jp/referee/"}
+      {"label": "JFA 裁判页", "url": "https://www.jfa.jp/referee/"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
      ]
     },
     {
@@ -131,10 +137,209 @@
      "lang": "俄语",
      "update": "按轮",
      "form": "判例视频解析",
-     "status_cn": "在更",
-     "note_cn": "按轮发布 RPL（俄超）判例视频解析，Dzen 官方账号 + VK 视频双渠道。",
+     "status_cn": "在更 · 本站已收录",
+     "note_cn": "按轮发布 RPL（俄超）判例视频解析，РФС ТВ 官方频道发布（另有 Dzen/VK 渠道）。25 期已入 weekly.html。",
      "links": [
-      {"label": "Dzen（РФС 官方账号）", "url": "https://dzen.ru"}
+      {"label": "РФС ТВ 官方 YouTube 频道", "url": "https://www.youtube.com/channel/UCLNgRqvauqKU6SOzdAJSQaw"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
+     ]
+    }
+   ]
+  },
+  {
+   "key": "audio",
+   "name_cn": "VAR 音频透明化（巴西 / 阿根廷）",
+   "desc_cn": "逐案公开 VAR 休息室音频的政策性发布，节奏不固定，适合作为判例素材库补充。",
+   "resources": [
+    {
+     "id": "cbf",
+     "org": "巴西足协 CBF",
+     "name": "Áudios do VAR（VAR 音频公开）",
+     "lang": "葡萄牙语",
+     "update": "逐案不定期",
+     "form": "VAR 音频 + 说明文章",
+     "status_cn": "政策推进中",
+     "note_cn": "CBF 逐案发布「Áudios do VAR」，2025 年 10 月起政策扩大到未回看判罚。发布散见于 cbf.com.br 新闻区与官方社媒，YouTube 上多为媒体转载（非官方），暂无稳定官方播放列表，故未入本站周更索引。",
+     "links": [
+      {"label": "CBF 官网新闻区", "url": "https://www.cbf.com.br"}
+     ]
+    },
+    {
+     "id": "afa",
+     "org": "阿根廷职业足球联赛（AFA · LPF）",
+     "name": "VAR Revisión / Audios del VAR",
+     "lang": "西语",
+     "update": "每轮",
+     "form": "VAR 对话音频 + 判例视频",
+     "status_cn": "在更 · 本站已收录",
+     "note_cn": "官方账号（Liga Profesional de Fútbol）按 Fecha（轮次）发布各场主裁与 VAR 对话音频。36 期已入 weekly.html。",
+     "links": [
+      {"label": "LPF 官方 YouTube 频道", "url": "https://www.youtube.com/channel/UCJmCVoUfCBQb9lcfXIS8nXQ"},
+      {"label": "本站期目索引（weekly.html）", "url": "weekly.html"}
+     ]
+    }
+   ]
+  },
+  {
+   "key": "courses",
+   "name_cn": "官方课程与规则测验（第三梯队）",
+   "desc_cn": "各国足协公开的规则课程与判例测验，适合系统学习与自测；部分需免费注册。",
+   "resources": [
+    {
+     "id": "england-learning",
+     "org": "英格兰足球总会",
+     "name": "Guide to the Laws of the Game",
+     "lang": "英语",
+     "update": "长期有效",
+     "form": "免费在线课程",
+     "status_cn": "开放",
+     "note_cn": "免费规则课程；CPD 视频在 England Football Learning YouTube。门槛：注册 England Football 账号。",
+     "links": [
+      {"label": "课程页（England Football Learning）", "url": "https://learn.englandfootball.com/courses/Refereeing/guide-to-the-laws-of-the-game"},
+      {"label": "裁判门户", "url": "https://www.englandfootball.com/participate/referees"}
+     ]
+    },
+    {
+     "id": "irishfa",
+     "org": "北爱尔兰足协 IFA",
+     "name": "Irish FA Refereeing",
+     "lang": "英语",
+     "update": "长期有效",
+     "form": "8 主题视频 + 测验",
+     "status_cn": "开放（需注册）",
+     "note_cn": "8 个主题的视频与配套测验，需免费注册。",
+     "links": [
+      {"label": "Irish FA Refereeing", "url": "https://www.irishfarefereeing.com/"}
+     ]
+    },
+    {
+     "id": "fai",
+     "org": "爱尔兰足协 FAI",
+     "name": "Referee Education 判例测验",
+     "lang": "英语",
+     "update": "长期有效",
+     "form": "7 个测验模块",
+     "status_cn": "开放",
+     "note_cn": "7 个判例测验模块，公开可做。",
+     "links": [
+      {"label": "教育训练页", "url": "https://www.fai.ie/play-and-participate/referees/active-referees/education-and-training/"}
+     ]
+    },
+    {
+     "id": "knvb",
+     "org": "荷兰足协 KNVB",
+     "name": "KNVB Dugout 裁判 e-learning",
+     "lang": "荷兰语",
+     "update": "长期有效",
+     "form": "e-learning 课程",
+     "status_cn": "开放",
+     "note_cn": "KNVB Dugout 平台裁判课程；注意旧域名 scheidsrechter.nl 已易主失效。",
+     "links": [
+      {"label": "Dugout 课程目录", "url": "https://dugout.knvb.nl/course/index.php?categoryid=450"}
+     ]
+    },
+    {
+     "id": "dbu",
+     "org": "丹麦足协 DBU",
+     "name": "Test din dommerviden（测测你的裁判知识）",
+     "lang": "丹麦语",
+     "update": "长期有效",
+     "form": "67 题带解析测验",
+     "status_cn": "开放",
+     "note_cn": "67 题判例测验，每题带答案解析。",
+     "links": [
+      {"label": "测验页", "url": "https://www.dbu.dk/turneringer-og-resultater/dommere/test-din-dommerviden/"}
+     ]
+    },
+    {
+     "id": "rbfa",
+     "org": "比利时足协 RBFA",
+     "name": "BeTheRef",
+     "lang": "英语 / 荷法德语",
+     "update": "长期有效",
+     "form": "规则测验",
+     "status_cn": "开放",
+     "note_cn": "RBFA 面向公众的规则测验入口。",
+     "links": [
+      {"label": "BeTheRef", "url": "https://www.rbfa.be/en/BeTheRef"}
+     ]
+    },
+    {
+     "id": "sfv",
+     "org": "瑞士足协 SFV",
+     "name": "Regel-Quiz",
+     "lang": "德语",
+     "update": "长期有效",
+     "form": "规则测验",
+     "status_cn": "开放",
+     "note_cn": "瑞士足协德语区规则测验；另 Pro-Memoria 年度裁判指令（德/法/意三语）在 org.football.ch 裁判栏目公开。",
+     "links": [
+      {"label": "Regel-Quiz", "url": "https://www.football.ch/sfv/schiedsrichter/regeln-und-ratschlaege/regel-quiz.aspx"}
+     ]
+    },
+    {
+     "id": "fff",
+     "org": "法国足协 FFF",
+     "name": "Tous Arbitres（入门教案）",
+     "lang": "法语",
+     "update": "长期有效",
+     "form": "初学者教案",
+     "status_cn": "开放",
+     "note_cn": "面向初学裁判的教案站；注意 arbitrage.fff.fr 旧裁判门户已迁移失效。",
+     "links": [
+      {"label": "Tous Arbitres", "url": "https://www.tousarbitres.fr"}
+     ]
+    },
+    {
+     "id": "canada",
+     "org": "加拿大足协",
+     "name": "Referee Resources",
+     "lang": "英语 / 法语",
+     "update": "长期有效",
+     "form": "资源导航",
+     "status_cn": "开放",
+     "note_cn": "加拿大足协裁判资源总入口。",
+     "links": [
+      {"label": "Referee Resources", "url": "https://canadasoccer.com/resources/referee-resources/"}
+     ]
+    },
+    {
+     "id": "australia",
+     "org": "澳大利亚足协",
+     "name": "Refereeing（Get Involved）",
+     "lang": "英语",
+     "update": "长期有效",
+     "form": "资源导航",
+     "status_cn": "开放",
+     "note_cn": "澳大利亚足协裁判项目入口。",
+     "links": [
+      {"label": "Refereeing", "url": "https://www.footballaustralia.com.au/get-involved/refereeing"}
+     ]
+    },
+    {
+     "id": "ofc",
+     "org": "大洋洲足联 OFC",
+     "name": "OFC Refereeing",
+     "lang": "英语",
+     "update": "长期有效",
+     "form": "资源导航 + LotG PDF",
+     "status_cn": "开放",
+     "note_cn": "大洋洲足联裁判页，含《竞赛规则》PDF 下载。",
+     "links": [
+      {"label": "OFC Refereeing", "url": "https://www.oceaniafootball.com/technical/refeering/"}
+     ]
+    },
+    {
+     "id": "afc",
+     "org": "亚足联 AFC",
+     "name": "AFC Referees",
+     "lang": "英语",
+     "update": "新闻更新",
+     "form": "新闻 / 任命公告",
+     "status_cn": "无公开判例库",
+     "note_cn": "亚足联裁判页仅新闻与任命公告，无公开判例库——亚洲公开层面以日本（シンレポ）最强。",
+     "links": [
+      {"label": "AFC Referees", "url": "https://www.the-afc.com/en/about_afc/referees.html"}
      ]
     }
    ]
@@ -145,6 +350,9 @@
   {"label": "UEFA RAP 训练包（本站指南）", "url": "rap.html"},
   {"label": "西班牙 RFEF 判罚标准（本站已译制）", "url": "rfef.html"},
   {"label": "美国 PRO 评议索引（本站）", "url": "pro.html"},
+  {"label": "南美 CONMEBOL 判例（本站已整合）", "url": "conmebol.html"},
+  {"label": "周更节目判例库（本站已收录 7 档）", "url": "weekly.html"},
+  {"label": "IFAB VAR 协议与统一尺度（本站已译制）", "url": "ifab.html"},
   {"label": "考题模式（离线自测）", "url": "quiz.html"}
  ]
 }

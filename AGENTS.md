@@ -6,8 +6,8 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**十六个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（十二张入口卡片 + 浏览模式开关）
+核心交付物是 `site/` 下的**十八个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（十四张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
@@ -16,8 +16,10 @@
 - `site/rap.html` UEFA RAP 判例训练包导航页（训练方法说明 + 23 期索引：Nextaur 在线期与历史下载包分区，纯指南页不收录判例内容）
 - `site/rfef.html` 西班牙 CTA《Criterios Arbitrales》判罚标准手册（RFEF 官方手册中文译制 + 西语原文开关 + 本地化判例视频，缺失时回退官方直链）
 - `site/conmebol.html` 南美 VAR 判例（CONMEBOL《Situación de Análisis VAR》60 案：比赛/日期/城市/球场/情境/分钟 + 官方 YouTube 判例视频链接；列表页+文章页双级抓取）
-- `site/intl.html` 全球评议资源导航（美国之外的 9 项官方节目/周更：苏格兰 SFA、克罗地亚 HNS、乌克兰 UAF、南美 CONMEBOL、英格兰 Mic'd Up、墨西哥 FMF、土耳其 TFF、日本 J联赛、俄罗斯 RFS；人工策展 intl.json，指南页）
+- `site/intl.html` 全球评议资源导航（4 组 23 项：官方周更节目/文章、YouTube 频道型、VAR 音频透明化、官方课程与测验；已在 weekly.html 建立索引的节目特别标注并互链；人工策展 intl.json）
 - `site/pro.html` 美国 PRO 评议索引（MLS/NWSL 周更 VAR 评析全量 207 篇：Inside Video Review / VAR a Fondo / The Definitive Angle，纯链接索引）+ USSF 视频入口指南
+- `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档官方节目的结构化期目索引 221 期：官方说明原文 + 中文译注层，逐期跳官方观看页）
+- `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ 判例，中英原文开关）
 - `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题随机出卷：判罚决定/纪律处分/复核结论作答判分，错题本 localStorage 记忆错选，支持练习/考试两种模式与错题重练）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
@@ -36,6 +38,7 @@
 ```
 ├── site/                   ← 生成站点与 GitHub Pages 发布目录（勿手改）
 │   ├── index.html / season-*.html / stats-*.html / rules.html / scale.html / uefa.html
+│   │   （国际板块：rap / rfef / pro / intl / conmebol / weekly / ifab.html + quiz.html）
 │   ├── assets/             ← 构建时从 assets/ 复制的队徽+尺度海报（gitignored；
 │   │                          clone 后跑一次 build_all.py 自动复原）
 │   └── videos/             ← 视频按赛季分目录（2024/2025/2026/scale，git忽略）
@@ -59,6 +62,8 @@
 │   ├── intl.json           ← 全球评议资源导航（人工策展）
 │   ├── conmebol.json       ← 南美 VAR 逐案判例（fetch_conmebol.py 产物）
 │   ├── rfef.json / rfef-zh.json ← 西班牙判罚手册抓取产物 / 中文译文层（不可互相覆盖）
+│   ├── weekly.json / weekly-zh.json ← 周更节目期目索引 / 中文译注层（不可互相覆盖）
+│   ├── ifab.json / ifab-zh.json ← IFAB VAR 协议抓取产物 / 中文全文译制层（不可互相覆盖）
 │   ├── issues/{2024,2025,2026}/ ← 各期官方页面原始 HTML 存档（按赛季子目录！）
 │   └── local/              ← **整目录 gitignored**：规则 PDF、抓取缓存、截图、日志、
 │                             2024 官方材料包；clone 下来不存在，脚本各自 mkdir
@@ -119,6 +124,12 @@ python scripts/build_intl.py                  # 12.12 生成 intl.html（读 dat
 python scripts/fetch_conmebol.py all          # 12.13 (随赛事更新) 抓取 CONMEBOL VAR 判例 → data/conmebol.json
                                               #     （列表页 5-10 页 + 逐案文章页增强；conmebol.com 属性常不带引号）
 python scripts/build_conmebol.py              # 12.14 生成 conmebol.html（判例页：赛事/情境筛选 + 年份分组）
+python scripts/fetch_weekly.py [all|discover] # 12.15 (新节目接入/跟更时) 抓取全球周更评议节目 → data/weekly.json
+                                              #     双通道：RSS 精确日期+官方说明；播放列表/频道检索页 ytInitialData 存量回补
+                                              #     discover <channel_id> [query] 辅助探明新源（ID 核验后固化进 SOURCES）
+python scripts/build_weekly.py                # 12.16 生成 weekly.html（weekly.json + weekly-zh.json 译注层）
+python scripts/fetch_ifab.py [all]            # 12.17 (IFAB 更新时) 抓取 VAR protocol 页 → data/ifab.json（缓存 ifab-cache/）
+python scripts/build_ifab.py                  # 12.18 生成 ifab.html（ifab.json + ifab-zh.json 全文译制层）
 python scripts/build_portal.py                # 13. 生成门户 index.html
 python scripts/build_page.py                  # 14. 生成 season-2026/2025/2024.html（可带赛季参数）
 python scripts/build_stats.py                 # 15. 生成 stats-2026/2025/2024.html（可带赛季参数）
@@ -205,6 +216,25 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 双级抓取：Elementor 列表页（分页 /2/…/10/，data-max-page 指示）+ 每案文章页增强（字段各自独立成 <p>，全页剥标签后取最后一组完整字段；YouTube 取字段区之后首个 embed）
 - situacion_norm 归一：penalty/no_penalty/red_card/offside/no_goal/ofr_penalty/other（官方西语原文保留在 situacion_es）
 
+### weekly.json（全球周更评议节目期目索引，fetch_weekly.py 产物，提交进仓库）
+- `{source, source_name, fetched, shows: {key: {name, org, lang, update, url}}, episodes[]}`
+- `episodes[]{id(videoId), show(=shows 键), title, url(官方观看页), date(ISO), date_src(exact/approx), duration, views, desc(官方说明原文，≤3500 字符)}`——exact 来自 RSS，approx 由页面相对时间按抓取日近似（页面显示 ≈ 前缀）
+- 双通道抓取：RSS（精确，≤15 条/源）+ 播放列表/频道检索页 ytInitialData 存量回补（新版 lockupViewModel 与旧版 renderer 双兼容；紧凑相对时间 `1mo ago` 已处理）；按 videoId 字段级增量合并，重跑只增不减
+- ⚠ SOURCES 注册表的频道/播放列表 ID 已人工核验（2026-10）；`@TFF`、`@ScottishFA` 等 handle 存在撞车/空壳陷阱，**一律用频道 ID 直访**（属主以 `ytInitialPlayerResponse.videoDetails.channelId` 为准）
+- ⚠ RSS 属不可信输入：parse_rss 拒绝 DTD/实体并限输入大小（防 XML 实体扩展）
+
+### weekly-zh.json（weekly 中文译注层，并存提交，绝不可互相覆写）
+- `{note, translated, shows{key:{intro}}, items{videoId:{note}}}`——id 键平铺（rfef-zh 同构，无块序脆弱性）；未译期页面回退官方原文，构建时对不上键打 ⚠
+- 补译工作流：直接在 items 补 `{videoId: {note}}` → 重跑 build_weekly.py 至零警告
+
+### ifab.json（IFAB VAR 协议，fetch_ifab.py 产物，提交进仓库）
+- `{source, source_name, fetched, sections[{id(s1…), num, h, blocks[{h(英文子节标题；节首为空), items[{k(p/li), t}]}]}], faq[{id(q1…), q, a}], links[]}`
+- 解析锚点：accordion h2（button+span 编号）/ h3 子节 / p+li（li 内嵌 p 整体吞并防重复）/ FAQ 的 `QuestionAndAnswer__StyledQuestion/Answer` 容器；clean() 处理块尾未闭合标签
+
+### ifab-zh.json（ifab 中文全文译制层，并存提交，绝不可互相覆写）
+- `{note, translated, terms{}, sections{id:{h, blocks{_head|[英文子节标题]: {h, items[]}}}}, faq{id:{q,a}}}`——`_head` 为裸 items 列表，命名子节为 dict；条目按块内序号 1:1 配对（数量不齐整块回退英文并 ⚠）
+- 页面中文为主：默认中文，页头「英文原文」开关（localStorage `cfa.ifab-en`，html[data-ifab-en] 控制所有 .en/.zhv 显隐互换）
+
 ### rap.json（UEFA RAP 各期索引，人工策展，提交进仓库）
 - `{source, checked, nextaur_url, about_cn[], howto_cn[3步], eras[], tools[], editions[]}`
 - `editions[]{id, title, year, era(nextaur/download), platform, size, status_cn, links[{label,url}], note_cn}`——下载包链接时效性强，status_cn 按人工核对填写
@@ -250,7 +280,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 ## 硬约束（违反会直接出错）
 
-1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG。唯一例外（用户批准）：uefa.html 无内嵌第三方资源，仅以文字+外链方式收录 UEFA 判例（视频受官方 token 门禁与 X-Frame-Options: DENY 限制，无法本地化/嵌入）。rfef.html 的判例视频为官方同域直链的本地化副本（site/videos/rfef/，git 忽略，约 14.9GB），仅本地学习用途、与各赛季评议视频同策略；视频缺失时运行时回退官方直链（vfb）。
+1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG。唯一例外（用户批准）：uefa.html 无内嵌第三方资源，仅以文字+外链方式收录 UEFA 判例（视频受官方 token 门禁与 X-Frame-Options: DENY 限制，无法本地化/嵌入）；weekly.html 同为纯链接模式——七档 YouTube 官方节目受 YouTube 服务条款约束不可下载/内嵌，仅收录元数据并跳官方观看页。rfef.html 的判例视频为官方同域直链的本地化副本（site/videos/rfef/，git 忽略，约 14.9GB），仅本地学习用途、与各赛季评议视频同策略；视频缺失时运行时回退官方直链（vfb）。
 2. **safe_http.py 安全模块**（`scripts/lib/safe_http.py`）：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib。⚠ 扩白名单只能写 `from lib import safe_http as S` + `S.ALLOWED_HOSTS |= {...}`；写成 `from lib.safe_http import ALLOWED_HOSTS` 会让 `_validate_url` 看到的仍是原集合，**白名单静默失效**
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且内容不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入
@@ -275,10 +305,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 改动后依次验证（命令一律在仓库根执行）：
 - [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
-- [ ] `python tests/test_integrity.py` 通过（16页面/三赛季数据/impact一致性/页面-数据同步/考题池基准/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] `python tests/test_integrity.py` 通过（18页面/三赛季数据/impact一致性/页面-数据同步/考题池基准/weekly+ifab 数据层/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
 - [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
 - [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题
-- [ ] 浏览器打开 index.html：门户十二张卡片数字正确、浏览模式分段开关与说明文字正确
+- [ ] 浏览器打开 index.html：门户十四张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
 - [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、uefa 页 lite 下隐藏 iframe（如有）只留链接、顶栏「轻量版」随时切回完整版、刷新记忆保持
@@ -288,14 +318,17 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - [ ] rfef.html：栏目导航/判例卡片/认定徽章渲染正确、西语原文开关持久化、过滤框（编号/中文/西语）可用、本地视频可播、临时删一个视频文件刷新 → 该视频回退官方直链、lite 模式视频隐藏+官方手册横幅、明暗主题
 - [ ] rap.html：各期索引与外链、训练三步说明、era 分组、明暗主题
 - [ ] pro.html：筛选 chips（系列/联赛）过滤正常、年份分组与 207 篇索引、官方页外链、USSF 指南区、明暗主题
-- [ ] intl.html：两组 9 资源卡（语言/频率/形态 chips + 注意事项 + 官方外链）、站内关联区、明暗主题
 - [ ] conmebol.html：赛事/情境筛选 chips、年份分组 60 案、官方分析+判例视频双链接、明暗主题
+- [ ] weekly.html：节目筛选 chips、搜索（标题/译注/原文说明）、年份分组、≈ 近似日期标记、译注与原文折叠、官方观看直链 rel 属性、明暗主题
+- [ ] ifab.html：章节导航跳转、中英原文开关（刷新持久化）、FAQ 折叠、配套材料区内外链、明暗主题
+- [ ] intl.html：四组 23 资源卡（语言/频率/形态 + 注意事项 + 官方外链）、站内关联区、明暗主题
 - [ ] `python scripts/verify_videos.py [赛季]`（如动过视频/数据）
 - [ ] 统计口径：2026 错漏判 95、支持原判 121、不予认定 9；2025 错漏判 82、支持 138、不予 7；2024 错漏判 60、支持 99、不予 1（与 cases-*.json 一致）
 
 ## 已知不足（欢迎改进）
 
 - 2026 赛季进行中：持续跑 fetch→parse→classify→impact 增量更新；影响统计的 79 场比分已核 19 场（确定得失球场次优先），其余"待补"；2024 第1期判例三（seq3）因原文未载明对阵与防守方无法归因受损队，未纳入影响统计（make_impact_2024.py UNATTRIBUTABLE 有注）
+- weekly.html 的中文译注层目前覆盖节目简介与各节目近期期目，其余回退官方原文说明（按 weekly-zh 增量补译）；英格兰《Mic'd Up》因官方发布形态分散（Sky 频道内短片、无完整播放列表）仅收录 3 期；YouTube 存量回补依赖页面 ytInitialData 结构，若其变更则仅影响回补通道（RSS 主通道不受影响）；ifab-zh.json 为 2026-10 首译，欢迎对照官方英文原文修订
 - 111 支标准队伍中 39 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽
 - 官方标题认定数与合集口径存在差异（漏判黄牌/低级别联赛/本轮中超口径），已在页面"说明"弹层按期注释（ISSUE_NOTES）
 - 2026 判例的判定与影响标注为按同一方法论复核（非官方逐条人工背书），把握度低的判 pending 并注释

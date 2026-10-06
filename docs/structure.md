@@ -34,6 +34,8 @@
 │   ├── pro.json            ← 美国 PRO 评议周报索引（fetch_pro.py 产物）
 │   ├── intl.json           ← 全球评议资源导航（人工策展）
 │   ├── conmebol.json       ← 南美 VAR 逐案判例（fetch_conmebol.py 产物）
+│   ├── weekly.json / weekly-zh.json ← 周更节目期目索引 / 中文译注层（fetch_weekly.py 产物；**不可互相覆盖**）
+│   ├── ifab.json / ifab-zh.json ← IFAB VAR 协议 / 中文全文译制层（fetch_ifab.py 产物；**不可互相覆盖**）
 │   ├── issues/{season}/    ← 各期官方页面原始 HTML 存档
 │   └── local/              ← **整目录 gitignored**，clone 下来不存在
 │       ├── laws/           ← IFAB 规则 PDF
@@ -41,11 +43,13 @@
 │       ├── rfef-cache/     ← RFEF 手册页缓存（断点续抓）
 │       ├── pro-cache/      ← PRO 分类列表页缓存
 │       ├── conmebol-cache/ ← CONMEBOL 列表页+判例文章页缓存
+│       ├── weekly-cache/   ← YouTube RSS/页面缓存（fetch_weekly.py）
+│       ├── ifab-cache/     ← IFAB VAR 协议页缓存
 │       ├── dutchref-cache/ ← dutchreferee RAP 索引页缓存
 │       ├── shots/          ← 页面截图
 │       ├── logs/           ← 下载日志、校验结果、人工复核文本
 │       └── scale-2024/     ← 2024 官方统一尺度材料包（3.3GB）
-├── scripts/                ← **可执行入口脚本**（27 个）：凡直接在本层的都能 python 跑
+├── scripts/                ← **可执行入口脚本**（41 个）：凡直接在本层的都能 python 跑
 │   ├── lib/                ← **只被 import，永不直接执行**（8 个模块）
 │   │   ├── __init__.py     ← 必需：否则 lib 成为 PEP 420 命名空间包，跨 sys.path 合并
 │   │   ├── paths.py        ← 路径常量**唯一权威源**

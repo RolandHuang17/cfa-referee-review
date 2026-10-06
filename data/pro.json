@@ -1,7 +1,7 @@
 {
  "source": "https://proreferees.com/category/inside-video-review/",
  "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
- "fetched": "2026-10-05",
+ "fetched": "2026-10-06",
  "ussf": {
   "videos": "https://www.ussoccer.com/refereeing/videos",
   "learning": "https://learning.ussoccer.com/referee",
@@ -17,7 +17,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "28",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=kmpvh3Hnriw"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #28",
@@ -28,7 +31,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "28",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=jVgiv-DAz9M"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 28",
@@ -39,7 +45,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=B67FtGSQzIc",
+    "https://www.youtube.com/watch?v=KAxo7z4GBpg"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 23",
@@ -50,7 +60,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=hctyxeEtOT4"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #27",
@@ -61,7 +74,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "27",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=8yUs8cGzGww"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #27",
@@ -72,7 +88,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "27",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=LZ-xcOcOBiE"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #22",
@@ -83,7 +102,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "22",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=DEc2I1LFnKU"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 27",
@@ -94,7 +116,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=mgivInfkBPA",
+    "https://www.youtube.com/watch?v=8fgn0SRkb8g",
+    "https://www.youtube.com/watch?v=xvcb7pnq64I",
+    "https://www.youtube.com/watch?v=B6MgSOsYFM0"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 22",
@@ -105,7 +133,14 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=2g1JxYS0Wm8",
+    "https://www.youtube.com/watch?v=EfXcibKBxbQ",
+    "https://www.youtube.com/watch?v=9DKj4uMjRFQ",
+    "https://www.youtube.com/watch?v=Q3UxctLeMuQ",
+    "https://www.youtube.com/watch?v=Zhrp2TZU8ms"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #25 + #26",
@@ -116,7 +151,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "25+26",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=C5NmUjVD6RU"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #25 + #26",
@@ -127,7 +165,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "25+26",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=JqWLRhW1H0g"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #21",
@@ -138,7 +179,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "21",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=f3yC_ysLfBw"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 26",
@@ -149,7 +193,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=fxLwBi6o7xU",
+    "https://www.youtube.com/watch?v=fIYP_R4N8OA",
+    "https://www.youtube.com/watch?v=BBjYyRuYDXY"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 25",
@@ -160,7 +209,16 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=X2T9V_ImhOs",
+    "https://www.youtube.com/watch?v=I-qHc0q2Qjc",
+    "https://www.youtube.com/watch?v=S5WJBMd-pq4",
+    "https://www.youtube.com/watch?v=kkgly0GrFuo",
+    "https://www.youtube.com/watch?v=SbClXXp7kew",
+    "https://www.youtube.com/watch?v=qAyXM1SGyBM",
+    "https://www.youtube.com/watch?v=LsW3JMxzD8k"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 21",
@@ -171,7 +229,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=qDzDdkhwmsQ",
+    "https://www.youtube.com/watch?v=7hPEEuq5huc"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #24",
@@ -182,7 +244,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "24",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=q4EpQPYsx4o"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #24",
@@ -193,7 +258,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "24",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=ZQm7q8ib-7s"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #20",
@@ -204,7 +272,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "20",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=k9NxOAbDyM4"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 24",
@@ -215,7 +286,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=25FfsAizHs8",
+    "https://www.youtube.com/watch?v=GBrey8Z1hSY",
+    "https://www.youtube.com/watch?v=IY7kKx_cuYg",
+    "https://www.youtube.com/watch?v=fT9xTrQ_s1o",
+    "https://www.youtube.com/watch?v=2gIQzK-sUwg"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 20",
@@ -226,7 +304,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=duqKJvynoMc",
+    "https://www.youtube.com/watch?v=D8gp4I7Y5uQ",
+    "https://www.youtube.com/watch?v=82obHose6wc"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #23",
@@ -237,7 +320,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "23",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=MCIfYEU0At0"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #23",
@@ -248,7 +334,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "23",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=DBa5mgC4uiM"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #19",
@@ -259,7 +348,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "19",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=ZtBN5izZogc"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 23",
@@ -270,7 +362,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=zGQjBAvf8sg",
+    "https://www.youtube.com/watch?v=Xl3jhblszzk",
+    "https://www.youtube.com/watch?v=51dU6y1oel4"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 19",
@@ -281,7 +378,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=UH2zbKF6zm4",
+    "https://www.youtube.com/watch?v=ZksUAq-peWU",
+    "https://www.youtube.com/watch?v=OzBSyataxf4"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #21 + #22",
@@ -292,7 +394,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "21+22",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=aoFlfKY6SjU"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #21 + #22",
@@ -303,7 +408,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "21+22",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=CYbReiBAUCE"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #18",
@@ -314,7 +422,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "18",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=8P6SHhP5onI"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 22",
@@ -325,7 +436,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=avxespOT8h8",
+    "https://www.youtube.com/watch?v=FpVziJgL304"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 21",
@@ -336,7 +451,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=yQyGTxk9aa8",
+    "https://www.youtube.com/watch?v=r9PU0FPUlZQ",
+    "https://www.youtube.com/watch?v=xt8dWlpOVvY",
+    "https://www.youtube.com/watch?v=R4qqdwnIIOw"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 18",
@@ -347,7 +468,14 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=MwA3ckjZt8I",
+    "https://www.youtube.com/watch?v=9Xa3HtEi4-M",
+    "https://www.youtube.com/watch?v=ZFzdcGYrKBw",
+    "https://www.youtube.com/watch?v=5LytTNSbP_g",
+    "https://www.youtube.com/watch?v=Ihp329M7mY8"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #19 + #20",
@@ -358,7 +486,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "19+20",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Yol-iYbA4Qk"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #19 + #20",
@@ -369,7 +500,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "19+20",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=VgsPydcZ34M"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #16 + #17",
@@ -380,7 +514,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "16+17",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=UgmFSf7qvEY"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 20",
@@ -391,7 +528,16 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=7Pfe59E1Wzg",
+    "https://www.youtube.com/watch?v=trE2kYViWGo",
+    "https://www.youtube.com/watch?v=9eBNW0gXxgw",
+    "https://www.youtube.com/watch?v=c7Pu5FNzef0",
+    "https://www.youtube.com/watch?v=rMjBMYqsgro",
+    "https://www.youtube.com/watch?v=jf8zIyaw3Cc",
+    "https://www.youtube.com/watch?v=39gep022bWw"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 17",
@@ -402,7 +548,13 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Qx4KA2p5lGw",
+    "https://www.youtube.com/watch?v=mfVehFfqMiY",
+    "https://www.youtube.com/watch?v=NDv_I3Kci-U",
+    "https://www.youtube.com/watch?v=20r61Gkt-FU"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 16",
@@ -413,7 +565,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=72Vd_udtrSI",
+    "https://www.youtube.com/watch?v=S-mIl8CUo50",
+    "https://www.youtube.com/watch?v=ujn1MMnwolI"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #15",
@@ -424,7 +581,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "15",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=6v4-p2xWfe0"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 19",
@@ -435,7 +595,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=8DBEKXtAuKM",
+    "https://www.youtube.com/watch?v=VpoljXQe_mI"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 15",
@@ -446,7 +610,13 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=jpombFz2eGk",
+    "https://www.youtube.com/watch?v=3VDWVAHcm_o",
+    "https://www.youtube.com/watch?v=vVenT06ROAA",
+    "https://www.youtube.com/watch?v=L6ftMf7BVe4"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #16 to #18",
@@ -457,7 +627,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "16",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=wfgseU8ukME"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #16 to #18",
@@ -468,7 +641,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "16",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=hMxEE1z7bRg"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #14",
@@ -479,7 +655,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "14",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=wJz5SMT8Qjk"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 18",
@@ -490,7 +669,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=l4SbJALA1Ww",
+    "https://www.youtube.com/watch?v=q6FDhz_HllE"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 17",
@@ -501,7 +684,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=FubZzjSS0Ys",
+    "https://www.youtube.com/watch?v=BpdyzR3rxUI",
+    "https://www.youtube.com/watch?v=TKHwWsM26nk"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 14",
@@ -512,7 +700,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=U15FKWWZIBY",
+    "https://www.youtube.com/watch?v=G07UOKfDkKw",
+    "https://www.youtube.com/watch?v=z4Dmhw0TR6M"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #13",
@@ -523,7 +716,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "13",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=-5-Pno-Bbr8"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 16",
@@ -534,7 +730,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=TFSifdCnRT8",
+    "https://www.youtube.com/watch?v=shTsp10iusM"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 13",
@@ -545,7 +745,14 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=a4sI2aC2sSI",
+    "https://www.youtube.com/watch?v=yun-OHM9q78",
+    "https://www.youtube.com/watch?v=vndPRu5l7rg",
+    "https://www.youtube.com/watch?v=yxwJurRY6vQ",
+    "https://www.youtube.com/watch?v=i4foP0-hzG4"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 12",
@@ -556,7 +763,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=x15YO5hHRO8"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #11",
@@ -567,7 +777,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "11",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=f0QeiUzk0Yk"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 11",
@@ -578,7 +791,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=EtJVfwUVFWY",
+    "https://www.youtube.com/watch?v=Y10E55Tzj8E"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 10",
@@ -589,7 +806,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=xs21kHsSn-A"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #15",
@@ -600,7 +820,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "15",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=qhJqccP8vL4"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #15",
@@ -611,7 +834,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "15",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=tKuS-I2jAOc"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #9",
@@ -622,7 +848,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "9",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=-JKUU-TXZ-8"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 15",
@@ -633,7 +862,15 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=FqL5oATUMDQ",
+    "https://www.youtube.com/watch?v=nxtMA3vX-64",
+    "https://www.youtube.com/watch?v=e_SZgzGFPeU",
+    "https://www.youtube.com/watch?v=UvKRUS6qkQ8",
+    "https://www.youtube.com/watch?v=48xgim5uSDQ",
+    "https://www.youtube.com/watch?v=ovptsb0vhdw"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 9",
@@ -644,7 +881,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=MM-bpIroCHo",
+    "https://www.youtube.com/watch?v=IK992VB3YY4"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #13 + #14",
@@ -655,7 +896,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "13+14",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=gHyiKTCFRug"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #13 + #14",
@@ -666,7 +910,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "13+14",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=gHyiKTCFRug"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #8",
@@ -677,7 +924,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "8",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=xYbDElWxFg8"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 14",
@@ -688,7 +938,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=qwxF30J9Dao",
+    "https://www.youtube.com/watch?v=62hhxjlBZyk",
+    "https://www.youtube.com/watch?v=XwAj63awbLo",
+    "https://www.youtube.com/watch?v=I8XPqqKS67A"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 13",
@@ -699,7 +955,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=vW6pSBVfjFI",
+    "https://www.youtube.com/watch?v=u8Rz64bF_HU"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 8",
@@ -710,7 +970,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=OcDVVD5M41U",
+    "https://www.youtube.com/watch?v=Vk89e3bonw8",
+    "https://www.youtube.com/watch?v=bWguh7MAPMM"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #12",
@@ -721,7 +986,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "12",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=RhEu04CcYQc"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #12",
@@ -732,7 +1000,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "12",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=vvNQZLBzyaU"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #7",
@@ -743,7 +1014,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "7",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=GvSgOAu1UyY"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 12",
@@ -754,7 +1028,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=leCcLC6THio",
+    "https://www.youtube.com/watch?v=Lw226R5qzEk",
+    "https://www.youtube.com/watch?v=-7EBpLqEuZQ",
+    "https://www.youtube.com/watch?v=bIlkDz2AHXo"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 7",
@@ -765,7 +1045,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=mg9gSI_XqBk"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #6",
@@ -776,7 +1059,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "6",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Hu3NzV09X5I"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 6",
@@ -787,7 +1073,14 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=mVGc-Ay1NRg",
+    "https://www.youtube.com/watch?v=A1v9Uh5KIVY",
+    "https://www.youtube.com/watch?v=RMpDhMabfh8",
+    "https://www.youtube.com/watch?v=Uf1FwK0jZXY",
+    "https://www.youtube.com/watch?v=xTkFYLrt0MU"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #9 + #10",
@@ -798,7 +1091,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "9+10",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=b1woXM8p860"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #9 + #10",
@@ -809,7 +1105,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "9+10",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=r2bYBfzEO2E"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 10",
@@ -820,7 +1119,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Me89Xpzx2K4",
+    "https://www.youtube.com/watch?v=6FFv1gAr4jU",
+    "https://www.youtube.com/watch?v=18O47inKZNk",
+    "https://www.youtube.com/watch?v=9kXexDI9NoA"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 9",
@@ -831,7 +1136,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=5H4nLscs6x0",
+    "https://www.youtube.com/watch?v=HKkTI2uth0g"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #8",
@@ -842,7 +1151,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "8",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=ihBtpIdOIn8"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #8",
@@ -853,7 +1165,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "8",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=JizRCa2xxhA"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 8",
@@ -864,7 +1179,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=ooiP8IS7Ssg",
+    "https://www.youtube.com/watch?v=GRZTv_cEOus"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #7",
@@ -875,7 +1194,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "7",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=8vNDObcdkdw"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #7",
@@ -886,7 +1208,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "7",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=-NZGguBMGBg"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 7",
@@ -897,7 +1222,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=8xDWPHDaUeM",
+    "https://www.youtube.com/watch?v=Mp8qA_lssmY",
+    "https://www.youtube.com/watch?v=1vYMVbzdTmg",
+    "https://www.youtube.com/watch?v=yElVwP0PUnk",
+    "https://www.youtube.com/watch?v=GjrRjEsdot0"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #6",
@@ -908,7 +1240,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "6",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=7N6FQL8PLIs"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #6",
@@ -919,7 +1254,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "6",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=LfY288SGt5Q"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #4",
@@ -930,7 +1268,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "4",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=5PYFveaY8Yk"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 6",
@@ -941,7 +1282,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=7KinNlFR3kA",
+    "https://www.youtube.com/watch?v=DjXzdBquw3A",
+    "https://www.youtube.com/watch?v=IpZA6hjEAu0",
+    "https://www.youtube.com/watch?v=XlBCGJpbYKA",
+    "https://www.youtube.com/watch?v=mm3ajCCQTnQ"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 4",
@@ -952,7 +1300,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=5Ry-eH-KOF0",
+    "https://www.youtube.com/watch?v=EuU36Rrdsc8"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #3",
@@ -963,7 +1315,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "3",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=yUMnoyPl9as"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 3",
@@ -974,7 +1329,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=cYljN1C2VTs",
+    "https://www.youtube.com/watch?v=RoR6gJSbfZk",
+    "https://www.youtube.com/watch?v=OswCu8NztJg"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #5",
@@ -985,7 +1345,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "5",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=v3Ue_xkdSb0"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #5",
@@ -996,7 +1359,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "5",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=-l4SUNH6rMI"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #2",
@@ -1007,7 +1373,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "2",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Pt2AvEoRz7c"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 5",
@@ -1018,7 +1387,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=YwaGCj-JS4o",
+    "https://www.youtube.com/watch?v=ITtbJXFwIgE",
+    "https://www.youtube.com/watch?v=V1Ffuh8n6nY",
+    "https://www.youtube.com/watch?v=xbSfAMAKbBI",
+    "https://www.youtube.com/watch?v=9dXc7KAo8Gk"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 2",
@@ -1029,7 +1405,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=CxhXCqHN8YU",
+    "https://www.youtube.com/watch?v=V7c5dy5Ehxw"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #4",
@@ -1040,7 +1420,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "4",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=xujncttRvsE"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #4",
@@ -1051,7 +1434,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "4",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=vjxC6QXDlA0"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #1",
@@ -1062,7 +1448,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "1",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=8DgLLaBCu18"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 4",
@@ -1073,7 +1462,18 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=BICLIRzg1qM",
+    "https://www.youtube.com/watch?v=arNuUK8MT2U",
+    "https://www.youtube.com/watch?v=dykPVm8wseE",
+    "https://www.youtube.com/watch?v=3uzntlZvnx0",
+    "https://www.youtube.com/watch?v=0a3nMNEobBk",
+    "https://www.youtube.com/watch?v=wEDFoHbGbLg",
+    "https://www.youtube.com/watch?v=J4NEeUeL7Sw",
+    "https://www.youtube.com/watch?v=Enb2QzowpuU",
+    "https://www.youtube.com/watch?v=zpCrs13DXBE"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 1",
@@ -1084,7 +1484,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=qv7pxZsQhyM",
+    "https://www.youtube.com/watch?v=GsuoJlr0mTI"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #3",
@@ -1095,7 +1499,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "3",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=AtFv7-Ie7zM"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #3",
@@ -1106,7 +1513,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "3",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=YtebWA3yq8E"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 3",
@@ -1117,7 +1527,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=DTFVyWKxYbM",
+    "https://www.youtube.com/watch?v=mvwFmT1su8o",
+    "https://www.youtube.com/watch?v=vexRimZ_kw0",
+    "https://www.youtube.com/watch?v=a_lAUgXTg94"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #2",
@@ -1128,7 +1544,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "2",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=g8NwjMLoj2I"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #2",
@@ -1139,7 +1558,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "2",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=1SE9DBJMdKw"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 2",
@@ -1150,7 +1572,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=PJuM5o0jTek",
+    "https://www.youtube.com/watch?v=yZ7hiplsq4w",
+    "https://www.youtube.com/watch?v=UBUeTTF1q8g"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #1",
@@ -1161,7 +1588,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "1",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=1IK5attN-k8"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #1",
@@ -1172,7 +1602,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "1",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=UUrNp2rg4Y0"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 1",
@@ -1183,7 +1616,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Ej-JQckHqmQ",
+    "https://www.youtube.com/watch?v=8LSltuj6qcY",
+    "https://www.youtube.com/watch?v=OtnQB_dUA1I",
+    "https://www.youtube.com/watch?v=F-wbkJhgZIg"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Cup Playoffs – Round One",
@@ -1194,7 +1633,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Wr3WJ9YFjkw",
+    "https://www.youtube.com/watch?v=dGCKdtDRtRg"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #26",
@@ -1205,7 +1648,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "26",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Q4T80_6u5PA"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 26",
@@ -1216,7 +1662,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=aNBVdw5IZ1A"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #40",
@@ -1227,7 +1676,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "40",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=ly2b-C1dd1M"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #40",
@@ -1238,7 +1690,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "40",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=wNMOYfExc3M"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #25",
@@ -1249,7 +1704,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "25",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=p9izlVDz1rQ"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 40",
@@ -1260,7 +1718,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=UhN6cWDzoPE",
+    "https://www.youtube.com/watch?v=vNmbNBfUP7U",
+    "https://www.youtube.com/watch?v=6000o7WbYNA",
+    "https://www.youtube.com/watch?v=QiX_PfOt-9w"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 25",
@@ -1271,7 +1735,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=6YyqsXyCM10"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #39",
@@ -1282,7 +1749,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "39",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=SJRV6Pkk7kY"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #39",
@@ -1293,7 +1763,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "39",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=43TT0-tLKzI"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #24",
@@ -1304,7 +1777,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "24",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=tlFJbC0-ckk"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 39",
@@ -1315,7 +1791,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=fsoMnSu6LsA",
+    "https://www.youtube.com/watch?v=y6QRqX1BGz8",
+    "https://www.youtube.com/watch?v=b0e4Hh_aLeU"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 24",
@@ -1326,7 +1807,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=PGGHVE3jPb0",
+    "https://www.youtube.com/watch?v=5LGfGtzi5Rc",
+    "https://www.youtube.com/watch?v=qSqBzAyKqTQ"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #38",
@@ -1337,7 +1823,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "38",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=uTgvbGNaFUk"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #38",
@@ -1348,7 +1837,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "38",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=YqFxd4Vf99s"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 38",
@@ -1359,7 +1851,15 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=CIJlBgLXtas",
+    "https://www.youtube.com/watch?v=onkZT2PGi4g",
+    "https://www.youtube.com/watch?v=HDa90N_l1G0",
+    "https://www.youtube.com/watch?v=ae1AQbvFsYk",
+    "https://www.youtube.com/watch?v=PH3p8xDA-iY",
+    "https://www.youtube.com/watch?v=YhJIaHtDdmY"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #36 + #37",
@@ -1370,7 +1870,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "36+37",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=9mA3dUxkaww"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #36 + #37",
@@ -1381,7 +1884,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "36+37",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=JgumO3CLtnY"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #22",
@@ -1392,7 +1898,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "22",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Hs97CD_A9D8"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 37",
@@ -1403,7 +1912,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=ho9LI6SUlhE",
+    "https://www.youtube.com/watch?v=bENDRL6YRB4",
+    "https://www.youtube.com/watch?v=_pWk9xNgkbM",
+    "https://www.youtube.com/watch?v=goqotbdH26A",
+    "https://www.youtube.com/watch?v=6Hyn2xkrM1Y"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 22",
@@ -1414,7 +1930,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=VvT9HEPGVos",
+    "https://www.youtube.com/watch?v=8qwW6MHmzT0"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #34 + #35",
@@ -1425,7 +1945,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "34+35",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=LShe8M_Tzdg"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #34 + #35",
@@ -1436,7 +1959,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "34+35",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=P3bX8lqPLbw"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #21",
@@ -1447,7 +1973,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "21",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=6cihfTT-0Qg"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 35",
@@ -1458,7 +1987,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=yR7Q10Dwjyc",
+    "https://www.youtube.com/watch?v=li1d6M_RrSA",
+    "https://www.youtube.com/watch?v=_1F_ZT3ZMcY"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 34",
@@ -1469,7 +2003,10 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=xsfj7Q-6UMg"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 21",
@@ -1480,7 +2017,13 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=RP6n0OIL5hA",
+    "https://www.youtube.com/watch?v=kpZ8YHx52Aw",
+    "https://www.youtube.com/watch?v=BNjHpt_WYeQ",
+    "https://www.youtube.com/watch?v=mlQGYQPOHPk"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #33",
@@ -1491,7 +2034,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "33",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=uhQ6SKG-i6w"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #33",
@@ -1502,7 +2048,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "33",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=7BHknzlQKjQ"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #20",
@@ -1513,7 +2062,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "20",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Yi2Q_-aij5s"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 33",
@@ -1524,7 +2076,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=v6Fyc_2HBpA",
+    "https://www.youtube.com/watch?v=kXgu6WUxB9I",
+    "https://www.youtube.com/watch?v=xUpgUc16cms",
+    "https://www.youtube.com/watch?v=pomtMCrOnmM"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 20",
@@ -1535,7 +2093,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=sCFexPUqzQU",
+    "https://www.youtube.com/watch?v=ENmaI__87fg",
+    "https://www.youtube.com/watch?v=7KLSzsPoh4I"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #31 + #32",
@@ -1546,7 +2109,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "31+32",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=oWv5ZjnY0Ss"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #31 + #32",
@@ -1557,7 +2123,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "31+32",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=Sgd614YrheM"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #19",
@@ -1568,7 +2137,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "19",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=a5sTETTDu6Y"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 32",
@@ -1579,7 +2151,10 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=og_JvgfNDa0"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 19",
@@ -1590,7 +2165,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=d5wxwqbA0Hk",
+    "https://www.youtube.com/watch?v=Kh3L_IXb4n8"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 31",
@@ -1601,7 +2180,10 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=0ZRqySI0IPQ"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #30",
@@ -1612,7 +2194,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "30",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=tCqStk8fdiI"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #30",
@@ -1623,7 +2208,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "30",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=NXiSYrn_Gqo"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #17",
@@ -1634,7 +2222,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "17",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=pVOS-m38vr4"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 30",
@@ -1645,7 +2236,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=q_0ZHr9m1f0",
+    "https://www.youtube.com/watch?v=_2k0ymhe6R4",
+    "https://www.youtube.com/watch?v=fT-IKZLA0vs",
+    "https://www.youtube.com/watch?v=zB1GV7Zcf8k",
+    "https://www.youtube.com/watch?v=aW80NAjbseQ"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 17",
@@ -1656,7 +2254,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=t0r6hdMlb_U"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #29",
@@ -1667,7 +2268,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "29",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=DIx8xiPN2W8"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #29",
@@ -1678,7 +2282,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "29",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=Ofa3eLNzYQw"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #16",
@@ -1689,7 +2296,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "16",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Wucph-J05u0"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 29",
@@ -1700,7 +2310,13 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=kIfFuXnBI8M",
+    "https://www.youtube.com/watch?v=kztokAyrRVs",
+    "https://www.youtube.com/watch?v=45QZE_VKkD4",
+    "https://www.youtube.com/watch?v=RztbBkRyC30"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 16",
@@ -1711,7 +2327,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=UPrq16DBpJk"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #28",
@@ -1722,7 +2341,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "28",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=OuSvfI_NMqU"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #28",
@@ -1733,7 +2355,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "28",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=lXdBCt3LNZ8"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #15",
@@ -1744,7 +2369,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "15",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=3SaCD-Fd63w"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 28",
@@ -1755,7 +2383,18 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=fca7mdY4DP4",
+    "https://www.youtube.com/watch?v=Y6ClA_7BW00",
+    "https://www.youtube.com/watch?v=giX1Gpfo6OQ",
+    "https://www.youtube.com/watch?v=nKMqAKEhOoM",
+    "https://www.youtube.com/watch?v=oss5CCoI1a4",
+    "https://www.youtube.com/watch?v=wI057_MQJ0w",
+    "https://www.youtube.com/watch?v=Veq-flLlXig",
+    "https://www.youtube.com/watch?v=SyaJzmua06o",
+    "https://www.youtube.com/watch?v=JnUi93oJOLU"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 15",
@@ -1766,7 +2405,12 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=TxLiVVLWEW4",
+    "https://www.youtube.com/watch?v=udQs3bkCvi4",
+    "https://www.youtube.com/watch?v=3uh6J2ywnyI"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #14",
@@ -1777,7 +2421,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "14",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=mpKpaAs2EgA"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 14",
@@ -1788,7 +2435,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=K0Z1Za44tYM"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #27",
@@ -1799,7 +2449,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "27",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=GQ2wjyIxOow"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #27",
@@ -1810,7 +2463,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "27",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=EE5ymCdlxlA"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 27",
@@ -1821,7 +2477,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=jNuzw4vSIME",
+    "https://www.youtube.com/watch?v=vb3MTB5NIX4",
+    "https://www.youtube.com/watch?v=n1Fze82SwGs",
+    "https://www.youtube.com/watch?v=1jqH9FWL_oc",
+    "https://www.youtube.com/watch?v=AhvQRGqcu70"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #25 + #26",
@@ -1832,7 +2495,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "25+26",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=tgGCHa3Sz8Q"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #25 + #26",
@@ -1843,7 +2509,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "25+26",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=YX21Y6F-wLE"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 26",
@@ -1854,7 +2523,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=PxwhAl6d5D0",
+    "https://www.youtube.com/watch?v=8vhlYaIgB2k",
+    "https://www.youtube.com/watch?v=Zu708y7c3hk",
+    "https://www.youtube.com/watch?v=2_ITloMTjyU",
+    "https://www.youtube.com/watch?v=VjHfDkns3bQ"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 25",
@@ -1865,7 +2541,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=fT2uu5xNjHc",
+    "https://www.youtube.com/watch?v=3G6y3ZyVjsI"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #23 + #24",
@@ -1876,7 +2556,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "23+24",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=1jliC51d-IM"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #23 + #24",
@@ -1887,7 +2570,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "23+24",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=bS2NwHiyUJI"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 24",
@@ -1898,7 +2584,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=SyJmuhwa-DA",
+    "https://www.youtube.com/watch?v=u3hNORWNW6o",
+    "https://www.youtube.com/watch?v=XUdhxd0SnEY"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #22",
@@ -1909,7 +2600,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "22",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=EBdE8l9-9CA"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #22",
@@ -1920,7 +2614,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "22",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=7w722Zybr-U"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 22",
@@ -1931,7 +2628,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=gMXDRALzT7o",
+    "https://www.youtube.com/watch?v=lutY2SBdtVY"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #20 + #21",
@@ -1942,7 +2643,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "20+21",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=brHIUGMcppU"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #20 + #21",
@@ -1953,7 +2657,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "20+21",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=nG8G0ZNvrIE"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 21",
@@ -1964,7 +2671,10 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=HPfstMaPEOQ"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 20",
@@ -1975,7 +2685,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=TEH2xPakxGo",
+    "https://www.youtube.com/watch?v=fiR6J5WHM-I"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #18 + #19",
@@ -1986,7 +2700,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "18+19",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=jMvBBAikSeI"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #18 + #19",
@@ -1997,7 +2714,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "18+19",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=mglvkC4XhPE"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 19",
@@ -2008,7 +2728,14 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=UXn8fPDqrGI",
+    "https://www.youtube.com/watch?v=f6Ox54j-tHg",
+    "https://www.youtube.com/watch?v=UHk8y2SQQ4k",
+    "https://www.youtube.com/watch?v=0qd8soDQLqQ",
+    "https://www.youtube.com/watch?v=VluDlNxQqOc"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #15",
@@ -2019,7 +2746,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "15",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=sgjTGG7PaVM"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #15",
@@ -2030,7 +2760,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "15",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=K1Mux8UiTTY"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #10",
@@ -2041,7 +2774,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "10",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=BECiu45wAKI"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 15",
@@ -2052,7 +2788,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=j9RnVAUdVRk",
+    "https://www.youtube.com/watch?v=ss6Ho8OBESI",
+    "https://www.youtube.com/watch?v=QSOohvw2owk"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 10",
@@ -2063,7 +2804,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Zp2pZqL84X4",
+    "https://www.youtube.com/watch?v=A9GsIQ_atD4"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #13 and #14",
@@ -2074,7 +2819,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "13",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=T-gsJf5TfCE"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #13 and #14",
@@ -2085,7 +2833,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "13",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=wRNADYy8GjI"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #9",
@@ -2096,7 +2847,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "9",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=6CJe7XRyiUA"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 14",
@@ -2107,7 +2861,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=q6-eYhJCWV4",
+    "https://www.youtube.com/watch?v=QoxbRE8nDqc"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 9",
@@ -2118,7 +2876,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=HpqZyehOOn4",
+    "https://www.youtube.com/watch?v=8OriigkV6k4"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #12",
@@ -2129,7 +2891,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "12",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=XEmKLAtezEw"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #12",
@@ -2140,7 +2905,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "12",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=nwAfAz_LClc"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #8",
@@ -2151,7 +2919,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "8",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=m8c2PmdVUzI"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 12",
@@ -2162,7 +2933,11 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=VzNG6x-ovx4",
+    "https://www.youtube.com/watch?v=tCZyssn89hs"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 8",
@@ -2173,7 +2948,10 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=oVaw8XNv9bM"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #11",
@@ -2184,7 +2962,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "11",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=Ga1wvSW6IKg"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #11",
@@ -2195,7 +2976,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "11",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=2fv4lTtEDHA"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #7",
@@ -2206,7 +2990,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "7",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=4hJyT1CdtVI"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 11",
@@ -2217,7 +3004,17 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=bnns7sXlhMA",
+    "https://www.youtube.com/watch?v=0gPs6WpEp3s",
+    "https://www.youtube.com/watch?v=imlVI-3kUZw",
+    "https://www.youtube.com/watch?v=rGjr6uO-d7w",
+    "https://www.youtube.com/watch?v=E_ha5PMGgQk",
+    "https://www.youtube.com/watch?v=K9pd5RF8j-0",
+    "https://www.youtube.com/watch?v=A3W-_AhpVUw",
+    "https://www.youtube.com/watch?v=sn0s132EXME"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 7",
@@ -2228,7 +3025,13 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=92iED05eOGU",
+    "https://www.youtube.com/watch?v=_9kuUdU_0Ic",
+    "https://www.youtube.com/watch?v=LjxyC1o_wKU",
+    "https://www.youtube.com/watch?v=6wTrHcddIkc"
+   ]
   },
   {
    "title": "Inside Video Review: MLS #10",
@@ -2239,7 +3042,10 @@
    "kind": "ivr",
    "league": "MLS",
    "round": "10",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=F98NEwfoopA"
+   ]
   },
   {
    "title": "VAR a Fondo: MLS #10",
@@ -2250,7 +3056,10 @@
    "kind": "vaf",
    "league": "MLS",
    "round": "10",
-   "lang": "es"
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=cd5We9X_paI"
+   ]
   },
   {
    "title": "Inside Video Review: NWSL #6",
@@ -2261,7 +3070,10 @@
    "kind": "ivr",
    "league": "NWSL",
    "round": "6",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=aZToGdDkDWg"
+   ]
   },
   {
    "title": "The Definitive Angle: MLS Matchday 10",
@@ -2272,7 +3084,12 @@
    "kind": "angle",
    "league": "MLS",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=qxUoAIC3fk8",
+    "https://www.youtube.com/watch?v=0s1BI8j5o0s",
+    "https://www.youtube.com/watch?v=2jQA_pmRvhU"
+   ]
   },
   {
    "title": "The Definitive Angle: NWSL Week 6",
@@ -2283,7 +3100,11 @@
    "kind": "angle",
    "league": "NWSL",
    "round": "",
-   "lang": "en"
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=OZ0fkv1dr-8",
+    "https://www.youtube.com/watch?v=DS7TFsl6Yb4"
+   ]
   }
  ]
 }

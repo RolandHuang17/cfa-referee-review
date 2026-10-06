@@ -154,9 +154,13 @@ def build_page(data):
             tags = f'<span class="badge {badge}">{esc(label)}</span>'
             if a.get("league"):
                 tags += f'<span class="badge info">{esc(a["league"])}{(" #" + a["round"]) if a.get("round") else ""}</span>'
+            vids = "".join(
+                f'<a class="go" href="{esc(v)}" target="_blank" rel="noopener noreferrer">{icon("play", 11)} 官方视频</a>'
+                for v in (a.get("videos") or [])[:1])
             rows += f"""<div class="acard" data-kinds="{esc(kinds)}">
   <div class="t"><b>{esc(a["title"])}</b><small>{esc(a.get("date", ""))}</small></div>
   {tags}
+  {vids}
   <a class="go" href="{esc(a['url'])}" target="_blank" rel="noopener noreferrer">{icon('external', 11)} 官方页</a>
 </div>"""
         secs += (f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>{len(by_year[y])} 篇</small></h3>'

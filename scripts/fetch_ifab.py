@@ -22,6 +22,17 @@ from lib.safe_http import fetch_text
 from lib.paths import IFAB_CACHE, IFAB_JSON
 
 URL = "https://www.theifab.com/laws/latest/video-assistant-referee-var-protocol/"
+# VAR 协议页之外的官方配套协议/指南页（2026/27 新规与统一尺度材料，人工核对）
+EXTRA_PAGES = [
+    ("guidelines-introduction", "https://www.theifab.com/laws/latest/guidelines/introduction/"),
+    ("temporary-dismissals", "https://www.theifab.com/laws/latest/guidelines-for-temporary-dismissals/"),
+    ("return-substitutes", "https://www.theifab.com/laws/latest/guidelines-for-return-substitutes/"),
+    ("only-the-captain", "https://www.theifab.com/laws/latest/only-the-captain/"),
+    ("throw-in-goal-kick-countdown", "https://www.theifab.com/laws/latest/throw-in-and-goal-kick-countdown-protocol/"),
+    ("concussion-substitutions", "https://www.theifab.com/laws/latest/additional-permanent-concussion-substitutions-protocol/"),
+    ("off-field-treatment", "https://www.theifab.com/laws/latest/off-field-treatment-and-assessment-protocol/"),
+    ("time-limited-substitutions", "https://www.theifab.com/laws/latest/time-limited-substitution-protocol/"),
+]
 MIN_BODY = 50000
 BACKOFFS = [30, 90]
 
@@ -47,16 +58,17 @@ def clean(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
-def fetch_page() -> str:
+def fetch_page(url: str = URL) -> str:
     IFAB_CACHE.mkdir(parents=True, exist_ok=True)
-    cache_f = IFAB_CACHE / "var-protocol.html"
+    slug = re.sub(r"[^a-z0-9-]", "_", url.split("theifab.com/")[-1]).strip("_")[:80] or "page"
+    cache_f = IFAB_CACHE / f"{slug}.html"
     if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
         return cache_f.read_text(encoding="utf-8", errors="replace")
     for wait in [0] + BACKOFFS:
         if wait:
             time.sleep(wait)
         try:
-            st, txt = fetch_text(URL, timeout=45, retries=2)
+            st, txt = fetch_text(url, timeout=45, retries=2)
             if st == 200 and len(txt) > MIN_BODY:
                 cache_f.write_text(txt, encoding="utf-8")
                 return txt
@@ -142,6 +154,42 @@ def parse_qna(seg: str) -> list:
     return out
 
 
+NOISE_RE = re.compile(r"^(en|de|es|fr)$", re.I)
+NOISE_TEXT = {"join us!", "key:"}
+
+
+def _strip_noise(blocks: list, faq: list):
+    """配套页尾部噪声：语言码列表 / Join us! / 页脚署名。"""
+    for b in blocks:
+        b["items"] = [it for it in b["items"]
+                      if not NOISE_RE.fullmatch(it["t"]) and it["t"].lower() not in NOISE_TEXT
+                      and not it["t"].startswith("The international football association board")]
+    for q in faq:
+        q["a"] = re.sub(r"\s+(?:en|de|es|fr)(\s+(?:en|de|es|fr))+\s*$", "", q["a"], flags=re.I)
+        q["a"] = re.sub(r"\s*Join us!.*$", "", q["a"], flags=re.I)
+
+
+def parse_extra(page_id: str, url: str, html: str) -> dict:
+    """配套协议页：h1 大标题 + h2 页名 + h3 子块（无 accordion），FAQ 容器若在有则解析。"""
+    seg = html
+    h2m = re.search(r"<h2[^>]*>(.*?)</h2>", seg, re.S)
+    h = clean(h2m.group(1)) if h2m else page_id
+    start = seg.find("</h2>")
+    if start != -1:
+        seg = seg[start + 4:]
+    for anchor in ("The international football association board",
+                   "All Rights Reserved", "Download mobile app"):
+        p = seg.find(anchor)
+        if p != -1:  # 截掉页脚与侧栏尾部
+            seg = seg[:p]
+            break
+    blocks = extract_blocks(seg)
+    faq = parse_qna(seg) if "QuestionAndAnswer__StyledQuestion" in seg else []
+    blocks = [b for b in blocks if b["items"]]
+    _strip_noise(blocks, faq)
+    return {"id": page_id, "url": url, "h": h, "blocks": blocks, "faq": faq}
+
+
 def parse_all():
     html = fetch_page()
     if not html:
@@ -156,10 +204,24 @@ def parse_all():
     faq = parse_qna(seg)
     if not sections or not faq:
         raise SystemExit(f"解析异常：sections={len(sections)} faq={len(faq)}（页面结构可能变化）")
+    extras = []
+    for page_id, url in EXTRA_PAGES:
+        ehtml = fetch_page(url)
+        if not ehtml:
+            print(f"⚠ 配套页抓取失败，跳过: {page_id}")
+            continue
+        ex = parse_extra(page_id, url, ehtml)
+        if not ex["blocks"]:
+            print(f"⚠ 配套页解析为空，跳过: {page_id}")
+            continue
+        n_it = sum(len(b["items"]) for b in ex["blocks"])
+        print(f"  extra {page_id}: 「{ex['h'][:44]}」 {len(ex['blocks'])} 子块 / {n_it} 条 / FAQ {len(ex['faq'])}", flush=True)
+        extras.append(ex)
+        time.sleep(2.0)
     data = {"source": URL,
             "source_name": "IFAB《Laws of the Game》— Video Assistant Referee (VAR) protocol & FAQs",
             "fetched": time.strftime("%Y-%m-%d"),
-            "sections": sections, "faq": faq, "links": LINKS}
+            "sections": sections, "faq": faq, "links": LINKS, "extras": extras}
     IFAB_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     n_items = sum(len(b["items"]) for s in sections for b in s["blocks"])
     print(f"parse 完成: {len(sections)} 节 / {sum(len(s['blocks']) for s in sections)} 子节 / "

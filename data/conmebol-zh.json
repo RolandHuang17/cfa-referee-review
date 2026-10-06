@@ -1,0 +1,156 @@
+{
+ "note": "conmebol.json 中文译制层：cases 键=判例 url（稳定唯一），situation 为官方西语情境标签的中文译名；excerpt_es 多为发布样板句不含判例信息，故不译。未命中回退西语并打 ⚠。",
+ "translated": "2026-10-06",
+ "cases": {
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil-2/": {
+   "situation": "点球判罚"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-venezuela-vs-peru/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-argentina/": {
+   "situation": "红牌"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-colombia/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-argentina/": {
+   "situation": "点球（场上回看 OFR）"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-colombia/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-colombia/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-chile-vs-paraguay/": {
+   "situation": "红牌"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-peru/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-bolivia/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-colombia/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-argentina/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-uruguay/": {
+   "situation": "进球判定"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-argentina/": {
+   "situation": "红牌"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-venezuela-vs-paraguay/": {
+   "situation": "手球判点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-uruguay/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-bolivia/": {
+   "situation": "点球判罚"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-chile/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-peru/": {
+   "situation": "手球（不构成犯规）"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-venezuela/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-emelec-vs-deportivo-cuenca/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-blooming-vs-atletico-palma-flor/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-estudiantes-de-merida-vs-deportivo-tachira/": {
+   "situation": "错罚对象"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-cesar-vallejo-vs-binacional/": {
+   "situation": "不构成越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-defensor-sporting-vs-danubio/": {
+   "situation": "进球无效"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-audax-italiano-vs-universidad-catolica/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-tacuary-vs-general-caballero/": {
+   "situation": "红牌"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-recopa-flamengo-vs-idv/": {
+   "situation": "非点球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-internacional-vs-melgar/": {
+   "situation": "红牌"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-deportivo-tachira/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-melgar-vs-internacional/": {
+   "situation": "红牌"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-sao-paulo-vs-ceara/": {
+   "situation": "场上回看（OFR）"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-lanus/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-deportivo-tachira-vs-santos/": {
+   "situation": "进球判定"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-the-strongest-vs-ceara/": {
+   "situation": "进球 / 进球无效判定"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-colo-colo-vs-internacional/": {
+   "situation": "手球（进攻阶段 APP）"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-venezuela-vs-colombia/": {
+   "situation": "进球无效"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-paraguay/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-argentina/": {
+   "situation": "鲁莽犯规（危及对方安全）"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-chile-vs-uruguay/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil/": {
+   "situation": "点球判罚"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-bolivia/": {
+   "situation": "进球判定"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-chile/": {
+   "situation": "点球判罚"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-peru/": {
+   "situation": "进球无效"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-chile/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-venezuela/": {
+   "situation": "罚球区内违规侵入"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-peru/": {
+   "situation": "越位"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-uruguay/": {
+   "situation": "非手球"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-brasil/": {
+   "situation": "红牌"
+  }
+ }
+}

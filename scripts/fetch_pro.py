@@ -13,6 +13,7 @@ v1 只抓列表页元数据（标题/日期/系列/联赛/轮次/链接），文
 """
 import html as htmllib
 import json
+import random
 import re
 import sys
 import time
@@ -83,6 +84,16 @@ def parse_listing(page: str) -> list:
 
 SERIES_RE = re.compile(r"(?i)^\s*(Inside Video Review|VAR a Fondo|The Definitive Angle)\s*[:：]?\s*(.*)$")
 LEAGUE_RE = re.compile(r"\b(MLS|NWSL|USL)\b")
+YT_EMBED_RE = re.compile(r"youtube(?:-nocookie)?\.com/embed/([-\w]{11})", re.I)
+
+
+def article_videos(url: str) -> list:
+    """文章页内嵌 YouTube 视频 → 官方观看直链（v2：2026-10 实测 IVR/VAF 文章均嵌 YouTube iframe）"""
+    page = fetch_page(url)
+    if not page:
+        return []
+    ids = list(dict.fromkeys(YT_EMBED_RE.findall(page)))
+    return [f"https://www.youtube.com/watch?v={i}" for i in ids]
 
 
 def classify(title: str) -> dict:
@@ -129,6 +140,17 @@ def parse_all():
         if a["url"] not in seen:
             seen.add(a["url"])
             uniq.append(a)
+    # v2：逐篇提取文章内嵌 YouTube 视频直链（增量：已带 videos 字段的跳过）
+    n_vid = 0
+    for a in uniq:
+        if isinstance(a.get("videos"), list):
+            continue
+        vids = article_videos(a["url"])
+        a["videos"] = vids
+        if vids:
+            n_vid += 1
+        print(f"  videos {a['url'].rstrip('/').split('/')[-1][:44]}: {len(vids)}", flush=True)
+        time.sleep(random.uniform(*DELAY))
     data = {"source": BASE + "/category/inside-video-review/",
             "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
             "fetched": time.strftime("%Y-%m-%d"),

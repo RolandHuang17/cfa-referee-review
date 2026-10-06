@@ -9,7 +9,7 @@ import json
 
 from lib.theme import inject_theme, topbar, icon
 
-from lib.paths import CONMEBOL_JSON, SITE
+from lib.paths import CONMEBOL_JSON, CONMEBOL_ZH_JSON, SITE
 
 SIT_LABEL = {
     "penalty": "点球", "ofr_penalty": "点球（现场回看）", "no_penalty": "非点球",
@@ -73,7 +73,7 @@ __TOPBAR__
     __SIT_CHIPS__
   </div>
   __SECTIONS__
-  <p class="foot">判例内容版权归 CONMEBOL 所有；本页收录结构化元数据与官方链接（来源 conmebol.com，核对日期 __CHECKED__）。情境类型以官方西语原文为准，中文标签仅供检索。</p>
+  <p class="foot">判例内容版权归 CONMEBOL 所有；本页收录结构化元数据与官方链接（来源 conmebol.com，核对日期 __CHECKED__）。情境已中文译制（conmebol-zh 译制层），官方西语原文保留标注，以原文为准。</p>
 </div>
 <script>
 (function(){
@@ -109,8 +109,18 @@ def esc(s):
         .replace('"', "&quot;").replace("'", "&#39;")
 
 
-def build_page(data):
+def build_page(data, zh=None):
     cases = data.get("cases", [])
+    zcases = (zh or {}).get("cases", {})
+    used = set()
+    for c in cases:
+        z = zcases.get(c.get("url", ""))
+        if z and z.get("situation"):
+            c["situacion_zh"] = z["situation"]
+            used.add(c.get("url", ""))
+    for k in zcases:
+        if k not in used:
+            print(f"⚠ conmebol-zh cases 键不在 conmebol.json 中（疑似过期）: {k[:80]}")
     for c in cases:
         y = (c.get("fecha") or c.get("date") or "0000")[-4:]
         if y.isdigit():
@@ -140,8 +150,15 @@ def build_page(data):
                 for v in (c.get("fecha", ""), c.get("minuto", "") and c["minuto"] + "′",
                           c.get("ciudad", ""), c.get("estadio", ""),
                           comp_cn.get(c.get("comp", ""), "")) if v)
-            es_sit = f'<span class="chip" title="官方原文">Situación: {esc(c["situacion_es"])}</span>' \
-                if c.get("situacion_es") and c["situacion_es"].lower() != label.lower() else ""
+            if c.get("situacion_zh"):
+                es_sit = f'<span class="chip">情境：{esc(c["situacion_zh"])}</span>'
+                if c.get("situacion_es") and c["situacion_es"].lower() != label.lower():
+                    es_sit += f'<span class="chip" title="官方西语原文">原文: {esc(c["situacion_es"])}</span>'
+            else:
+                if c.get("situacion_es"):
+                    print(f"⚠ conmebol-zh 缺该案情境译制，回退西语: {c.get('url', '')[:70]}")
+                es_sit = f'<span class="chip" title="官方原文">Situación: {esc(c["situacion_es"])}</span>' \
+                    if c.get("situacion_es") and c["situacion_es"].lower() != label.lower() else ""
             links = (f'<a class="go" href="{esc(c["url"])}" target="_blank" rel="noopener noreferrer">'
                      f'{icon("note", 11)} 官方分析</a>')
             if c.get("youtube"):
@@ -178,7 +195,12 @@ def main():
     if not CONMEBOL_JSON.exists():
         raise SystemExit(f"缺少 {CONMEBOL_JSON}；请先运行 fetch_conmebol.py")
     data = json.loads(CONMEBOL_JSON.read_text(encoding="utf-8"))
-    build_page(data)
+    zh = {}
+    if CONMEBOL_ZH_JSON.exists():
+        zh = json.loads(CONMEBOL_ZH_JSON.read_text(encoding="utf-8"))
+    else:
+        print("⚠ 缺少 conmebol-zh.json，情境将显示西语原文")
+    build_page(data, zh)
 
 
 if __name__ == "__main__":

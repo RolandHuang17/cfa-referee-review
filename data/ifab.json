@@ -538,5 +538,909 @@
    "url": "scale.html",
    "internal": true
   }
+ ],
+ "extras": [
+  {
+   "id": "guidelines-introduction",
+   "url": "https://www.theifab.com/laws/latest/guidelines/introduction/",
+   "h": "Introduction",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "These guidelines contain practical advice for match officials which supplements the information in the Laws of the Game section."
+      },
+      {
+       "k": "p",
+       "t": "Reference is made in Law 5 to referees operating within the framework of the Laws of the Game and the 'spirit of the game'. Referees are expected to use common sense and to apply the 'spirit of the game' when applying the Laws of the Game, especially when making decisions relating to whether a match takes place and/or continues."
+      },
+      {
+       "k": "p",
+       "t": "This is especially true for the lower levels of football where it may not always be possible for the Law to be strictly applied. For example, unless there are safety issues, the referee should allow a game to start/continue if:"
+      },
+      {
+       "k": "li",
+       "t": "one or more corner flags are missing"
+      },
+      {
+       "k": "li",
+       "t": "there is a minor inaccuracy with the markings on the field of play such as the corner area, centre circle etc."
+      },
+      {
+       "k": "li",
+       "t": "the goalposts/crossbar are not white"
+      },
+      {
+       "k": "p",
+       "t": "In such cases, the referee should, with the agreement of the teams, play/continue the match and must submit a report to the appropriate authorities."
+      },
+      {
+       "k": "li",
+       "t": "AR = assistant referee"
+      },
+      {
+       "k": "li",
+       "t": "AAR = additional assistant referee"
+      }
+     ]
+    },
+    {
+     "h": "FAQs",
+     "items": [
+      {
+       "k": "p",
+       "t": "The Practical Guidelines recommend that the referee:"
+      },
+      {
+       "k": "li",
+       "t": "allows the match to take place (with the agreement of the teams)"
+      },
+      {
+       "k": "li",
+       "t": "submits a report to the appropriate authorities"
+      },
+      {
+       "k": "p",
+       "t": "This is especially important for the lower levels of football where it is not always possible for Law 1 to be strictly applied."
+      }
+     ]
+    }
+   ],
+   "faq": [
+    {
+     "id": "q1",
+     "q": "The referee enters the field of play for the pre-match inspection and sees that one corner flag is missing or the goalposts/crossbar are grey (not white). What should the referee do in this situation?",
+     "a": "The Practical Guidelines recommend that the referee: allows the match to take place (with the agreement of the teams) submits a report to the appropriate authorities This is especially important for the lower levels of football where it is not always possible for Law 1 to be strictly applied."
+    }
+   ]
+  },
+  {
+   "id": "temporary-dismissals",
+   "url": "https://www.theifab.com/laws/latest/guidelines-for-temporary-dismissals/",
+   "h": "Guidelines for Temporary Dismissals",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "Introduction"
+      },
+      {
+       "k": "p",
+       "t": "Temporary dismissals (sin bins) for all or some cautionable (YC) offences are an option in youth, veterans, disability and grassroots football competitions, subject to the approval of the competition's national FA, confederation or FIFA (whichever is appropriate)."
+      },
+      {
+       "k": "p",
+       "t": "The 138 th Annual General Meeting of The IFAB approved a revised version of the 'Guidelines for temporary dismissals (sin bins)'."
+      },
+      {
+       "k": "p",
+       "t": "Reference to temporary dismissals is found in:"
+      }
+     ]
+    },
+    {
+     "h": "Law 5. The Referee",
+     "items": [
+      {
+       "k": "p",
+       "t": "5.3 Powers and duties – Disciplinary action"
+      },
+      {
+       "k": "p",
+       "t": "The referee has the power to show yellow or red cards and, where competition rules permit, temporarily dismiss a player, from entering the field of play at the start of the match until after the match has ended, including during the half-time interval, extra time and penalties (penalty shoot-out)."
+      },
+      {
+       "k": "p",
+       "t": "A temporary dismissal is when a player commits a cautionable (YC) offence and is punished by an immediate 'suspension' from participating in the next part of the match. The philosophy is that an 'instant punishment' can have a significant and immediate positive influence on the behaviour of the offending player and, potentially, the player's team."
+      },
+      {
+       "k": "p",
+       "t": "The national FA, confederation or FIFA should approve (for publication in the competition rules) a temporary dismissal protocol within the following guidelines:"
+      }
+     ]
+    },
+    {
+     "h": "Players only",
+     "items": [
+      {
+       "k": "li",
+       "t": "Temporary dismissals apply to all players (including goalkeepers) but not to cautionable (YC) offences committed by a substitute or substituted player"
+      }
+     ]
+    },
+    {
+     "h": "Referee's signal",
+     "items": [
+      {
+       "k": "li",
+       "t": "The referee will indicate a temporary dismissal by showing a yellow card and then clearly pointing with both arms to the temporary dismissal area (usually the player's technical area)"
+      }
+     ]
+    },
+    {
+     "h": "Temporary dismissal period",
+     "items": [
+      {
+       "k": "li",
+       "t": "The length of the temporary dismissal is the same for all offences"
+      },
+      {
+       "k": "li",
+       "t": "The length of the temporary dismissal should be 10-15% of the total playing time (e.g. 10 minutes in a 90-minute match; 8 minutes in an 80-minute match)"
+      },
+      {
+       "k": "li",
+       "t": "The temporary dismissal period begins when play restarts after the player has left the field of play"
+      },
+      {
+       "k": "li",
+       "t": "The referee should include in the temporary dismissal period any time 'lost' for a stoppage for which 'additional time' will be allowed at the end of the half (e.g. substitution, injury, goal celebration, etc.)"
+      },
+      {
+       "k": "li",
+       "t": "Competitions must decide who will help the referee time the dismissal period – it could be the responsibility of a delegate, fourth official or neutral assistant referee; conversely it could be a team official"
+      },
+      {
+       "k": "li",
+       "t": "Once the temporary dismissal period has been completed, the player can return from the touchline with the referee's permission, when the ball is next out of play"
+      },
+      {
+       "k": "li",
+       "t": "The referee has the final decision as to when the player can return"
+      },
+      {
+       "k": "li",
+       "t": "A temporarily dismissed player can only be substituted after the temporary dismissal period has ended (and only if the team has not used all its permitted substitutes and/or substitution opportunities, if applicable)"
+      },
+      {
+       "k": "li",
+       "t": "If a temporary dismissal period has not been completed at the end of the first half, the remaining period is served from the start of the second half; this also applies in extra time"
+      },
+      {
+       "k": "li",
+       "t": "If a temporary dismissal period has not been completed at the end of the second half when extra time is to be played, the remaining period is served from the start of extra time"
+      },
+      {
+       "k": "li",
+       "t": "A player who is still serving a temporary dismissal at the end of the match is permitted to take part in penalties (penalty shoot-out) as temporary dismissals are not used during penalties (penalty shoot-out)"
+      }
+     ]
+    },
+    {
+     "h": "Temporary dismissal area",
+     "items": [
+      {
+       "k": "li",
+       "t": "A temporarily dismissed player should remain within the technical area (where one exists) or with the team's coach/technical staff, unless 'warming up' (under the same conditions as a substitute)"
+      }
+     ]
+    },
+    {
+     "h": "Offences during a temporary dismissal period",
+     "items": [
+      {
+       "k": "li",
+       "t": "A temporarily dismissed player who commits a cautionable (YC) or sending-off (RC) offence during their temporary dismissal period will take no further part in the match and may not be replaced or substituted"
+      }
+     ]
+    },
+    {
+     "h": "Further disciplinary action",
+     "items": [
+      {
+       "k": "li",
+       "t": "Competitions/national FAs will decide if temporary dismissals must be reported to the appropriate authorities and whether any further disciplinary action may be taken e.g. suspension for accumulating a number of temporary dismissals, as with 'standard' cautions (YCs)"
+      }
+     ]
+    },
+    {
+     "h": "Temporary dismissal systems",
+     "items": [
+      {
+       "k": "p",
+       "t": "A competition may use either of the following temporary dismissal systems:"
+      },
+      {
+       "k": "li",
+       "t": "System A – for all cautionable (YC) offences"
+      },
+      {
+       "k": "li",
+       "t": "System B – for some cautionable (YC) offences"
+      }
+     ]
+    },
+    {
+     "h": "System A – temporary dismissal for all cautionable (YC) offences",
+     "items": [
+      {
+       "k": "li",
+       "t": "All cautionable (YC) offences are punished with a temporary dismissal"
+      },
+      {
+       "k": "li",
+       "t": "A player who receives a second caution (YC) in the same match: will serve a second temporary dismissal period and then take no further part in the match"
+      },
+      {
+       "k": "li",
+       "t": "may be replaced by a substitute at the end of the second temporary dismissal period if the player's team has not used its maximum number of substitutes and/or substitution opportunities, if applicable (this is because the team has already been 'punished' by playing without that player for two temporary dismissal periods)"
+      }
+     ]
+    },
+    {
+     "h": "System B – temporary dismissal for some cautionable (YC) offences*",
+     "items": [
+      {
+       "k": "li",
+       "t": "A predefined list of cautionable (YC) offences will be punished by a temporary dismissal"
+      },
+      {
+       "k": "li",
+       "t": "All other cautionable (YC) offences are punished with a yellow card but no temporary dismissal"
+      },
+      {
+       "k": "li",
+       "t": "A player who receives two cautions (YCs) in the same match is sent off (RC), even if one caution is/both cautions are for a temporary dismissal offence"
+      },
+      {
+       "k": "p",
+       "t": "*Some competitions may find it valuable to use temporary dismissals only for offences relating to 'inappropriate' behaviour, e.g."
+      },
+      {
+       "k": "li",
+       "t": "Simulation"
+      },
+      {
+       "k": "li",
+       "t": "Deliberately delaying the opposing team's restart of the match"
+      },
+      {
+       "k": "li",
+       "t": "Dissent or verbal comments or gestures"
+      },
+      {
+       "k": "li",
+       "t": "Stopping or interfering with a promising attack by holding, pulling, pushing or deliberate handball"
+      },
+      {
+       "k": "li",
+       "t": "Kicker illegally feinting at a penalty kick"
+      }
+     ]
+    }
+   ],
+   "faq": []
+  },
+  {
+   "id": "return-substitutes",
+   "url": "https://www.theifab.com/laws/latest/guidelines-for-return-substitutes/",
+   "h": "Guidelines for Return Substitutes",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "Following approval at the 131 st Annual General Meeting of The IFAB held in London on 3 rd March 2017, the Laws of the Game permit the use of return substitutes in youth, veterans, disability and grassroots football, subject to the approval of the competition's national FA, confederation or FIFA, whichever is appropriate."
+      },
+      {
+       "k": "p",
+       "t": "Reference to return substitutions is found in:"
+      }
+     ]
+    },
+    {
+     "h": "Law 3. The Players",
+     "items": [
+      {
+       "k": "p",
+       "t": "3.2 Number of substitutions – Return substitutions"
+      },
+      {
+       "k": "p",
+       "t": "The use of return substitutions is only permitted in youth, veterans, disability and grassroots football, subject to the agreement of the national football association, confederation or FIFA."
+      },
+      {
+       "k": "p",
+       "t": "A 'return substitute' is a player who has already played in the match and has been substituted (a substituted player) and later in the match returns to play by replacing another player."
+      },
+      {
+       "k": "p",
+       "t": "Apart from the dispensation for a substituted player to return to play in the match, all other provisions of Law 3 and the Laws of the Game apply to return substitutes. In particular, the substitution procedure outlined in Law 3 must be followed."
+      }
+     ]
+    }
+   ],
+   "faq": []
+  },
+  {
+   "id": "only-the-captain",
+   "url": "https://www.theifab.com/laws/latest/only-the-captain/",
+   "h": "'Only the captain' guidelines",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "These guidelines will become a compulsory protocol for all competitions starting on or after 1 st July 2027."
+      }
+     ]
+    },
+    {
+     "h": "Introduction",
+     "items": [
+      {
+       "k": "p",
+       "t": "Respect and fairness are core values of football, but referees and other match officials are regularly subjected to verbal and/or physical dissent when they make decisions. In extreme cases, players sometimes run at referees and surround or mob them, which shows a lack of respect for the referee, harms the image of the game and can be intimidating and upsetting."
+      },
+      {
+       "k": "p",
+       "t": "Stronger collaboration between the referee and the team captains can help instil fairness and mutual respect. In this regard, so that the referee can explain key decisions, only the captains will be allowed to approach the referee, provided that they do so respectfully and conduct themselves as such. At the same time, it will be the responsibility of each captain to ensure that their team-mates remain a reasonable distance from the referee and do not interfere in the interaction between the referee and the team captain(s)."
+      },
+      {
+       "k": "p",
+       "t": "The following simple guidelines should assist organisers of competitions wishing to apply the 'only the captain' principles."
+      }
+     ]
+    },
+    {
+     "h": "Guidelines",
+     "items": [
+      {
+       "k": "li",
+       "t": "Normal interactions between players and the referee are allowed and remain important (to promote transparency and avoid possible frustration and conflict)"
+      },
+      {
+       "k": "li",
+       "t": "Any player (including the captain) who shows dissent by word or action will be cautioned (yellow card)"
+      },
+      {
+       "k": "li",
+       "t": "The referee will, where appropriate, explain important decisions to the captain(s) and/or the player(s) involved in an incident"
+      },
+      {
+       "k": "li",
+       "t": "To prevent players mobbing or surrounding the referee in major situations and following key incidents or decisions: only one player from each team – usually the captain – is allowed to approach the referee and, when doing so, they must always interact in a respectful manner"
+      },
+      {
+       "k": "li",
+       "t": "the referee may instruct/encourage players (verbally or with gestures) not to approach them"
+      },
+      {
+       "k": "li",
+       "t": "the team captains are responsible for helping to direct their team-mates away from the referee"
+      },
+      {
+       "k": "li",
+       "t": "players who approach/surround the referee when they are not permitted to do so may be cautioned (yellow card)"
+      },
+      {
+       "k": "li",
+       "t": "if appropriate, the referee may delay the restart of play to allow the captain(s) time to speak with their team-mates to explain a decision, demand proper behaviour, etc."
+      },
+      {
+       "k": "li",
+       "t": "Interaction with, or an approach by, any player other than the captain is at the discretion of the referee, e.g. if the player has committed an offence, been fouled and/or is injured"
+      }
+     ]
+    },
+    {
+     "h": "When the captain is the goalkeeper",
+     "items": [
+      {
+       "k": "li",
+       "t": "Where the goalkeeper is the captain, the referee must be told, no later than at the coin toss before kick-off, which player is nominated to approach the referee instead of the goalkeeper"
+      },
+      {
+       "k": "li",
+       "t": "Only the goalkeeper or the nominated player, not both, may approach the referee"
+      },
+      {
+       "k": "li",
+       "t": "If the nominated player is substituted or sent off, another player must be nominated"
+      }
+     ]
+    },
+    {
+     "h": "Option for youth, veterans, disability and grassroots football",
+     "items": [
+      {
+       "k": "p",
+       "t": "The guidelines below apply only to youth, veterans, disability and grassroots football."
+      },
+      {
+       "k": "li",
+       "t": "The referee can initiate the 'only the captain' guidelines by blowing the whistle and using the following signal: Raising both arms above their head and crossing them at the wrists"
+      },
+      {
+       "k": "li",
+       "t": "Uncrossing their arms and moving them in front of their body with their palms open in a forward pushing motion to indicate that the players must not approach"
+      },
+      {
+       "k": "li",
+       "t": "A captain-only zone will then extend for 4 m (4.5 yds) around the referee"
+      },
+      {
+       "k": "li",
+       "t": "Where appropriate, the referee may move away from the players to create the captain-only zone"
+      },
+      {
+       "k": "li",
+       "t": "No player is permitted to enter the captain-only zone except each team's captain, who should wear an identifying armband"
+      },
+      {
+       "k": "li",
+       "t": "The captain has a degree of responsibility for encouraging team-mates to respect the captain-only zone and remain at least 4 m (4.5 yds) away from the referee"
+      },
+      {
+       "k": "li",
+       "t": "If one player other than the captain enters the captain-only zone, the offender should be cautioned (YC) for dissent by action"
+      },
+      {
+       "k": "li",
+       "t": "If more than one player from a team enters the captain-only zone, at least one player must be cautioned (YC) – this will usually be the first unauthorised player to enter the captain-only zone or the player whose approach is most aggressive"
+      },
+      {
+       "k": "li",
+       "t": "Any incident in which more than one unauthorised player from a team enters the captain-only zone must be reported to the appropriate authorities after the match*"
+      },
+      {
+       "k": "p",
+       "t": "*It is strongly recommended that competition organisers have sanctions in place to deal with situations where more than one player from a team enters the captain-only zone."
+      }
+     ]
+    }
+   ],
+   "faq": []
+  },
+  {
+   "id": "throw-in-goal-kick-countdown",
+   "url": "https://www.theifab.com/laws/latest/throw-in-and-goal-kick-countdown-protocol/",
+   "h": "Throw-in and goal-kick countdown protocol",
+   "blocks": [
+    {
+     "h": "Introduction",
+     "items": [
+      {
+       "k": "p",
+       "t": "This protocol relates to the five-second countdown in Laws 15 and 16 to prevent time-wasting and disruption to the tempo of the match at throw-ins and goal kicks. If the time limit is exceeded, the restart is taken by the opposing team."
+      }
+     ]
+    },
+    {
+     "h": "Procedure",
+     "items": [
+      {
+       "k": "p",
+       "t": "When the referee determines that a throw-in/goal kick is being deliberately delayed by the team taking the restart:"
+      },
+      {
+       "k": "li",
+       "t": "The referee may use their whistle and/or voice to indicate that the player should hurry up/not delay the restart."
+      },
+      {
+       "k": "li",
+       "t": "To start the five-second countdown (which may start without the above cue) the referee will: blow the whistle"
+      },
+      {
+       "k": "li",
+       "t": "signal clearly with their hand/arm for the restart to be taken"
+      },
+      {
+       "k": "li",
+       "t": "visually count down from five seconds with a raised hand; this visual countdown may be accompanied by a verbal countdown where appropriate"
+      },
+      {
+       "k": "li",
+       "t": "If the ball is not in play at the end of the five-second countdown , the referee will: award the throw-in to the opposing team, to be taken from the same position as the original throw-in; or"
+      },
+      {
+       "k": "li",
+       "t": "award a corner kick to the opposing team on the side of the field closest to where the goal kick was to be taken"
+      },
+      {
+       "k": "li",
+       "t": "Where the restart is awarded to the opposing team, a caution (yellow card) applies only if the player or a team-mate then excessively delays the restart by the opposing team."
+      },
+      {
+       "k": "p",
+       "t": "The referee does not have to wait for a player to have possession of the ball to start the five-second countdown . The countdown can also be started if the player deliberately causes a delay by:"
+      },
+      {
+       "k": "li",
+       "t": "slowly retrieving the ball"
+      },
+      {
+       "k": "li",
+       "t": "taking up an incorrect position at a throw-in"
+      },
+      {
+       "k": "li",
+       "t": "putting the ball in an incorrect position at a goal kick"
+      },
+      {
+       "k": "p",
+       "t": "As the purpose of the countdown is to maintain the tempo of the match by preventing time-wasting at throw-ins and goal kicks, the player should not be penalised if they are in the process of throwing/kicking the ball as the referee reaches the end of the countdown."
+      }
+     ]
+    }
+   ],
+   "faq": []
+  },
+  {
+   "id": "concussion-substitutions",
+   "url": "https://www.theifab.com/laws/latest/additional-permanent-concussion-substitutions-protocol/",
+   "h": "Additional permanent concussion substitutions protocol",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "Introduction"
+      },
+      {
+       "k": "p",
+       "t": "Following approval at the 138 th Annual General Meeting (AGM) of The IFAB held in Scotland on 2nd March 2024, the Laws of the Game allow competitions to permit the use of additional permanent concussion substitutions."
+      },
+      {
+       "k": "p",
+       "t": "An additional permanent concussion substitution occurs when a player who has an actual or suspected concussion is substituted and takes no further part in the match. This substitution does not count as one of the 'normal' permitted substitutions (or substitution opportunities, where applicable)."
+      },
+      {
+       "k": "p",
+       "t": "Reference to additional permanent concussion substitutions is found in:"
+      }
+     ]
+    },
+    {
+     "h": "Law 3. The Players",
+     "items": [
+      {
+       "k": "p",
+       "t": "3.2 Number of substitutions – Additional permanent concussion substitutions"
+      },
+      {
+       "k": "p",
+       "t": "Competitions may use additional permanent concussion substitutions in accordance with the protocol listed under 'Notes and modifications'."
+      },
+      {
+       "k": "p",
+       "t": "NB: Although two different protocols were used during the trials, a single protocol was approved at The IFAB AGM and must be used in its entirety."
+      },
+      {
+       "k": "p",
+       "t": "Principles"
+      },
+      {
+       "k": "li",
+       "t": "Each team is permitted to use a maximum of one 'concussion substitute' in a match."
+      },
+      {
+       "k": "li",
+       "t": "A 'concussion substitution' may be made regardless of the number of substitutes already used."
+      },
+      {
+       "k": "li",
+       "t": "In competitions in which the number of named substitutes is the same as the maximum number of 'normal substitutes' that can be used, the 'concussion substitute' can be a player who has previously been substituted and may be used at any time, regardless of the number of substitutes already used."
+      },
+      {
+       "k": "li",
+       "t": "When a 'concussion substitute' is used, the opposing team then has the option to use an 'additional substitute' for any reason."
+      },
+      {
+       "k": "p",
+       "t": "Procedure"
+      },
+      {
+       "k": "li",
+       "t": "The substitution procedure operates in accordance with Law 3 – The Players (except as outlined otherwise below)."
+      },
+      {
+       "k": "li",
+       "t": "A 'concussion substitution' may be made: immediately after a concussion occurs or is suspected;"
+      },
+      {
+       "k": "li",
+       "t": "after an on-field assessment and/or an off-field assessment;"
+      },
+      {
+       "k": "li",
+       "t": "or at any other time when a concussion occurs or is suspected, including when a player has previously been assessed and has returned to the field of play."
+      },
+      {
+       "k": "li",
+       "t": "If a team decides to make a 'concussion substitution', the referee/fourth official is informed, ideally by using a substitution card/form of a different colour."
+      },
+      {
+       "k": "li",
+       "t": "The player with concussion or suspected concussion is not permitted to take any further part in the match, including penalties (penalty shoot-out), and should, where possible, be accompanied to the dressing room and/or a medical facility."
+      },
+      {
+       "k": "li",
+       "t": "The opposing team is informed by the referee/fourth official that it has the option of using an 'additional substitute' and an 'additional substitution' opportunity, which may be used concurrently with the 'concussion substitution' made by the other team or at any time thereafter (except as outlined otherwise in the Laws of the Game)."
+      },
+      {
+       "k": "p",
+       "t": "Substitution opportunities"
+      },
+      {
+       "k": "li",
+       "t": "Making a 'concussion substitution' is separate from any limit on the number of 'normal substitution' opportunities."
+      },
+      {
+       "k": "li",
+       "t": "However, if a team makes a 'normal substitution' at the same time as a 'concussion substitution', this will count as one of its 'normal substitution' opportunities."
+      },
+      {
+       "k": "li",
+       "t": "Once a team has used all its 'normal substitution' opportunities, it cannot use a 'concussion substitution' to make a 'normal substitution'."
+      },
+      {
+       "k": "li",
+       "t": "Where a team makes a 'concussion substitution', the opposing team can use an 'additional substitute' and receives an 'additional substitution' opportunity. This additional opportunity can be used only for the 'additional substitute' and not for a 'normal substitute'."
+      },
+      {
+       "k": "p",
+       "t": "Match officials"
+      },
+      {
+       "k": "p",
+       "t": "The referee and other match officials, especially the fourth official:"
+      },
+      {
+       "k": "li",
+       "t": "are not part of a team's decision-making process as to whether a player should be substituted or not, nor whether a player should be replaced by a 'normal substitute' or a 'concussion substitute';"
+      },
+      {
+       "k": "li",
+       "t": "must not decide whether an actual or suspected injury qualifies for a 'concussion substitute' to be used;"
+      },
+      {
+       "k": "li",
+       "t": "should give appropriate support where a player has an actual or suspected injury, including by informing the team captain, coach and/or medical staff if they suspect that a player needs to be assessed and/or treated;"
+      },
+      {
+       "k": "li",
+       "t": "should support a decision by the team captain, coach and/or medical staff that an injured player cannot continue playing, which may require the referee to delay the restart until after the player has left the field of play; and"
+      },
+      {
+       "k": "li",
+       "t": "must inform the appropriate authorities if there are concerns that a 'concussion substitution' has been made inappropriately."
+      }
+     ]
+    }
+   ],
+   "faq": []
+  },
+  {
+   "id": "off-field-treatment",
+   "url": "https://www.theifab.com/laws/latest/off-field-treatment-and-assessment-protocol/",
+   "h": "Off-field treatment and assessment protocol",
+   "blocks": [
+    {
+     "h": "Introduction",
+     "items": [
+      {
+       "k": "p",
+       "t": "This protocol relates to the Law 5 requirement for an outfield player who is assessed and/or treated on the field of play,* or whose injury causes play to be stopped, to leave the field of play and remain off it for a period of one minute after the restart."
+      },
+      {
+       "k": "p",
+       "t": "* Law 5 permits treatment on the field of play only in certain circumstances (see below)."
+      },
+      {
+       "k": "p",
+       "t": "The purpose is to give the medical staff the necessary time off the field of play to evaluate the player's injury and determine whether they should continue playing, as well as to reduce disruption to the tempo of the match."
+      }
+     ]
+    },
+    {
+     "h": "Procedure",
+     "items": [
+      {
+       "k": "p",
+       "t": "Requirement to leave the field of play for one minute"
+      },
+      {
+       "k": "li",
+       "t": "An outfield player is required to leave the field of play for one minute after the restart in the event of one or more of the following: play is stopped because the player has an actual or suspected injury"
+      },
+      {
+       "k": "li",
+       "t": "the referee has signalled for the medical staff to enter the field of play"
+      },
+      {
+       "k": "li",
+       "t": "the referee has asked the player if they require on-field medical attention and the player has requested it"
+      },
+      {
+       "k": "li",
+       "t": "The medical staff should be given sufficient time to carry out an initial assessment on the field but should not treat the player on the field unless it is a serious injury."
+      },
+      {
+       "k": "li",
+       "t": "After any initial assessment, the player must leave the field of play (except as outlined below) and remain off it until play has restarted and one minute has elapsed (running clock)."
+      },
+      {
+       "k": "p",
+       "t": "One-minute period off the field of play"
+      },
+      {
+       "k": "li",
+       "t": "The one-minute period off the field of play begins when play restarts."
+      },
+      {
+       "k": "li",
+       "t": "The one minute is timed using a running clock and is determined by the referee, who may be assisted by the other match officials."
+      },
+      {
+       "k": "li",
+       "t": "The player may only return with the referee's permission ; they must re-enter from the touchline if the ball is in play but may re-enter from any boundary line if the ball is not in play."
+      },
+      {
+       "k": "li",
+       "t": "If the injured player is substituted, the substitution is not delayed ."
+      },
+      {
+       "k": "li",
+       "t": "If the first half ends before the one minute has elapsed, the player may return as from the beginning of the second half; this principle applies to: the period between the end of normal time and the start of extra time"
+      },
+      {
+       "k": "li",
+       "t": "half-time in extra time"
+      },
+      {
+       "k": "li",
+       "t": "the period between the end of extra time and penalties (penalty shoot-out)"
+      },
+      {
+       "k": "p",
+       "t": "A player is not required to leave the field of play for one minute when:"
+      },
+      {
+       "k": "li",
+       "t": "the player: indicates that they do not require medical attention, except where play was stopped for the injury; or"
+      },
+      {
+       "k": "li",
+       "t": "voluntarily leaves the field during play or a stoppage, provided that this does not delay the restart"
+      },
+      {
+       "k": "li",
+       "t": "there is an injury for which Law 5 permits a player to be treated on the field of play: a goalkeeper is injured"
+      },
+      {
+       "k": "li",
+       "t": "a goalkeeper and an outfield player have collided and need attention"
+      },
+      {
+       "k": "li",
+       "t": "players from the same team have collided and need attention"
+      },
+      {
+       "k": "li",
+       "t": "a severe injury has occurred, especially a head injury (e.g. concussion), cardiac issue or life-threatening event (e.g. seizure, choking etc.)"
+      },
+      {
+       "k": "li",
+       "t": "a player is injured as the result of a physical offence for which the opponent is cautioned or sent off (e.g. reckless or serious foul challenge)"
+      },
+      {
+       "k": "li",
+       "t": "a penalty kick has been awarded and the injured player will be the kicker"
+      }
+     ]
+    }
+   ],
+   "faq": []
+  },
+  {
+   "id": "time-limited-substitutions",
+   "url": "https://www.theifab.com/laws/latest/time-limited-substitution-protocol/",
+   "h": "Time-limited substitution protocol",
+   "blocks": [
+    {
+     "h": "Introduction",
+     "items": [
+      {
+       "k": "p",
+       "t": "This protocol relates to the Law 3 requirement for a substituted player to leave the field of play within ten seconds to prevent time-wasting and disruption to the tempo of the match."
+      }
+     ]
+    },
+    {
+     "h": "Procedure",
+     "items": [
+      {
+       "k": "li",
+       "t": "Once the substitution board has been shown or, where there is no substitution board, the referee signals for a substitution to take place,* the player being substituted must leave the field of play: within ten seconds"
+      },
+      {
+       "k": "li",
+       "t": "at the nearest point on the boundary line, unless indicated otherwise by the referee"
+      },
+      {
+       "k": "p",
+       "t": "*If the referee inspects the substitute's equipment at the halfway line, the ten seconds start when the inspection is completed and the referee signals for the substitution to be made."
+      },
+      {
+       "k": "li",
+       "t": "The referee may visually count down the last five seconds with a raised hand; this visual countdown may be accompanied by a verbal countdown where appropriate."
+      },
+      {
+       "k": "li",
+       "t": "If the player being substituted has not left the field of play within the ten seconds : they must still leave the field of play as quickly as possible"
+      },
+      {
+       "k": "li",
+       "t": "the substitute is not permitted to enter the field of play"
+      },
+      {
+       "k": "li",
+       "t": "play restarts"
+      },
+      {
+       "k": "li",
+       "t": "the substitution cannot be cancelled nor the substitute changed"
+      },
+      {
+       "k": "li",
+       "t": "the substitute may only enter the field of play at the first stoppage after one minute has elapsed following the restart and after receiving a signal from the referee"
+      },
+      {
+       "k": "li",
+       "t": "The one minute is timed using a running clock and is determined by the referee, who may be assisted by the other match officials."
+      },
+      {
+       "k": "li",
+       "t": "If more than one substitution is made during a stoppage, all players being substituted must be off the field of play within ten seconds of the substitution board being shown/signal being given for the final substitution; the board/signal must not be delayed between substitutions that are made during the same stoppage."
+      },
+      {
+       "k": "li",
+       "t": "Where the ten seconds are exceeded and the substitute is prevented from entering the field of play, the player being substituted is only cautioned (yellow card) if the delay is excessive."
+      },
+      {
+       "k": "li",
+       "t": "The referee may decide not to apply the ten-second time limit, including when: a player's injury clearly prevents them from leaving the field within that time"
+      },
+      {
+       "k": "li",
+       "t": "a player cannot leave the field at the nearest point on the boundary line due to safety/security reasons"
+      },
+      {
+       "k": "p",
+       "t": "As the purpose of the countdown is to maintain the tempo of the match by preventing time-wasting, if the player being substituted is very close to or crossing the boundary line as the referee reaches the end of the countdown, the substitute should be allowed to enter the field of play."
+      }
+     ]
+    }
+   ],
+   "faq": []
+  }
  ]
 }

@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>IFAB · VAR 协议与统一尺度 · 裁判学习平台</title>
+<script>try{if(localStorage.getItem('cfa.ifab-en')==='1')document.documentElement.setAttribute('data-ifab-en','')}catch(e){}</script>
+<style>
+/* ===== ifab 页专属布局 (tokens/组件来自 data-cfa-theme; 中英开关同 uefa 页机制) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{max-width:1180px;margin:0 auto;padding:22px 16px 18px}
+.page-head h1{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
+.page-head .sub{color:var(--muted);font-size:13px;line-height:1.7}
+.page-head .toprow{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.src-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.src-banner .ic{color:var(--brand)}
+.src-banner a{color:var(--brand);font-weight:600;text-decoration:none}
+.src-banner a:hover{text-decoration:underline}
+.en-toggle{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border-radius:999px;
+  border:1px solid var(--brand);background:var(--card);color:var(--brand);
+  font-size:12.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.en-toggle:hover{background:var(--info-bg)}
+.en-toggle[aria-pressed="true"]{background:var(--brand-strong);color:var(--on-brand)}
+.layout{max-width:1180px;margin:0 auto;padding:18px 16px 60px;display:grid;
+  grid-template-columns:248px minmax(0,1fr);gap:26px}
+.toc{position:sticky;top:76px;align-self:start;max-height:calc(100vh - 96px);overflow:auto;
+  border:1px solid var(--line);border-radius:var(--r-md);background:var(--card);padding:12px}
+.toc b{display:block;font-size:12px;color:var(--muted);letter-spacing:.8px;margin:2px 0 8px}
+.toc a{display:block;padding:6px 9px;border-radius:var(--r-sm);color:var(--ink2);
+  font-size:13px;text-decoration:none;line-height:1.5}
+.toc a:hover{background:var(--info-bg);color:var(--ink)}
+.toc a.cur{background:var(--info-bg);color:var(--brand);font-weight:600}
+.toc .sub{padding-left:16px;font-size:12.5px}
+.doc .sec{margin-bottom:34px}
+.doc h2{font-family:var(--font-display);font-size:20px;margin:0 0 12px;padding-bottom:8px;
+  border-bottom:1px solid var(--line);letter-spacing:.4px}
+.doc h3{font-family:var(--font-display);font-size:16px;margin:20px 0 8px;color:var(--brand)}
+.doc p,.doc li{font-size:14px;line-height:1.9;color:var(--ink)}
+.doc ul{margin:6px 0 12px;padding-left:22px}
+.doc li{margin:4px 0}
+.doc .panel{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:16px 20px;margin-bottom:14px}
+.en{display:none}
+html[data-ifab-en] .en{display:revert}
+html[data-ifab-en] .zhv{display:none}
+html[data-ifab-en] li.zhv{display:none}
+html[data-ifab-en] p.zhv,html[data-ifab-en] span.zhv,html[data-ifab-en] div.zhv{display:none}
+.faq details{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:12px 16px;margin-bottom:10px}
+.faq summary{cursor:pointer;font-size:14px;line-height:1.75;font-weight:600;color:var(--ink)}
+.faq .a{margin-top:9px;padding-top:9px;border-top:1px dashed var(--line);
+  font-size:13.5px;line-height:1.85;color:var(--ink2)}
+.links{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px;margin-top:8px}
+.links a{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 15px;
+  text-decoration:none;color:var(--ink2);transition:.12s;font-size:12.5px;line-height:1.7}
+.links a:hover{border-color:var(--brand);color:var(--ink)}
+.links a b{display:block;font-size:13.5px;color:var(--ink);margin-bottom:4px}
+.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
+@media (max-width:900px){.layout{grid-template-columns:1fr}.toc{position:static;max-height:none}}
+</style>
+<style data-cfa-theme>
+/* ============================================================
+   裁判学习平台 · 全站设计系统 (唯一权威样式层)
+   风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
+   衬线大标题/陶土色点缀/发丝线边框/平面卡片
+   - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
+   - 本文件由 scripts/lib/theme.py 以 style 标签内联注入全部生成页 head
+   - 各 builder 的页面 style 块只允许写页面专属布局, 禁止重定义
+     :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
+   ============================================================ */
+
+/* ---------- 设计 tokens ---------- */
+:root{
+  /* 主题色: 陶土(clay)为品牌色, 红/绿/黄为判定语义色 */
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:rgba(178,58,46,.09); --red-line:rgba(178,58,46,.32);
+  --green:#3e7b49; --green-bg:rgba(62,123,73,.1); --green-line:rgba(62,123,73,.32);
+  --amber:#946d1b; --amber-bg:rgba(148,109,27,.11); --amber-line:rgba(148,109,27,.34);
+  --info:#a3502b; --info-bg:rgba(163,80,43,.09); --info-line:rgba(163,80,43,.3);
+
+  /* 表面与文字 (暖炭深色) */
+  --bg:#191813; --bg2:#201e18; --card:#242219; --card2:#2b2820;
+  --ink:#ece8dd; --ink2:#cfc9ba; --muted:#9c9585; --faint:#6e6759;
+  --line:#3a362c; --line2:#2e2b22;
+  --shadow:0 14px 40px rgba(10,9,6,.5);
+  --shadow-sm:0 2px 10px rgba(10,9,6,.35);
+
+  /* 顶栏 (与页面同底色 + 发丝线, 编辑风导航) */
+  --top-bg:#191813; --top-ink:#ece8dd; --top-muted:#9c9585;
+  --top-line:#3a362c; --top-chip:rgba(236,232,221,.07); --top-chip-on:rgba(224,139,98,.16);
+  --top-input-bg:#242219; --top-input-line:#3a362c;
+
+  /* 几何与字体 */
+  --r-sm:6px; --r-md:10px; --r-lg:13px;
+  --top-h:56px;
+  --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
+}
+[data-theme="light"]{
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:#f7e8e2; --red-line:#e6c3b6;
+  --green:#3e7b49; --green-bg:#e8f0e4; --green-line:#c3d6be;
+  --amber:#946d1b; --amber-bg:#f5edda; --amber-line:#e2d3a4;
+  --info:#a3502b; --info-bg:#f4e7dd; --info-line:#e3c8b2;
+
+  --bg:#f3f1ea; --bg2:#eceade; --card:#fbfaf5; --card2:#f1eee3;
+  --ink:#211e1a; --ink2:#46423a; --muted:#7a7466; --faint:#a49d8c;
+  --line:#ddd8ca; --line2:#e9e5d9;
+  --shadow:0 14px 40px rgba(48,42,30,.12);
+  --shadow-sm:0 1px 4px rgba(48,42,30,.06);
+
+  --top-bg:#f3f1ea; --top-ink:#211e1a; --top-muted:#7a7466;
+  --top-line:#ddd8ca; --top-chip:rgba(33,30,26,.05); --top-chip-on:rgba(163,80,43,.12);
+  --top-input-bg:#fbfaf5; --top-input-line:#cfc9b8;
+}
+
+/* ---------- 基础 ---------- */
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:14.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+::selection{background:rgba(163,80,43,.25)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.skip-link{position:absolute;left:-999px;top:0;z-index:200;background:var(--brand);
+  color:var(--on-brand);padding:8px 14px;border-radius:0 0 8px 0}
+.skip-link:focus{left:0}
+h1,h2{font-variant-numeric:tabular-nums}
+
+/* 滚动条 */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 图标 ---------- */
+.ic{vertical-align:-2.5px;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+
+/* ---------- 顶栏(全站统一) ---------- */
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--top-bg);color:var(--top-ink);border-bottom:1px solid var(--top-line);
+  position:sticky;top:0;z-index:60}
+.topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--top-ink);white-space:nowrap;min-width:0}
+.topbar .brand .ic{color:var(--brand)}
+.topbar .brand b{font-family:var(--font-display);font-size:16.5px;letter-spacing:.4px;font-weight:700}
+.topbar .brand .brand-sub{font-size:11.5px;color:var(--top-muted);padding:1px 9px;
+  border:1px solid var(--top-line);border-radius:999px;white-space:nowrap}
+.topbar .nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.topbar .nav::-webkit-scrollbar{display:none}
+.topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;
+  border:1px solid transparent;border-radius:var(--r-sm);background:none;
+  color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
+.topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+/* 顶栏共 11 个导航项：中等宽度下隐藏导航图标保标签，并收紧搜索框/间距/内边距，
+   避免导航横向滚动溢出（≤1360 再隐品牌副标） */
+@media (max-width:1560px){
+  .topbar{gap:10px}
+  .topbar .nav{gap:1px}
+  .topbar .nav .ic{display:none}
+  .topbar .nav .tbtn{font-size:12.5px;padding:6px 6px}
+  .topbar .tbtn{padding:6px 7px}
+  .topbar input[type=search]{min-width:96px}
+}
+@media (max-width:1460px){.topbar .brand .brand-sub{display:none}}
+.topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
+  border:1px solid var(--top-input-line);border-radius:var(--r-sm);
+  background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
+.topbar .search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:480px;min-width:120px}
+.topbar .search-wrap .ic{position:absolute;left:10px;color:var(--top-muted);pointer-events:none}
+
+/* 主题切换按钮: 图标随主题互换 */
+#btnTheme .when-light{display:none}
+[data-theme="light"] #btnTheme .when-dark{display:none}
+[data-theme="light"] #btnTheme .when-light{display:inline-flex}
+
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* ---------- 通用组件 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.btn.primary:hover{opacity:.88;color:var(--bg)}
+.btn.iconbtn{padding:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;white-space:nowrap;transition:.15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.chip.on b{color:var(--brand)}
+
+/* 判定徽章 */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2.5px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.badge.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line)}
+.badge.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.badge.pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-line);font-weight:500}
+.badge.wrong,.badge.correct,.badge.pending,.badge.info{letter-spacing:.3px}
+
+/* 队徽 (跨页共用, JS 注入) */
+.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:4px;background:#fff}
+.team-dot{display:inline-block;border-radius:3px;vertical-align:-3px;margin-right:4px;flex:none}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:4px;margin-right:4px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.wrong{background:var(--red)}.dot.correct{background:var(--green)}.dot.pending{background:var(--amber)}
+.kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
+
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
+/* ---------- 弹层 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
+  z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
+.modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
+.modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
+.modal .close:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- 通用响应式辅助 ---------- */
+@media (max-width:760px){
+  .topbar{gap:8px;padding:0 10px}
+  .topbar .brand .brand-sub{display:none}
+  .topbar .tbtn span{display:none}
+  /* 恢复导航图标：≤1560 的藏图标规则会让小屏导航只剩空盒 */
+  .topbar .nav .ic{display:inline}
+  .topbar .tbtn{padding:6px 8px}
+}
+
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'}catch(e){}</script></head>
+<body class="page-ifab">
+<a class="skip-link" href="#content0">跳到内容</a>
+<header class="topbar"><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">IFAB 统一尺度</span></a><nav class="nav" aria-label="站点导航"><a class="tbtn" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025评议</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024评议</span></a><a class="tbtn" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA</span></a><a class="tbtn" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>RAP</span></a><a class="tbtn" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>RFEF</span></a><a class="tbtn" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国评议</span></a><a class="tbtn" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>国际评议</span></a><a class="tbtn" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美评议</span></a><a class="tbtn" href="weekly.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg><span>周更评议</span></a><a class="tbtn cur" aria-current="page" href="ifab.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>IFAB</span></a><a class="tbtn" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题</span></a></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header>
+<header class="page-head">
+  <div class="wrap">
+    <div class="toprow">
+      <div>
+        <h1>IFAB · VAR 协议与统一尺度</h1>
+        <div class="sub">《Laws of the Game》Video Assistant Referee (VAR) protocol 官方全文中文译制：四原则章节 + 12 条官方 FAQ 判例 · 与本站《竞赛规则》2026-27 译本同源 · 默认中文，右上角切换英文原文</div>
+      </div>
+      <button id="btnEn" class="en-toggle" aria-pressed="false"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg> 英文原文：关</button>
+    </div>
+    <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 译文供学习参考，以 IFAB 官方原文为准；<a href="https://www.theifab.com/laws/latest/video-assistant-referee-var-protocol/" target="_blank" rel="noopener noreferrer">theifab.com 官方协议页</a> · 核对日期 2026-10-06</div>
+  </div>
+</header>
+<div class="layout" id="content0">
+  <nav class="toc" aria-label="章节导航">
+    <b>章节导航</b>
+    <a href="#s1">原则</a><a href="#s2">可回看的判定/事件</a><a href="#s3">实务安排</a><a href="#s4">程序</a><a href="#faq">官方 FAQ 判例</a><a href="#links">配套材料与站内关联</a>
+  </nav>
+  <div class="doc">
+    <section class="sec" id="s1"><h2><span class="zhv">1. 原则</span><span class="en">1. Principles</span></h2><div class="panel"><p><span class="zhv">VAR 协议在尽可能的范围内，符合《竞赛规则》的原则与精神。</span><span class="en">The VAR protocol, as far as possible, conforms to the principles and philosophy of the Laws of the Game.</span></p><p><span class="zhv">只有当比赛/赛事主办方已满足《VAR 手册》规定的全部实施条件，并获得 FIFA 书面许可时，方可使用视频助理裁判（VAR）。</span><span class="en">The use of video assistant referees (VARs) is only permitted where the match/competition organiser has fulfilled all the implementation requirements as set out in the VAR Handbook , and has received written permission from FIFA.</span></p><h3><span class="zhv">原则</span><span class="en">Principles</span></h3><p><span class="zhv">足球比赛中使用 VAR 基于若干原则——所有原则必须适用于每一场使用 VAR 的比赛（错误判给的角球除外，见「可回看的判定/事件」e 项）。</span><span class="en">The use of VARs in football matches is based on a number of principles, all of which must apply in every match using VARs (except for incorrectly awarded corner kicks – see point e. under &#39;2. Reviewable decisions/incidents&#39;) .</span></p><p><span class="zhv">1. 视频助理裁判（VAR）是一名比赛官员，可独立调取比赛画面，但仅在出现与下列事项相关的「清晰而明显的错误」或「严重漏判事件」时协助裁判员：</span><span class="en">1. A video assistant referee (VAR) is a match official, with independent access to match footage, who may assist the referee only in the event of a &#39;clear and obvious error&#39; or &#39;serious missed incident&#39; in relation to:</span></p><p><span class="zhv">a. 进球 / 未进球</span><span class="en">a. Goal/no goal</span></p><p><span class="zhv">b. 点球 / 不是点球</span><span class="en">b. Penalty/no penalty</span></p><p><span class="zhv">c. 直接红牌（不包括明显错误的第二张警告）</span><span class="en">c. Direct red Red card ( not including a clearly incorrect second caution)</span></p><p><span class="zhv">d. 错罚对象（裁判员向犯规队的错误球员出示黄牌或红牌时）</span><span class="en">d. Mistaken identity (when the referee cautions or sends off the wrong player of the offending team )</span></p><p><span class="zhv">2. 裁判员必须始终作出决定——不允许「不作决定」再借助 VAR 作出决定；「允许比赛继续」的决定同样可以回看。</span><span class="en">2. The referee must always make a decision, i.e. the referee is not permitted to give &#39;no decision&#39; and then use the VAR to make the decision; a decision to allow play to continue after an alleged offence can be reviewed.</span></p><p><span class="zhv">3. 只有当视频回看清楚表明原判属于「清晰而明显的错误」时，才更改裁判员的原判。</span><span class="en">3. The original decision given by the referee will not be changed unless the video review clearly shows that the decision was a &#39;clear and obvious error&#39;.</span></p><p><span class="zhv">4. 只有裁判员可以发起「回看」；VAR（及其他比赛官员）只能向裁判员「建议」回看。</span><span class="en">4. Only the referee can initiate a &#39;review&#39;; the VAR (and other match officials) can only recommend a &#39;review&#39; to the referee.</span></p><p><span class="zhv">5. 最终决定始终由裁判员作出——或依据 VAR 提供的信息，或在裁判员完成「场上回看」（OFR）之后。</span><span class="en">5. The final decision is always taken by the referee, either based on information from the VAR or after the referee has undertaken an &#39;on-field review&#39; (OFR).</span></p><p><span class="zhv">6. 回看过程没有时间限制，因为准确比速度更重要。</span><span class="en">6. There is no time limit for the review process as accuracy is more important than speed.</span></p><p><span class="zhv">7. 球员与球队官员不得围住裁判员，也不得试图影响是否回看、回看过程或最终决定。</span><span class="en">7. The players and team officials must not surround the referee or attempt to influence if a decision is reviewed, the review process or the final decision.</span></p><p><span class="zhv">8. 回看过程中裁判员必须保持「可见」，以确保透明。</span><span class="en">8. The referee must remain &#39;visible&#39; during the review process to ensure transparency.</span></p><p><span class="zhv">9. 若事件发生后比赛继续、随后才回看，则在事件发生至回看期间已作出/应作出的纪律处分不予取消（即使原判被更改）——因「停止或干扰有希望的进攻」或 DOGSO 被警告/罚令出场的情形除外。</span><span class="en">9. If play continues after an incident which is then reviewed, any disciplinary action taken/required during the post-incident period is not cancelled, even if the original decision is changed (except a caution/sending-off for stopping or interfering with a promising attack or DOGSO).</span></p><p><span class="zhv">10. 若比赛已停止并重新开始，裁判员不得再发起「回看」——错罚对象情形，或与暴力行为、向他人吐口水、咬人、使用极其攻击性/侮辱性/辱骂性言行相关的潜在罚令出场事件除外。</span><span class="en">10. If play has stopped and been restarted, the referee may not undertake a &#39;review&#39; except for a case of mistaken identity or for a potential sending-off offence relating to violent conduct, spitting, biting or extremely offensive, insulting and/or abusive action(s).</span></p><p><span class="zhv">11. 可回看事件前后的比赛时段，由《竞赛规则》与 VAR 协议确定。</span><span class="en">11. The period of play before and after an incident that can be reviewed is determined by the Laws of the Game and VAR protocol.</span></p><p><span class="zhv">12. 由于 VAR 会自动「核查」每一情况/决定，教练员或球员无需申请「回看」。</span><span class="en">12. As the VAR will automatically &#39;check&#39; every situation/decision, there is no need for coaches or players to request a &#39;review&#39;.</span></p></div></section><section class="sec" id="s2"><h2><span class="zhv">2. 可回看的判定/事件</span><span class="en">2. Reviewable decisions/incidents</span></h2><div class="panel"><p><span class="zhv">裁判员仅可在四类改变比赛进程的判定/事件上获得 VAR 协助（若赛事启用 e 项的角球判罚则为第五类）。在所有这些情形中，VAR 仅在裁判员已作出（第一/原始）决定（包括允许比赛继续）之后使用，或在比赛官员漏看/未看到严重事件时使用。</span><span class="en">The referee may receive assistance from the VAR only in relation to four five categories of match-changing decisions/incidents. In all these situations, the VAR is only used after the referee has made a (first/original) decision (including allowing play to continue), or if a serious incident is missed/not seen by the match officials.</span></p><p><span class="zhv">只有出现「清晰而明显的错误」时才会更改裁判员的原判（包括裁判员依据其他比赛官员提供的信息〔如越位〕作出的决定）。</span><span class="en">The referee`s original decision will not be changed unless there was a &#39;clear and obvious error&#39; (this includes any decision made by the referee based on information from another match official e.g. offside).</span></p><p><span class="zhv">出现潜在「清晰而明显的错误」或「严重漏判事件」时，可回看的判定/事件类别为：</span><span class="en">The categories of decision/incident which may be reviewed in the event of a potential &#39;clear and obvious error&#39; or &#39;serious missed incident&#39; are:</span></p><p><span class="zhv">a. 进球 / 未进球</span><span class="en">a. Goal/no goal</span></p><ul><li><span class="zhv">进攻队在进球过程或进球前的犯规（手球、犯规、越位等）</span><span class="en">attacking team offence in the build-up to or scoring of the goal (handball, foul, offside etc.)</span></li><li><span class="zhv">进球前球已出界</span><span class="en">ball out of play prior to the goal</span></li><li><span class="zhv">进球 / 未进球判定本身</span><span class="en">goal/no goal decisions</span></li><li><span class="zhv">罚球点球时守门员和/或主罚队员犯规；或攻守队员过早进入禁区，并在球从球门柱、横梁或守门员弹回时直接参与比赛</span><span class="en">offence by goalkeeper and/or kicker at the taking of a penalty kick or encroachment by an attacker or defender who becomes directly involved in play if the penalty kick rebounds from the goalpost, crossbar or goalkeeper</span></li></ul><p><span class="zhv">b. 点球 / 不是点球</span><span class="en">b. Penalty kick/no penalty kick</span></p><ul><li><span class="zhv">点球事件发生前进攻队的犯规（手球、犯规、越位等）</span><span class="en">attacking team offence in the build-up to the penalty incident (handball, foul, offside etc.)</span></li><li><span class="zhv">事件发生前球已出界</span><span class="en">ball out of play prior to the incident</span></li><li><span class="zhv">犯规地点（罚球区之内或之外）</span><span class="en">location of offence (inside or outside the penalty area)</span></li><li><span class="zhv">错误判给的点球</span><span class="en">penalty kick incorrectly awarded</span></li><li><span class="zhv">漏判的点球犯规</span><span class="en">penalty kick offence not penalised</span></li></ul><p><span class="zhv">c. 直接红牌（不包括第二张黄牌/警告）</span><span class="en">c. Direct red Red cards (not second yellow card/caution)</span></p><ul><li><span class="zhv">DOGSO——破坏明显进球得分机会（尤其是犯规地点与其他队员位置）</span><span class="en">DOGSO (especially position of offence and positions of other players)</span></li><li><span class="zhv">严重犯规（或鲁莽的抢截)</span><span class="en">serious foul play (or reckless challenge)</span></li><li><span class="zhv">暴力行为、咬人或向他人吐口水</span><span class="en">violent conduct, biting or spitting at another person</span></li><li><span class="zhv">使用攻击性、侮辱性或辱骂性言行</span><span class="en">using offensive, insulting or abusive action(s)</span></li><li><span class="zhv">明显错误的第二张警告</span><span class="en">clearly incorrect second caution</span></li></ul><p><span class="zhv">d. 错罚对象（红牌或黄牌）</span><span class="en">d. Mistaken identity (red or yellow card)</span></p><p><span class="zhv">若裁判员处罚了犯规但明显认错了犯规球员，向犯规（被判罚）队的错误球员出示了黄牌或红牌，则只能回看犯规球员的身份；犯规本身不可回看——除非其涉及进球、点球事件或直接红牌。</span><span class="en">If the referee penalises an offence but has clearly misidentified the player who committed that offence and then gives the wrong player from the offending (penalised) team a yellow or red card , only the identity of the offender can be reviewed ; the actual offence itself cannot be reviewed unless it relates to a goal, penalty incident or direct red card .</span></p><p><span class="zhv">e. 明显错误判给的角球——前提是该决定可以立即更改且不延误重新开始比赛（赛事可选）</span><span class="en">e. Clearly incorrectly awarded corner kick if the decision can be changed immediately and without delaying the restart (competition option)</span></p></div></section><section class="sec" id="s3"><h2><span class="zhv">3. 实务安排</span><span class="en">3. Practicalities</span></h2><div class="panel"><p><span class="zhv">比赛中使用 VAR 涉及以下实务安排：</span><span class="en">The use of VARs during a match involves the following practical arrangements:</span></p><ul><li><span class="zhv">VAR 在视频操作室（VOR）内观看比赛，由一名或多名助理视频助理裁判（AVAR）协助</span><span class="en">The VAR watches the match in the video operation room (VOR) assisted by one or more assistant VARs (AVARs)</span></li><li><span class="zhv">根据机位数量与其他因素，可配置多名 AVAR 与一名或多名回放操作员（RO）</span><span class="en">Depending on the number of camera angles and other considerations, there may be more than one AVAR and one or more replay operators (ROs)</span></li><li><span class="zhv">比赛期间只有获授权人员方可进入 VOR，或与 VAR/AVAR/RO 通话</span><span class="en">Only authorised persons are allowed to enter the VOR or communicate with the VAR/AVAR/RO during the match</span></li><li><span class="zhv">VAR 可独立调取电视转播画面并控制回放</span><span class="en">The VAR has independent access to, and replay control of, TV broadcast footage</span></li><li><span class="zhv">VAR 接入比赛官员的通讯系统，能听到他们的一切通话；VAR 只有按下按钮才能对裁判员说话（避免裁判员被 VOR 内的交谈干扰）</span><span class="en">The VAR is connected to the communication system being used by the match officials and can hear everything they say; the VAR can only speak to the referee by pushing a button (to avoid the referee being distracted by conversations in the VOR)</span></li><li><span class="zhv">若 VAR 正忙于「核查」或「回看」，AVAR 可以对裁判员讲话——尤其是需要停止比赛或确保比赛暂不重新开始时</span><span class="en">If the VAR is busy with a &#39;check&#39; or a &#39;review&#39;, the AVAR may speak to the referee especially if the game needs to be stopped or to ensure play does not restart</span></li><li><span class="zhv">若裁判员决定查看回放画面，VAR 负责选定最佳机位/回放速度；裁判员也可要求其他/追加的机位与速度</span><span class="en">If the referee decides to view the replay footage, the VAR will select the best angle/replay speed; the referee can request other/additional angles/speeds</span></li></ul></div></section><section class="sec" id="s4"><h2><span class="zhv">4. 程序</span><span class="en">4. Procedures</span></h2><div class="panel"><h3><span class="zhv">最初决定</span><span class="en">Original decision</span></h3><ul><li><span class="zhv">裁判员与其他比赛官员必须始终像没有 VAR 一样作出最初决定（包括纪律处分）——「漏判」事件除外</span><span class="en">The referee and other match officials must always make an initial decision (including any disciplinary action) as if there was no VAR (except for a &#39;missed&#39; incident)</span></li><li><span class="zhv">不允许「不作决定」——那会导致执法软弱/犹豫、「回看」过多，并在技术故障时造成重大问题</span><span class="en">The referee and other match officials are not permitted to give &#39;no decision&#39; as this will lead to &#39;weak/indecisive&#39; officiating, too many &#39;reviews&#39; and significant problems if there is a technology failure</span></li><li><span class="zhv">只有裁判员能作出最终决定；VAR 与其他比赛官员地位相同，只能协助裁判员</span><span class="en">The referee is the only person who can make the final decision; the VAR has the same status as the other match officials and can only assist the referee</span></li><li><span class="zhv">只有在非常清晰的进攻局面——队员即将射门得分，或将直接突入对方罚球区——才可延迟举旗/鸣哨</span><span class="en">Delaying the flag/whistle for an offence is only permissible in a very clear attacking situation when a player is about to score a goal or has a clear run into/towards the opponents&#39; penalty area</span></li><li><span class="zhv">若助理裁判员延迟举旗，当进攻队进球、获判点球/任意球/角球/界外球，或在最初进攻结束后仍控有球权时，必须举旗；其余情形由助理裁判员根据比赛需要自行决定是否举旗</span><span class="en">If an assistant referee delays a flag for an offence, the assistant referee must raise the flag if the attacking team scores a goal, is awarded a penalty kick, free kick, corner kick or throw-in, or retains possession of the ball after the initial attack has ended; in all other situations, the assistant referee should decide whether or not to raise the flag, depending on the requirements of the game</span></li></ul><h3><span class="zhv">核查</span><span class="en">Check</span></h3><ul><li><span class="zhv">VAR 自动使用不同机位与回放速度，「核查」每一个潜在或实际的进球、点球、直接红牌判定/事件，以及错罚对象情形</span><span class="en">The VAR automatically &#39;checks&#39; the TV camera footage for every potential or actual goal, penalty or direct red card decision/incident, or a case of mistaken identity, using different camera angles and replay speeds</span></li><li><span class="zhv">VAR 可以常速和/或慢速核查画面；一般而言，慢速回放只应用于「事实」判断——如犯规/球员位置、身体接触与手球的触球点、球出界（含进球/未进球）；判断犯规「强度」或是否构成手球犯规应使用常速</span><span class="en">The VAR can &#39;check&#39; the footage in normal speed and/or in slow motion but, in general, slow motion replays should only be used for facts, e.g. position of offence/player, point of contact for physical offences and handball, ball out of play (including goal/no goal); normal speed should be used for the &#39;intensity&#39; of an offence or to decide if it was a handball offence</span></li><li><span class="zhv">若核查未显示「清晰而明显的错误」或「严重漏判事件」，VAR 通常无需与裁判员通话——这称为「静默核查」；不过，VAR 有时确认「无错漏判」也有助于裁判员/助理裁判员管理球员与比赛</span><span class="en">If the &#39;check&#39; does not indicate a &#39;clear and obvious error&#39; or &#39;serious missed incident&#39;, there is usually no need for the VAR to communicate with the referee – this is a &#39;silent check&#39;; however, it sometimes helps the referee/assistant referee to manage the players/match if the VAR confirms that no &#39;clear and obvious error&#39; or &#39;serious missed incident&#39; occurred</span></li><li><span class="zhv">若需为核查延迟重新开始比赛，裁判员以一手食指明确指向耳麦/耳机、另一手臂前伸示意；该手势须保持到核查结束——它表示裁判员正在接收信息（可能来自 VAR 或其他比赛官员）</span><span class="en">If the restart of play needs to be delayed for a &#39;check&#39;, the referee will signal this by clearly holding a finger to the earpiece/headset and extending the other hand/arm; this signal must be maintained until the &#39;check&#39; is complete as it announces that the referee is receiving information (which may be from the VAR or another match official)</span></li><li><span class="zhv">若核查显示可能存在「清晰而明显的错误」或「严重漏判事件」，VAR 会将信息告知裁判员，由裁判员决定是否发起「回看」</span><span class="en">If the &#39;check&#39; indicates a probable &#39;clear and obvious error&#39; or &#39;serious missed incident&#39;, the VAR will communicate this information to the referee, who will then decide whether or not to initiate a &#39;review&#39;</span></li></ul><h3><span class="zhv">回看</span><span class="en">Review</span></h3><ul><li><span class="zhv">出现潜在「清晰而明显的错误」或「严重漏判事件」时，裁判员在以下情况可发起「回看」：VAR（或其他比赛官员）建议回看</span><span class="en">The referee can initiate a &#39;review&#39; for a potential &#39;clear and obvious error&#39; or &#39;serious missed incident&#39; when: the VAR (or another match official) recommends a &#39;review&#39;</span></li><li><span class="zhv">裁判员自己怀疑漏看了严重事件</span><span class="en">the referee suspects that something serious has been &#39;missed&#39;</span></li><li><span class="zhv">若比赛已停止，裁判员延迟重新开始比赛</span><span class="en">If play has already stopped, the referee delays the restart</span></li><li><span class="zhv">若比赛尚未停止，裁判员在球下次进入中立区域/局面（通常是双方都不处于进攻中）时停止比赛，并做出「电视信号」手势</span><span class="en">If play has not already stopped, the referee stops play when the ball is next in a neutral zone/situation (usually when neither team is in an attacking move) and shows the &#39;TV signal&#39;</span></li><li><span class="zhv">VAR 向裁判员描述电视回放中的内容，裁判员随后：做出「电视信号」手势（如尚未做出），前往裁判回看区查看回放画面——「场上回看」（OFR）——再作出最终决定；其他比赛官员一般不查看回放，除非在特殊情况下受裁判员要求，或者——</span><span class="en">The VAR describes to the referee what can be seen on the TV replay(s) and the referee then: shows the &#39;TV signal&#39; (if not already shown) and goes to the referee review area to view replay footage – &#39;on-field review&#39; (OFR) – before making a final decision. The other match officials will not review the footage unless, in exceptional circumstances, asked to do so by the referee or</span></li><li><span class="zhv">依据裁判员自己的判断、VAR 提供的信息以及（适当时的）其他比赛官员的意见，直接作出最终决定——「仅 VAR 回看」</span><span class="en">makes a final decision based on the referee&#39;s own perception and the information from the VAR, and, where appropriate, input from other match officials – &#39;VAR-only review&#39;</span></li><li><span class="zhv">两种回看流程结束时，裁判员必须先做「电视信号」手势，随即给出最终决定</span><span class="en">At the end of both review processes, the referee must show the &#39;TV signal&#39; immediately followed by the final decision</span></li><li><span class="zhv">主观性决定——如犯规强度、越位干扰、手球考量——适用「场上回看」（OFR）</span><span class="en">For subjective decisions, e.g. intensity of a foul challenge, interference at offside, handball considerations, an &#39;on-field review&#39; (OFR) is appropriate</span></li><li><span class="zhv">事实性决定——如犯规/球员位置（越位）、触球点（手球/犯规）、地点（罚球区之内或之外）、球出界等——通常适用「仅 VAR 回看」；但若有助于管理球员/比赛或让决定更易被接受（如比赛末段决定胜负的关键判罚），事实性决定也可使用「场上回看」</span><span class="en">For factual decisions e.g. position of an offence or player (offside), point of contact (handball/foul), location (inside or outside the penalty area), ball out of play etc. a &#39;VAR-only review&#39; is usually appropriate but an &#39;on-field review&#39; (OFR) can be used for a factual decision if it will help manage the players/match or &#39;sell&#39; the decision (e.g. a crucial match-deciding decision late in the game)</span></li><li><span class="zhv">裁判员可以要求不同机位/回放速度；一般而言，慢速回放只应用于事实判断（如犯规/球员位置、身体接触与手球的触球点、球出界〔含进球/未进球〕），判断犯规「强度」或是否构成手球应使用常速</span><span class="en">The referee can request different cameras angles/replay speeds but, in general, slow motion replays should only be used for facts, e.g. position of offence/player, point of contact for physical offences and handball, ball out of play (including goal/no goal); normal speed should be used for the &#39;intensity&#39; of an offence or to decide if it was a handball offence</span></li><li><span class="zhv">与进球、点球/不是点球及 DOGSO 红牌相关的判定/事件，可能需要回看直接导致该判定/事件的进攻阶段——包括运动战中进攻队如何获得球权</span><span class="en">For decisions/incidents relating to goals, penalty/no penalty and red cards for denying an obvious goal-scoring opportunity (DOGSO), it may be necessary to review the attacking phase of play which led directly to the decision/incident; this may include how the attacking team gained possession of the ball in open play</span></li><li><span class="zhv">《竞赛规则》不允许在比赛重新开始后更改重新开始方式的决定（角球、界外球等），因此此类决定不可回看</span><span class="en">The Laws of the Game do not allow restart decisions (corner kicks, throw-ins etc.) to be changed once play has restarted, so they cannot be reviewed</span></li><li><span class="zhv">若比赛已停止并重新开始，裁判员只能为错罚对象情形，或与暴力行为、向他人吐口水、咬人、极其攻击性/侮辱性/辱骂性言行相关的潜在罚令出场事件发起「回看」并作出相应纪律处罚</span><span class="en">If play has stopped and restarted, the referee may only undertake a &#39;review&#39;, and take the appropriate disciplinary sanction, for a case of mistaken identity or for a potential sending-off offence relating to violent conduct, spitting, biting or extremely offensive, insulting and/or abusive action(s)</span></li><li><span class="zhv">回看过程应尽快完成，但最终决定的准确性重于速度；因此——且由于部分情形复杂、包含多个可回看点——回看没有最长时限</span><span class="en">The review process should be completed as efficiently as possible, but the accuracy of the final decision is more important than speed. For this reason, and because some situations are complex with several reviewable decisions/incidents, there is no maximum time limit for the review process</span></li></ul><h3><span class="zhv">最终决定</span><span class="en">Final decision</span></h3><ul><li><span class="zhv">回看结束后，裁判员必须做出「电视信号」手势并宣布最终决定；赛事也可按 FIFA 指南与《VAR 手册》所述，实行由裁判员在 VAR「回看」或长时间「核查」后公开解释并宣布决定的制度</span><span class="en">When the review process is completed, the referee must show the &#39;TV signal&#39; and communicate the final decision; competitions may also implement a system in which the referee publicly explains and announces decisions following a VAR &#39;review&#39; or lengthy VAR &#39;check&#39;, as outlined in the FIFA guidelines and the VAR Handbook</span></li><li><span class="zhv">随后裁判员（视情况）作出/更改/撤销纪律处分，并按《竞赛规则》重新开始比赛</span><span class="en">The referee will then take/change/rescind any disciplinary action (where appropriate) and restart play in accordance with the Laws of the Game</span></li></ul><h3><span class="zhv">球员、替补队员与球队官员</span><span class="en">Players, substitutes and team officials</span></h3><ul><li><span class="zhv">VAR 会自动「核查」每一情况/事件，教练员与球员无需申请「核查」或「回看」</span><span class="en">As the VAR will automatically &#39;check&#39; every situation/incident, there is no need for coaches or players to request a &#39;check&#39; or &#39;review&#39;</span></li><li><span class="zhv">球员、替补队员与球队官员不得试图影响或干扰回看过程，包括宣布最终决定时</span><span class="en">Players, substitutes and team officials must not attempt to influence or interfere with the review process, including when the final decision is communicated</span></li><li><span class="zhv">回看期间，球员应留在比赛场地内；替补队员与球队官员应留在比赛场地外</span><span class="en">During the review process, players should remain on the field of play; substitutes and team officials should remain off the field of play</span></li><li><span class="zhv">过度做出「电视信号」手势或进入裁判回看区（RRA）的球员/替补队员/被替换队员/球队官员，将被警告</span><span class="en">A player/substitute/substituted player/team official who excessively shows the &#39;TV signal&#39; or enters the RRA will be cautioned</span></li><li><span class="zhv">进入视频操作室（VOR）的球员/替补队员/被替换队员/球队官员，将被罚令出场</span><span class="en">A player/substitute/substituted player/team official who enters the VOR will be sent off</span></li></ul><h3><span class="zhv">比赛有效性</span><span class="en">Match validity</span></h3><p><span class="zhv">原则上，比赛不因以下原因判为无效：</span><span class="en">In principle, a match is not invalidated because of:</span></p><ul><li><span class="zhv">VAR 技术故障（与门线技术 GLT 同理）</span><span class="en">malfunction(s) of the VAR technology (as for goal line technology (GLT))</span></li><li><span class="zhv">涉及 VAR 的错误决定（VAR 是比赛官员）</span><span class="en">wrong decision(s) involving the VAR (as the VAR is a match official)</span></li><li><span class="zhv">决定不回看某事件</span><span class="en">decision(s) not to review an incident</span></li><li><span class="zhv">回看了不可回看的情形/决定</span><span class="en">review(s) of a non-reviewable situation/decision</span></li></ul><h3><span class="zhv">VAR、AVAR 或回放操作员无法工作时</span><span class="en">Incapacitated VAR, AVAR or replay operator</span></h3><p><span class="zhv">《竞赛规则》第 6 章「其他比赛官员」规定：「竞赛规程必须明确写明由谁替换无法开始或继续工作的比赛官员，以及任何相关调整。」在使用 VAR 的比赛中，该条同样适用于回放操作员。</span><span class="en">Law 6 – The Other Match Officials stipulates: &#39;Competition rules must state clearly who replaces a match official who is unable to start or continue and any associated changes.&#39; In matches using VARs, this also applies to replay operators.</span></p><p><span class="zhv">由于担任视频比赛官员（VMO）/回放操作员需要专门培训与资质，竞赛规程必须包含以下原则：</span><span class="en">As special training and qualifications are needed to be a video match official (VMO)/replay operator, the following principles must be included in competition rules:</span></p><ul><li><span class="zhv">无法开始或继续工作的 VAR、AVAR 或回放操作员，只能由具备该岗位资质者替换</span><span class="en">A VAR, AVAR or replay operator who is unable to start or continue may only be replaced by someone who is qualified for that role</span></li><li><span class="zhv">若无法为 VAR 或回放操作员*找到合格替换者，比赛必须在不使用 VAR 的情况下进行/继续</span><span class="en">If no qualified replacement can be found for the VAR or replay operator,* the match must be played/continue without the use of VARs</span></li><li><span class="zhv">若无法为 AVAR*找到合格替换者，比赛必须在不使用 VAR 的情况下进行/继续——除非在特殊情况下，双方以书面形式同意仅凭 VAR 与回放操作员继续比赛</span><span class="en">If no qualified replacement can be found for the AVAR,* the match must be played/continue without the use of VARs unless, in exceptional circumstances, both teams agree in writing that the match may be played/continue with only the VAR and replay operator</span></li></ul><p><span class="zhv">*若该场配置多名 AVAR/回放操作员，则上述规定不适用。</span><span class="en">*This does not apply where there is more than one AVAR/replay operator.</span></p></div></section>
+    <section class="sec" id="faq">
+      <h2><span class="zhv">官方 FAQ 判例</span><span class="en">Official FAQs</span></h2>
+      <div class="faq"><details><summary><span class="zhv">进攻队员（A 队）踢球后，球意外碰到本方队友（A 队）的手/手臂。裁判员停止比赛，但错误地认定手球犯规系防守队员（B 队）所为，向其出示黄牌（YC）并判给 A 队直接任意球。此时视频助理裁判（VAR）可以告知裁判员「被警告的是非犯规方球员」吗？</span><span class="en">An attacking player (Team A) kicks the ball which then accidentally touches a hand/arm of their team-mate (Team A). The referee stops play, but wrongly decides that the handball offence was committed by a defending player (Team B), who is punished with a yellow card (YC) and a direct free kick to Team A. May the video assistant referee (VAR) inform the referee that the player from the non-offending team was cautioned?</span></summary><div class="a"><div class="zhv">可以。与第二张黄牌无关的黄牌可以回看，用于确认被判手球犯规的球员身份。本例中防守队员的黄牌被取消，比赛以直接任意球重新开始，判给 B 队。</div><div class="en">A YC which is not a second YC can be reviewed to identify the player who committed the handball offence that was penalised. In this case, the YC for the defender is cancelled and play is restarted with a direct free kick to Team B.</div></div></details><details><summary><span class="zhv">进攻队员争抢，防守队员在场地中央倒地假摔（并无身体接触）。裁判员停止比赛，判给防守方任意球，并向进攻队员出示黄牌（YC）——这是其本场第二张黄牌，进而两黄变一红（RC）。VAR 可以就「清晰而明显的错误」告知裁判员并发起回看吗？</span><span class="en">An attacker challenges a defender, who falls to the ground in the middle of the field and pretends to have been fouled, despite there being no contact. The referee stops play, awards a free kick for the defender&amp;#39;s team and shows a yellow card (YC) to the attacker, which is their second YC in the match and results in a red card (RC). May the video assistant referee (VAR) inform the referee about a &amp;#39;clear and obvious error&amp;#39; so that the incident is reviewed?</span></summary><div class="a"><div class="zhv">可以。VAR 可以协助处理明显错误的第二张黄牌。裁判员回看回放后，进攻队员的第二张黄牌及由此产生的红牌均被取消；防守队员因假摔被出示黄牌，比赛以间接任意球重新开始，判给进攻方。</div><div class="en">Yes, the VAR can assist the referee in relation to a clearly incorrect second YC. After the referee reviews the replay footage, the second YC and the subsequent RC for the attacker are cancelled. The defender is shown a YC for simulation and play is restarted with an indirect free kick to the attacker&amp;#39;s team.</div></div></details><details><summary><span class="zhv">一名已领到黄牌的球员实施鲁莽抢截，够得上本场第二张警告；但裁判员在场上没有看到该犯规。VAR 可以以「严重漏判事件」告知裁判员并建议「回看」吗？</span><span class="en">A player who has already received a yellow card commits a reckless tackle, which would be their second caution in the match; however, the offence is not seen by the referee on the field. May the video assistant referee (VAR) inform the referee about a serious missed incident and recommend a &amp;#39;review&amp;#39;?</span></summary><div class="a"><div class="zhv">不可以。VAR 只能在裁判员出示明显错误的第二张黄牌（进而红牌）时介入，而不能在潜在的第二张黄牌犯规被漏判时介入。</div><div class="en">No. The VAR can only intervene when the referee shows a clearly incorrect second yellow card which results in a red card, not when a potential second yellow card offence has been missed.</div></div></details><details><summary><span class="zhv">进攻队员在对方罚球区内倒地，裁判员认为其被防守队员犯规，停止比赛判给点球。裁判员进行场上回看，回放清楚显示进攻队员系假摔——防守队员并未接触进攻队员。裁判员应如何决定？</span><span class="en">The referee stops play and awards a penalty kick because an attacker falls down in the opponents&amp;#39; penalty area and the referee thinks the attacker was fouled by a defender. The referee undertakes an on-field review and the replay footage clearly shows that the attacker pretends to have been fouled – the defender did not touch the attacker . What is the referee&amp;#39;s decision?</span></summary><div class="a"><div class="zhv">取消点球，改判防守方间接任意球；进攻队员因非体育行为（假摔）被警告（黄牌）。</div><div class="en">The penalty kick is cancelled and an indirect free kick is awarded to the defending team. The attacker is cautioned (yellow card) for unsporting behaviour (simulation).</div></div></details><details><summary><span class="zhv">在改变比赛进程的事件之后，比赛已停止并重新开始——裁判员此时还可以发起 VAR「回看」吗？</span><span class="en">May the referee undertake the VAR &amp;#39;review&amp;#39; if – after a match-changing incident – play has stopped and been restarted?</span></summary><div class="a"><div class="zhv">不可以，仅两种例外：错罚对象情形，或与暴力行为、向他人吐口水、咬人、使用极其攻击性/侮辱性/辱骂性言行相关的潜在罚令出场事件。</div><div class="en">No, it is not permitted except for: a case of mistaken identity or for a potential sending-off offence relating to violent conduct, spitting, biting or extremely offensive, insulting and/or abusive action(s).</div></div></details><details><summary><span class="zhv">球员的抢截可能危及对方安全。VAR 因该事件未被裁判员看到而建议场上回看（潜在红牌犯规）。裁判员完成回看后，可以改判警告（黄牌）吗？</span><span class="en">A player makes a challenge which might endanger the safety of the opponent. The video assistant referee recommends an on-field review for a potential sending-off (red card, RC) offence because this incident was not seen by the referee. May the referee, after undertaking the review, decide to caution (yellow card, YC) the offender?</span></summary><div class="a"><div class="zhv">最终决定必须以回看所见为准——即使回看是为红牌发起的，若裁判员观看回放后认为该犯规只值警告而非罚令出场，就必须出示黄牌。</div><div class="en">The final decision(s) must be based on what has been seen – therefore although the review was initiated for a red card offence if the referee&amp;#39;s opinion, after watching the replays, is that the offence was a caution (YC) and not a sending-off (RC), then the referee must issue a YC.</div></div></details><details><summary><span class="zhv">裁判员已判给点球，但 VAR 建议「回看」——因为犯规发生在罚球区外。正确的程序是什么？</span><span class="en">The referee has awarded a penalty kick, however, the video assistant referee (VAR) recommends a &amp;#39;review&amp;#39; because the foul was committed outside the penalty area. What is the appropriate procedure?</span></summary><div class="a"><div class="zhv">事实性决定（如犯规地点在罚球区内外、越位、球出界等）通常适用「仅 VAR 回看」：只需一次「电视信号」手势——VAR 告知裁判员回放内容，裁判员在给出最终决定前即刻做出该手势。</div><div class="en">A &amp;#39;VAR-only review&amp;#39; is usually appropriate for factual decisions e.g. location of an offence (inside/outside the penalty area), offside, ball out of play etc. Only one &amp;#39;TV signal&amp;#39; is needed so the VAR tells the referee what the TV replays show and the referee then makes the &amp;#39;TV signal&amp;#39; immediately before giving the final decision.</div></div></details><details><summary><span class="zhv">防守队员扩大身体面积，在己方罚球区内用手臂触球，裁判员令比赛继续。VAR 将该事件告知裁判员。正确的程序是什么？</span><span class="en">A defending team player has made their body bigger and touched the ball with their arm inside their own penalty area. The referee allows play to continue. The video assistant referee (VAR) communicates the incident to the referee. What is the correct procedure?</span></summary><div class="a"><div class="zhv">裁判员在球下次进入中立区域/局面时停止比赛，并做出「电视信号」手势。这属于主观性决定，适用「场上回看」（OFR）——裁判员前往裁判回看区查看回放画面后再作出最终决定。</div><div class="en">The referee stops play when the ball is next in a neutral zone/situation and shows the &amp;#39;TV signal&amp;#39;. As this is a subjective decision, an &amp;#39;on-field review&amp;#39; (OFR) is appropriate so the referee goes to the referee review area to view replay footage before making a final decision.</div></div></details><details><summary><span class="zhv">裁判员可以「不作决定」，然后借助 VAR 作出决定吗？</span><span class="en">Is the referee permitted to give &amp;#39;no decision&amp;#39; and then use the VAR to make a decision?</span></summary><div class="a"><div class="zhv">不可以。VAR 只能在裁判员已作出第一决定（包括允许比赛继续）之后使用，或在比赛官员漏看/未看到严重事件时使用。</div><div class="en">No. The VAR is only used after the referee has made a first decision (including allowing play to continue), or if a serious incident is missed/not seen by the match officials.</div></div></details><details><summary><span class="zhv">守门员在罚球点球时犯规，随后又扑出射门。这种情形允许使用 VAR 吗？</span><span class="en">A goalkeeper committed an offence while a penalty kick was taken and then saved a kick. Is the use of VAR allowed in this situation?</span></summary><div class="a"><div class="zhv">允许。罚球点球时守门员和/或主罚队员犯规的，裁判员可以获得 VAR 协助。</div><div class="en">Yes. The referee may receive assistance from the VAR in case of offence by the goalkeeper and/or kicker at the taking of a penalty kick.</div></div></details><details><summary><span class="zhv">裁判员判给点球。VAR 回看显示进攻队员假摔（假装被犯规）。裁判员应如何决定？</span><span class="en">The referee awards a penalty kick. The VAR review shows that an attacking player was guilty of simulation (pretended to be fouled). What is the referee&amp;#39;s decision?</span></summary><div class="a"><div class="zhv">裁判员回看回放后，取消点球并改判防守方间接任意球；假摔的进攻队员必须因非体育行为被警告（黄牌）。</div><div class="en">After the referee has reviewed the replay footage, the penalty kick is cancelled and an indirect free kick is awarded to the defending team. The attacking player who was guilty of simulation must be cautioned (yellow card, YC) for unsporting behaviour.</div></div></details><details><summary><span class="zhv">一名球员在对方罚球区内因假摔被警告（黄牌）。该事件随后被回看，回放清楚显示该球员确实被犯规。裁判员应如何决定？</span><span class="en">A player receives a caution (yellow card, YC) for simulation in the opponents&amp;#39; penalty area. The incident is then reviewed by the referee and the VAR review clearly shows that the player was fouled. What is the referee&amp;#39;s decision?</span></summary><div class="a"><div class="zhv">若裁判员认定并非假摔，则取消黄牌并改判点球；视情况，犯规的防守队员被出示黄牌或红牌。</div><div class="en">If the referee decides that it was not a simulation, the YC is cancelled and the penalty kick is awarded; if appropriate, the defender who committed the foul is shown the YC or RC. en de es fr Download mobile app Visit webshop Join us! The international football association board / guardians of the laws of the game The IFAB 2026®</div></div></details></div>
+    </section>
+    <section class="sec" id="links">
+      <h2><span class="zhv">配套材料与站内关联</span><span class="en">Related resources</span></h2>
+      <div class="links"><a href="https://www.theifab.com/laws-of-the-game-documents/" target="_blank" rel="noopener noreferrer"><b><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> IFAB 官方 PDF 下载门户（Laws / Practical Guidelines / VAR Handbook 等）</b>theifab.com 官方页</a><a href="https://www.theifab.com/laws/latest/guidelines/introduction/" target="_blank" rel="noopener noreferrer"><b><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Practical Guidelines for Match Officials（引言页，站位/协作/沟通三册入口）</b>theifab.com 官方页</a><a href="rules.html"><b><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 竞赛规则 2026-27 简体全译（本站 rules.html，与本页协议同源 IFAB 原文）</b>站内页面</a><a href="scale.html"><b><svg class="ic" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg> 中国足协《统一判罚尺度》官方宣讲（本站 scale.html，场景判例矩阵）</b>站内页面</a></div>
+    </section>
+    <p class="foot">原文版权归 IFAB（The International Football Association Board）所有；本页为独立学习用途的中文译制（译文 2026-10-06 校对），仅收录文本与官方链接，不复制任何官方图片/字体/脚本。术语对照见页首说明：VAR=视频助理裁判、OFR=场上回看、DOGSO=破坏明显进球得分机会。</p>
+  </div>
+</div>
+<script>
+(function(){
+  var b=document.getElementById("btnEn");
+  if(!b)return;
+  function paint(){
+    var on=document.documentElement.hasAttribute("data-ifab-en");
+    b.setAttribute("aria-pressed",on?"true":"false");
+    b.textContent="英文原文："+(on?"开":"关");
+  }
+  b.addEventListener("click",function(){
+    var on=document.documentElement.hasAttribute("data-ifab-en");
+    if(on)document.documentElement.removeAttribute("data-ifab-en");
+    else document.documentElement.setAttribute("data-ifab-en","");
+    try{localStorage.setItem("cfa.ifab-en",on?"0":"1")}catch(_){ }
+    paint();
+  });
+  paint();
+})();
+</script>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
+</html>

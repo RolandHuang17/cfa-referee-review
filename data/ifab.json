@@ -1,0 +1,542 @@
+{
+ "source": "https://www.theifab.com/laws/latest/video-assistant-referee-var-protocol/",
+ "source_name": "IFAB《Laws of the Game》— Video Assistant Referee (VAR) protocol & FAQs",
+ "fetched": "2026-10-06",
+ "sections": [
+  {
+   "id": "s1",
+   "num": "1",
+   "h": "Principles",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "The VAR protocol, as far as possible, conforms to the principles and philosophy of the Laws of the Game."
+      },
+      {
+       "k": "p",
+       "t": "The use of video assistant referees (VARs) is only permitted where the match/competition organiser has fulfilled all the implementation requirements as set out in the VAR Handbook , and has received written permission from FIFA."
+      }
+     ]
+    },
+    {
+     "h": "Principles",
+     "items": [
+      {
+       "k": "p",
+       "t": "The use of VARs in football matches is based on a number of principles, all of which must apply in every match using VARs (except for incorrectly awarded corner kicks – see point e. under '2. Reviewable decisions/incidents') ."
+      },
+      {
+       "k": "p",
+       "t": "1. A video assistant referee (VAR) is a match official, with independent access to match footage, who may assist the referee only in the event of a 'clear and obvious error' or 'serious missed incident' in relation to:"
+      },
+      {
+       "k": "p",
+       "t": "a. Goal/no goal"
+      },
+      {
+       "k": "p",
+       "t": "b. Penalty/no penalty"
+      },
+      {
+       "k": "p",
+       "t": "c. Direct red Red card ( not including a clearly incorrect second caution)"
+      },
+      {
+       "k": "p",
+       "t": "d. Mistaken identity (when the referee cautions or sends off the wrong player of the offending team )"
+      },
+      {
+       "k": "p",
+       "t": "2. The referee must always make a decision, i.e. the referee is not permitted to give 'no decision' and then use the VAR to make the decision; a decision to allow play to continue after an alleged offence can be reviewed."
+      },
+      {
+       "k": "p",
+       "t": "3. The original decision given by the referee will not be changed unless the video review clearly shows that the decision was a 'clear and obvious error'."
+      },
+      {
+       "k": "p",
+       "t": "4. Only the referee can initiate a 'review'; the VAR (and other match officials) can only recommend a 'review' to the referee."
+      },
+      {
+       "k": "p",
+       "t": "5. The final decision is always taken by the referee, either based on information from the VAR or after the referee has undertaken an 'on-field review' (OFR)."
+      },
+      {
+       "k": "p",
+       "t": "6. There is no time limit for the review process as accuracy is more important than speed."
+      },
+      {
+       "k": "p",
+       "t": "7. The players and team officials must not surround the referee or attempt to influence if a decision is reviewed, the review process or the final decision."
+      },
+      {
+       "k": "p",
+       "t": "8. The referee must remain 'visible' during the review process to ensure transparency."
+      },
+      {
+       "k": "p",
+       "t": "9. If play continues after an incident which is then reviewed, any disciplinary action taken/required during the post-incident period is not cancelled, even if the original decision is changed (except a caution/sending-off for stopping or interfering with a promising attack or DOGSO)."
+      },
+      {
+       "k": "p",
+       "t": "10. If play has stopped and been restarted, the referee may not undertake a 'review' except for a case of mistaken identity or for a potential sending-off offence relating to violent conduct, spitting, biting or extremely offensive, insulting and/or abusive action(s)."
+      },
+      {
+       "k": "p",
+       "t": "11. The period of play before and after an incident that can be reviewed is determined by the Laws of the Game and VAR protocol."
+      },
+      {
+       "k": "p",
+       "t": "12. As the VAR will automatically 'check' every situation/decision, there is no need for coaches or players to request a 'review'."
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s2",
+   "num": "2",
+   "h": "Reviewable decisions/incidents",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "The referee may receive assistance from the VAR only in relation to four five categories of match-changing decisions/incidents. In all these situations, the VAR is only used after the referee has made a (first/original) decision (including allowing play to continue), or if a serious incident is missed/not seen by the match officials."
+      },
+      {
+       "k": "p",
+       "t": "The referee`s original decision will not be changed unless there was a 'clear and obvious error' (this includes any decision made by the referee based on information from another match official e.g. offside)."
+      },
+      {
+       "k": "p",
+       "t": "The categories of decision/incident which may be reviewed in the event of a potential 'clear and obvious error' or 'serious missed incident' are:"
+      },
+      {
+       "k": "p",
+       "t": "a. Goal/no goal"
+      },
+      {
+       "k": "li",
+       "t": "attacking team offence in the build-up to or scoring of the goal (handball, foul, offside etc.)"
+      },
+      {
+       "k": "li",
+       "t": "ball out of play prior to the goal"
+      },
+      {
+       "k": "li",
+       "t": "goal/no goal decisions"
+      },
+      {
+       "k": "li",
+       "t": "offence by goalkeeper and/or kicker at the taking of a penalty kick or encroachment by an attacker or defender who becomes directly involved in play if the penalty kick rebounds from the goalpost, crossbar or goalkeeper"
+      },
+      {
+       "k": "p",
+       "t": "b. Penalty kick/no penalty kick"
+      },
+      {
+       "k": "li",
+       "t": "attacking team offence in the build-up to the penalty incident (handball, foul, offside etc.)"
+      },
+      {
+       "k": "li",
+       "t": "ball out of play prior to the incident"
+      },
+      {
+       "k": "li",
+       "t": "location of offence (inside or outside the penalty area)"
+      },
+      {
+       "k": "li",
+       "t": "penalty kick incorrectly awarded"
+      },
+      {
+       "k": "li",
+       "t": "penalty kick offence not penalised"
+      },
+      {
+       "k": "p",
+       "t": "c. Direct red Red cards (not second yellow card/caution)"
+      },
+      {
+       "k": "li",
+       "t": "DOGSO (especially position of offence and positions of other players)"
+      },
+      {
+       "k": "li",
+       "t": "serious foul play (or reckless challenge)"
+      },
+      {
+       "k": "li",
+       "t": "violent conduct, biting or spitting at another person"
+      },
+      {
+       "k": "li",
+       "t": "using offensive, insulting or abusive action(s)"
+      },
+      {
+       "k": "li",
+       "t": "clearly incorrect second caution"
+      },
+      {
+       "k": "p",
+       "t": "d. Mistaken identity (red or yellow card)"
+      },
+      {
+       "k": "p",
+       "t": "If the referee penalises an offence but has clearly misidentified the player who committed that offence and then gives the wrong player from the offending (penalised) team a yellow or red card , only the identity of the offender can be reviewed ; the actual offence itself cannot be reviewed unless it relates to a goal, penalty incident or direct red card ."
+      },
+      {
+       "k": "p",
+       "t": "e. Clearly incorrectly awarded corner kick if the decision can be changed immediately and without delaying the restart (competition option)"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s3",
+   "num": "3",
+   "h": "Practicalities",
+   "blocks": [
+    {
+     "h": "",
+     "items": [
+      {
+       "k": "p",
+       "t": "The use of VARs during a match involves the following practical arrangements:"
+      },
+      {
+       "k": "li",
+       "t": "The VAR watches the match in the video operation room (VOR) assisted by one or more assistant VARs (AVARs)"
+      },
+      {
+       "k": "li",
+       "t": "Depending on the number of camera angles and other considerations, there may be more than one AVAR and one or more replay operators (ROs)"
+      },
+      {
+       "k": "li",
+       "t": "Only authorised persons are allowed to enter the VOR or communicate with the VAR/AVAR/RO during the match"
+      },
+      {
+       "k": "li",
+       "t": "The VAR has independent access to, and replay control of, TV broadcast footage"
+      },
+      {
+       "k": "li",
+       "t": "The VAR is connected to the communication system being used by the match officials and can hear everything they say; the VAR can only speak to the referee by pushing a button (to avoid the referee being distracted by conversations in the VOR)"
+      },
+      {
+       "k": "li",
+       "t": "If the VAR is busy with a 'check' or a 'review', the AVAR may speak to the referee especially if the game needs to be stopped or to ensure play does not restart"
+      },
+      {
+       "k": "li",
+       "t": "If the referee decides to view the replay footage, the VAR will select the best angle/replay speed; the referee can request other/additional angles/speeds"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "id": "s4",
+   "num": "4",
+   "h": "Procedures",
+   "blocks": [
+    {
+     "h": "Original decision",
+     "items": [
+      {
+       "k": "li",
+       "t": "The referee and other match officials must always make an initial decision (including any disciplinary action) as if there was no VAR (except for a 'missed' incident)"
+      },
+      {
+       "k": "li",
+       "t": "The referee and other match officials are not permitted to give 'no decision' as this will lead to 'weak/indecisive' officiating, too many 'reviews' and significant problems if there is a technology failure"
+      },
+      {
+       "k": "li",
+       "t": "The referee is the only person who can make the final decision; the VAR has the same status as the other match officials and can only assist the referee"
+      },
+      {
+       "k": "li",
+       "t": "Delaying the flag/whistle for an offence is only permissible in a very clear attacking situation when a player is about to score a goal or has a clear run into/towards the opponents' penalty area"
+      },
+      {
+       "k": "li",
+       "t": "If an assistant referee delays a flag for an offence, the assistant referee must raise the flag if the attacking team scores a goal, is awarded a penalty kick, free kick, corner kick or throw-in, or retains possession of the ball after the initial attack has ended; in all other situations, the assistant referee should decide whether or not to raise the flag, depending on the requirements of the game"
+      }
+     ]
+    },
+    {
+     "h": "Check",
+     "items": [
+      {
+       "k": "li",
+       "t": "The VAR automatically 'checks' the TV camera footage for every potential or actual goal, penalty or direct red card decision/incident, or a case of mistaken identity, using different camera angles and replay speeds"
+      },
+      {
+       "k": "li",
+       "t": "The VAR can 'check' the footage in normal speed and/or in slow motion but, in general, slow motion replays should only be used for facts, e.g. position of offence/player, point of contact for physical offences and handball, ball out of play (including goal/no goal); normal speed should be used for the 'intensity' of an offence or to decide if it was a handball offence"
+      },
+      {
+       "k": "li",
+       "t": "If the 'check' does not indicate a 'clear and obvious error' or 'serious missed incident', there is usually no need for the VAR to communicate with the referee – this is a 'silent check'; however, it sometimes helps the referee/assistant referee to manage the players/match if the VAR confirms that no 'clear and obvious error' or 'serious missed incident' occurred"
+      },
+      {
+       "k": "li",
+       "t": "If the restart of play needs to be delayed for a 'check', the referee will signal this by clearly holding a finger to the earpiece/headset and extending the other hand/arm; this signal must be maintained until the 'check' is complete as it announces that the referee is receiving information (which may be from the VAR or another match official)"
+      },
+      {
+       "k": "li",
+       "t": "If the 'check' indicates a probable 'clear and obvious error' or 'serious missed incident', the VAR will communicate this information to the referee, who will then decide whether or not to initiate a 'review'"
+      }
+     ]
+    },
+    {
+     "h": "Review",
+     "items": [
+      {
+       "k": "li",
+       "t": "The referee can initiate a 'review' for a potential 'clear and obvious error' or 'serious missed incident' when: the VAR (or another match official) recommends a 'review'"
+      },
+      {
+       "k": "li",
+       "t": "the referee suspects that something serious has been 'missed'"
+      },
+      {
+       "k": "li",
+       "t": "If play has already stopped, the referee delays the restart"
+      },
+      {
+       "k": "li",
+       "t": "If play has not already stopped, the referee stops play when the ball is next in a neutral zone/situation (usually when neither team is in an attacking move) and shows the 'TV signal'"
+      },
+      {
+       "k": "li",
+       "t": "The VAR describes to the referee what can be seen on the TV replay(s) and the referee then: shows the 'TV signal' (if not already shown) and goes to the referee review area to view replay footage – 'on-field review' (OFR) – before making a final decision. The other match officials will not review the footage unless, in exceptional circumstances, asked to do so by the referee or"
+      },
+      {
+       "k": "li",
+       "t": "makes a final decision based on the referee's own perception and the information from the VAR, and, where appropriate, input from other match officials – 'VAR-only review'"
+      },
+      {
+       "k": "li",
+       "t": "At the end of both review processes, the referee must show the 'TV signal' immediately followed by the final decision"
+      },
+      {
+       "k": "li",
+       "t": "For subjective decisions, e.g. intensity of a foul challenge, interference at offside, handball considerations, an 'on-field review' (OFR) is appropriate"
+      },
+      {
+       "k": "li",
+       "t": "For factual decisions e.g. position of an offence or player (offside), point of contact (handball/foul), location (inside or outside the penalty area), ball out of play etc. a 'VAR-only review' is usually appropriate but an 'on-field review' (OFR) can be used for a factual decision if it will help manage the players/match or 'sell' the decision (e.g. a crucial match-deciding decision late in the game)"
+      },
+      {
+       "k": "li",
+       "t": "The referee can request different cameras angles/replay speeds but, in general, slow motion replays should only be used for facts, e.g. position of offence/player, point of contact for physical offences and handball, ball out of play (including goal/no goal); normal speed should be used for the 'intensity' of an offence or to decide if it was a handball offence"
+      },
+      {
+       "k": "li",
+       "t": "For decisions/incidents relating to goals, penalty/no penalty and red cards for denying an obvious goal-scoring opportunity (DOGSO), it may be necessary to review the attacking phase of play which led directly to the decision/incident; this may include how the attacking team gained possession of the ball in open play"
+      },
+      {
+       "k": "li",
+       "t": "The Laws of the Game do not allow restart decisions (corner kicks, throw-ins etc.) to be changed once play has restarted, so they cannot be reviewed"
+      },
+      {
+       "k": "li",
+       "t": "If play has stopped and restarted, the referee may only undertake a 'review', and take the appropriate disciplinary sanction, for a case of mistaken identity or for a potential sending-off offence relating to violent conduct, spitting, biting or extremely offensive, insulting and/or abusive action(s)"
+      },
+      {
+       "k": "li",
+       "t": "The review process should be completed as efficiently as possible, but the accuracy of the final decision is more important than speed. For this reason, and because some situations are complex with several reviewable decisions/incidents, there is no maximum time limit for the review process"
+      }
+     ]
+    },
+    {
+     "h": "Final decision",
+     "items": [
+      {
+       "k": "li",
+       "t": "When the review process is completed, the referee must show the 'TV signal' and communicate the final decision; competitions may also implement a system in which the referee publicly explains and announces decisions following a VAR 'review' or lengthy VAR 'check', as outlined in the FIFA guidelines and the VAR Handbook"
+      },
+      {
+       "k": "li",
+       "t": "The referee will then take/change/rescind any disciplinary action (where appropriate) and restart play in accordance with the Laws of the Game"
+      }
+     ]
+    },
+    {
+     "h": "Players, substitutes and team officials",
+     "items": [
+      {
+       "k": "li",
+       "t": "As the VAR will automatically 'check' every situation/incident, there is no need for coaches or players to request a 'check' or 'review'"
+      },
+      {
+       "k": "li",
+       "t": "Players, substitutes and team officials must not attempt to influence or interfere with the review process, including when the final decision is communicated"
+      },
+      {
+       "k": "li",
+       "t": "During the review process, players should remain on the field of play; substitutes and team officials should remain off the field of play"
+      },
+      {
+       "k": "li",
+       "t": "A player/substitute/substituted player/team official who excessively shows the 'TV signal' or enters the RRA will be cautioned"
+      },
+      {
+       "k": "li",
+       "t": "A player/substitute/substituted player/team official who enters the VOR will be sent off"
+      }
+     ]
+    },
+    {
+     "h": "Match validity",
+     "items": [
+      {
+       "k": "p",
+       "t": "In principle, a match is not invalidated because of:"
+      },
+      {
+       "k": "li",
+       "t": "malfunction(s) of the VAR technology (as for goal line technology (GLT))"
+      },
+      {
+       "k": "li",
+       "t": "wrong decision(s) involving the VAR (as the VAR is a match official)"
+      },
+      {
+       "k": "li",
+       "t": "decision(s) not to review an incident"
+      },
+      {
+       "k": "li",
+       "t": "review(s) of a non-reviewable situation/decision"
+      }
+     ]
+    },
+    {
+     "h": "Incapacitated VAR, AVAR or replay operator",
+     "items": [
+      {
+       "k": "p",
+       "t": "Law 6 – The Other Match Officials stipulates: 'Competition rules must state clearly who replaces a match official who is unable to start or continue and any associated changes.' In matches using VARs, this also applies to replay operators."
+      },
+      {
+       "k": "p",
+       "t": "As special training and qualifications are needed to be a video match official (VMO)/replay operator, the following principles must be included in competition rules:"
+      },
+      {
+       "k": "li",
+       "t": "A VAR, AVAR or replay operator who is unable to start or continue may only be replaced by someone who is qualified for that role"
+      },
+      {
+       "k": "li",
+       "t": "If no qualified replacement can be found for the VAR or replay operator,* the match must be played/continue without the use of VARs"
+      },
+      {
+       "k": "li",
+       "t": "If no qualified replacement can be found for the AVAR,* the match must be played/continue without the use of VARs unless, in exceptional circumstances, both teams agree in writing that the match may be played/continue with only the VAR and replay operator"
+      },
+      {
+       "k": "p",
+       "t": "*This does not apply where there is more than one AVAR/replay operator."
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "faq": [
+  {
+   "id": "q1",
+   "q": "An attacking player (Team A) kicks the ball which then accidentally touches a hand/arm of their team-mate (Team A). The referee stops play, but wrongly decides that the handball offence was committed by a defending player (Team B), who is punished with a yellow card (YC) and a direct free kick to Team A. May the video assistant referee (VAR) inform the referee that the player from the non-offending team was cautioned?",
+   "a": "A YC which is not a second YC can be reviewed to identify the player who committed the handball offence that was penalised. In this case, the YC for the defender is cancelled and play is restarted with a direct free kick to Team B."
+  },
+  {
+   "id": "q2",
+   "q": "An attacker challenges a defender, who falls to the ground in the middle of the field and pretends to have been fouled, despite there being no contact. The referee stops play, awards a free kick for the defender's team and shows a yellow card (YC) to the attacker, which is their second YC in the match and results in a red card (RC). May the video assistant referee (VAR) inform the referee about a 'clear and obvious error' so that the incident is reviewed?",
+   "a": "Yes, the VAR can assist the referee in relation to a clearly incorrect second YC. After the referee reviews the replay footage, the second YC and the subsequent RC for the attacker are cancelled. The defender is shown a YC for simulation and play is restarted with an indirect free kick to the attacker's team."
+  },
+  {
+   "id": "q3",
+   "q": "A player who has already received a yellow card commits a reckless tackle, which would be their second caution in the match; however, the offence is not seen by the referee on the field. May the video assistant referee (VAR) inform the referee about a serious missed incident and recommend a 'review'?",
+   "a": "No. The VAR can only intervene when the referee shows a clearly incorrect second yellow card which results in a red card, not when a potential second yellow card offence has been missed."
+  },
+  {
+   "id": "q4",
+   "q": "The referee stops play and awards a penalty kick because an attacker falls down in the opponents' penalty area and the referee thinks the attacker was fouled by a defender. The referee undertakes an on-field review and the replay footage clearly shows that the attacker pretends to have been fouled – the defender did not touch the attacker . What is the referee's decision?",
+   "a": "The penalty kick is cancelled and an indirect free kick is awarded to the defending team. The attacker is cautioned (yellow card) for unsporting behaviour (simulation)."
+  },
+  {
+   "id": "q5",
+   "q": "May the referee undertake the VAR 'review' if – after a match-changing incident – play has stopped and been restarted?",
+   "a": "No, it is not permitted except for: a case of mistaken identity or for a potential sending-off offence relating to violent conduct, spitting, biting or extremely offensive, insulting and/or abusive action(s)."
+  },
+  {
+   "id": "q6",
+   "q": "A player makes a challenge which might endanger the safety of the opponent. The video assistant referee recommends an on-field review for a potential sending-off (red card, RC) offence because this incident was not seen by the referee. May the referee, after undertaking the review, decide to caution (yellow card, YC) the offender?",
+   "a": "The final decision(s) must be based on what has been seen – therefore although the review was initiated for a red card offence if the referee's opinion, after watching the replays, is that the offence was a caution (YC) and not a sending-off (RC), then the referee must issue a YC."
+  },
+  {
+   "id": "q7",
+   "q": "The referee has awarded a penalty kick, however, the video assistant referee (VAR) recommends a 'review' because the foul was committed outside the penalty area. What is the appropriate procedure?",
+   "a": "A 'VAR-only review' is usually appropriate for factual decisions e.g. location of an offence (inside/outside the penalty area), offside, ball out of play etc. Only one 'TV signal' is needed so the VAR tells the referee what the TV replays show and the referee then makes the 'TV signal' immediately before giving the final decision."
+  },
+  {
+   "id": "q8",
+   "q": "A defending team player has made their body bigger and touched the ball with their arm inside their own penalty area. The referee allows play to continue. The video assistant referee (VAR) communicates the incident to the referee. What is the correct procedure?",
+   "a": "The referee stops play when the ball is next in a neutral zone/situation and shows the 'TV signal'. As this is a subjective decision, an 'on-field review' (OFR) is appropriate so the referee goes to the referee review area to view replay footage before making a final decision."
+  },
+  {
+   "id": "q9",
+   "q": "Is the referee permitted to give 'no decision' and then use the VAR to make a decision?",
+   "a": "No. The VAR is only used after the referee has made a first decision (including allowing play to continue), or if a serious incident is missed/not seen by the match officials."
+  },
+  {
+   "id": "q10",
+   "q": "A goalkeeper committed an offence while a penalty kick was taken and then saved a kick. Is the use of VAR allowed in this situation?",
+   "a": "Yes. The referee may receive assistance from the VAR in case of offence by the goalkeeper and/or kicker at the taking of a penalty kick."
+  },
+  {
+   "id": "q11",
+   "q": "The referee awards a penalty kick. The VAR review shows that an attacking player was guilty of simulation (pretended to be fouled). What is the referee's decision?",
+   "a": "After the referee has reviewed the replay footage, the penalty kick is cancelled and an indirect free kick is awarded to the defending team. The attacking player who was guilty of simulation must be cautioned (yellow card, YC) for unsporting behaviour."
+  },
+  {
+   "id": "q12",
+   "q": "A player receives a caution (yellow card, YC) for simulation in the opponents' penalty area. The incident is then reviewed by the referee and the VAR review clearly shows that the player was fouled. What is the referee's decision?",
+   "a": "If the referee decides that it was not a simulation, the YC is cancelled and the penalty kick is awarded; if appropriate, the defender who committed the foul is shown the YC or RC. en de es fr Download mobile app Visit webshop Join us! The international football association board / guardians of the laws of the game The IFAB 2026®"
+  }
+ ],
+ "links": [
+  {
+   "label": "IFAB 官方 PDF 下载门户（Laws / Practical Guidelines / VAR Handbook 等）",
+   "url": "https://www.theifab.com/laws-of-the-game-documents/",
+   "internal": false
+  },
+  {
+   "label": "Practical Guidelines for Match Officials（引言页，站位/协作/沟通三册入口）",
+   "url": "https://www.theifab.com/laws/latest/guidelines/introduction/",
+   "internal": false
+  },
+  {
+   "label": "竞赛规则 2026-27 简体全译（本站 rules.html，与本页协议同源 IFAB 原文）",
+   "url": "rules.html",
+   "internal": true
+  },
+  {
+   "label": "中国足协《统一判罚尺度》官方宣讲（本站 scale.html，场景判例矩阵）",
+   "url": "scale.html",
+   "internal": true
+  }
+ ]
+}

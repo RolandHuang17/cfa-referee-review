@@ -22,47 +22,749 @@
   },
   "rfs": {
    "intro": "俄罗斯足协官方频道 РФС ТВ 的判例解析栏目「Судейский разбор」（裁判复盘）：逐轮解析俄超（Мир РПЛ）与俄罗斯杯（FONBET Кубок）关键判例，含越位帧图与规则讲解。"
+  },
+  "uaf": {
+   "intro": "乌克兰足协（UAF）裁判委员会逐轮发布的官方判例解读（Комітет арбітрів УАФ，名哨 Nicola Rizzoli 任顾问）：每轮就争议判例给出执法口径说明，另发布规则修改宣讲与裁判培训动态。官方文章正文为简介，逐判例解读见其配套视频。"
   }
  },
  "items": {
-  "HNQaFXr3GgQ": {"note": "2026/27 新季第 1 期（8-9 月判例）：新赛季首月苏超关键 VAR 判罚逐案复盘。"},
-  "yyt--_yNT_Q": {"note": "2026 年 5 月刊：4-5 月苏超关键判罚复盘。"},
-  "LE8bS2L_22I": {"note": "2026 年 4 月刊：4 月苏超关键判罚复盘。"},
-  "Rb8BPN5Z-Fk": {"note": "2026 年 2-3 月合刊。"},
-  "2h6LWwe9_8k": {"note": "2026 年 1-2 月合刊。"},
-  "o1kn6UhLOeA": {"note": "2025 年 12 月-2026 年 1 月合刊。"},
-  "yXsoC3ItK18": {"note": "2026/27 赛季土超第 6 轮：本轮各场「场上审查」VAR 音频+画面合集。"},
-  "gX6KSOxqDcA": {"note": "2026/27 赛季土超第 5 轮。"},
-  "xHApx1kGALI": {"note": "2026/27 赛季土超第 4 轮。"},
-  "aDdeHid0ev4": {"note": "2026/27 赛季土超第 3 轮。"},
-  "udUB0eKSjhI": {"note": "2026/27 赛季土超第 2 轮。"},
-  "E8meVUWOE7A": {"note": "2026/27 赛季土超揭幕轮。"},
-  "sPmsU-Uau3Y": {"note": "新规则适用事象专场：集中解说 2026/27 赛季新规（含门将持球 8 秒等）在 J 联赛的判例。"},
-  "hF1RoZrIN7g": {"note": "2026 赛季揭幕特辑：开季新规适用与首轮判例解说。"},
-  "Hoy6b2kSP9Y": {"note": "特别篇：MQA 与现役裁判的聚餐实录——赛场上听不到的真实执法话题。"},
-  "8ZcsTW9tsUE": {"note": "争议判罚解说 + 球员视角谈 J 联赛执法特辑。"},
-  "C9h2zzTb7ds": {"note": "世界杯特辑：专访森保一监督与执法世界杯的荒木友辅主审、三原纯副审。"},
-  "nU09tupMh-M": {"note": "VAR 室幕后专题：VAR 如何与主裁协作导向正确判罚。"},
-  "_bbJkDD9qQo": {"note": "科尔威尔（Colwill）手球判例：官方短片说明该球 VAR 介入的依据与价值。"},
-  "CUrlkWUpPuQ": {"note": "哈兰德曼市德比争议绝杀进球的完整 VAR 音频官方公开版。"},
-  "NIZisIde7oM": {"note": "相关素材（非节目正片）：尼尔·沃诺克赛后怒斥执法人员的发布会片段，可作裁判-教练关系讨论素材。"},
-  "6QCbKNbCnGA": {"note": "2025 Clausura 第 11 轮：Tigres vs Querétaro 判例复盘。"},
-  "i7EIURZMUXo": {"note": "2025 Clausura 第 7 轮：Tigres vs Cruz Azul。"},
-  "sJP42kGF2Uk": {"note": "2025 Clausura 第 7 轮：América vs Necaxa。"},
-  "9cesvBRzyAE": {"note": "2025 Clausura 第 7 轮：Mazatlán vs Santos。"},
-  "DAb1NgMeQHo": {"note": "2024/25 Apertura 第 2 轮：Atlas vs Tijuana。"},
-  "vk3yVcvDqmw": {"note": "2024 Clausura 第 6 轮：León vs América——禁区手球点球判例。"},
-  "9AW4mSrrIsw": {"note": "2026 国际超级杯（第四届）：Estudiantes vs Rosario Central 判例音频。"},
-  "Fjv4XzpzIVM": {"note": "同场次另一判例的 VAR 对话音频。"},
-  "JjAO58MYaAU": {"note": "2026 Clausura 第 10 轮：Rosario Central vs Argentinos 判例音频。"},
-  "r13igve_wXI": {"note": "2026 Clausura 第 9 轮：Atlético Tucumán vs River——主裁与 VAR 完整对话。"},
-  "F768xBom5kI": {"note": "2026 Clausura 第 9 轮：Independiente Rivadavia 场次判例音频。"},
-  "-oZ6p5MgH84": {"note": "2026 Clausura 第 8 轮：Racing vs Atlético Tucumán 判例音频。"},
-  "Nbi6sEOojP4": {"note": "俄超（Мир РПЛ）第 25 轮判例解析。"},
-  "VcsZw2bDCGI": {"note": "俄超第 23 轮判例解析。"},
-  "6Lrnrk_07G4": {"note": "俄超第 20 轮 + 俄罗斯杯季后赛判例解析（长片 15 分钟）。"},
-  "cObRvbVR0Ls": {"note": "俄超第 21 轮判例解析。"},
-  "rFeLvQgigAI": {"note": "俄超第 22 轮 + 俄罗斯杯半决赛判例解析。"},
-  "AKfai7M6l0Y": {"note": "俄超第 19 轮判例解析。"}
+  "HNQaFXr3GgQ": {
+   "note": "2026/27 新季第 1 期（8-9 月判例）：新赛季首月苏超关键 VAR 判罚逐案复盘。"
+  },
+  "yyt--_yNT_Q": {
+   "note": "2026 年 5 月刊：4-5 月苏超关键判罚复盘。"
+  },
+  "LE8bS2L_22I": {
+   "note": "2026 年 4 月刊：4 月苏超关键判罚复盘。"
+  },
+  "Rb8BPN5Z-Fk": {
+   "note": "2026 年 2-3 月合刊。"
+  },
+  "2h6LWwe9_8k": {
+   "note": "2026 年 1-2 月合刊。"
+  },
+  "o1kn6UhLOeA": {
+   "note": "2025 年 12 月-2026 年 1 月合刊。"
+  },
+  "yXsoC3ItK18": {
+   "note": "2026/27 赛季土超第 6 轮：本轮各场「场上审查」VAR 音频+画面合集。"
+  },
+  "gX6KSOxqDcA": {
+   "note": "2026/27 赛季土超第 5 轮。"
+  },
+  "xHApx1kGALI": {
+   "note": "2026/27 赛季土超第 4 轮。"
+  },
+  "aDdeHid0ev4": {
+   "note": "2026/27 赛季土超第 3 轮。"
+  },
+  "udUB0eKSjhI": {
+   "note": "2026/27 赛季土超第 2 轮。"
+  },
+  "E8meVUWOE7A": {
+   "note": "2026/27 赛季土超揭幕轮。"
+  },
+  "sPmsU-Uau3Y": {
+   "note": "新规则适用事象专场：集中解说 2026/27 赛季新规（含门将持球 8 秒等）在 J 联赛的判例。"
+  },
+  "hF1RoZrIN7g": {
+   "note": "2026 赛季揭幕特辑：开季新规适用与首轮判例解说。"
+  },
+  "Hoy6b2kSP9Y": {
+   "note": "特别篇：MQA 与现役裁判的聚餐实录——赛场上听不到的真实执法话题。"
+  },
+  "8ZcsTW9tsUE": {
+   "note": "争议判罚解说 + 球员视角谈 J 联赛执法特辑。"
+  },
+  "C9h2zzTb7ds": {
+   "note": "世界杯特辑：专访森保一监督与执法世界杯的荒木友辅主审、三原纯副审。"
+  },
+  "nU09tupMh-M": {
+   "note": "VAR 室幕后专题：VAR 如何与主裁协作导向正确判罚。"
+  },
+  "_bbJkDD9qQo": {
+   "note": "科尔威尔（Colwill）手球判例：官方短片说明该球 VAR 介入的依据与价值。"
+  },
+  "CUrlkWUpPuQ": {
+   "note": "哈兰德曼市德比争议绝杀进球的完整 VAR 音频官方公开版。"
+  },
+  "NIZisIde7oM": {
+   "note": "相关素材（非节目正片）：尼尔·沃诺克赛后怒斥执法人员的发布会片段，可作裁判-教练关系讨论素材。"
+  },
+  "6QCbKNbCnGA": {
+   "note": "2025 Clausura 第 11 轮：Tigres vs Querétaro 判例复盘。"
+  },
+  "i7EIURZMUXo": {
+   "note": "2025 Clausura 第 7 轮：Tigres vs Cruz Azul。"
+  },
+  "sJP42kGF2Uk": {
+   "note": "2025 Clausura 第 7 轮：América vs Necaxa。"
+  },
+  "9cesvBRzyAE": {
+   "note": "2025 Clausura 第 7 轮：Mazatlán vs Santos。"
+  },
+  "DAb1NgMeQHo": {
+   "note": "2024/25 Apertura 第 2 轮：Atlas vs Tijuana。"
+  },
+  "vk3yVcvDqmw": {
+   "note": "2024 Clausura 第 6 轮：León vs América——禁区手球点球判例。"
+  },
+  "9AW4mSrrIsw": {
+   "note": "2026 国际超级杯（第四届）：Estudiantes vs Rosario Central 判例音频。"
+  },
+  "Fjv4XzpzIVM": {
+   "note": "同场次另一判例的 VAR 对话音频。"
+  },
+  "JjAO58MYaAU": {
+   "note": "2026 Clausura 第 10 轮：Rosario Central vs Argentinos 判例音频。"
+  },
+  "r13igve_wXI": {
+   "note": "2026 Clausura 第 9 轮：Atlético Tucumán vs River——主裁与 VAR 完整对话。"
+  },
+  "F768xBom5kI": {
+   "note": "2026 Clausura 第 9 轮：Independiente Rivadavia 场次判例音频。"
+  },
+  "-oZ6p5MgH84": {
+   "note": "2026 Clausura 第 8 轮：Racing vs Atlético Tucumán 判例音频。"
+  },
+  "Nbi6sEOojP4": {
+   "note": "俄超（Мир РПЛ）第 25 轮判例解析。"
+  },
+  "VcsZw2bDCGI": {
+   "note": "俄超第 23 轮判例解析。"
+  },
+  "6Lrnrk_07G4": {
+   "note": "俄超第 20 轮 + 俄罗斯杯季后赛判例解析（长片 15 分钟）。"
+  },
+  "cObRvbVR0Ls": {
+   "note": "俄超第 21 轮判例解析。"
+  },
+  "rFeLvQgigAI": {
+   "note": "俄超第 22 轮 + 俄罗斯杯半决赛判例解析。"
+  },
+  "AKfai7M6l0Y": {
+   "note": "俄超第 19 轮判例解析。"
+  },
+  "5QBbTWPbr4c": {
+   "note": "Torneo Mercado Libre Clausura 第 6 轮：GIMNASIA vs GIMNASIA (MZA.) 场次的主裁-VAR 对话音频。"
+  },
+  "uyrgUqM9iSA": {
+   "note": "Torneo Mercado Libre Clausura 第 7 轮：BANFIELD vs RIVER 场次的主裁-VAR 对话音频。"
+  },
+  "QqIlYfFGgUY": {
+   "note": "Torneo Mercado Libre Clausura 第 7 轮：ARGENTINOS vs ALDOSIVI 场次的主裁-VAR 对话音频。"
+  },
+  "kpzo-yqDUA0": {
+   "note": "Torneo Mercado Libre Clausura 第 4 轮：INDEPENDIENTE vs PLATENSE 场次的主裁-VAR 对话音频。"
+  },
+  "lJYfpd5Stek": {
+   "note": "Torneo Mercado Libre Clausura 第 2 轮：BANFIELD vs SARMIENTO 场次的主裁-VAR 对话音频。"
+  },
+  "z_RxRXGSKG8": {
+   "note": "Torneo Mercado Libre Clausura 第 1 轮：RACING vs GIMNASIA（其二） 场次的主裁-VAR 对话音频。"
+  },
+  "fXS75RJUn8I": {
+   "note": "Torneo Mercado Libre Clausura 第 1 轮：RACING vs GIMNASIA（其一） 场次的主裁-VAR 对话音频。"
+  },
+  "iQMknS8yA7c": {
+   "note": "2025/26 赛季土超第 34 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "xnnEHwBJ1pM": {
+   "note": "2025/26 赛季土超第 33 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "omZzgzAuFyM": {
+   "note": "2025/26 赛季土超第 32 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "pSHyLR_IjuM": {
+   "note": "2025/26 赛季土超第 29 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "RpwHK2jcRok": {
+   "note": "Torneo Mercado Libre 第 9 轮：SAN LORENZO vs INDEPENDIENTE 场次的主裁-VAR 对话音频。"
+  },
+  "iYON7ULdmL8": {
+   "note": "Torneo Mercado Libre 第 9 轮：RACING vs HURACÁN 场次的主裁-VAR 对话音频。"
+  },
+  "HLDMAYzFJUI": {
+   "note": "阿职联 第 14 轮：BOCA vs INDEPENDIENTE 场次的主裁-VAR 对话音频。"
+  },
+  "Ki_Hdk-MLkQ": {
+   "note": "2025/26 赛季土超第 31 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "8Uj1FE9Fbdg": {
+   "note": "2025/26 赛季土超第 30 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "7vDDbNc5PVs": {
+   "note": "2025/26 赛季土超第 25 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "mY2DzlzKzAk": {
+   "note": "Torneo Mercado Libre 第 11 轮：Unión vs Boca 场次的主裁-VAR 对话音频。"
+  },
+  "2fzOfm1CuB8": {
+   "note": "Torneo Mercado Libre 第 12 轮：ESTUDIANTES (RC) vs RIVER 场次的主裁-VAR 对话音频。"
+  },
+  "7dRMuGLXLfg": {
+   "note": "2025/26 赛季土超第 28 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "0iObwcPyOo8": {
+   "note": "2025/26 赛季土超第 27 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "niAJBNpo_0A": {
+   "note": "2025/26 赛季土超第 26 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "JLFGBY7YW1o": {
+   "note": "Torneo Mercado Libre 第 4 轮：RIVER vs TIGRE 场次的主裁-VAR 对话音频。"
+  },
+  "QFgrUo6j7BE": {
+   "note": "2025/26 赛季土超第 24 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "OwI8iw7OPAo": {
+   "note": "2025/26 赛季土超第 23 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "WCkv0mdjD64": {
+   "note": "2025/26 赛季土超第 22 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "WyXduazVsmE": {
+   "note": "2025/26 赛季土超第 21 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "jNyHFaIS3GU": {
+   "note": "Torneo Mercado Libre 第 3 轮：Independiente vs Vélez 场次的主裁-VAR 对话音频。"
+  },
+  "Fe1QyMSACmU": {
+   "note": "Torneo Mercado Libre 第 1 轮：Barracas Central vs River 场次的主裁-VAR 对话音频。"
+  },
+  "t13qvyYO6EQ": {
+   "note": "Torneo Mercado Libre 第 1 轮：San Lorenzo vs Lanús 场次的主裁-VAR 对话音频。"
+  },
+  "UNM-uKWnb4I": {
+   "note": "Torneo Mercado Libre 第 1 轮：Instituto vs Vélez 场次的主裁-VAR 对话音频。"
+  },
+  "YWeXro7Akzw": {
+   "note": "Torneo Mercado Libre 第 2 轮：Vélez vs Talleres 场次的主裁-VAR 对话音频。"
+  },
+  "OQT-YlpwVQY": {
+   "note": "2025/26 赛季土超第 20 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "8sl9t0LyrQo": {
+   "note": "2025/26 赛季土超第 19 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "soA7fZIfph0": {
+   "note": "2025/26 赛季土超第 18 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "YT_bNhgcJNE": {
+   "note": "2025 年 11-12 月合刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "uR80nJp-74I": {
+   "note": "2025/26 赛季土超第 16 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "7LhhG28nOyA": {
+   "note": "2025/26 赛季土超第 14 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "nrx7Fi9JCC4": {
+   "note": "2025/26 赛季土超第 13 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "P3DTYCPY_ms": {
+   "note": "2025/26 赛季土超第 12 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "JA40cEpdUxQ": {
+   "note": "判例解析：俄罗斯杯（RPL 通道）四分之一决赛 + 俄超第 17 轮。"
+  },
+  "YVcEik4EHGU": {
+   "note": "判例解析：俄罗斯杯（RPL 通道）四分之一决赛 + 俄超第 15 轮。"
+  },
+  "4jsEnBmkd5c": {
+   "note": "判例解析：俄超第 14 轮。"
+  },
+  "8ULHW9jEIbA": {
+   "note": "判例解析：俄超第 16 轮。"
+  },
+  "EC1l2rhB2ks": {
+   "note": "2025/26 赛季土超第 15 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "rezHDnt0F_w": {
+   "note": "2025 年 10-11 月合刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "fryLktNfDX0": {
+   "note": "2025/26 赛季土超第 11 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "AwKfuk70BFI": {
+   "note": "2025/26 赛季土超第 10 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "TG0RJDPsv5Q": {
+   "note": "2025/26 赛季土超第 3 轮补赛：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "y18z8AGB_gg": {
+   "note": "2025/26 赛季土超第 9 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "4KJbKjf3iyA": {
+   "note": "2025/26 赛季土超第 8 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "A1KoIthkqHY": {
+   "note": "判例解析：俄超第 12 轮。"
+  },
+  "1Egyd6wEe1I": {
+   "note": "2025 年 9-10 月合刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "0ymQh9rueA0": {
+   "note": "2024 年 10 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "jYynyRkmSQE": {
+   "note": "2024 年 12 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "TbcU3J4OZL0": {
+   "note": "2025/26 赛季土超第 7 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "osrkl18-JZM": {
+   "note": "2025/26 赛季土超第 6 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "H70yS3rWwGo": {
+   "note": "2025/26 赛季土超第 1 轮补赛：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "-aDyGB34IIU": {
+   "note": "2025/26 赛季土超第 5 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "h_u0A_nKCMg": {
+   "note": "2025/26 赛季土超第 4 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "YwxtOngeqpw": {
+   "note": "2025/26 赛季土超第 3 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "sMep5KgY2Xk": {
+   "note": "2025/26 赛季土超第 2 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "oyP62MMLSPE": {
+   "note": "2025/26 赛季土超第 1 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "y4PbRJCGVFY": {
+   "note": "2024/25 赛季土超第 19 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "OZLmia6ZlPk": {
+   "note": "2024/25 赛季土超第 18 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "Ka8jbfgW0aM": {
+   "note": "2024/25 赛季土超第 17 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "a1lFIL9iqhQ": {
+   "note": "2024/25 赛季土超第 16 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "Hj6x5W2TXos": {
+   "note": "2024/25 赛季土超第 15 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "KnCRnRBDDiA": {
+   "note": "2024/25 赛季土超第 14 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "Galw1a7PYi4": {
+   "note": "2024/25 赛季土超第 12 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "h7jkcBsNZNg": {
+   "note": "2024/25 赛季土超第 11 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "_eYszB4f_50": {
+   "note": "2024/25 赛季土超第 10 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "2iv5ZM0ZEh8": {
+   "note": "2024/25 赛季土超第 8 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "AGqwZ3lYyig": {
+   "note": "2024/25 赛季土超第 38 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "jhxlyCg-MSU": {
+   "note": "Torneo Betano Apertura 第 14 轮：Unión vs Newell's 场次的主裁-VAR 对话音频。"
+  },
+  "ac4o5ffqtGs": {
+   "note": "Torneo Betano Apertura 第 9 轮：Central Córdoba vs Boca 场次的主裁-VAR 对话音频。"
+  },
+  "tDrxDz-c91s": {
+   "note": "Torneo Betano Clausura 第 3 轮：Sarmiento vs Lanús 场次的主裁-VAR 对话音频。"
+  },
+  "hOFRZ4u8L3w": {
+   "note": "俄罗斯杯与俄超判例精选解析。"
+  },
+  "8lzW9JN4LYs": {
+   "note": "判例解析：俄罗斯杯第 6 轮 + 俄超第 13 轮。"
+  },
+  "bFZs-VMY-V4": {
+   "note": "判例解析：俄超第 16 轮。"
+  },
+  "kdsQcp-yExQ": {
+   "note": "2025 年 8 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "ojZSkWLwYzE": {
+   "note": "2025 年 5 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "fTAk1odV89s": {
+   "note": "2024/25 赛季土超第 37 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "2rV2ZU8PNq8": {
+   "note": "2024/25 赛季土超第 36 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "ejJ3ZubR-Pg": {
+   "note": "2024/25 赛季土超第 35 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "XwA6BOriGQE": {
+   "note": "2024/25 赛季土超第 34 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "OZYsEnSeS50": {
+   "note": "2025 年 4 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "jTzfrtRKwqE": {
+   "note": "2024/25 赛季土超第 32 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "C5NEQ9k30rw": {
+   "note": "2024/25 赛季土超第 30 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "UVClRBCh-to": {
+   "note": "2024/25 赛季土超第 29 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "S_b5Y6jgXew": {
+   "note": "2024/25 赛季土超第 28 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "nxVKVzcBqGg": {
+   "note": "2025 年 3 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "ExUIHPEOLNo": {
+   "note": "2024/25 赛季土超第 26 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "5LJ_XOvaTOU": {
+   "note": "2024/25 赛季土超第 25 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "slyIbngWjjs": {
+   "note": "2024/25 赛季土超第 24 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "zQLqnGMMyrY": {
+   "note": "2024/25 赛季土超第 23 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "ozANmrSfq-M": {
+   "note": "2025 年 2 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "QoxK9xpLjqA": {
+   "note": "2024/25 赛季土超第 22 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "7jbG495N3UM": {
+   "note": "2024/25 赛季土超第 21 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "q8B-iFpyBtM": {
+   "note": "2025 年 1 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "C6TqtZBJmMY": {
+   "note": "2024/25 赛季土超第 20 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "3YZZgquXDig": {
+   "note": "2024 年 11 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "SnZ2a7rmglE": {
+   "note": "2024 年 9 月刊：当期苏超关键 VAR 判罚逐案复盘（Collum & Duncan 主持）。"
+  },
+  "2W-FpSk8nvM": {
+   "note": "2024/25 赛季土超第 7 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "EZmAEPmr9v8": {
+   "note": "2024/25 赛季土超第 6 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "hG9bGj_waFc": {
+   "note": "2024/25 赛季土超第 3 轮补赛：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "TwKXEQNs1yI": {
+   "note": "2024/25 赛季土超第 5 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "ISJ_WC29HCE": {
+   "note": "2024/25 赛季土超第 4 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "UQUNYSU4qqU": {
+   "note": "2024/25 赛季土超第 3 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "zUTgr9Htkm0": {
+   "note": "2024/25 赛季土超第 2 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "_71Ses4yj0A": {
+   "note": "2024/25 赛季土超第 1 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "dK7kOMBKjX4": {
+   "note": "Copa Sur Finanzas 第 9 轮：Fecha 9 场次的主裁-VAR 对话音频。"
+  },
+  "Y4sdvjW3lPc": {
+   "note": "Torneo Betano 第 15 轮：Boca vs River 场次的主裁-VAR 对话音频。"
+  },
+  "SUG03G_Fh1A": {
+   "note": "判例解析：俄罗斯杯第 13 轮 + 俄超第 6 轮。"
+  },
+  "wWIsoJvjK9w": {
+   "note": "判例解析：附专家裁判委员会（ЭСК）决定 + 俄超第 15 轮。"
+  },
+  "zUQt-F02lOI": {
+   "note": "俄罗斯杯与俄超判例精选解析。"
+  },
+  "FjF4b09-IPE": {
+   "note": "判例解析：俄超第 17 轮。"
+  },
+  "w86pAA-lIFs": {
+   "note": "判例解析：俄超第 6 轮。"
+  },
+  "kefpiR_pZKw": {
+   "note": "2023/24 赛季土超第 32 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "Ze8NW2uCg5s": {
+   "note": "2023/24 赛季土超第 30 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "dW0dDm7ufkM": {
+   "note": "2023/24 赛季土超第 29 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "7xTsuGCY0Ik": {
+   "note": "2023/24 赛季土超第 28 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "LGgm2obAqJE": {
+   "note": "2023/24 赛季土超第 27 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "SuMaxUBfgfE": {
+   "note": "2023/24 赛季土超第 26 轮：本轮各场关键判罚的 VAR 休息室音频与现场画面合集。"
+  },
+  "EYSZmT08300": {
+   "note": "专题：边界越位情形——VAR 何时应当介入。"
+  },
+  "M9fHRc5_BK0": {
+   "note": "判例解析：俄罗斯杯第 3 轮 + 俄超第 2 轮。"
+  },
+  "f34YsDS4KWQ": {
+   "note": "判例解析：俄罗斯杯。"
+  },
+  "-pcJ1WF0MuI": {
+   "note": "判例解析：俄罗斯杯。"
+  },
+  "N6eyLUW04vM": {
+   "note": "判例解析：俄乙第 7 轮 + 俄超第 6 轮。"
+  },
+  "8nsPSq1Sv1E": {
+   "note": "Torneo Betano Apertura 第 14 轮：Huracán vs Defensa y Justicia 场次的主裁-VAR 对话音频。"
+  },
+  "0ZqcqF6kX7M": {
+   "note": "Copa Sur Finanzas ：Cuartos de Final 场次的主裁-VAR 对话音频。"
+  },
+  "FASO50ZGIJI": {
+   "note": "Copa Sur Finanzas 第 14 轮：Fecha 14 场次的主裁-VAR 对话音频。"
+  },
+  "NFkFwuDJY98": {
+   "note": "Copa Sur Finanzas ：Cuartos de final 场次的主裁-VAR 对话音频。"
+  },
+  "DXSQI08pku0": {
+   "note": "Copa Sur Finanzas 第 14 轮：Fecha 14 场次的主裁-VAR 对话音频。"
+  },
+  "C19OkCs5JlQ": {
+   "note": "Torneo Betano 第 21 轮：Platense vs Deportivo Riestra 场次的主裁-VAR 对话音频。"
+  },
+  "RPV29U7LLyI": {
+   "note": "Torneo Betano 第 20 轮：River vs Banfield 场次的主裁-VAR 对话音频。"
+  },
+  "GLS2kgKX1YQ": {
+   "note": "判例解析：俄罗斯杯。"
+  },
+  "Rkhn7LJCY08": {
+   "note": "纪录特辑：贴身跟拍 J 联赛职业助理裁判西桥勋——不为人知的副审日常与判罚幕后。"
+  },
+  "jUD6X_3qJ64": {
+   "note": "#19：现役球员本音畅谈——2025 赛季 J 联赛执法总结特辑。"
+  },
+  "KNK0cB15tYw": {
+   "note": "#18：鹿岛 vs 横滨 FC——VAR 介入判进球无效，全过程还原。"
+  },
+  "x0Wk7pvk9Ms": {
+   "note": "#17：J 联赛首次适用的犯规——门将相关场景解读。"
+  },
+  "IYfslgh30j4": {
+   "note": "#16：难度最高的两个 DOGSO（破坏明显进球得分机会）场景判例解说。"
+  },
+  "EU6eEWOkQAM": {
+   "note": "#15：手球判点？犯规致进球无效？J1 第 33 节两个判例详解。"
+  },
+  "Vb86mHi8h8Q": {
+   "note": "友谊赛特辑：横滨水手 vs 利物浦——以裁判视角机位画面解说进球场景。"
+  },
+  "YzTnEMctEMY": {
+   "note": "#10：公开主审视角珍贵画面——横滨水手 vs 利物浦裁判机位实录。"
+  },
+  "-JOlNJzCRCk": {
+   "note": "#9：DOGSO、手球、VAR……以测验形式复习难点规则。"
+  },
+  "pjC-kMWgytA": {
+   "note": "#8：8 月起规则更新——必须掌握的三个要点。"
+  },
+  "HxOdPr822ek": {
+   "note": "#7：JOY 与眞嶋优直击现役裁判——「只有裁判才知道的世界」。"
+  },
+  "nXXQMmw8k88": {
+   "note": "#6：前日本国脚专访职业裁判——荒木主审与山下主审谈「何为执法」。"
+  },
+  "zHYApgswtDs": {
+   "note": "纪录特辑：贴身跟拍 J 联赛职业裁判中村太——日常与比赛舞台幕后。"
+  },
+  "JBHtxQHfp8o": {
+   "note": "#5：浦和红钻出战世俱杯——俱乐部世界杯适用的“新规则”解读。"
+  },
+  "h77x5_YjUqM": {
+   "note": "#4：裁判交流项目——来日德国裁判贴身纪录。"
+  },
+  "l4B93McspKg": {
+   "note": "#3：本赛季执法新方针「催促快速恢复比赛 / 不过度中断比赛」——与 VAR 的配合实况。"
+  },
+  "n_341FonPxo": {
+   "note": "#2：本赛季新举措如何改变执法——「催促快速恢复 / 不过度中断」专题检视。"
+  },
+  "LLgrtoQ2L0k": {
+   "note": "赛季开幕篇：以世界顶级水准为目标——本赛季执法工作的重点方向。"
+  },
+  "d_ZTbkQbuuM": {
+   "note": "特别篇：现役裁判齐聚——休赛期才敢聊的本赛季轶事。"
+  },
+  "0S1ZGdcZaWY": {
+   "note": "裁判幕后 #9：Ben Mabley 直击专访“VAR 之父”。"
+  },
+  "rREbhSSldG4": {
+   "note": "哨声 #9：打到手上却不判罚的“手球”——判定边界解析。"
+  },
+  "M9ksaStK7wE": {
+   "note": "裁判幕后 #8：贴身跟拍裁判评估员——现役裁判的严格考核现场。"
+  },
+  "znaI6NtVZtw": {
+   "note": "哨声 #8：无球区域犯规——与 VAR 的沟通过程公开。"
+  },
+  "eXNET3aK2KI": {
+   "note": "裁判幕后 #7：“裁判简报会”是什么——潜入采访实录。"
+  },
+  "_3TPRyLDcjw": {
+   "note": "哨声 #7：VAR 没有错过——构成罚令出场的犯规解析。"
+  },
+  "0Zt6qmqwllo": {
+   "note": "#14：VAR 介入了但没有手球？——手球相关难点判断详解。"
+  },
+  "pFEcp3cle3c": {
+   "note": "#13：门将 8 秒规则的相关场景解读。"
+  },
+  "-BNK-0OXuo8": {
+   "note": "#12：上周末 J1 第 28 节进球无效的幕后解析。"
+  },
+  "bdqn0CJrkxk": {
+   "note": "裁判幕后 #6：前 J 联赛球员御厨贵文选择裁判之路的原因。"
+  },
+  "n-2tqiLEygI": {
+   "note": "哨声 #6：判定越位干扰的三个要点。"
+  },
+  "2b5IvI404PY": {
+   "note": "裁判幕后 #5：突击采访 VAR 训练现场。"
+  },
+  "c9CPYOhA2WA": {
+   "note": "哨声 #5：2024-25 竞赛规则修改——8 月起这样变。"
+  },
+  "Woof1LP_9ww": {
+   "note": "裁判幕后 #4：前国脚安田理大体验职业裁判训练营。"
+  },
+  "pHheBVhxUcU": {
+   "note": "哨声 #4：对对方球员产生影响的越位——难点判定解析。"
+  },
+  "z6_Tys_gZv0": {
+   "note": "特稿：来日执法的英格兰裁判谈 J 联赛执法的积极特征。"
+  },
+  "2crxPNj2PPw": {
+   "note": "裁判幕后 #3：潜入裁判休息室 + 第四官员特写。"
+  },
+  "E-AJUQsPWTc": {
+   "note": "哨声 #3：公开与 VAR 的通话——手球判定详解。"
+  },
+  "wHFXz6m-fls": {
+   "note": "裁判幕后 #2：在 J 联赛执法的英格兰裁判专访。"
+  },
+  "nX_GiTmSVqo": {
+   "note": "哨声 #2：越位判定中 2D/3D 越位线的使用区分详解。"
+  },
+  "6I4H_Tmh_YM": {
+   "note": "短时间处理海量信息——主审与 VAR 协作的实时还原（手球？点球？DOGSO？）。"
+  },
+  "MEMKYS7c_Ds": {
+   "note": "公开 VAR 音频与画面——左右比赛结果的时刻，VAR 通话实录。"
+  },
+  "aIQlC5cesMM": {
+   "note": "裁判幕后 #1：潜入 VOR（视频操作室）。"
+  },
+  "ZtxHgAPYNKQ": {
+   "note": "哨声 #1：超珍贵——公开与 VAR 的通话实录。"
+  },
+  "0O1h7jXEIvk": {
+   "note": "Howard Webb 深度专访：裁判执法将有哪些改变（英超裁判机构透明化路线）。"
+  },
+  "z-dgceYnd58": {
+   "note": "2024 Clausura 第 3 轮：León vs Santos 判例复盘。"
+  },
+  "QuE1nAXkzdU": {
+   "note": "2024 Clausura 第 4 轮：Atlético de San Luis vs Tigres 判例复盘。"
+  },
+  "w0znrGGqJLU": {
+   "note": "“球迷必须看到这些！”——内维尔与卡拉格就 VAR 音频公开拷问 Howard Webb。"
+  },
+  "XGNm5TvK6Ec": {
+   "note": "“拉什福德放到现在就是越位！”——Howard Webb 谈 VAR 的角色与透明化。"
+  },
+  "V4kGVbW4jmM": {
+   "note": "内维尔与卡拉格对谈 Howard Webb：2023/24 赛季新规盘点。"
+  },
+  "9BWeRr3LmPI": {
+   "note": "Howard Webb：阿森纳对纽卡斯尔的点球被撤销是正确判罚——官方复盘片段。"
+  },
+  "7-tur-upl-20262027-komentar-epizodiv-vid-komitetu-arbitriv-uaf": {
+   "note": "乌超 2026 赛季第 7 轮：裁判委员会（与顾问 Rizzoli）对争议判例的官方解读。"
+  },
+  "5-tur-upl-20262027-komentar-epizodiv-vid-komitetu-arbitriv-uaf": {
+   "note": "乌超 2026 赛季第 5 轮：裁判委员会（与顾问 Rizzoli）对争议判例的官方解读。"
+  },
+  "3-tur-upl-202627-komentar-epizodiv-vid-komitetu-arbitriv-uaf": {
+   "note": "乌超 2026 赛季第 3 轮：裁判委员会（与顾问 Rizzoli）对争议判例的官方解读。"
+  },
+  "1-tur-upl-202627-komentar-epizodiv-vid-komitetu-arbitriv-uaf": {
+   "note": "乌超 2026 赛季第 1 轮：裁判委员会（与顾问 Rizzoli）对争议判例的官方解读。"
+  },
+  "v-odesi-vidbuvsia-futbolnyy-turnir-sered-arbitriv": {
+   "note": "敖德萨举行裁判员足球友谊赛。"
+  },
+  "55638": {
+   "note": "裁判委员会就裁判对若干判例的执法口径发布解读说明。"
+  },
+  "komitet-arbitriv-uaf-provede-seminary-ta-fitnes-testy-dlia-referi-pfl-nlm-ta-nshfa": {
+   "note": "裁判委员会将为职业足球联赛（PFL/NLM/NSHFA）裁判举办研讨会与体能测试。"
+  },
+  "komitet-arbitriv-uaf-provede-seminar-ta-fitnes-test-dlia-referi-upl": {
+   "note": "裁判委员会为乌超裁判举办研讨会与体能测试。"
+  },
+  "finalnyy-etap-zustrichey-komitetu-arbitriv-uaf-iz-klubamy-upl-shchodo-onovlenykh-pravyl-hry-na-sezon-20262027": {
+   "note": "裁判委员会与乌超俱乐部新规宣讲会收官。"
+  },
+  "u-kyyevi-zavershyvsia-ntz-dlia-arbitriv-upl-pered-startom-sezonu-20262027": {
+   "note": "乌超裁判赛季前集训（基辅）收官。"
+  },
+  "komitet-arbitriv-uaf-rozpochav-seriiu-zustrichey-iz-klubamy-upl-shchodo-onovlenykh-pravyl-hry": {
+   "note": "裁判委员会启动乌超俱乐部新规系列宣讲。"
+  },
+  "zminy-do-pravyl-hry-ifab-20262027-ukrayinskoiu-movoiu-na-sayti-uaf": {
+   "note": "IFAB 2026/27 竞赛规则修改要点（乌克兰语版发布）。"
+  },
+  "chotyry-bryhady-ukrayinskykh-arbitriv-pratsiuvatymut-na-poyedynkakh-lihy-konferentsiy-uyefa": {
+   "note": "四组乌克兰裁判将执法欧协联赛事。"
+  },
+  "komitet-arbitriv-uaf-rozpochav-pidhotovku-ofitsiynykh-osib-matchiv-do-sezonu-20262027": {
+   "note": "裁判委员会启动赛季前比赛官员培训。"
+  },
+  "navchannia-cherez-praktyku-u-kyyevi-vidbuvsia-seminar-molodykh-arbitriv-nshfa": {
+   "note": "新裁判培养：基辅实践研讨会。"
+  },
+  "plan-hrafik-provedennia-ntz-arbitriv-ta-seminariv-sa-vlitku-2026-roku": {
+   "note": "2026 年夏裁判集训与评估员研讨会日程公布。"
+  },
+  "komitet-arbitriv-uaf-prokomentuvav-epizody-matchiv-pfl": {
+   "note": "裁判委员会解读乌甲（PFL）比赛判例。"
+  },
+  "proyekt-uaf-analizuyemo-ta-navchayemos-chastyna-6-komentari-shchodo-ihrovykh-epizodiv-matchiv-pfl": {
+   "note": "UAF 项目「分析学习」第 6 期：比赛判例解读。"
+  },
+  "komentar-komitetu-arbitriv-uaf-shchodo-traktuvannia-arbitramy-okremykh-ihrovykh-epizodiv-matchiv-24-ho-turu-vbet-ukrayinskoyi-premyer-lihy-20252026": {
+   "note": "裁判委员会就裁判对若干判例的执法口径发布解读说明。"
+  },
+  "komentar-komitetu-arbitriv-uaf-shchodo-traktuvannia-arbitramy-okremykh-ihrovykh-epizodiv-matchiv-23-ho-turu-vbet-ukrayinskoyi-premyer-lihy-20252026": {
+   "note": "裁判委员会就裁判对若干判例的执法口径发布解读说明。"
+  }
  }
 }

@@ -22,6 +22,7 @@ ALLOWED_HOSTS = {
     "www.conmebol.com",  # 南美足联 Situación de Análisis VAR（fetch_conmebol.py）
     "www.youtube.com",  # 全球周更评议节目 RSS/频道页（fetch_weekly.py；视频不下载只取元数据）
     "www.theifab.com",  # IFAB《Laws of the Game》VAR 协议与统一尺度材料（fetch_ifab.py）
+    "uaf.ua",  # 乌克兰足协裁判委员会逐轮判例解读列表（fetch_weekly.py 文章型源）
 }
 # DoH解析器固定为IP直连（无DNS依赖）；本机若开TUN代理，系统DNS返回fake-ip，
 # 因此一律走公共DNS取真实公网IP

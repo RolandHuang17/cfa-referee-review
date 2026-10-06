@@ -12,7 +12,8 @@ from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import SITE, WEEKLY_JSON, WEEKLY_ZH_JSON
 
-LANG_LABEL = {"en": "英语", "tr": "土耳其语", "ja": "日语", "es": "西语", "ru": "俄语", "pt": "葡语"}
+LANG_LABEL = {"en": "英语", "tr": "土耳其语", "ja": "日语", "es": "西语", "ru": "俄语",
+              "pt": "葡语", "uk": "乌克兰语", "hr": "克罗地亚语"}
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -213,9 +214,11 @@ def build_page(data, zh):
                     inner += (f'<details><summary>官方说明（原文）</summary>'
                               f'<p>{esc(desc)}</p></details>')
                 inner += "</div>"
+                is_video = "youtube.com" in (e.get("url") or "")
+                go_lbl = "官方观看" if is_video else "官方文章"
                 rows += (f'<div class="ecard" data-search="{search_blob}">{inner}'
                          f'<a class="go" href="{esc(e.get("url", ""))}" target="_blank" '
-                         f'rel="noopener noreferrer">{icon("play", 11)} 官方观看</a></div>')
+                         f'rel="noopener noreferrer">{icon("play", 11)} {go_lbl}</a></div>')
             label = f"{y} 年" if y != "待定" else "日期待定"
             body += (f'<h3 class="year-h" data-year="{esc(y)}">{esc(label)} '
                      f'<small>{len(by_year[y])} 期</small></h3><div>{rows}</div>')

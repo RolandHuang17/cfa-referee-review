@@ -70,7 +70,8 @@ SOURCES = [
      "org": "Sky Sports / PGMOL（英格兰）", "lang": "en", "update": "月更",
      "channel": "UCNAf1k0yIjyGu3k9BwAg3lg",
      "playlists": [],
-     "search": "Match Officials Mic'd Up", "filter": r"match officials|mic'?d up"},
+     "searches": ["Match Officials Mic'd Up", "Mic'd Up Howard Webb", "Match Officials"],
+     "search": "", "filter": r"match officials|mic'?d up|howard webb"},
     {"key": "fmx", "name": "VAR Review",
      "org": "Comisión de Árbitros · FMF（墨西哥足协裁判委员会）", "lang": "es", "update": "不定期",
      "channel": "UCdqXXpzLUYbfckwnGIgR_8g",
@@ -86,6 +87,12 @@ SOURCES = [
      "channel": "UCLNgRqvauqKU6SOzdAJSQaw",
      "playlists": [],
      "search": "Судейский разбор", "filter": r"Судейский разбор"},
+    # 文章型源：无 YouTube 视频，逐轮官方文字认定（索引级——官方正文为 stub）
+    {"key": "uaf", "name": "Коментар епізодів（判例解读）",
+     "org": "UAF 裁判委员会（乌克兰足协）", "lang": "uk", "update": "每轮",
+     "type": "article", "url": "https://uaf.ua/referee-committee",
+     "channel": "", "playlists": [], "search": "", "filter": r"арбітрів|коментар",
+     "articles": {"listing": "https://uaf.ua/referee-committee?page={n}", "pages": 3}},
 ]
 
 CLEAN_RE = re.compile(r"<[^>]+>")
@@ -109,8 +116,8 @@ def text_of(node):
     return None
 
 
-def yt_data(html: str):
-    m = re.search(r"var ytInitialData = ({.*?});</script>", html, re.S)
+def yt_data(html: str, pat: str = r"var ytInitialData = ({.*?});</script>"):
+    m = re.search(pat, html, re.S)
     if not m:
         return None
     try:
@@ -287,11 +294,65 @@ def merge(dst: dict, src: dict):
         dst["date"], dst["date_src"] = src["date"], "exact"
 
 
+UA_MONTHS = {"січня": "01", "лютого": "02", "березня": "03", "квітня": "04", "травня": "05",
+             "червня": "06", "липня": "07", "серпня": "08", "вересня": "09",
+             "жовтня": "10", "листопада": "11", "грудня": "12"}
+
+
+def parse_uaf_cards(html: str) -> list:
+    """UAF 列表页 news-card → [{id,title,url,date,desc}]（Livewire 卡块切分）"""
+    out = []
+    for card in re.split(r'(?=<div wire:key="news-\d+">)', html)[1:]:
+        um = re.search(r'class="news-card__image"\s+href="(https://uaf\.ua/news/[^"]+)"', card)
+        if not um:
+            continue
+        url = um.group(1)
+        tm = re.search(r'class="fw-600[^"]*\stitle">\s*(?:<!--\[if BLOCK\]><!--\[endif\]-->)?\s*(.+?)\s*<!--\[if ENDBLOCK\]-->', card, re.S)
+        title = clean(tm.group(1)) if tm else ""
+        if not title:
+            am = re.search(r'alt="([^"]+)"', card)
+            title = clean(am.group(1)) if am else ""
+        dm = re.search(r"(\d{1,2})\s+(" + "|".join(UA_MONTHS) + r")\s+(20\d\d)", card)
+        date = f"{dm.group(3)}-{UA_MONTHS[dm.group(2)]}-{int(dm.group(1)):02d}" if dm else ""
+        dcm = re.search(r'class="[^"]*description[^"]*">\s*(?:<!--\[if BLOCK\]><!--\[endif\]-->)?\s*<p>\s*(?:<!--\[if BLOCK\]><!--\[endif\]-->)?\s*(.+?)\s*</p>', card, re.S)
+        desc = clean(dcm.group(1)) if dcm else ""
+        eid = url.rsplit("/", 1)[-1]
+        out.append({"id": eid, "title": title, "url": url, "date": date, "desc": desc[:DESC_MAX]})
+    return out
+
+
 def collect(show: dict) -> list:
-    """一个源的全部期目（RSS 精确通道 + 页面存量回补），按日期倒序。"""
+    """一个源的全部期目（RSS 精确通道 + 页面存量回补；文章型源走列表页），按日期倒序。"""
     eps = {}
     today = datetime.now()
     fpat = re.compile(show["filter"], re.I) if show.get("filter") else None
+
+    if show.get("type") == "article":
+        cfg = show["articles"]
+        for n in range(1, cfg.get("pages", 2) + 1):
+            html = fetch_url(cfg["listing"].format(n=n), MIN_PAGE)
+            items = parse_uaf_cards(html) if html else []
+            hit = 0
+            for it in items:
+                if fpat and not fpat.search(it["title"]):
+                    continue
+                item = {"id": it["id"], "show": show["key"], "title": it["title"],
+                        "url": it["url"], "date": it["date"],
+                        "date_src": "exact" if it["date"] else "",
+                        "desc": it["desc"], "views": None, "length": ""}
+                if it["id"] in eps:
+                    merge(eps[it["id"]], item)
+                else:
+                    eps[it["id"]] = item
+                    hit += 1
+            print(f"  listing p{n}: {len(items)} 卡 / 命中 +{hit}", flush=True)
+            time.sleep(random.uniform(*DELAY))
+        out = list(eps.values())
+        for e in out:
+            e["show"] = show["key"]
+            e["title"] = clean(e.get("title") or "")
+        out.sort(key=lambda x: x.get("date") or "0000-00-00", reverse=True)
+        return out
 
     feeds = [f"https://www.youtube.com/feeds/videos.xml?playlist_id={p}"
              for p in show.get("playlists", [])]
@@ -313,9 +374,10 @@ def collect(show: dict) -> list:
         time.sleep(random.uniform(*DELAY))
 
     pages = [f"https://www.youtube.com/playlist?list={p}" for p in show.get("playlists", [])]
-    if show.get("channel") and show.get("search"):
-        pages.append(f"https://www.youtube.com/channel/{show['channel']}"
-                     f"/search?query={quote(show['search'])}")
+    if show.get("channel"):
+        for sq in (show.get("searches") or ([show["search"]] if show.get("search") else [])):
+            pages.append(f"https://www.youtube.com/channel/{show['channel']}"
+                         f"/search?query={quote(sq)}")
     for pu in pages:
         html = fetch_url(pu, MIN_PAGE)
         found = harvest(html) if html else {}
@@ -370,9 +432,10 @@ def parse_all():
                 newn += 1
         shows[show["key"]] = {"name": show["name"], "org": show["org"],
                               "lang": show["lang"], "update": show["update"],
-                              "url": (f"https://www.youtube.com/channel/{show['channel']}"
-                                      if show.get("channel") else
-                                      f"https://www.youtube.com/playlist?list={show['playlists'][0]}")}
+                              "url": (show.get("url")
+                                      or (f"https://www.youtube.com/channel/{show['channel']}"
+                                          if show.get("channel") else
+                                          f"https://www.youtube.com/playlist?list={show['playlists'][0]}"))}
         print(f"[{show['key']}] 共 {len(got)} 期（净增 {newn}）", flush=True)
         time.sleep(random.uniform(*DELAY))
     data = {"source": "https://www.youtube.com",
@@ -388,6 +451,37 @@ def parse_all():
     exact = sum(1 for e in data["episodes"] if e.get("date_src") == "exact")
     print(f"parse 完成: {len(data['episodes'])} 期 / {len(shows)} 节目 {per_show}"
           f"（精确日期 {exact}）→ {WEEKLY_JSON}", flush=True)
+
+
+PLAYER_RE = r"ytInitialPlayerResponse\s*=\s*({.+?});\s*(?:</script>|var\s|</head>)"
+
+
+def fill_dates():
+    """对无精确日期的期目逐条抓 watch 页，从 playerMicroformatRenderer.publishDate 补齐。"""
+    data = json.loads(WEEKLY_JSON.read_text(encoding="utf-8"))
+    todo = [e for e in data.get("episodes", [])
+            if e.get("id") and (e.get("date_src") != "exact" or not e.get("date"))]
+    print(f"待补精确日期: {len(todo)} 期", flush=True)
+    fixed = 0
+    for i, e in enumerate(todo):
+        vid = e["id"]
+        try:
+            html = fetch_url(f"https://www.youtube.com/watch?v={vid}", 200000)
+            d = yt_data(html, PLAYER_RE) if html else None
+            pub = ((d or {}).get("microformat", {}).get("playerMicroformatRenderer", {})
+                   or {}).get("publishDate", "")
+        except Exception:  # noqa: BLE001
+            pub = ""
+        if pub:
+            e["date"] = str(pub)[:10]
+            e["date_src"] = "exact"
+            fixed += 1
+        print(f"  [{i + 1}/{len(todo)}] {vid}: {e.get('date') or '仍无日期'}", flush=True)
+        time.sleep(random.uniform(*DELAY))
+    WEEKLY_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    total = len(data.get("episodes", []))
+    exact = sum(1 for e in data["episodes"] if e.get("date_src") == "exact")
+    print(f"dates 完成: 新补 {fixed} 条，全库精确日期 {exact}/{total}", flush=True)
 
 
 def discover(channel_id: str, query: str = ""):
@@ -429,10 +523,13 @@ def main():
             raise SystemExit("用法: fetch_weekly.py discover <channel_id> [query]")
         discover(sys.argv[2], sys.argv[3] if len(sys.argv) > 3 else "")
         return
+    if mode == "dates":
+        fill_dates()
+        return
     if mode in ("fetch", "parse", "all"):
         parse_all()
     else:
-        raise SystemExit("用法: fetch_weekly.py [fetch|parse|all|discover]")
+        raise SystemExit("用法: fetch_weekly.py [fetch|parse|all|dates|discover]")
 
 
 if __name__ == "__main__":

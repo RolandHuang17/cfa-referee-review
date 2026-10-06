@@ -26,6 +26,11 @@ def main():
     run("build_stats.py")
     run("build_scale.py")
     run("build_uefa.py")
+    run("build_rap.py")
+    run("build_rfef.py")
+    run("build_pro.py")
+    run("build_intl.py")
+    run("build_conmebol.py")
     run("build_quiz.py")
     if SITE_ASSETS.exists():
         shutil.rmtree(SITE_ASSETS)

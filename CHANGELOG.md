@@ -6,6 +6,28 @@
 [语义化版本](https://semver.org/lang/zh-CN/)。仓库尚未打过 tag，首次切分发布时会
 把 `Unreleased` 段落并入对应版本号并补上对比链接。
 
+## 2026-10-05
+
+### 新增（第四批：CONMEBOL 深度整合 + RFEF 视频齐备）
+- **南美 VAR 判例 conmebol.html**（新页面 + `scripts/fetch_conmebol.py` + 数据 `data/conmebol.json`）：CONMEBOL《Situación de Análisis VAR》**60 案判例页**（世预赛 36 / 南美杯 20 / 优胜者杯 4）——双级抓取（Elementor 列表页 5 页 + 逐案文章页增强），每案含对阵/日期/城市/球场/情境（点球 14 / 红牌 6 / 越位 9 / 进球无效 4 等，官方西语原文保留）/分钟 + 官方 YouTube 判例视频链接（60/60，纯链接模式）。页面提供赛事与情境筛选 chips + 年份分组。解析要点：conmebol.com 属性常不带引号、正文字段各自独立成 <p>、页面头部有无关嵌入组件（取「最后一组」完整字段规避）。
+- **RFEF 判例视频 169/169 全部下载完成**（约 14.9GB，verify 通过），rfef.html 全量本地播放就绪。
+- 门户第十二张卡片「南美 VAR 判例」；`safe_http` 白名单新增 `hns.family`（调研用）、`www.conmebol.com`；`paths.py` 新增 `CONMEBOL_JSON`/`CONMEBOL_CACHE`；`build_all.py` 挂入 build_conmebol；测试 `PAGES` 扩至 16 页全绿。
+- 深度整合结论：9 国资源中 CONMEBOL 是唯一具备逐案公开数据的（HNS 的逐镜头认定在 YouTube 视频内、苏格兰为视频节目、其余为频道型）——HNS/苏格兰/频道型保持 intl.html 导航级。
+
+### 新增（第三批：全球导航）
+- **国际评议导航 intl.html**（新页面 + `scripts/build_intl.py` + 数据 `data/intl.json`）：美国之外的 9 项官方评议资源一页导航——苏格兰 SFA《The VAR Review》（Collum 主裁-VAR 通话音频复盘）、克罗地亚 HNS《Sudačka analiza》（Layec 逐镜头认定）、乌克兰 UAF（Rizzoli 复盘）、南美 CONMEBOL《Situación de Análisis VAR》、英格兰《Match Officials: Mic'd Up》（Webb，内容最深）、墨西哥 FMF《VAR Review》（注意 VAR 音频 2025 底暂停）、土耳其 TFF《VAR Kayıtları》（休息室音频公开）、日本 J联赛《シンレポ》（VAR 室原声）、俄罗斯 RFS《Судейский разбор》。按「官方周更节目/文章」与「官方 YouTube 频道型」两组组织，每项标注语言/更新频率/内容形态与注意事项；纯导航页（rap.html 模式），不抓取条目。
+- 顶栏新增第 13 个导航项「国际评议」（≤1560px 媒体查询微调字号/间距防溢出）；门户第十一张卡片；`paths.py` 新增 `INTL_JSON`；`build_all.py` 挂入 build_intl；测试 `PAGES` 扩至 15 页全绿。
+
+### 新增（第二批：美国资源）
+- **美国评议 pro.html**（新页面 + `scripts/fetch_pro.py` / `scripts/build_pro.py` + 数据 `data/pro.json`）：美国 PRO（MLS/NWSL 职业裁判机构）周更 VAR 评析**全量索引 207 篇**（Inside Video Review 英文版 75 / VAR a Fondo 西语版 41 / The Definitive Angle 文字判例 91，2025–2026 两个赛季），WordPress 分类列表页直抓（无反爬），系列/联赛/轮次从标题解析，页面提供系列与联赛筛选 chips + 年份分组，逐篇跳官方页（文章内视频受官方播放器约束，纯链接索引模式）。USSF（美国足协）视频页为 JS 渲染且完整内容在 Learning Center 免费注册墙内、无公开 YouTube 播放列表 → 页内作入口指南区（视频页/Learning Center/裁判项目）。
+- 全站导航新增「美国评议」入口（门户十张卡片）；为容纳第 12 个导航项，顶栏「欧足联判例」「考题模式」缩写为「UEFA」「考题」；`safe_http` 白名单新增 `proreferees.com`；`paths.py` 新增 `PRO_JSON`/`PRO_CACHE`；`build_all.py` 挂入 build_pro；`tests/test_integrity.py` 的 `PAGES` 扩至 14 页并全绿。
+- 小屏回归修复：≤1560px 隐藏顶栏导航图标的规则曾使 ≤760px（图标模式）导航变空盒，已在 760px 断点内恢复图标显示。
+
+### 新增
+- **西班牙判罚标准手册 rfef.html**（新页面 + `scripts/fetch_rfef.py` / `scripts/download_rfef_videos.py` / `scripts/build_rfef.py` + 数据 `data/rfef.json` / `data/rfef-zh.json`）：RFEF/CTA《Criterios Arbitrales》2026/27 官方手册全量整合——8 个判罚专题 / 39 个代码分组 / 134 条判罚尺度（情形+认定+判读总结+加重/减轻因素）+ 169 段官方判例视频（约 14.9GB，下载至 gitignored 的 `site/videos/rfef/`，缺失时运行时回退官方直链）。页面中文译制为主（译文层全 id 平铺匹配，构建时零缺口/零漂移告警）、页头「西语原文」开关（localStorage `cfa.rfef-es`）、判例过滤框（编号/中文/西语）、轻量版隐藏视频+官方手册横幅。解析锚定手册站自定义组件（`manual-criterion-row`/`manual-inline-video-card`）与 base64 lightbox 参数，视频文件名前缀即判例编号（MD.1.1→MD.1），表格型与视频卡型（越位正反例）两种形态共用同一锚。
+- **UEFA RAP 训练包导航页 rap.html**（新页面 + `scripts/build_rap.py` / `scripts/fetch_rap.py` + 数据 `data/rap.json`）：RAP 判例内容在 Nextaur 注册墙后、旧版下载包链接多已失效，故做纯指南页——训练三步法（看片段→自己判→对官方答案，含 borderline 含义）、23 期索引按 Nextaur 在线期/下载包时期分组（含体积、状态标注、PC/MAC 多链接）、Mulppy/第三方查看器等工具区，与 uefa.html 互为导流。
+- 全站导航与门户新增「RAP 训练」「RFEF 标准」入口（门户九张卡片）；`scripts/lib/safe_http.py` 白名单新增 `www.card.rfef.es`、`www.dutchreferee.com`；`scripts/lib/paths.py` 新增 `RAP_JSON`/`RFEF_JSON`/`RFEF_ZH_JSON`/`RFEF_CACHE`/`DUTCHREF_CACHE`；`build_all.py` 管线挂入 build_rap/build_rfef；`tests/test_integrity.py` 的 `PAGES` 扩至 13 页并全绿。
+
 ## 2026-10-04
 
 ### 新增

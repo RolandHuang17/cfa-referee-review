@@ -1,0 +1,2824 @@
+{
+ "source": "https://www.card.rfef.es/manual/indice/",
+ "source_name": "RFEF/CTA《Criterios Arbitrales》判罚标准手册",
+ "season": "2026/27",
+ "fetched": "2026-10-05",
+ "extra_topics": [
+  {
+   "key": "cambios-reglas",
+   "name_cn": "26/27 规则变动",
+   "url": "https://www.card.rfef.es/manual/cambios-reglas/"
+  },
+  {
+   "key": "manual-var",
+   "name_cn": "VAR 手册",
+   "url": "https://www.card.rfef.es/manual/manual-var/"
+  },
+  {
+   "key": "protocolos",
+   "name_cn": "协议",
+   "url": "https://www.card.rfef.es/manual/protocolos/"
+  },
+  {
+   "key": "glosario",
+   "name_cn": "术语表",
+   "url": "https://www.card.rfef.es/manual/glosario/"
+  },
+  {
+   "key": "adelantamiento-tiro-penal-encroachment",
+   "name_cn": "点球提前进入（encroachment）",
+   "url": "https://www.card.rfef.es/manual/adelantamiento-tiro-penal-encroachment/"
+  },
+  {
+   "key": "protestas",
+   "name_cn": "抗议（protestas）",
+   "url": "https://www.card.rfef.es/manual/protestas/"
+  }
+ ],
+ "sections": [
+  {
+   "key": "penaltis-por-mano",
+   "name_es": "Penaltis por mano",
+   "name_cn": "手球点球",
+   "url": "https://www.card.rfef.es/manual/penaltis-por-mano/",
+   "intro_es": "Un penalti por mano se produce cuando un jugador defensor, dentro de su propia área, toca el balón con la mano o el brazo de forma antirreglamentaria estando el balón en juego . La decisión dependerá de factores como la posición de la mano o el brazo, el movimiento realizado por el jugador, la relación de esa posición con la acción que está ejecutando y/o su impacto táctico.",
+   "complexity_es": "La valoración de una posible mano dentro del área penal constituye una de las decisiones más complejas a las que se enfrenta un árbitro durante un partido. A diferencia de otras infracciones cuya apreciación puede basarse en hechos más objetivos, las acciones de mano requieren un análisis contextual en el que intervienen múltiples factores que deben ser valorados de forma conjunta. La simple existencia de un contacto entre el balón y la mano o el brazo no determina por sí misma la existencia de una infracción . El árbitro debe evaluar aspectos como la posición de la mano o el brazo, la naturalidad del movimiento realizado por el jugador, la velocidad y trayectoria del balón, la distancia existente entre el balón y el jugador, la posibilidad real de reacción y la acción específica que este está ejecutando en el momento del contacto. Además, muchas de estas acciones se producen en fracciones de segundo y en situaciones de alta exigencia física , donde los movimientos corporales naturales pueden provocar que los brazos adopten posiciones necesarias para mantener el equilibrio, disputar un balón o realizar una acción técnica. Distinguir cuándo una posición está justificada por el movimiento del jugador y cuándo supone una ocupación injustificada de espacio representa uno de los principales desafíos interpretativos del arbitraje moderno. Por todo ello, la valoración de las manos dentro del área exige una interpretación técnica rigurosa, basada en criterios homogéneos y en el análisis completo de cada acción. Aunque las Reglas de Juego proporcionan un marco común de actuación, cada situación presenta matices específicos que hacen necesario un examen individualizado para determinar si el contacto debe ser sancionado o no.",
+   "general_es": "No todo contacto entre el balón y la mano o el brazo constituye una infracción . La existencia de una mano sancionable debe determinarse atendiendo a los criterios establecidos en las Reglas de Juego. De forma general, se considerará infracción cuando un jugador: Para valorar estas acciones, el árbitro deberá analizar el contexto completo de la jugada , teniendo en cuenta factores como la posición de los brazos, el movimiento corporal del jugador, la trayectoria y velocidad del balón, la distancia entre los jugadores y la posibilidad real de reacción. Por tanto, la decisión sobre una posible infracción por mano no debe basarse únicamente en el punto de contacto, sino en una valoración global de las circunstancias que rodean la acción. Como norma general, no se considerará infracción cuando el balón contacte con la mano o el brazo de un jugador y dicho contacto sea consecuencia natural de la acción que está realizando o de las circunstancias de la jugada. Entre los supuestos más habituales destacan: En todos los casos, el árbitro deberá valorar el contexto completo de la acción, ya que la misma posición del brazo puede ser considerada natural en una situación y antinatural en otra dependiendo del movimiento, la velocidad de la jugada y la acción que esté realizando el futbolista. La pregunta principal no es si el balón toca la mano, sino si la posición de esa mano o brazo está justificada por la acción que realiza el jugador en ese momento. Límite corporal de la infracción por mano A efectos de la Regla 12, el brazo comienza en la parte inferior de la axila . Por tanto, el contacto del balón con la zona del hombro no debe considerarse mano, mientras que cualquier contacto producido por debajo de dicha línea podrá ser objeto de valoración arbitral. Toque deliberadamente el balón con la mano o el brazo, realizando un movimiento hacia el balón. Toque el balón con la mano o el brazo cuando la posición de estos haya aumentado de forma antinatural el espacio que ocupa su c",
+   "groups": [
+    {
+     "code": "MD",
+     "name_es": "Mano deliberada",
+     "items": [
+      {
+       "id": "MD.1",
+       "situation_es": "Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.1.1.mp4",
+         "id": "MD.1.1",
+         "caption_es": "MD.1: Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+         "file": "videos/rfef/MD.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.1.2.mp4",
+         "id": "MD.1.2",
+         "caption_es": "MD.1: Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+         "file": "videos/rfef/MD.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.1.3.mp4",
+         "id": "MD.1.3",
+         "caption_es": "MD.1: Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+         "file": "videos/rfef/MD.1.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.1.4.mp4",
+         "id": "MD.1.4",
+         "caption_es": "MD.1: Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+         "file": "videos/rfef/MD.1.4.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.1.5.mp4",
+         "id": "MD.1.5",
+         "caption_es": "MD.1: Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+         "file": "videos/rfef/MD.1.5.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.1.6.mp4",
+         "id": "MD.1.6",
+         "caption_es": "MD.1: Defensor hace un movimiento claro de la mano/brazo hacia el balón de forma deliberada, que no es producto de la inercia de su movimiento natural, del marcaje a un contrario, o de cualquier otra circunstancia no deliberada.",
+         "file": "videos/rfef/MD.1.6.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MD.2",
+       "situation_es": "Defensor hace un movimiento claro del cuerpo hacia el balón para evitar que este pase, golpeándolo con el brazo.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MD.2.1.mp4",
+         "id": "MD.2.1",
+         "caption_es": "MD.2: Defensor hace un movimiento claro del cuerpo hacia el balón para evitar que éste pase, golpeándolo con el brazo.",
+         "file": "videos/rfef/MD.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "Determinar si una mano es deliberada resulta complejo porque el árbitro debe interpretar la intención del jugador a partir de hechos observables. Para ello, debe analizar factores como el movimiento de la mano, la distancia al balón y el tiempo de reacción disponible, valorando siempre el contexto completo de la acción. Esta valoración es especialmente exigente porque determinados movimientos del brazo hacia el balón pueden ser consecuencia de la inercia generada por la propia acción corporal del jugador y no de una intención consciente de jugar el balón con la mano."
+    },
+    {
+     "code": "MA",
+     "name_es": "Mano en posición antinatural",
+     "items": [
+      {
+       "id": "MA.1",
+       "situation_es": "Defensor toca el balón con la mano, aumentando de forma antinatural el espacio que ocupa su cuerpo (con el brazo abierto y separado, de forma parcial o total).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.1.1.mp4",
+         "id": "MA.1.1",
+         "caption_es": "MA.1: Defensor toca el balón con la mano, aumentando de forma antinatural el espacio que ocupa su cuerpo (con el brazo abierto y separado, de forma parcial o total).",
+         "file": "videos/rfef/MA.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.1.2.mp4",
+         "id": "MA.1.2",
+         "caption_es": "MA.1: Defensor toca el balón con la mano, aumentando de forma antinatural el espacio que ocupa su cuerpo (con el brazo abierto y separado, de forma parcial o total).",
+         "file": "videos/rfef/MA.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.2",
+       "situation_es": "Defensor disputa un balón con un contrario e impacta el mismo con la mano por encima del hombro (el brazo está en una posición claramente antinatural). El hecho de que el brazo esté por encima del hombro en una posición claramente antinatural puede ser un elemento que prime sobre otras circunstancias a la hora de considerar una mano punible, más aún si la acción tiene una clara repercusión táctica.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.3",
+       "situation_es": "Defensor, en su intento de chutar / controlar / dejar pasar el balón, falla en su coordinación, golpeándole el balón directamente en el brazo, que está despegado de su cuerpo ocupando un mayor espacio.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.4",
+       "situation_es": "Defensor extiende su brazo para marcar / agarrar / alcanzar a un delantero y el balón le impacta en su brazo, llegándole este desde la distancia y sin hacerlo de forma sobrevenida. El jugador podía haber evitado el contacto del balón con su brazo.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.4.1.mp4",
+         "id": "MA.4.1",
+         "caption_es": "MA.4: Defensor extiende su brazo para marcar / agarrar / alcanzar a un delantero y el balón le impacta en su brazo, llegándole éste desde la distancia y sin hacerlo de forma sobrevenida. El jugador podía haber evitado el contacto del balón con su brazo.",
+         "file": "videos/rfef/MA.4.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.5",
+       "situation_es": "Defensor de espaldas golpea el balón con el brazo abierto y separado ocupando un mayor espacio cuando podía haberlo hecho de otra forma / sin ser producto de un movimiento natural para la dinámica de la acción.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.5.1.mp4",
+         "id": "MA.5.1",
+         "caption_es": "MA.5: Defensor de espaldas golpea el balón con el brazo abierto y separado ocupando un mayor espacio cuando podía haberlo hecho de otra forma / sin ser producto de un movimiento natural para la dinámica de la acción.",
+         "file": "videos/rfef/MA.5.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.5.2.mp4",
+         "id": "MA.5.2",
+         "caption_es": "MA.5: Defensor de espaldas golpea el balón con el brazo abierto y separado ocupando un mayor espacio cuando podía haberlo hecho de otra forma / sin ser producto de un movimiento natural para la dinámica de la acción.",
+         "file": "videos/rfef/MA.5.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.6",
+       "situation_es": "Defensor acude a una disputa con los brazos estirados de forma antinatural para ocupar un mayor espacio y golpea el balón con la mano.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.7",
+       "situation_es": "Defensor en la barrera golpea el balón con el brazo abierto y separado de su cuerpo ocupando un mayor espacio (posición alta, separada y antinatural).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.7.1.mp4",
+         "id": "MA.7.1",
+         "caption_es": "MA.7: Defensor en la barrera golpea el balón con el brazo abierto y separado de su cuerpo ocupando un mayor espacio (posición alta, separada y antinatural).",
+         "file": "videos/rfef/MA.7.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MA.8",
+       "situation_es": "Defensor se lanza al suelo y golpea el balón con el brazo extendido en diagonal / horizontal, de camino al suelo o en el césped, llegándole este desde la distancia y sin hacerlo de forma sobrevenida (manteniéndolo en esa posición / haciendo un movimiento adicional).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MA.8.1.mp4",
+         "id": "MA.8.1",
+         "caption_es": "MA.8: Defensor se lanza al suelo y golpea el balón con el brazo extendido en diagonal / horizontal, de camino al suelo o en el césped, llegándole éste desde la distancia y sin hacerlo de forma sobrevenida (manteniéndolo en esa posición / haciendo un movimiento adicional).",
+         "file": "videos/rfef/MA.8.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "Determinar si una mano es antinatural resulta complejo porque el árbitro debe valorar si la posición del brazo está justificada por el movimiento que realiza el jugador. Para ello, debe analizar factores como la acción técnica ejecutada, la dinámica corporal y la relación entre la posición de los brazos y el movimiento realizado. Esta valoración es especialmente exigente porque una misma posición puede ser consecuencia natural de la mecánica corporal del jugador en una acción concreta o, por el contrario, representar una ocupación injustificada del espacio que aumenta el volumen del cuerpo."
+    },
+    {
+     "code": "MBP",
+     "name_es": "Mano bajo palos / portería vacía",
+     "items": [
+      {
+       "id": "MBP.1",
+       "situation_es": "Defensor evita un gol bajo palos / portería vacía con el brazo separado del cuerpo, sin que la mano sea deliberada.",
+       "decision_es": "Penalti y tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MBP.1.1.mp4",
+         "id": "MBP.1.1",
+         "caption_es": "MBP.1: Defensor evita un gol bajo palos / portería vacía con el brazo separado del cuerpo, sin que la mano sea deliberada.",
+         "file": "videos/rfef/MBP.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MBP.1.2.mp4",
+         "id": "MBP.1.2",
+         "caption_es": "MBP.1: Defensor evita un gol bajo palos / portería vacía con el brazo separado del cuerpo, sin que la mano sea deliberada.",
+         "file": "videos/rfef/MBP.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty_yellow"
+      },
+      {
+       "id": "MBP.2",
+       "situation_es": "Defensor evita un gol bajo palos / portería vacía mediante una mano deliberada.",
+       "decision_es": "Penalti y tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MBP.2.1.mp4",
+         "id": "MBP.2.1",
+         "caption_es": "MBP.2: Defensor evita un gol bajo palos / portería vacía mediante una mano deliberada.",
+         "file": "videos/rfef/MBP.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MBP.2.2.mp4",
+         "id": "MBP.2.2",
+         "caption_es": "MBP.2: Defensor evita un gol bajo palos / portería vacía mediante una mano deliberada.",
+         "file": "videos/rfef/MBP.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty_red"
+      },
+      {
+       "id": "MBP.3",
+       "situation_es": "Defensor evita un gol bajo palos / portería vacía con el brazo completamente pegado al cuerpo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MBP.3.1.mp4",
+         "id": "MBP.3.1",
+         "caption_es": "MBP.3: Defensor evita un gol bajo palos / portería vacía con el brazo completamente pegado al cuerpo.",
+         "file": "videos/rfef/MBP.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_extra_es": "Mano punible: brazo separado del cuerpo. Mano no punible: Brazo pegado al cuerpo.",
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "No es que exista una «mano distinta» en la línea de gol; la misma conducta se juzga con los criterios de la Regla 12, pero la posibilidad real de evitar un gol le otorga una trascendencia táctica y disciplinaria singular y justifica una valoración especialmente cuidadosa. En estas situaciones, además, se espera que el jugador sea consciente de su ubicación y extreme el cuidado respecto a la posición de sus brazos , asumiendo el riesgo que supone ocupar espacios que puedan interferir en la trayectoria del balón."
+    },
+    {
+     "code": "MTP",
+     "name_es": "Mano en un tiro / remate a puerta",
+     "items": [
+      {
+       "id": "MTP.1",
+       "situation_es": "Defensor evita un tiro / remate a puerta con el brazo separado del cuerpo, sin que la mano sea deliberada, existiendo una cierta distancia entre el balón y la mano (existiendo, por tanto, posibilidad de retirarla).",
+       "decision_es": "Penalti sin tarjeta",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.1.1.mp4",
+         "id": "MTP.1.1",
+         "caption_es": "MTP.1: Defensor evita un tiro a puerta con el brazo separado del cuerpo, sin que la mano sea deliberada, existiendo una cierta distancia entre el balón y la mano (existiendo, por tanto, posibilidad de retirarla).",
+         "file": "videos/rfef/MTP.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.1.2.mp4",
+         "id": "MTP.1.2",
+         "caption_es": "MTP.1: Defensor evita un tiro a puerta con el brazo separado del cuerpo, sin que la mano sea deliberada, existiendo una cierta distancia entre el balón y la mano (existiendo, por tanto, posibilidad de retirarla).",
+         "file": "videos/rfef/MTP.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.1.3.mp4",
+         "id": "MTP.1.3",
+         "caption_es": "MTP.1: Defensor evita un tiro a puerta con el brazo separado del cuerpo, sin que la mano sea deliberada, existiendo una cierta distancia entre el balón y la mano (existiendo, por tanto, posibilidad de retirarla).",
+         "file": "videos/rfef/MTP.1.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty_no_card"
+      },
+      {
+       "id": "MTP.2",
+       "situation_es": "Defensor evita un tiro / remate a puerta con el brazo en posición antinatural. La distancia y capacidad de reacción son irrelevantes.",
+       "decision_es": "Penalti sin tarjeta",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.2.1.mp4",
+         "id": "MTP.2.1",
+         "caption_es": "MTP.2: Defensor evita un tiro a puerta con el brazo en posición antinatural. La distancia y capacidad de reacción son irrelevantes.",
+         "file": "videos/rfef/MTP.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.2.2.mp4",
+         "id": "MTP.2.2",
+         "caption_es": "MTP.2: Defensor evita un tiro a puerta con el brazo en posición antinatural. La distancia y capacidad de reacción son irrelevantes.",
+         "file": "videos/rfef/MTP.2.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.2.3.mp4",
+         "id": "MTP.2.3",
+         "caption_es": "MTP.2: Defensor evita un tiro a puerta con el brazo en posición antinatural. La distancia y capacidad de reacción son irrelevantes.",
+         "file": "videos/rfef/MTP.2.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.2.4.mp4",
+         "id": "MTP.2.4",
+         "caption_es": "MTP.2: Defensor evita un tiro a puerta con el brazo en posición antinatural. La distancia y capacidad de reacción son irrelevantes.",
+         "file": "videos/rfef/MTP.2.4.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty_no_card"
+      },
+      {
+       "id": "MTP.3",
+       "situation_es": "Defensor evita un tiro / remate a puerta con el brazo de forma deliberada.",
+       "decision_es": "Penalti y tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty_yellow"
+      },
+      {
+       "id": "MTP.4",
+       "situation_es": "Defensor evita un tiro / remate a puerta con el brazo pegado al cuerpo o muy próximo al cuerpo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MTP.5",
+       "situation_es": "Defensor evita un tiro / remate a puerta con el brazo separado del cuerpo, en una posición compatible con ser natural, con escasa distancia entre el balón y la mano (escasa capacidad de reacción).",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.5.1.mp4",
+         "id": "MTP.5.1",
+         "caption_es": "MTP.5: Defensor evita un tiro a puerta con el brazo separado del cuerpo, en una posición compatible con ser natural, con escasa distancia entre el balón y la mano (escasa capacidad de reacción).",
+         "file": "videos/rfef/MTP.5.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MTP.5.2.mp4",
+         "id": "MTP.5.2",
+         "caption_es": "MTP.5: Defensor evita un tiro a puerta con el brazo separado del cuerpo, en una posición compatible con ser natural, con escasa distancia entre el balón y la mano (escasa capacidad de reacción).",
+         "file": "videos/rfef/MTP.5.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_extra_es": "Mano punible Elementos agravantes Brazo separado / fuera del cuerpo. Jugador no trata de evitar el contacto. Cierta distancia. Mano no punible Elementos atenuantes Brazo pegado al cuerpo o muy próximo al cuerpo. Jugador trata de evitar el contacto / no puede evitar el contacto. Muy escasa distancia (disparo “a quemarropa”).",
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "notes_es": [
+      {
+       "h": "Mano punible",
+       "items": [
+        "Elementos agravantes：Brazo separado / fuera del cuerpo.；Jugador no trata de evitar el contacto.；Cierta distancia."
+       ]
+      },
+      {
+       "h": "Mano no punible",
+       "items": [
+        "Elementos atenuantes：Brazo pegado al cuerpo o muy próximo al cuerpo.；Jugador trata de evitar el contacto / no puede evitar el contacto.；Muy escasa distancia (disparo “a quemarropa”).；Las manos producidas ante un tiro a puerta presentan una especial complejidad interpretativa por la elevada trascendencia táctica de la acción. El jugador debe ser consciente del riesgo asociado a interceptar un disparo y extremar el cuidado respecto a la posición de sus brazos. Asimismo, la valoración de la capacidad de reacción del defensor constituye uno de los aspectos más complejos de estas jugadas, ya que, aunque guarda relación con la distancia al balón, depende también de otros factores que hacen de su interpretación un ejercicio necesariamente subjetivo."
+       ]
+      }
+     ],
+     "conclusion_es": "Las manos producidas ante un tiro a puerta presentan una especial complejidad interpretativa por la elevada trascendencia táctica de la acción. El jugador debe ser consciente del riesgo asociado a interceptar un disparo y extremar el cuidado respecto a la posición de sus brazos. Asimismo, la valoración de la capacidad de reacción del defensor constituye uno de los aspectos más complejos de estas jugadas, ya que, aunque guarda relación con la distancia al balón, depende también de otros factores que hacen de su interpretación un ejercicio necesariamente subjetivo."
+    },
+    {
+     "code": "MR",
+     "name_es": "Manos rebotadas",
+     "items": [
+      {
+       "id": "MR.1",
+       "situation_es": "El balón toca en el brazo de un defensor en posición claramente antinatural, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo. La distancia, la capacidad de reacción y el cambio de trayectoria del balón son irrelevantes.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.1.1.mp4",
+         "id": "MR.1.1",
+         "caption_es": "MR.1: El balón toca en el brazo de un defensor en posición claramente antinatural, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo. La distancia, la capacidad de reacción y el cambio de trayectoria del balón son irrelevantes.",
+         "file": "videos/rfef/MR.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.1.2.mp4",
+         "id": "MR.1.2",
+         "caption_es": "MR.1: El balón toca en el brazo de un defensor en posición claramente antinatural, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo. La distancia, la capacidad de reacción y el cambio de trayectoria del balón son irrelevantes.",
+         "file": "videos/rfef/MR.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MR.2",
+       "situation_es": "El balón toca en el brazo de un defensor en posición antinatural, después de haberle rebotado el balón de forma leve (sin cambio sustancial de trayectoria) en otra parte del cuerpo / en otro jugador / en el suelo (mismo concepto de las manos antinaturales).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.2.1.mp4",
+         "id": "MR.2.1",
+         "caption_es": "MR.2: El balón toca en el brazo de un defensor en posición antinatural, después de haberle rebotado el balón de forma leve (sin cambio sustancial de trayectoria) en otra parte del cuerpo / en otro jugador / en el suelo (mismo concepto de las manos antinaturales).",
+         "file": "videos/rfef/MR.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.2.2.mp4",
+         "id": "MR.2.2",
+         "caption_es": "MR.2: El balón toca en el brazo de un defensor en posición antinatural, después de haberle rebotado el balón de forma leve (sin cambio sustancial de trayectoria) en otra parte del cuerpo / en otro jugador / en el suelo (mismo concepto de las manos antinaturales).",
+         "file": "videos/rfef/MR.2.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.2.3.mp4",
+         "id": "MR.2.3",
+         "caption_es": "MR.2: El balón toca en el brazo de un defensor en posición antinatural, después de haberle rebotado el balón de forma leve (sin cambio sustancial de trayectoria) en otra parte del cuerpo / en otro jugador / en el suelo (mismo concepto de las manos antinaturales).",
+         "file": "videos/rfef/MR.2.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MR.3",
+       "situation_es": "El balón toca en el brazo separado del cuerpo de un defensor, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo, llegándole de forma inesperada (normalmente, tras cambio de trayectoria del balón). La acción no tiene impacto táctico relevante.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.3.1.mp4",
+         "id": "MR.3.1",
+         "caption_es": "MR.3: El balón toca en el brazo separado del cuerpo de un defensor, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo, llegándole de forma inesperada (normalmente, tras cambio de trayectoria del balón). La acción no tiene impacto táctico relevante.",
+         "file": "videos/rfef/MR.3.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/2026/08/MR.3.2.mp4",
+         "id": "MR.3.2",
+         "caption_es": "MR.3: El balón toca en el brazo separado del cuerpo de un defensor, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo, llegándole de forma inesperada (normalmente, tras cambio de trayectoria del balón). La acción no tiene impacto táctico relevante.",
+         "file": "videos/rfef/MR.3.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/2026/08/MR.3.3.mp4",
+         "id": "MR.3.3",
+         "caption_es": "MR.3: El balón toca en el brazo separado del cuerpo de un defensor, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo, llegándole de forma inesperada (normalmente, tras cambio de trayectoria del balón). La acción no tiene impacto táctico relevante.",
+         "file": "videos/rfef/MR.3.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MR.4",
+       "situation_es": "El balón toca en el brazo separado del cuerpo de un defensor, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo, llegándole de forma inesperada (normalmente, tras cambio de trayectoria del balón). La acción sí tiene impacto táctico relevante.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MR.5",
+       "situation_es": "Defensor toca el balón con el brazo en posición natural / pegado al cuerpo o muy próximo al cuerpo, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.5.1.mp4",
+         "id": "MR.5.1",
+         "caption_es": "MR.5: Defensor toca el balón con el brazo en posición natural / pegado al cuerpo o muy próximo al cuerpo, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo.",
+         "file": "videos/rfef/MR.5.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MR.5.2.mp4",
+         "id": "MR.5.2",
+         "caption_es": "MR.5: Defensor toca el balón con el brazo en posición natural / pegado al cuerpo o muy próximo al cuerpo, después de haberle rebotado el balón en otra parte del cuerpo / en otro jugador / en el suelo.",
+         "file": "videos/rfef/MR.5.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_extra_es": "Mano punible Elementos agravantes Claramente antinatural. Sin cambio sustancial de trayectoria / roce. Impacto táctico (tiro a puerta, ocasión de gol). Mano no punible Elementos atenuantes Posición natural, pegada al cuerpo o muy próxima al cuerpo. Cambio claro de trayectoria. Balón llega de forma inesperada. Sin impacto táctico.",
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "notes_es": [
+      {
+       "h": "Mano punible",
+       "items": [
+        "Elementos agravantes：Claramente antinatural.；Sin cambio sustancial de trayectoria / roce.；Impacto táctico (tiro a puerta, ocasión de gol)."
+       ]
+      },
+      {
+       "h": "Mano no punible",
+       "items": [
+        "Elementos atenuantes：Posición natural, pegada al cuerpo o muy próxima al cuerpo.；Cambio claro de trayectoria.；Balón llega de forma inesperada.；Sin impacto táctico.；Las manos precedidas por un rebote en el propio cuerpo, en otro jugador o en el suelo presentan una especial complejidad interpretativa. Aunque la limitada capacidad de reacción del jugador suele ser un factor relevante que, en muchos casos, excluye la infracción, el árbitro debe valorar también la posición inicial de los brazos, el efecto real del rebote sobre la trayectoria del balón y el impacto táctico . Todos estos elementos están sujetos a interpretación y requieren una valoración contextual de la acción, lo que convierte este tipo de jugadas en algunas de las más complejas de evaluar desde el punto de vista arbitral."
+       ]
+      }
+     ],
+     "conclusion_es": "Las manos precedidas por un rebote en el propio cuerpo, en otro jugador o en el suelo presentan una especial complejidad interpretativa. Aunque la limitada capacidad de reacción del jugador suele ser un factor relevante que, en muchos casos, excluye la infracción, el árbitro debe valorar también la posición inicial de los brazos, el efecto real del rebote sobre la trayectoria del balón y el impacto táctico . Todos estos elementos están sujetos a interpretación y requieren una valoración contextual de la acción, lo que convierte este tipo de jugadas en algunas de las más complejas de evaluar desde el punto de vista arbitral."
+    },
+    {
+     "code": "MNAT",
+     "name_es": "Mano en posición natural",
+     "items": [
+      {
+       "id": "MNAT.1",
+       "situation_es": "En general, un defensor golpea el balón con la mano como consecuencia natural y justificada del movimiento corporal realizado por el jugador en esa acción concreta.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.1.1.mp4",
+         "id": "MNAT.1.1",
+         "caption_es": "MNAT.1: En general, un defensor golpea el balón con la mano como consecuencia natural y justificada del movimiento corporal realizado por el jugador en esa acción concreta.",
+         "file": "videos/rfef/MNAT.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.1.2.mp4",
+         "id": "MNAT.1.2",
+         "caption_es": "MNAT.1: En general, un defensor golpea el balón con la mano como consecuencia natural y justificada del movimiento corporal realizado por el jugador en esa acción concreta.",
+         "file": "videos/rfef/MNAT.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.2",
+       "situation_es": "En general, un defensor golpea el balón con la mano pegada al cuerpo o muy próxima al cuerpo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.2.1.mp4",
+         "id": "MNAT.2.1",
+         "caption_es": "MNAT.2: En general, un defensor golpea el balón con la mano pegada al cuerpo o muy próxima al cuerpo.",
+         "file": "videos/rfef/MNAT.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.2.2.mp4",
+         "id": "MNAT.2.2",
+         "caption_es": "MNAT.2: En general, un defensor golpea el balón con la mano pegada al cuerpo o muy próxima al cuerpo.",
+         "file": "videos/rfef/MNAT.2.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.2.3.mp4",
+         "id": "MNAT.2.3",
+         "caption_es": "MNAT.2: En general, un defensor golpea el balón con la mano pegada al cuerpo o muy próxima al cuerpo.",
+         "file": "videos/rfef/MNAT.2.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.3",
+       "situation_es": "Defensor, tras saltar a la disputa del balón y estando de espaldas, tras el remate del delantero golpea el balón con el brazo estando este en posición natural para la dinámica de la acción. El jugador tiene el brazo algo separado, pero bajando por la inercia de la caída tras el salto.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.4",
+       "situation_es": "Defensor golpea el balón con la mano tras venir «llovido», encontrándose el brazo algo abierto y separado pero en posición natural para la dinámica de la acción. En general, en este tipo de acciones el defensor pierde la referencia del balón al estar en movimiento y pugnando con su marca o con varios contrarios.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.4.1.mp4",
+         "id": "MNAT.4.1",
+         "caption_es": "MNAT.4: Defensor golpea el balón con la mano tras venir “llovido”, encontrándose el brazo algo abierto y separado pero en posición natural para la dinámica de la acción. En general, en este tipo de acciones el defensor pierde la referencia del balón al estar en movimiento y pugnando con su marca o con varios contrarios.",
+         "file": "videos/rfef/MNAT.4.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.5",
+       "situation_es": "Defensor salta a disputar un balón y, en la inercia de la caída, el balón le golpea en el brazo, que está bajando y se encuentra algo abierto y separado, en posición natural para la dinámica de la acción.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.6",
+       "situation_es": "Defensor está fijando su marca con el/los brazo/s y el balón le golpea en uno de ellos estando en posición natural para la dinámica de la acción. En general, en este tipo de acciones, el defensor pierde la referencia del balón al estar pugnando con su marca, golpeándole de forma inesperada.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MNAT.6.1.mp4",
+         "id": "MNAT.6.1",
+         "caption_es": "MNAT.6: Defensor está fijando su marca con el/los brazo/s y el balón le golpea en uno de ellos estando en posición natural para la dinámica de la acción. En general, en este tipo de acciones, el defensor pierde la referencia del balón al estar pugnando con su marca, golpeándole de forma inesperada.",
+         "file": "videos/rfef/MNAT.6.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.7",
+       "situation_es": "Defensor está corriendo y el balón le golpea en el brazo, encontrándose este en posición natural para la dinámica de la acción. El defensor pierde la referencia del balón, al estar corriendo hacia otro lugar, golpeándole de forma inesperada.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MNAT.8",
+       "situation_es": "Defensor hace un gesto instintivo con las manos para evitar que el balón le pegue en la cara, cuerpo… porque este le llega a gran velocidad.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "La valoración de una mano en posición natural resulta compleja porque la naturalidad de los brazos no depende únicamente de su ubicación, sino de su relación con el movimiento que realiza el jugador . Una misma posición puede estar plenamente justificada en una acción concreta y resultar injustificada en otra. Esta necesidad de analizar el contexto completo de la jugada, unida al impacto táctico que puede tener el contacto con el balón, hace que este tipo de acciones estén especialmente sujetas a interpretación arbitral."
+    },
+    {
+     "code": "MAP",
+     "name_es": "Mano apoyada en el suelo o en dirección al suelo",
+     "items": [
+      {
+       "id": "MAP.1",
+       "situation_es": "Defensor impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo en posición natural apoyado en el suelo o en dirección al suelo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MAP.1.1.mp4",
+         "id": "MAP.1.1",
+         "caption_es": "MAP.1: Defensor impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo en posición natural apoyado en el suelo o en dirección al suelo.",
+         "file": "videos/rfef/MAP.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MAP.1.2.mp4",
+         "id": "MAP.1.2",
+         "caption_es": "MAP.1: Defensor impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo en posición natural apoyado en el suelo o en dirección al suelo.",
+         "file": "videos/rfef/MAP.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "MAP.2",
+       "situation_es": "Defensor impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo apoyado en el suelo, pero haciendo un movimiento adicional claro hacia el balón.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MAP.3",
+       "situation_es": "Defensor se lanza al suelo con ambos brazos separados, e impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo que va en dirección al suelo, pero separado y abierto en posición antinatural.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MAP.3.1.mp4",
+         "id": "MAP.3.1",
+         "caption_es": "MAP.3: Defensor se lanza al suelo con ambos brazos separados, e impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo que va en dirección al suelo, pero separado y abierto en posición antinatural.",
+         "file": "videos/rfef/MAP.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MAP.4",
+       "situation_es": "Defensor impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo apoyado en el suelo o en dirección al suelo pero extendido, en posición antinatural, sin que el balón le llegue desde corta distancia o de forma sobrevenida.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "MAP.5",
+       "situation_es": "Defensor, tras lanzarse al suelo, impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo extendido en el césped, en posición antinatural.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MAP.5.1.mp4",
+         "id": "MAP.5.1",
+         "caption_es": "MAP.5: Defensor, tras lanzarse al suelo, impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo extendido en el césped, en posición antinatural.",
+         "file": "videos/rfef/MAP.5.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MAP.5.2.mp4",
+         "id": "MAP.5.2",
+         "caption_es": "MAP.5: Defensor, tras lanzarse al suelo, impide un tiro / remate a puerta / centro al área / pase / autopase con el brazo extendido en el césped, en posición antinatural.",
+         "file": "videos/rfef/MAP.5.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "En la mayoría de los casos, en las manos apoyadas o en dirección al apoyo los brazos cumplen una función natural de protección y equilibrio al amortiguar la caída del cuerpo, por lo que normalmente estas acciones no son punibles. Sin embargo, esta excepción no ampara a los jugadores que se lanzan al suelo ocupando espacio de forma excesiva o con los brazos extendidos para interceptar el balón. Determinar cuándo una mano responde a una necesidad real de apoyo y cuándo supone una acción antinatural constituye uno de los principales desafíos interpretativos para el árbitro."
+    },
+    {
+     "code": "PTB",
+     "name_es": "Mano tras balón jugado de forma deliberada por el propio jugador («play the ball»)",
+     "items": [
+      {
+       "id": "PTB.1",
+       "situation_es": "Defensor juega voluntariamente el balón con la cabeza, la pierna, el pecho,… y posteriormente le rebota en el brazo, que está abierto y separado, pero empleado para equilibrarse.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTB.1.1.mp4",
+         "id": "PTB.1.1",
+         "caption_es": "PTB.1: Defensor juega voluntariamente el balón con la cabeza, la pierna, el pecho,… y posteriormente le rebota en el brazo, que está abierto y separado, pero empleado para equilibrarse.",
+         "file": "videos/rfef/PTB.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTB.1.2.mp4",
+         "id": "PTB.1.2",
+         "caption_es": "PTB.1: Defensor juega voluntariamente el balón con la cabeza, la pierna, el pecho,… y posteriormente le rebota en el brazo, que está abierto y separado, pero empleado para equilibrarse.",
+         "file": "videos/rfef/PTB.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "Es importante no confundir las acciones de «play the ball» con las manos rebotadas . En el primer caso, el balón procede de una acción deliberada del propio jugador sobre el balón, lo que normalmente excluye la infracción. En el segundo, la valoración gira en torno a elementos como la capacidad de reacción, la posición de los brazos o las circunstancias del rebote. Aunque en ambos casos existe un contacto previo con el balón, su fundamento interpretativo es completamente diferente."
+    },
+    {
+     "code": "PTBC",
+     "name_es": "Mano tras balón jugado de forma deliberada por un compañero de equipo",
+     "items": [
+      {
+       "id": "PTBC.1",
+       "situation_es": "Defensor juega voluntariamente el balón y, tras ello, el balón cambia de trayectoria y golpea en el brazo de un compañero, que está separado del cuerpo, llegándole el balón de forma sobrevenida.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTBC.1.1.mp4",
+         "id": "PTBC.1.1",
+         "caption_es": "PTBC.1: Defensor juega voluntariamente el balón y, tras ello, el balón cambia de trayectoria y golpea en el brazo de un compañero, que está separado del cuerpo, llegándole el balón de forma sobrevenida.",
+         "file": "videos/rfef/PTBC.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTBC.1.2.mp4",
+         "id": "PTBC.1.2",
+         "caption_es": "PTBC.1: Defensor juega voluntariamente el balón y, tras ello, el balón cambia de trayectoria y golpea en el brazo de un compañero, que está separado del cuerpo, llegándole el balón de forma sobrevenida.",
+         "file": "videos/rfef/PTBC.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTBC.1.3.mp4",
+         "id": "PTBC.1.3",
+         "caption_es": "PTBC.1: Defensor juega voluntariamente el balón y, tras ello, el balón cambia de trayectoria y golpea en el brazo de un compañero, que está separado del cuerpo, llegándole el balón de forma sobrevenida.",
+         "file": "videos/rfef/PTBC.1.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTBC.1.4.mp4",
+         "id": "PTBC.1.4",
+         "caption_es": "PTBC.1: Defensor juega voluntariamente el balón y, tras ello, el balón cambia de trayectoria y golpea en el brazo de un compañero, que está separado del cuerpo, llegándole el balón de forma sobrevenida.",
+         "file": "videos/rfef/PTBC.1.4.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "PTBC.2",
+       "situation_es": "Defensor juega voluntariamente el balón pero este no cambia de trayectoria (o lo hace de forma anecdótica). Tras ello, el balón golpea en el brazo de un compañero que ya estaba separado del cuerpo ocupando un espacio indebido (misma situación que una mano antinatural al uso).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PTBC.2.1.mp4",
+         "id": "PTBC.2.1",
+         "caption_es": "PTBC.2: Defensor juega voluntariamente el balón pero éste no cambia de trayectoria (o lo hace de forma anecdótica). Tras ello, el balón golpea en el brazo de un compañero que ya estaba separado del cuerpo ocupando un espacio indebido (misma situación que una mano antinatural al uso).",
+         "file": "videos/rfef/PTBC.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "PTBC.3",
+       "situation_es": "Defensor juega voluntariamente el balón y, tras ello, el balón golpea en el brazo de un compañero, que se encuentra por encima del hombro en posición antinatural.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "Es fundamental diferenciar entre un rebote y una acción deliberada sobre el balón , ya que ambos supuestos tienen una consideración distinta. Del mismo modo, no es igual un leve desvío que mantiene la trayectoria original del balón que una acción que modifica claramente su dirección. La valoración de estos elementos, junto con la posición del brazo (si el brazo está por encima del hombro, es muy probable que la mano sea considerada punible), condiciona la interpretación final de la jugada."
+    },
+    {
+     "code": "MPOST",
+     "name_es": "Mano tras empujón / carga previa de delantero",
+     "items": [
+      {
+       "id": "MPOST.1",
+       "situation_es": "Defensor golpea el balón con el brazo en posición antinatural pero la posición del mismo viene condicionada por un empujón o una carga previa del delantero.",
+       "decision_es": "Falta en ataque",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MPOST.1.1.mp4",
+         "id": "MPOST.1.1",
+         "caption_es": "MPOST.1: Defensor golpea el balón con el brazo en posición antinatural pero la posición del mismo viene condicionada por un empujón o una carga previa del delantero.",
+         "file": "videos/rfef/MPOST.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "attacking_foul"
+      },
+      {
+       "id": "MPOST.2",
+       "situation_es": "Defensor golpea el balón con el brazo en posición antinatural (considerando variables incluidas en apartados anteriores) tras mínima carga previa del delantero.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/MPOST.2.1.mp4",
+         "id": "MPOST.2.1",
+         "caption_es": "MPOST.2: Defensor golpea el balón con el brazo en posición antinatural (considerando variables incluidas en apartados anteriores) tras mínima carga previa del delantero.",
+         "file": "videos/rfef/MPOST.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "En estos casos, el árbitro debe valorar si esa acción previa del delantero ha condicionado realmente la posición del brazo o la mano del defensor. Si existe una relación directa entre el contacto y la posición final de la mano, deberá sancionarse la infracción atacante. Sin embargo, si la carga o el empujón no tienen una incidencia real en la ubicación del brazo, la posible mano deberá analizarse de forma independiente, aplicando los criterios habituales de valoración."
+    }
+   ]
+  },
+  {
+   "key": "penaltis-disputas-piernas",
+   "name_es": "Penaltis por disputas con las piernas",
+   "name_cn": "腿部争抢点球",
+   "url": "https://www.card.rfef.es/manual/penaltis-disputas-piernas/",
+   "intro_es": "Un penalti por una disputa con la parte inferior del cuerpo se produce cuando un jugador defensor, dentro de su propia área penal, comete una infracción sobre un adversario mediante una acción realizada con el pie o la pierna . La decisión dependerá de factores como la naturaleza del contacto, la intensidad de la acción, la posibilidad de disputar el balón de forma reglamentaria y la incidencia que dicho contacto tiene sobre el movimiento o la acción del adversario (causa – efecto).",
+   "complexity_es": "Las infracciones cometidas con la parte inferior del cuerpo presentan una especial complejidad interpretativa porque el árbitro debe valorar no solo la existencia de un contacto, sino también su relevancia real sobre la acción del adversario. Uno de los principales desafíos consiste en determinar si existe una relación clara de causa-efecto entre la acción del defensor y la caída o pérdida de equilibrio del atacante. Además, factores como la intensidad del contacto, el momento en que se produce, la disputa por el balón y la acción realizada por ambos jugadores condicionan la interpretación de la jugada. La valoración conjunta de todos estos elementos, muchos de ellos sujetos a interpretación, convierte este tipo de acciones en algunas de las más complejas de evaluar dentro del área penal.",
+   "general_es": "Se concederá un tiro libre directo o penalti si un jugador comete contra un adversario alguna de las siguientes infracciones de manera imprudente, temeraria o empleando fuerza excesiva, estando el balón en juego: dar o intentar dar una patada , poner o intentar poner una zancadilla , golpear o intentar golpear , realizar una entrada o disputar el balón sobre un adversario. Las Reglas de Juego distinguen tres niveles de gravedad: Imprudente : el jugador actúa sin la atención o precaución necesarias al disputar el balón. La infracción se sanciona, pero no requiere amonestación. Temeraria : el jugador actúa haciendo caso omiso del peligro o las consecuencias para su adversario. La infracción debe sancionarse con amonestación. Con uso de fuerza excesiva : el jugador excede el uso necesario de fuerza y pone en peligro la integridad física del adversario. La infracción debe sancionarse con expulsión. Por tanto, la valoración arbitral no depende únicamente de la existencia de contacto, sino también de la naturaleza de la acción y del nivel de riesgo asumido por el jugador que la comete.",
+   "groups": [
+    {
+     "code": "CAEF",
+     "name_es": "Situaciones generales: causa - efecto",
+     "items": [
+      {
+       "id": "CAEF.1",
+       "situation_es": "Un defensor da una patada/ zancadillea / derriba / golpea / pisa / pone un plantillazo de forma clara a un delantero, existiendo una clara relación de causa - efecto y/o una clara temeridad o empleando fuerza excesiva.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CAEF.1.1.mp4",
+         "id": "CAEF.1.1",
+         "caption_es": "CAEF.1: Un defensor da una patada/ zancadillea / derriba / golpea / pisa / pone un plantillazo de forma clara a un delantero, existiendo una clara relación de causa - efecto y/o una clara temeridad o empleando fuerza excesiva.",
+         "file": "videos/rfef/CAEF.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CAEF.1.2.mp4",
+         "id": "CAEF.1.2",
+         "caption_es": "CAEF.1: Un defensor da una patada/ zancadillea / derriba / golpea / pisa / pone un plantillazo de forma clara a un delantero, existiendo una clara relación de causa - efecto y/o una clara temeridad o empleando fuerza excesiva.",
+         "file": "videos/rfef/CAEF.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CAEF.2",
+       "situation_es": "Se produce un contacto normal de fútbol entre defensa y delantero / el defensor contacta con el delantero sin que exista una clara relación de causa - efecto (ejemplos: leve pisotón en la puntera / lateral de la bota, contacto con la pierna en estático o casi en estático acompañado de caída del delantero que no corresponde a la intensidad del contacto,…).",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CAEF.2.1.mp4",
+         "id": "CAEF.2.1",
+         "caption_es": "CAEF.2: Se produce un contacto normal de fútbol entre defensa y delantero / el defensor contacta con el delantero sin que exista una clara relación de causa - efecto (ejemplos: leve pisotón en la puntera / lateral de la bota, contacto con la pierna en estático o casi en estático acompañado de caída del delantero que no corresponde a la intensidad del contacto,…).",
+         "file": "videos/rfef/CAEF.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CAEF.2.2.mp4",
+         "id": "CAEF.2.2",
+         "caption_es": "CAEF.2: Se produce un contacto normal de fútbol entre defensa y delantero / el defensor contacta con el delantero sin que exista una clara relación de causa - efecto (ejemplos: leve pisotón en la puntera / lateral de la bota, contacto con la pierna en estático o casi en estático acompañado de caída del delantero que no corresponde a la intensidad del contacto,…).",
+         "file": "videos/rfef/CAEF.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "CAEF.3",
+       "situation_es": "Se produce una simulación clara del delantero / el delantero inicia claramente el contacto con el defensor / el delantero aprovecha un mínimo contacto para dejarse caer.",
+       "decision_es": "Tiro libre indirecto y tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CAEF.3.1.mp4",
+         "id": "CAEF.3.1",
+         "caption_es": "CAEF.3: Se produce una simulación clara del delantero / el delantero inicia claramente el contacto con el defensor / el delantero aprovecha un mínimo contacto para dejarse caer.",
+         "file": "videos/rfef/CAEF.3.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CAEF.3.2.mp4",
+         "id": "CAEF.3.2",
+         "caption_es": "CAEF.3: Se produce una simulación clara del delantero / el delantero inicia claramente el contacto con el defensor / el delantero aprovecha un mínimo contacto para dejarse caer.",
+         "file": "videos/rfef/CAEF.3.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "ifk"
+      }
+     ],
+     "conclusion_es": "Las posibles infracciones cometidas con la parte inferior del cuerpo dentro del área presentan una especial complejidad interpretativa porque el árbitro debe determinar en fracciones de segundo si existe una relación clara de causa-efecto entre la acción del defensor y la caída o pérdida de equilibrio del atacante . No todo contacto constituye necesariamente una infracción, por lo que resulta fundamental valorar si dicho contacto tiene la entidad suficiente para afectar realmente a la acción del adversario. Factores como la intensidad del contacto, la velocidad de los jugadores, la habilidad técnica del atacante o posibles exageraciones en la caída condicionan esta valoración."
+    },
+    {
+     "code": "CT",
+     "name_es": "Contacto tardío («late contact»)",
+     "items": [
+      {
+       "id": "CT.1",
+       "situation_es": "Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma temeraria o con uso de fuerza excesiva.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.1.1.mp4",
+         "id": "CT.1.1",
+         "caption_es": "CT.1: Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma temeraria o con uso de fuerza excesiva.",
+         "file": "videos/rfef/CT.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.1.2.mp4",
+         "id": "CT.1.2",
+         "caption_es": "CT.1: Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma temeraria o con uso de fuerza excesiva.",
+         "file": "videos/rfef/CT.1.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CT.2",
+       "situation_es": "Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma no temeraria pero su acción impide al delantero seguir disputando el balón / participar en una clara acción de ataque.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CT.3",
+       "situation_es": "Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma no temeraria y su acción no le impide seguir disputando el balón / participar en una clara acción de ataque.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.3.1.mp4",
+         "id": "CT.3.1",
+         "caption_es": "CT.3: Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma no temeraria y su acción no le impide seguir disputando el balón / participar en una clara acción de ataque.",
+         "file": "videos/rfef/CT.3.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.3.2.mp4",
+         "id": "CT.3.2",
+         "caption_es": "CT.3: Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma no temeraria y su acción no le impide seguir disputando el balón / participar en una clara acción de ataque.",
+         "file": "videos/rfef/CT.3.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.3.3.mp4",
+         "id": "CT.3.3",
+         "caption_es": "CT.3: Delantero chuta / da un pase / desplaza el balón y posteriormente el defensor / portero le derriba / pisa / impacta de forma no temeraria y su acción no le impide seguir disputando el balón / participar en una clara acción de ataque.",
+         "file": "videos/rfef/CT.3.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "CT.4",
+       "situation_es": "Delantero cabecea el balón y posteriormente el portero le contacta con sus manos / puños / brazos de forma temeraria / uso excesivo de fuerza.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.4.1.mp4",
+         "id": "CT.4.1",
+         "caption_es": "CT.4: Delantero cabecea el balón y posteriormente el portero le contacta con sus manos / puños / brazos de forma temeraria / uso excesivo de fuerza.",
+         "file": "videos/rfef/CT.4.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CT.5",
+       "situation_es": "Delantero cabecea el balón y posteriormente el portero le contacta con sus manos / puños / brazos de forma no temeraria.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CT.5.1.mp4",
+         "id": "CT.5.1",
+         "caption_es": "CT.5: Delantero cabecea el balón y posteriormente el portero le contacta con sus manos / puños / brazos de forma no temeraria.",
+         "file": "videos/rfef/CT.5.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "Los contactos tardíos presentan una especial complejidad interpretativa porque no todo contacto del defensor producido después que el delantero juegue el balón constituye automáticamente una infracción. La clave radica en determinar si la acción posterior es temeraria / uso excesivo de fuerza o si impide al atacante continuar disputando el balón / participando en una clara acción de ataque . La valoración de estos elementos resulta determinante para decidir si el contacto debe sancionarse como penalti. Dado el componente interpretativo de estas acciones -especialmente en cuanto a la valoración de la temeridad-, la mejor forma de comprender los criterios aplicados por el Comité es analizar detenidamente los clips que acompañan a esta explicación."
+    },
+    {
+     "code": "CPOST",
+     "name_es": "Contacto del defensor posterior a que este juegue el balón",
+     "items": [
+      {
+       "id": "CPOST.1",
+       "situation_es": "En un balón dividido o en posesión del delantero, defensor juega el balón y, tras ello, contacta con el delantero de forma temeraria o con uso de fuerza excesiva.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CPOST.1.1.mp4",
+         "id": "CPOST.1.1",
+         "caption_es": "CPOST.1: En un balón dividido o en posesión del delantero, defensor juega el balón y, tras ello, contacta con el delantero de forma temeraria o con uso de fuerza excesiva.",
+         "file": "videos/rfef/CPOST.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CPOST.2",
+       "situation_es": "En un balón dividido o en posesión del delantero, defensor juega el balón y, tras ello, contacta / derriba al delantero de forma no temeraria (ej: con la pierna de arrastre) pero su acción impide al delantero seguir disputando el balón / participar en una clara acción de ataque.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CPOST.2.1.mp4",
+         "id": "CPOST.2.1",
+         "caption_es": "CPOST.2: En un balón dividido o en posesión del delantero, defensor juega el balón y, tras ello, contacta / derriba al delantero de forma no temeraria (ej: con la pierna de arrastre) pero su acción impide al delantero seguir disputando el balón / participar en una clara acción de ataque.",
+         "file": "videos/rfef/CPOST.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CPOST.3",
+       "situation_es": "Un jugador en posesión del balón (con pleno control del balón), tras jugar / despejar / chutar dar un pase impacta en un contrario, sin hacer ningún movimiento adicional en su mecánica natural de golpeo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CPOST.3.1.mp4",
+         "id": "CPOST.3.1",
+         "caption_es": "CPOST.3: Un jugador en posesión del balón (con pleno control del balón), tras jugar / despejar / chutar dar un pase impacta en un contrario, sin hacer ningún movimiento adicional en su mecánica natural de golpeo.",
+         "file": "videos/rfef/CPOST.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "CPOST.4",
+       "situation_es": "Defensor juega el balón y, tras ello, contacta / derriba al delantero de forma no temeraria y su acción no le impide seguir disputando el balón / participar en una clara acción de ataque.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CPOST.4.2.mp4",
+         "id": "CPOST.4.2",
+         "caption_es": "Defensor juega el balón y, tras ello, contacta / derriba al delantero de forma no temeraria y su acción no le impide seguir disputando el balón / participar en una clara acción de ataque",
+         "file": "videos/rfef/CPOST.4.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "CPOST.5",
+       "situation_es": "Portero despeja el balón y, tras ello o de forma simultánea, golpea la cabeza del delantero de forma temeraria o con uso de fuerza excesiva.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CPOST.5.1.mp4",
+         "id": "CPOST.5.1",
+         "caption_es": "CPOST.5: Portero despeja el balón y, tras ello o de forma simultánea, golpea la cabeza del delantero de forma temeraria o con uso de fuerza excesiva.",
+         "file": "videos/rfef/CPOST.5.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "CPOST.6",
+       "situation_es": "Portero despeja el balón y, tras ello o de forma simultánea, golpea la cabeza del delantero de forma no temeraria.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CPOST.6.1.mp4",
+         "id": "CPOST.6.1",
+         "caption_es": "CPOST.6: Portero despeja el balón y, tras ello o de forma simultánea, golpea la cabeza del delantero de forma no temeraria.",
+         "file": "videos/rfef/CPOST.6.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "Las acciones en las que un defensor toca o juega previamente el balón presentan una especial complejidad interpretativa. Al igual que ocurre con los contactos tardíos, para que la acción sea sancionable el contacto posterior debe ser temerario, realizado con uso de fuerza excesiva o impedir de forma evidente que el atacante continúe disputando el balón / participando en una clara acción de ataque . El hecho de tocar o jugar el balón reduce significativamente las posibilidades de que exista infracción, pero no la excluye por sí mismo. Determinar cuándo el contacto posterior supera ese umbral exige una valoración muy precisa por parte del árbitro."
+    },
+    {
+     "code": "FORT",
+     "name_es": "Pisotones o contactos fortuitos",
+     "items": [
+      {
+       "id": "FORT.1",
+       "situation_es": "Defensor pisa de forma fortuita a un delantero sin existir disputa por el balón / sin que el balón esté en la zona.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/FORT.1.1.mp4",
+         "id": "FORT.1.1",
+         "caption_es": "FORT.1: Defensor pisa de forma fortuita a un delantero sin existir disputa por el balón / sin que el balón esté en la zona.",
+         "file": "videos/rfef/FORT.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "FORT.2",
+       "situation_es": "Defensor pisa de forma fortuita a un delantero (ej: el defensor va corriendo mirando al balón que viene por el aire) sin que la acción tenga un impacto táctico relevante.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/FORT.2.1.mp4",
+         "id": "FORT.2.1",
+         "caption_es": "FORT.2: Defensor pisa de forma fortuita a un delantero (ej: el defensor va corriendo mirando al balón que viene por el aire) sin que la acción tenga un impacto táctico relevante.",
+         "file": "videos/rfef/FORT.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "FORT.3",
+       "situation_es": "Defensor pisa de forma fortuita a un delantero (ej: el defensor va corriendo mirando al balón que viene por el aire) pero la acción, además de tener una relación clara de causa - efecto, tiene un impacto táctico relevante.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "FORT.4",
+       "situation_es": "Defensor va corriendo detrás de un delantero y le hace caer invadiendo el espacio natural y necesario para su carrera, existiendo una relación clara de causa - efecto.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "Los pisotones fortuitos presentan una especial complejidad interpretativa porque la existencia del contacto, por sí sola, no determina necesariamente una infracción. Para su valoración, resulta fundamental que el balón se encuentre en una zona real de disputa y que la acción tenga un impacto táctico relevante sobre el desarrollo de la jugada. Asimismo, el árbitro debe determinar si existe una relación clara de causa-efecto entre el pisotón y la caída o pérdida de equilibrio del atacante. La valoración conjunta de todos estos elementos es la que permitirá decidir si, pese a su carácter fortuito, la acción debe ser sancionada como penalti."
+    },
+    {
+     "code": "PD",
+     "name_es": "Disputas portero - delantero",
+     "items": [
+      {
+       "id": "PD.1",
+       "situation_es": "Delantero regatea al portero, el portero invade su espacio, no toca el balón (o lo toca muy ligeramente, casi sin cambiar la trayectoria del balón) y derriba al delantero (con su cuerpo, con sus manos,…).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PD.1.1.mp4",
+         "id": "PD.1.1",
+         "caption_es": "PD.1: Delantero regatea al portero, el portero invade su espacio, no toca el balón (o lo toca muy ligeramente, casi sin cambiar la trayectoria del balón) y derriba al delantero (con su cuerpo, con sus manos,…).",
+         "file": "videos/rfef/PD.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PD.1.2.mp4",
+         "id": "PD.1.2",
+         "caption_es": "PD.1: Delantero regatea al portero, el portero invade su espacio, no toca el balón (o lo toca muy ligeramente, casi sin cambiar la trayectoria del balón) y derriba al delantero (con su cuerpo, con sus manos,…).",
+         "file": "videos/rfef/PD.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/PD.1.3.mp4",
+         "id": "PD.1.3",
+         "caption_es": "PD.1: Delantero regatea al portero, el portero invade su espacio, no toca el balón (o lo toca muy ligeramente, casi sin cambiar la trayectoria del balón) y derriba al delantero (con su cuerpo, con sus manos,…).",
+         "file": "videos/rfef/PD.1.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "PD.2",
+       "situation_es": "Delantero regatea al portero, portero juega el balón con su/s mano/s y, por la inercia, derriba de forma marginal al delantero (con su cuerpo, con sus manos,…).",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "PD.3",
+       "situation_es": "Delantero regatea al portero, portero juega el balón (con su/s mano/s, cuerpo, pierna/s, pie/s,…) pero derriba de forma temeraria al delantero.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "PD.4",
+       "situation_es": "Delantero regatea al portero, este juega el balón pero, seguidamente, derriba al delantero con un movimiento adicional (con el brazo, con la pierna,…), impidiéndole continuar disputando el balón / participar en una clara acción de ataque.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "PD.5",
+       "situation_es": "Delantero regatea al portero, el portero invade su espacio, derriba claramente al delantero (con su cuerpo, con sus manos,…) y posteriormente juega el balón.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "PD.6",
+       "situation_es": "Delantero acude a la disputa del balón / va a regatear al portero y, cierta distancia antes de llegar, arrastra claramente la pierna / lanza claramente la pierna para forzar el contacto (el jugador es claramente quien inicia el contacto con el portero) o, sin haber contacto alguno, se deja caer.",
+       "decision_es": "Tiro libre indirecto y tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "ifk"
+      }
+     ],
+     "conclusion_es": "Las disputas entre portero y delantero dentro del área presentan una especial complejidad interpretativa porque el árbitro debe determinar qué jugador inicia realmente el contacto y cuál es su impacto sobre la acción. En muchas ocasiones, la dificultad radica en decidir si es el portero quien invade el espacio del atacante y le derriba o si, por el contrario, es el delantero quien busca o provoca el contacto. Dentro de esta casuística también se encuentran las simulaciones, que se producen cuando el atacante inicia claramente el contacto, utiliza un contacto leve para dejarse caer o incluso cae sin que exista contacto. Asimismo, el hecho de que el portero toque o juegue el balón reduce las posibilidades de infracción, pero no las elimina , ya que el toque del balón puede ser un simple roce, puede existir posteriormente un contacto temerario o una acción que impida al delantero seguir disputando el balón / participando en una clara acción de ataque. La valoración de todos estos elementos convierte estas acciones en algunas de las más complejas de interpretar dentro del área penal."
+    },
+    {
+     "code": "ESP",
+     "name_es": "Espacio delantero - defensor",
+     "items": [
+      {
+       "id": "ESP.1",
+       "situation_es": "Delantero chuta a puerta y un defensor se lanza con la plancha por delante para impedir el tiro. El delantero, después de chutar o de forma simultánea, le golpea en la plancha al defensor (plantillazo con contacto).",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "ESP.2",
+       "situation_es": "Delantero arma la pierna para chutar a puerta y en ese momento, antes de patear el balón, un defensor contacta / golpea en la pierna del delantero, impidiéndole / limitándole el disparo a puerta.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "ESP.3",
+       "situation_es": "Delantero arma la pierna para chutar a puerta y un defensor, con posibilidad de jugar el balón, estira su pierna en dirección al balón, pateando el delantero su pierna.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ESP.3.1.mp4",
+         "id": "ESP.3.1",
+         "caption_es": "ESP.3: Delantero arma la pierna para chutar a puerta y un defensor, con posibilidad de jugar el balón, estira su pierna en dirección al balón, pateando el delantero su pierna.",
+         "file": "videos/rfef/ESP.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "ESP.4",
+       "situation_es": "Delantero arma la pierna para chutar a puerta y un defensor, sin posibilidad de jugar el balón y/o moviendo su pierna hacia la posición del rival (y no hacia el balón), impide con su acción el tiro a puerta, pateando finalmente el delantero la pierna del defensor.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      }
+     ],
+     "conclusion_es": "En este tipo de lances pueden coexistir interpretaciones diferentes sobre una misma acción . La clave de la valoración radica en determinar si el defensor tiene posibilidad de jugar el balón y/o si mueve su pierna en dirección al balón o en dirección al rival . Existirá infracción cuando el defensor no tenga posibilidad de jugar el balón y/o estire su pierna hacia la posición del rival (y no hacia el balón). Por el contrario, no existirá infracción cuando el defensor estire su pierna en dirección al balón con posibilidad de jugarlo, siendo golpeado finalmente por el atacante."
+    }
+   ]
+  },
+  {
+   "key": "penaltis-acciones-brazos",
+   "name_es": "Penaltis por acciones con los brazos",
+   "name_cn": "手臂动作点球",
+   "url": "https://www.card.rfef.es/manual/penaltis-acciones-brazos/",
+   "intro_es": "Un penalti por una disputa con los brazos o la parte superior del cuerpo se produce cuando un jugador defensor, dentro de su propia área penal, comete una infracción sobre un adversario mediante una acción realizada con los brazos, las manos o el tronco . La decisión depende de factores como la naturaleza del contacto, su intensidad, la forma en que se produce la disputa y la incidencia que dicha acción tiene sobre el movimiento o la capacidad del adversario para continuar jugando el balón.",
+   "complexity_es": "Las infracciones cometidas con los brazos o la parte superior del cuerpo presentan una especial complejidad interpretativa porque el árbitro debe determinar si la acción tiene una incidencia real sobre el adversario . La clave radica en valorar si la acción restringe, desplaza, desequilibra o impide al atacante continuar su movimiento de forma normal . La intensidad del contacto, la acción de ambos jugadores y el impacto táctico de la jugada son elementos que condicionan esta valoración.",
+   "general_es": "Se concederá un tiro libre directo o penalti si un jugador comete contra un adversario alguna de las siguientes infracciones de manera imprudente, temeraria o empleando fuerza excesiva: cargar, saltar encima o empujar . Las Reglas de Juego distinguen tres niveles de gravedad: Imprudente : el jugador actúa sin la atención o precaución necesarias al disputar el balón. La infracción se sanciona, pero no requiere amonestación. Temeraria : el jugador actúa haciendo caso omiso del peligro o las consecuencias para su adversario. La infracción debe sancionarse con amonestación. Con uso de fuerza excesiva : el jugador excede el uso necesario de fuerza y pone en peligro la integridad física del adversario. La infracción debe sancionarse con expulsión. Asimismo, se concederá un tiro libre directo o penalti si un jugador comete contra un adversario alguna de las siguientes infracciones: sujetar u obstaculizar a un adversario mediante contacto físico.",
+   "groups": [
+    {
+     "code": "AG",
+     "name_es": "Agarrones",
+     "items": [
+      {
+       "id": "AG.1",
+       "situation_es": "Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.1.1.mp4",
+         "id": "AG.1.1",
+         "caption_es": "AG.1: Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado",
+         "file": "videos/rfef/AG.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.1.2.mp4",
+         "id": "AG.1.2",
+         "caption_es": "AG.1: Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado",
+         "file": "videos/rfef/AG.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.1.3.mp4",
+         "id": "AG.1.3",
+         "caption_es": "AG.1: Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado",
+         "file": "videos/rfef/AG.1.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.1.4.mp4",
+         "id": "AG.1.4",
+         "caption_es": "AG.1: Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado",
+         "file": "videos/rfef/AG.1.4.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "AG.2",
+       "situation_es": "Defensor agarra a un delantero, de forma ostensible y/o persistente, con el balón en la zona, dificultando claramente sus movimientos.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.2.1.mp4",
+         "id": "AG.2.1",
+         "caption_es": "AG.2: Defensor agarra a un delantero, de forma ostensible y/o persistente, con el balón en la zona, dificultando claramente sus movimientos.",
+         "file": "videos/rfef/AG.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.2.2.mp4",
+         "id": "AG.2.2",
+         "caption_es": "AG.2: Defensor agarra a un delantero, de forma ostensible y/o persistente, con el balón en la zona, dificultando claramente sus movimientos.",
+         "file": "videos/rfef/AG.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "AG.3",
+       "situation_es": "Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero, derribándole, sin estar el balón en la zona.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.3.1.mp4",
+         "id": "AG.3.1",
+         "caption_es": "AG.3: Defensor agarra, de forma ostensible y/o persistente, con uno o ambos brazos, a un delantero, derribándole, sin estar el balón en la zona.",
+         "file": "videos/rfef/AG.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "AG.4",
+       "situation_es": "Defensor agarra levemente (de la camiseta, del brazo, de la cintura…) a un delantero, sin dificultar claramente sus movimientos / con una exageración clara del delantero / sin relación clara de causa - efecto.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.4.1.mp4",
+         "id": "AG.4.1",
+         "caption_es": "AG.4: Defensor agarra levemente (de la camiseta, del brazo, de la cintura…) a un delantero, sin dificultar claramente sus movimientos / con una exageración clara del delantero / sin relación clara de causa - efecto .",
+         "file": "videos/rfef/AG.4.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.4.2.mp4",
+         "id": "AG.4.2",
+         "caption_es": "AG.4: Defensor agarra levemente (de la camiseta, del brazo, de la cintura…) a un delantero, sin dificultar claramente sus movimientos / con una exageración clara del delantero / sin relación clara de causa - efecto .",
+         "file": "videos/rfef/AG.4.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "AG.5",
+       "situation_es": "Defensor y delantero se agarran mutuamente y caen (o no) al suelo, sin poder determinar con claridad si existe únicamente una infracción del defensor.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/AG.5.1.mp4",
+         "id": "AG.5.1",
+         "caption_es": "AG.5: Defensor y delantero se agarran mutuamente y caen (o no) al suelo, sin poder determinar con claridad si existe únicamente una infracción del defensor.",
+         "file": "videos/rfef/AG.5.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "Los agarrones presentan una especial complejidad interpretativa porque no toda sujeción constituye necesariamente una infracción sancionable. El árbitro debe valorar aspectos como la naturaleza, duración e intensidad del agarrón , así como la relación de causa-efecto entre la acción y la pérdida de movimiento o equilibrio del adversario. Asimismo, resulta fundamental analizar las repercusiones tácticas de la acción , determinando si el agarrón limita de forma efectiva la capacidad del atacante para disputar el balón o continuar la jugada. La valoración conjunta de todos estos elementos está frecuentemente sujeta a interpretación."
+    },
+    {
+     "code": "EMP",
+     "name_es": "Cargas y empujones",
+     "items": [
+      {
+       "id": "EMP.1",
+       "situation_es": "Defensor empuja, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado / que está en el aire con la posición ganada.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EMP.1.1.mp4",
+         "id": "EMP.1.1",
+         "caption_es": "EMP.1: Defensor empuja, con uno o ambos brazos, a un delantero con el balón por delante para rematar / que tiene la posición ganada / que va en carrera hacia portería con el balón controlado / que está en el aire con la posición ganada.",
+         "file": "videos/rfef/EMP.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "EMP.2",
+       "situation_es": "Defensor empuja, con uno o ambos brazos, a un delantero, derribándole, sin estar el balón en la zona.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "EMP.3",
+       "situation_es": "Defensor empuja levemente a un delantero, sin relación clara de causa - efecto.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EMP.3.1.mp4",
+         "id": "EMP.3.1",
+         "caption_es": "EMP.3: Defensor empuja levemente a un delantero, sin relación clara de causa - efecto.",
+         "file": "videos/rfef/EMP.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "Los empujones y las cargas presentan una especial complejidad interpretativa porque no todo contacto entre jugadores constituye necesariamente una infracción. El árbitro debe valorar la naturaleza e intensidad de la acción , así como la existencia de una relación clara de causa-efecto entre el contacto y la pérdida de equilibrio, desplazamiento o caída del adversario. Asimismo, resulta fundamental analizar la relevancia táctica de la acción , determinando si el contacto tiene una incidencia real sobre la capacidad del atacante para disputar el balón o continuar la jugada. La valoración conjunta de todos estos elementos está frecuentemente sujeta a interpretación."
+    },
+    {
+     "code": "IUA",
+     "name_es": "Uso ilegal de brazos",
+     "items": [
+      {
+       "id": "IUA.1",
+       "situation_es": "Defensor golpea con el brazo a un contrario en la disputa del balón / del espacio en la cabeza, nuca, pecho, cara,… de forma temeraria / uso excesivo de fuerza. Puede ser en la disputa de un balón aéreo, un braceo durante una pugna o carrera, etc.",
+       "decision_es": "Penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/IUA.1.1.mp4",
+         "id": "IUA.1.1",
+         "caption_es": "IUA.1: Defensor golpea con el brazo a un contrario en la disputa del balón / del espacio en la cabeza, nuca, pecho, cara,… de forma temeraria / uso excesivo de fuerza. Puede ser en la disputa de un balón aéreo, un braceo durante una pugna o carrera, etc.",
+         "file": "videos/rfef/IUA.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/IUA.1.2.mp4",
+         "id": "IUA.1.2",
+         "caption_es": "IUA.1: Defensor golpea con el brazo a un contrario en la disputa del balón / del espacio en la cabeza, nuca, pecho, cara,… de forma temeraria / uso excesivo de fuerza. Puede ser en la disputa de un balón aéreo, un braceo durante una pugna o carrera, etc.",
+         "file": "videos/rfef/IUA.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/IUA.1.3.mp4",
+         "id": "IUA.1.3",
+         "caption_es": "IUA.1: Defensor golpea con el brazo a un contrario en la disputa del balón / del espacio en la cabeza, nuca, pecho, cara,… de forma temeraria / uso excesivo de fuerza. Puede ser en la disputa de un balón aéreo, un braceo durante una pugna o carrera, etc.",
+         "file": "videos/rfef/IUA.1.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "penalty"
+      },
+      {
+       "id": "IUA.2",
+       "situation_es": "Defensor golpea en la cara a un contrario por la inercia de la carrera o en la búsqueda del espacio de forma fortuita, sin que exista temeridad.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "IUA.3",
+       "situation_es": "Defensor golpea con el brazo a un delantero que invade su espacio sin intención de disputar el balón y buscando que el defensor contacte con él.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/IUA.3.1.mp4",
+         "id": "IUA.3.1",
+         "caption_es": "IUA.3: Defensor golpea con el brazo a un delantero que invade su espacio sin intención de disputar el balón y buscando que el defensor contacte con él.",
+         "file": "videos/rfef/IUA.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "IUA.4",
+       "situation_es": "Defensor impacta levemente con el brazo a un contrario en la disputa del balón / del espacio en la cabeza, nuca, pecho, cara,...",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      },
+      {
+       "id": "IUA.5",
+       "situation_es": "Defensor se apoya levemente con los brazos en un contrario en la disputa de un balón aéreo.",
+       "decision_es": "No penalti",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "no_penalty"
+      }
+     ],
+     "conclusion_es": "En las acciones de uso ilegal de los brazos el árbitro debe valorar, entre otros elementos, si el impacto es temerario o simplemente consecuencia de una disputa normal del juego, si el contacto es fortuito o producto de una acción antirreglamentaria o si es el delantero quien invade el espacio del defensor buscando o provocando el contacto. Asimismo, la intensidad del impacto, la relación de causa-efecto y la repercusión táctica de la acción son factores que condicionan la valoración final."
+    }
+   ]
+  },
+  {
+   "key": "tarjeta-roja-juego-brusco-grave",
+   "name_es": "Tarjeta roja por juego brusco grave",
+   "name_cn": "严重犯规红牌",
+   "url": "https://www.card.rfef.es/manual/tarjeta-roja-juego-brusco-grave/",
+   "intro_es": "Una acción de juego brusco grave se produce cuando un jugador disputa el balón empleando una fuerza excesiva o poniendo en peligro la integridad física de un adversario. Estas acciones suelen caracterizarse por una intensidad elevada, un uso desproporcionado de la fuerza o un modo de entrada que genera un riesgo evidente de lesión para el oponente. De acuerdo con las Reglas de Juego, el juego brusco grave debe sancionarse con expulsión.",
+   "complexity_es": "Las acciones de juego brusco grave presentan una especial complejidad interpretativa porque el árbitro debe determinar si la intensidad y la forma de la acción alcanzan el umbral necesario para considerar que se ha puesto en peligro la integridad física del adversario. Para ello, debe valorar factores como la fuerza empleada, la velocidad de la entrada, el punto de contacto, la zona impactada, la posibilidad de jugar el balón y las consecuencias potenciales de la acción. La necesidad de evaluar conjuntamente todos estos elementos, muchos de ellos sujetos a interpretación y apreciados en décimas de segundo, convierte este tipo de lances en algunos de los más exigentes desde el punto de vista arbitral.",
+   "general_es": "Una acción constituye juego brusco grave cuando un jugador disputa el balón empleando fuerza excesiva o poniendo en peligro la integridad física de un adversario. Para su valoración, el árbitro deberá considerar, entre otros, los siguientes elementos:",
+   "groups": [
+    {
+     "code": "ER",
+     "name_es": "Entradas rasas («low tackles»)",
+     "items": [
+      {
+       "id": "ER.1",
+       "situation_es": "Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja. Lo hace con fuerza excesiva / brutalidad / intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión / torsión de articulación,…",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.1.1.mp4",
+         "id": "ER.1.1",
+         "caption_es": "ER.1: Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja. Lo hace con fuerza excesiva / brutalidad / intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión / torsión de articulación,…",
+         "file": "videos/rfef/ER.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.1.2.mp4",
+         "id": "ER.1.2",
+         "caption_es": "ER.1: Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja. Lo hace con fuerza excesiva / brutalidad / intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión / torsión de articulación,…",
+         "file": "videos/rfef/ER.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.1.3.mp4",
+         "id": "ER.1.3",
+         "caption_es": "ER.1: Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja. Lo hace con fuerza excesiva / brutalidad / intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión / torsión de articulación,…",
+         "file": "videos/rfef/ER.1.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "ER.2",
+       "situation_es": "Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja pero lo hace de manera temeraria, con intensidad media / recogiendo la pierna / impacto parcial…",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.2.1.mp4",
+         "id": "ER.2.1",
+         "caption_es": "ER.2: Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja pero lo hace de manera temeraria, con intensidad media / recogiendo la pierna / impacto parcial…",
+         "file": "videos/rfef/ER.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.2.2.mp4",
+         "id": "ER.2.2",
+         "caption_es": "ER.2: Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja pero lo hace de manera temeraria, con intensidad media / recogiendo la pierna / impacto parcial…",
+         "file": "videos/rfef/ER.2.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.2.3.mp4",
+         "id": "ER.2.3",
+         "caption_es": "ER.2: Jugador disputa un balón con un contrario e impacta con sus tacos en una zona baja pero lo hace de manera temeraria, con intensidad media / recogiendo la pierna / impacto parcial…",
+         "file": "videos/rfef/ER.2.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "ER.3",
+       "situation_es": "Jugador disputa un balón con un contrario a gran velocidad / con elevada intensidad, impactando en el contrario con su pierna de arrastre con fuerza excesiva, generando una torsión de la articulación.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "ER.4",
+       "situation_es": "Jugador disputa un balón con un portero, estira la pierna e impacta con sus tacos en la cabeza, cara, pecho, estómago, muslo,… Lo hace con gran intensidad, con la pierna estirada y con los tacos, con fuerza excesiva / brutalidad.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "ER.5",
+       "situation_es": "Jugador, con la intención de frenar una contra, da una patada a un contrario por detrás con uso de fuerza excesiva / brutalidad.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.5.1.mp4",
+         "id": "ER.5.1",
+         "caption_es": "Jugador da una patada a un contrario por detrás con uso de fuerza excesiva / brutalidad",
+         "file": "videos/rfef/ER.5.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "ER.6",
+       "situation_es": "Jugador, con la intención de frenar una contra, zancadillea a un contrario por detrás de forma temeraria.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/ER.6.1.mp4",
+         "id": "ER.6.1",
+         "caption_es": "ER.6: Jugador, con la intención de frenar una contra, zancadillea a un contrario por detrás de forma temeraria.",
+         "file": "videos/rfef/ER.6.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      }
+     ]
+    },
+    {
+     "code": "EA",
+     "name_es": "Entradas en altura («high tackles»)",
+     "items": [
+      {
+       "id": "EA.1",
+       "situation_es": "Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…). Lo hace con fuerza excesiva / brutalidad /intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión,…",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EA.1.1.mp4",
+         "id": "EA.1.1",
+         "caption_es": "EA.1: Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…). Lo hace con fuerza excesiva / brutalidad /intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión,…",
+         "file": "videos/rfef/EA.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EA.1.2.mp4",
+         "id": "EA.1.2",
+         "caption_es": "EA.1: Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…). Lo hace con fuerza excesiva / brutalidad /intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión,…",
+         "file": "videos/rfef/EA.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EA.1.3.mp4",
+         "id": "EA.1.3",
+         "caption_es": "EA.1: Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…). Lo hace con fuerza excesiva / brutalidad /intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión,…",
+         "file": "videos/rfef/EA.1.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EA.1.4.mp4",
+         "id": "EA.1.4",
+         "caption_es": "EA.1: Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…). Lo hace con fuerza excesiva / brutalidad /intensidad / velocidad / con la pierna estirada / impacto pleno / riesgo de lesión,…",
+         "file": "videos/rfef/EA.1.4.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "EA.2",
+       "situation_es": "Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…) pero lo hace de forma temeraria, con intensidad media / recogiendo la pierna / de arriba hacia abajo / impacto parcial…",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EA.2.1.mp4",
+         "id": "EA.2.1",
+         "caption_es": "EA.2: Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…) pero lo hace de forma temeraria, con intensidad media / recogiendo la pierna / de arriba hacia abajo / impacto parcial…",
+         "file": "videos/rfef/EA.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/EA.2.2.mp4",
+         "id": "EA.2.2",
+         "caption_es": "EA.2: Jugador disputa un balón con un contrario e impacta con sus tacos en zona peligrosa (cara, pecho, estómago, muslo, tibia,…) pero lo hace de forma temeraria, con intensidad media / recogiendo la pierna / de arriba hacia abajo / impacto parcial…",
+         "file": "videos/rfef/EA.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "EA.3",
+       "situation_es": "Jugador va de frente a la disputa de un balón a media altura e impacta con su bota (no entra con los tacos) en zona peligrosa de un contrario (cara, pecho, estómago, muslo,…), de forma temeraria, con intensidad media.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "yellow_card"
+      }
+     ],
+     "conclusion_es": "Las acciones que implican un impacto en una zona peligrosa del cuerpo, tanto si son rasas como en altura, presentan una especial complejidad interpretativa porque el árbitro debe determinar si la acción alcanza el umbral de juego brusco grave o si, por el contrario, debe considerarse únicamente temeraria. Para ello, debe valorar múltiples factores, entre los que se encuentran la intensidad y velocidad de la acción, la zona de impacto , el modo de contacto (con tacos, bota o pierna de arrastre), el riesgo generado para la integridad física del adversario, si el impacto es pleno o parcial , la posición de la pierna en el momento del contacto, así como la continuidad de la acción tras el impacto. La valoración conjunta de todos estos elementos, que pueden presentarse en diferentes combinaciones y grados de intensidad , convierte este tipo de lances en acciones de elevada carga interpretativa . Determinar si una entrada debe sancionarse con tarjeta amarilla o tarjeta roja exige un análisis preciso del riesgo real generado sobre el adversario y de la naturaleza global de la acción."
+    },
+    {
+     "code": "CP",
+     "name_es": "Contacto posterior a jugar el balón.",
+     "items": [
+      {
+       "id": "CP.1",
+       "situation_es": "En un balón dividido, un jugador tras jugar / tocar / despejar el balón, impacta de lleno con sus tacos en una zona peligrosa de un contrario / hace un movimiento adicional / mantiene la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa o minimizar el impacto de la acción.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CP.1.1.mp4",
+         "id": "CP.1.1",
+         "caption_es": "CP.1: En un balón dividido, un jugador tras jugar / tocar / despejar el balón, impacta de lleno con sus tacos en una zona peligrosa de un contrario / hace un movimiento adicional / mantiene la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa o minimizar el impacto de la acción.",
+         "file": "videos/rfef/CP.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CP.1.2.mp4",
+         "id": "CP.1.2",
+         "caption_es": "CP.1: En un balón dividido, un jugador tras jugar / tocar / despejar el balón, impacta de lleno con sus tacos en una zona peligrosa de un contrario / hace un movimiento adicional / mantiene la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa o minimizar el impacto de la acción.",
+         "file": "videos/rfef/CP.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CP.1.3.mp4",
+         "id": "CP.1.3",
+         "caption_es": "CP.1: En un balón dividido, un jugador tras jugar / tocar / despejar el balón, impacta de lleno con sus tacos en una zona peligrosa de un contrario / hace un movimiento adicional / mantiene la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa o minimizar el impacto de la acción.",
+         "file": "videos/rfef/CP.1.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "CP.2",
+       "situation_es": "En un balón dividido, un jugador tras jugar / tocar / despejar el balón, impacta de forma temeraria en un contrario.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "CP.3",
+       "situation_es": "Un jugador en posesión del balón (con pleno control del balón), tras jugar / despejar / chutar dar un pase impacta con sus tacos en una zona peligrosa de un contrario, sin hacer ningún movimiento adicional en su mecánica natural de golpeo.",
+       "decision_es": "No infracción",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CP.3.1.mp4",
+         "id": "CP.3.1",
+         "caption_es": "CP.3: Un jugador en posesión del balón (con pleno control del balón), tras jugar / despejar / chutar dar un pase impacta con sus tacos en una zona peligrosa de un contrario, sin hacer ningún movimiento adicional en su mecánica natural de golpeo.",
+         "file": "videos/rfef/CP.3.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CP.3.2.mp4",
+         "id": "CP.3.2",
+         "caption_es": "CP.3: Un jugador en posesión del balón (con pleno control del balón), tras jugar / despejar / chutar dar un pase impacta con sus tacos en una zona peligrosa de un contrario, sin hacer ningún movimiento adicional en su mecánica natural de golpeo.",
+         "file": "videos/rfef/CP.3.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CP.3.3.mp4",
+         "id": "CP.3.3",
+         "caption_es": "CP.3: Un jugador en posesión del balón (con pleno control del balón), tras jugar / despejar / chutar dar un pase impacta con sus tacos en una zona peligrosa de un contrario, sin hacer ningún movimiento adicional en su mecánica natural de golpeo.",
+         "file": "videos/rfef/CP.3.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_infringement"
+      }
+     ],
+     "conclusion_es": "Las acciones con impacto posterior a jugar el balón presentan una especial complejidad interpretativa porque es fundamental diferenciar el contexto en el que se produce dicho contacto. En balones divididos, los jugadores deben tener precaución a la hora de disputar el balón. En estos casos, el árbitro debe valorar si el impacto posterior se trata de un contacto normal de fútbol o si, por el contrario, constituye una acción temeraria o realizada con uso excesivo de fuerza. Sin embargo, cuando el jugador se encuentra en posesión del balón y ejecuta una acción normal de juego (pase, despeje, chut,…), la valoración es diferente, ya que el contacto posterior se produce porque es el adversario quien invade su espacio de acción. Distinguir entre ambos escenarios y valorar correctamente la naturaleza, intensidad y responsabilidad del contacto exige un análisis muy preciso por parte del árbitro."
+    },
+    {
+     "code": "SF",
+     "name_es": "Pisotón en el pie («step on foot»)",
+     "items": [
+      {
+       "id": "SF.1",
+       "situation_es": "Jugador pisa a un contrario en la disputa del balón de forma temeraria / de forma plena en el empeine de la bota.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SF.1.1.mp4",
+         "id": "SF.1.1",
+         "caption_es": "SF.1: Jugador pisa a un contrario en la disputa del balón de forma temeraria / de forma plena en el empeine de la bota.",
+         "file": "videos/rfef/SF.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "SF.2",
+       "situation_es": "Jugador pisa a un contrario en la disputa del balón de forma imprudente / parcial / lateral,…",
+       "decision_es": "Sin tarjeta",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SF.2.1.mp4",
+         "id": "SF.2.1",
+         "caption_es": "SF.2: Jugador pisa a un contrario en la disputa del balón de forma imprudente / parcial / lateral,…",
+         "file": "videos/rfef/SF.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_card"
+      }
+     ],
+     "conclusion_es": "Los pisotones sobre el pie suelen ser acciones dolorosas, pero no todos alcanzan el umbral necesario para ser sancionados con tarjeta amarilla . Para ello, el árbitro debe valorar la naturaleza y el punto exacto del impacto , determinando si la acción puede considerarse temeraria o simplemente imprudente. La rapidez con la que se producen estos contactos convierte su valoración en acciones difíciles de apreciar y evaluar por parte del árbitro."
+    },
+    {
+     "code": "SL",
+     "name_es": "Pisotón en la pierna («step on leg»)",
+     "items": [
+      {
+       "id": "SL.1",
+       "situation_es": "En un balón dividido, un jugador pisa la pierna de un contrario de forma temeraria / con la pierna recogida / retirando la pierna / de forma parcial.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.1.1.mp4",
+         "id": "SL.1.1",
+         "caption_es": "SL.1: En un balón dividido, un jugador pisa la pierna de un contrario de forma temeraria / con la pierna recogida / retirando la pierna / de forma parcial.",
+         "file": "videos/rfef/SL.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.1.2.mp4",
+         "id": "SL.1.2",
+         "caption_es": "SL.1: En un balón dividido, un jugador pisa la pierna de un contrario de forma temeraria / con la pierna recogida / retirando la pierna / de forma parcial.",
+         "file": "videos/rfef/SL.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.1.3.mp4",
+         "id": "SL.1.3",
+         "caption_es": "SL.1: En un balón dividido, un jugador pisa la pierna de un contrario de forma temeraria / con la pierna recogida / retirando la pierna / de forma parcial.",
+         "file": "videos/rfef/SL.1.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.1.4.mp4",
+         "id": "SL.1.4",
+         "caption_es": "SL.1: En un balón dividido, un jugador pisa la pierna de un contrario de forma temeraria / con la pierna recogida / retirando la pierna / de forma parcial.",
+         "file": "videos/rfef/SL.1.4.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "SL.2",
+       "situation_es": "En un balón dividido, un jugador pisa la pierna de un contrario, impactando de lleno con sus tacos / haciendo un movimiento adicional / manteniendo la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa, etc.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.2.1.mp4",
+         "id": "SL.2.1",
+         "caption_es": "SL.2: En un balón dividido, un jugador pisa la pierna de un contrario que se deslizaba por el suelo, impactando de lleno con sus tacos / haciendo un movimiento adicional / manteniendo la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa, etc.",
+         "file": "videos/rfef/SL.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.2.2.mp4",
+         "id": "SL.2.2",
+         "caption_es": "SL.2: En un balón dividido, un jugador pisa la pierna de un contrario que se deslizaba por el suelo, impactando de lleno con sus tacos / haciendo un movimiento adicional / manteniendo la pierna con uso excesivo de fuerza / brutalidad. El jugador no hace todo lo posible por retirar la pierna, ralentizar su disputa, etc.",
+         "file": "videos/rfef/SL.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "SL.3",
+       "situation_es": "Jugador estira la pierna para disputar un balón y, al ir a posar la pierna, lo hace con sus tacos encima de una zona peligrosa, con fuerza excesiva / brutalidad / gran intensidad, impactando de lleno, sin retirar la pierna y con elevado riesgo de lesión.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.3.1.mp4",
+         "id": "SL.3.1",
+         "caption_es": "SL.3: Jugador estira la pierna para disputar un balón y, al ir a posar la pierna, lo hace con sus tacos encima de una zona peligrosa, con fuerza excesiva / brutalidad / gran intensidad, impactando de lleno, sin retirar la pierna y con elevado riesgo de lesión.",
+         "file": "videos/rfef/SL.3.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.3.2.mp4",
+         "id": "SL.3.2",
+         "caption_es": "SL.3: Jugador estira la pierna para disputar un balón y, al ir a posar la pierna, lo hace con sus tacos encima de una zona peligrosa, con fuerza excesiva / brutalidad / gran intensidad, impactando de lleno, sin retirar la pierna y con elevado riesgo de lesión.",
+         "file": "videos/rfef/SL.3.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.3.3.mp4",
+         "id": "SL.3.3",
+         "caption_es": "SL.3: Jugador estira la pierna para disputar un balón y, al ir a posar la pierna, lo hace con sus tacos encima de una zona peligrosa, con fuerza excesiva / brutalidad / gran intensidad, impactando de lleno, sin retirar la pierna y con elevado riesgo de lesión.",
+         "file": "videos/rfef/SL.3.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "SL.4",
+       "situation_es": "Jugador conduce el balón / hace un regate / cae al suelo tras un salto y, al ir a posar la pierna, lo hace con sus tacos encima de una zona peligrosa. No se trata de una disputa ni de un balón dividido. El jugador no puede posar el pie en otro lugar y el impacto se produce por la inercia de la caída de la pierna. No hay movimiento adicional.",
+       "decision_es": "Sin tarjeta",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.4.1.mp4",
+         "id": "SL.4.1",
+         "caption_es": "SL.4: Jugador conduce el balón / hace un regate / cae al suelo tras un salto y, al ir a posar la pierna, lo hace con sus tacos encima de una zona peligrosa. No se trata de una disputa ni de un balón dividido. El jugador no puede posar el pie en otro lugar y el impacto se produce por la inercia de la caída de la pierna. No hay movimiento adicional.",
+         "file": "videos/rfef/SL.4.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_card"
+      },
+      {
+       "id": "SL.5",
+       "situation_es": "Jugador detrás de otro estira la pierna y, al hacerlo, impacta con sus tacos en una zona peligrosa (gemelo, sóleo,…), con fuerza excesiva / brutalidad / intensidad, impacto pleno y riesgo de lesión.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "SL.6",
+       "situation_es": "Jugador detrás de otro estira la pierna y, al hacerlo, impacta con sus tacos en una zona peligrosa (gemelo, sóleo,…), de forma temeraria pero sin elevada intensidad.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/SL.6.1.mp4",
+         "id": "SL.6.1",
+         "caption_es": "SL.6: Jugador detrás de otro estira la pierna y, al hacerlo, impacta con sus tacos en una zona peligrosa (gemelo, sóleo,…), de forma temeraria pero sin elevada intensidad.",
+         "file": "videos/rfef/SL.6.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      }
+     ],
+     "conclusion_es": "Los pisotones sobre la pierna de un adversario presentan una especial complejidad interpretativa porque el árbitro debe valorar múltiples factores para determinar si la acción es temeraria o si, por el contrario, constituye juego brusco grave. Entre ellos se encuentran la velocidad de la acción, la intensidad y el punto de impacto , si el contacto es pleno o parcial , si el jugador mantiene o retira la pierna tras el impacto y la posición de esta en el momento del contacto. La valoración conjunta de todos estos elementos resulta determinante para evaluar el riesgo generado sobre la integridad física del adversario y adoptar la sanción disciplinaria adecuada."
+    },
+    {
+     "code": "CH",
+     "name_es": "Chilenas («bicycle kicks»)",
+     "items": [
+      {
+       "id": "CH.1",
+       "situation_es": "Jugador hace una «chilena» e impacta con su bota en la cabeza, cara, pecho,… de un contrario de forma temeraria. No hay más consecuencias.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "CH.2",
+       "situation_es": "Jugador hace una «chilena» e impacta con su bota en la cabeza / cara de un contrario con gran intensidad / uso excesivo de fuerza / brutalidad y evidente riesgo de lesión, pudiendo generar una visible hemorragia, conmoción cerebral, etc.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CH.2.1.mp4",
+         "id": "CH.2.1",
+         "caption_es": "CH.2: Jugador hace una “chilena” e impacta con su bota en la cabeza / cara de un contrario con gran intensidad / uso excesivo de fuerza / brutalidad y evidente riesgo de lesión, pudiendo generar una visible hemorragia, conmoción cerebral, etc.",
+         "file": "videos/rfef/CH.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CH.2.2.mp4",
+         "id": "CH.2.2",
+         "caption_es": "CH.2: Jugador hace una “chilena” e impacta con su bota en la cabeza / cara de un contrario con gran intensidad / uso excesivo de fuerza / brutalidad y evidente riesgo de lesión, pudiendo generar una visible hemorragia, conmoción cerebral, etc.",
+         "file": "videos/rfef/CH.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      }
+     ],
+     "conclusion_es": "Las chilenas constituyen un recurso técnico espectacular y generalmente aceptado en el fútbol , siempre que su ejecución no ponga en riesgo la integridad física de un adversario. Cuando existe impacto, este tipo de acciones suelen ser valoradas, por norma general, como temerarias . Sin embargo, en aquellos casos en los que el contacto se produce con una intensidad elevada, uso excesivo de fuerza o una evidente despreocupación por la seguridad del contrario, la acción puede alcanzar el umbral del juego brusco grave . La potencial peligrosidad de este recurso técnico, genera que el desconocimiento de la cercanía del rival no exima de la responsabilidad que tiene el jugador que lo ejecuta. La complejidad interpretativa de estos lances radica en valorar el nivel real de riesgo generado sobre el adversario, teniendo en cuenta factores como la intensidad del impacto, la zona de contacto y las consecuencias potenciales o efectivas de la acción. En aquellos casos en los que la integridad física del oponente se ve claramente comprometida, la expulsión constituye la decisión disciplinaria esperada."
+    },
+    {
+     "code": "TI",
+     "name_es": "Entradas en tijera («scissor tackles»)",
+     "items": [
+      {
+       "id": "TI.1",
+       "situation_es": "Jugador hace una entrada por detrás en tijera / con ambos pies. El jugador, más allá de tocar o no el balón, la ejecuta con fuerza excesiva / brutalidad / gran intensidad, atrapando las piernas de su adversario, con elevado riesgo de lesión / generando una torsión en la articulación.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/TI.1.1.mp4",
+         "id": "TI.1.1",
+         "caption_es": "TI.1: Jugador hace una entrada por detrás en tijera / con ambos pies. El jugador, más allá de tocar o no el balón, la ejecuta con fuerza excesiva / brutalidad / gran intensidad, atrapando las piernas de su adversario, con elevado riesgo de lesión / generando una torsión en la articulación.",
+         "file": "videos/rfef/TI.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "TI.2",
+       "situation_es": "Jugador hace una entrada por detrás en tijera / con ambos pies de forma temeraria. La entrada tiene una intensidad media-baja / la/s pierna/s de su adversario no se quede/n atrapada/s (escaso riesgo de lesión).",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/TI.2.1.mp4",
+         "id": "TI.2.1",
+         "caption_es": "TI.2: Jugador hace una entrada por detrás en tijera / con ambos pies de forma temeraria. La entrada tiene una intensidad media-baja / la/s pierna/s de su adversario no se quede/n atrapada/s (escaso riesgo de lesión).",
+         "file": "videos/rfef/TI.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/TI.2.2.mp4",
+         "id": "TI.2.2",
+         "caption_es": "TI.2: Jugador hace una entrada por detrás en tijera / con ambos pies de forma temeraria. La entrada tiene una intensidad media-baja / la/s pierna/s de su adversario no se quede/n atrapada/s (escaso riesgo de lesión).",
+         "file": "videos/rfef/TI.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      }
+     ],
+     "conclusion_es": "Las entradas en tijera son acciones que entrañan un elevado riesgo para la integridad física de los jugadores debido a la posibilidad de que las piernas queden atrapadas, generando torsiones peligrosas en las articulaciones. La complejidad interpretativa de estos lances radica en determinar si la acción debe considerarse temeraria o realizada con uso excesivo de fuerza , para lo que el árbitro debe valorar factores como la intensidad del contacto, la velocidad de la acción, el grado de atrapamiento de las piernas , la posible torsión en las articulaciones y el riesgo real de lesión generado sobre el adversario. En el caso de las tijeras, el hecho de tocar el balón no suele constituir un elemento que reduzca por sí mismo la gravedad de la acción, ya que la valoración disciplinaria se centra principalmente en el riesgo que la entrada supone para la integridad física del contrario."
+    }
+   ]
+  },
+  {
+   "key": "tarjeta-roja-conducta-violenta",
+   "name_es": "Tarjeta roja por conducta violenta",
+   "name_cn": "暴力行为红牌",
+   "url": "https://www.card.rfef.es/manual/tarjeta-roja-conducta-violenta/",
+   "intro_es": "Una acción de conducta violenta se produce cuando un jugador utiliza o intenta utilizar fuerza excesiva o brutalidad contra un adversario, compañero, miembro del equipo arbitral o cualquier otra persona, sin que exista una disputa por el balón o independientemente de ella. Estas acciones suelen caracterizarse por una agresión física o un comportamiento violento que excede claramente lo permitido en el juego y que pone en riesgo la integridad física de la otra persona. De acuerdo con las Reglas de Juego, la conducta violenta debe sancionarse con expulsión.",
+   "complexity_es": "Las acciones de conducta violenta presentan una especial complejidad interpretativa porque el árbitro debe determinar si la conducta observada constituye una mera desconsideración o si, por el contrario, traspasa el umbral de lo aceptable en el fútbol y debe considerarse una acción realizada con uso excesivo de fuerza o brutalidad . Para ello, resulta necesario valorar factores como la intensidad de la acción, el gesto realizado, la zona de impacto, la fuerza empleada y el riesgo generado para la integridad física del oponente. Asimismo, existen acciones que, aun sin provocar un impacto de gran intensidad, pueden ser consideradas claramente incompatibles con los códigos de conducta y respeto propios del fútbol . La necesidad de diferenciar entre comportamientos antideportivos y acciones que merecen expulsión convierte este tipo de lances en situaciones de elevada carga interpretativa, que exigen del árbitro una valoración precisa de la naturaleza y gravedad de la conducta observada.",
+   "general_es": "Una acción constituye conducta violenta cuando un jugador utiliza o intenta utilizar fuerza excesiva o brutalidad contra un adversario, compañero, miembro del equipo arbitral o cualquier otra persona, sin que exista una disputa por el balón o independientemente de ella. Para su valoración, el árbitro deberá considerar, entre otros, los siguientes elementos:",
+   "groups": [
+    {
+     "code": "CV",
+     "name_es": "Acciones potenciales de conducta violenta",
+     "items": [
+      {
+       "id": "CV.1",
+       "situation_es": "Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.1.mp4",
+         "id": "CV.1.1",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.2.mp4",
+         "id": "CV.1.2",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.3.mp4",
+         "id": "CV.1.3",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.3.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.4.mp4",
+         "id": "CV.1.4",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.4.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.5.mp4",
+         "id": "CV.1.5",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.5.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.6.mp4",
+         "id": "CV.1.6",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.6.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.7.mp4",
+         "id": "CV.1.7",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.7.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.1.8.mp4",
+         "id": "CV.1.8",
+         "caption_es": "CV.1: Jugador propina un codazo, cabezazo, puñetazo, bofetón, agarra del cuello, empujón, patada, coz, mordisco, tirón de pelo,… a un contrario o cualquier otra persona sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.1.8.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "CV.2",
+       "situation_es": "Jugador pisa / da una patada de forma intencionada a un contrario que está en el suelo, sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.2.1.mp4",
+         "id": "CV.2.1",
+         "caption_es": "CV.2: Jugador pisa / da una patada de forma intencionada a un contrario que está en el suelo, sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.2.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.2.2.mp4",
+         "id": "CV.2.2",
+         "caption_es": "CV.2: Jugador pisa / da una patada de forma intencionada a un contrario que está en el suelo, sin estar disputando el balón, empleando fuerza excesiva o brutalidad.",
+         "file": "videos/rfef/CV.2.2.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "CV.3",
+       "situation_es": "Jugador que ve venir a un contrario desde la distancia, posiciona de forma consciente y deliberada el codo, la rodilla, el puño,… para impactar con fuerza excesiva en el mismo.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "CV.4",
+       "situation_es": "Jugador da una patada al balón / lanza el balón con sus manos con fuerza excesiva y con la clara intención de agredir a un contrario, al banquillo o cualquier otra persona.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "CV.5",
+       "situation_es": "Jugador se enfrenta / golpea a un contrario sin estar disputando el balón y sin emplear fuerza excesiva o brutalidad (se encara cabeza con cabeza, le empuja / golpea con la mano o el brazo, suelta la pierna…) y el citado contrario finge haber sido agredido. No hay fuerza excesiva / brutalidad / riesgo de lesión.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/CV.5.1.mp4",
+         "id": "CV.5.1",
+         "caption_es": "CV.5: Jugador se enfrenta / golpea a un contrario sin estar disputando el balón y sin emplear fuerza excesiva o brutalidad (se encara cabeza con cabeza, le empuja / golpea con la mano o el brazo, suelta la pierna…) y el citado contrario finge haber sido agredido. No hay fuerza excesiva / brutalidad / riesgo de lesión.",
+         "file": "videos/rfef/CV.5.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "CV.6",
+       "situation_es": "Jugador lanza la pierna hacia un contrario que está de pie / en el suelo, sin estar disputando el balón y sin emplear fuerza excesiva o brutalidad (el contacto no es en la cabeza).",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "yellow_card"
+      }
+     ],
+     "conclusion_es": "La dificultad a la hora de sancionar conductas violentas afecta tanto a la fase de detección de la acción como a la posterior evaluación de su naturaleza, intensidad y trascendencia disciplinaria. En primer lugar, muchas conductas violentas se producen en contextos de elevada concentración de jugadores , como confrontaciones colectivas, enfrentamientos multitudinarios o situaciones de tensión tras una interrupción del juego. En estos escenarios, la acumulación de jugadores y la existencia de múltiples focos de atención simultáneos dificultan la correcta visualización de todos los comportamientos individuales y pueden impedir que el árbitro disponga de una visión clara y completa de los hechos. Asimismo, no es infrecuente que determinadas conductas violentas tengan su origen en acciones previas de provocación , desafío o enfrentamiento mutuo cuya percepción resulta especialmente compleja. La dificultad para identificar el contexto completo de la acción puede condicionar la valoración posterior de la conducta observada y de la respuesta producida. A ello se añade que muchas de estas acciones se desarrollan fuera del campo visual directo del árbitro o de otros miembros del equipo arbitral, a sus espaldas o en zonas alejadas de la atención principal del juego. En otras ocasiones, los propios jugadores ejecutan estas conductas de forma disimulada, utilizando movimientos sutiles, ocultando parcialmente la acción con su cuerpo o aprovechando la presencia de otros jugadores para dificultar su detección. Desde el punto de vista técnico-disciplinario, también puede resultar complejo diferenciar determinadas conductas antideportivas de auténticas conductas violentas . En numerosas ocasiones, la decisión depende de valorar aspectos como la intensidad del contacto, el uso de fuerza excesiva, la brutalidad de la acción y el riesgo generado para la integridad física del adversario. Estos elementos exigen una evaluación precisa y contextualizada que, en determinadas situaciones, puede presentar un elevado componente interpretativo. Por todo ello, la detección, análisis y calificación de las conductas violentas requiere un proceso de valoración especialmente exigente para el equipo arbitral, condicionado por factores de visibilidad, posicionamiento, contexto, ocultación de la acción y apreciación de la intensidad empleada."
+    }
+   ]
+  },
+  {
+   "key": "dogso",
+   "name_es": "Tarjeta por impedir una ocasión manifiesta de gol (DOGSO)",
+   "name_cn": "DOGSO 破坏明显进球得分机会",
+   "url": "https://www.card.rfef.es/manual/dogso/",
+   "intro_es": "Una acción de impedir una ocasión manifiesta de gol se produce cuando un jugador comete una infracción que evita que un adversario disponga de una oportunidad clara de marcar un gol . Para determinar si existe una ocasión manifiesta de gol, deben valorarse factores como la distancia entre la infracción y la portería, la dirección de la jugada, la probabilidad de controlar o jugar el balón y la posición y posibilidad de intervención de otros defensores y atacantes. Cuando estos elementos indican que el atacante tenía una oportunidad evidente de marcar, la infracción se considerará una ocasión manifiesta de gol.",
+   "complexity_es": "Las acciones de impedir una ocasión manifiesta de gol presentan una especial complejidad interpretativa porque el árbitro debe valorar de forma conjunta varios elementos para determinar si la oportunidad de marcar era realmente evidente. Factores como la distancia a la portería, la dirección de la jugada, la posibilidad de controlar el balón y la ubicación de los defensores pueden admitir diferentes interpretaciones según las circunstancias concretas de la acción. Asimismo, pequeñas variaciones en cualquiera de estos elementos pueden modificar de forma significativa la valoración final. Asimismo, a nivel disciplinario, resulta fundamental determinar si existe una intención real de disputar el balón o si, por el contrario, la acción tiene como único objetivo impedir el avance del adversario.",
+   "general_es": "Una acción constituirá una ocasión manifiesta de gol cuando un jugador cometa una infracción que impida a un adversario disponer de una oportunidad evidente de marcar. Para su valoración, el árbitro deberá considerar, entre otros, los siguientes elementos: La valoración conjunta de estos factores permitirá determinar si la oportunidad de marcar era manifiesta y, por tanto, si la acción debe ser sancionada como una ocasión manifiesta de gol conforme a las Reglas de Juego. Las Reglas de Juego no establecen una zona específica del terreno en la que una infracción deba considerarse automáticamente una ocasión manifiesta de gol. La valoración debe realizarse siempre atendiendo a las circunstancias concretas de la acción y a los criterios de distancia a portería, dirección de la jugada, posibilidad de controlar el balón y posición de los defensores. Por ello, una acción puede ser DOGSO relativamente lejos de la portería si el atacante tiene control y ningún defensor puede intervenir, mientras que otra acción más cerca del área puede no serlo si existen defensores con opciones reales de recuperación. En cuanto a la sanción disciplinaria, un jugador deberá ser expulsado cuando impida una ocasión manifiesta de gol mediante una infracción sancionable con tiro libre o penalti. No obstante, si la infracción se produce dentro del área penal y el defensor realiza una acción con intención de disputar el balón , la sanción disciplinaria será de amonestación . Esta excepción no se aplicará en casos de sujetar, empujar, tirar, mano deliberada o cuando no exista una posibilidad real de disputar el balón , situaciones en las que deberá mantenerse la expulsión . La distancia entre la infracción y la portería. La probabilidad de mantener o recuperar el balón. La posición y número de defensores y atacantes .",
+   "groups": [
+    {
+     "code": "DOG",
+     "name_es": "CRITERIOS ESPECÍFICOS",
+     "items": [
+      {
+       "id": "DOG.1",
+       "situation_es": "Jugador comete una clara infracción sin intención de disputar el balón o una mano deliberada dentro del área o con intención de disputar el balón, pero fuera del área, incluyendo todas las consideraciones para DOGSO: distancia a portería, dirección del juego, probabilidad de mantener o recuperar el balón, posición y número de defensores y atacantes.",
+       "decision_es": "Tarjeta roja",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/DOG.1.1.mp4",
+         "id": "DOG.1.1",
+         "caption_es": "DOG.1: Jugador comete una clara infracción sin intención de disputar el balón o una mano deliberada dentro del área o con intención de disputar el balón, pero fuera del área, incluyendo todas las consideraciones para DOGSO: distancia a portería, dirección del juego, probabilidad de mantener o recuperar el balón, posición y número de defensores y atacantes.",
+         "file": "videos/rfef/DOG.1.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/DOG.1.2.mp4",
+         "id": "DOG.1.2",
+         "caption_es": "DOG.1: Jugador comete una clara infracción sin intención de disputar el balón o una mano deliberada dentro del área o con intención de disputar el balón, pero fuera del área, incluyendo todas las consideraciones para DOGSO: distancia a portería, dirección del juego, probabilidad de mantener o recuperar el balón, posición y número de defensores y atacantes.",
+         "file": "videos/rfef/DOG.1.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/DOG.1.3.mp4",
+         "id": "DOG.1.3",
+         "caption_es": "DOG.1: Jugador comete una clara infracción sin intención de disputar el balón o una mano deliberada dentro del área o con intención de disputar el balón, pero fuera del área, incluyendo todas las consideraciones para DOGSO: distancia a portería, dirección del juego, probabilidad de mantener o recuperar el balón, posición y número de defensores y atacantes.",
+         "file": "videos/rfef/DOG.1.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "red_card"
+      },
+      {
+       "id": "DOG.2",
+       "situation_es": "Jugador comete una clara infracción con intención de disputar el balón dentro del área o una mano punible pero no deliberada, incluyendo todas las consideraciones para DOGSO: distancia a portería, dirección del juego, probabilidad de mantener o recuperar el balón, posición y número de defensores y atacantes.",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/DOG.2.1.mp4",
+         "id": "DOG.2.1",
+         "caption_es": "DOG.2: Jugador comete una clara infracción con intención de disputar el balón dentro del área o una mano punible pero no deliberada, incluyendo todas las consideraciones para DOGSO: distancia a portería, dirección del juego, probabilidad de mantener o recuperar el balón, posición y número de defensores y atacantes.",
+         "file": "videos/rfef/DOG.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "DOG.3",
+       "situation_es": "Jugador comete una clara infracción sin intención de disputar el balón o una mano deliberada dentro del área o con intención de disputar el balón, pero fuera del área, sin incluir todas las consideraciones para DOGSO (se trataría de un ataque prometedor).",
+       "decision_es": "Tarjeta amarilla",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/DOG.3.1.mp4",
+         "id": "DOG.3.1",
+         "caption_es": "DOG.3: Jugador comete una clara infracción sin intención de disputar el balón o una mano deliberada dentro del área o con intención de disputar el balón, pero fuera del área, sin incluir todas las consideraciones para DOGSO (se trataría de un ataque prometedor).",
+         "file": "videos/rfef/DOG.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "yellow_card"
+      },
+      {
+       "id": "DOG.4",
+       "situation_es": "Jugador comete una clara infracción con intención de disputar el balón dentro del área o una mano punible pero no deliberada, sin incluir todas las consideraciones para DOGSO (se trataría de un ataque prometedor).",
+       "decision_es": "Sin tarjeta",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/DOG.4.1.mp4",
+         "id": "DOG.4.1",
+         "caption_es": "DOG.4: Jugador comete una clara infracción con intención de disputar el balón dentro del área o una mano punible pero no deliberada, sin incluir todas las consideraciones para DOGSO (se trataría de un ataque prometedor).",
+         "file": "videos/rfef/DOG.4.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "no_card"
+      }
+     ],
+     "conclusion_es": "La intención de disputar el balón no debe valorarse únicamente por el tipo de infracción cometida, sino también por la posibilidad real que tiene el defensor de jugar el balón en el momento de la acción . Si el balón se encuentra a una distancia razonable de disputa, por norma general se considerará que existe intención de jugarlo. En estos casos, incluso acciones como agarrones, empujones o cargas podrán encuadrarse dentro de una disputa por el balón y ser sancionadas con amonestación cuando impidan una ocasión manifiesta de gol dentro del área penal. No obstante, el árbitro deberá valorar las circunstancias concretas de cada acción , especialmente cuando la conducta del defensor tenga como objetivo principal impedir el avance del adversario más que disputar el balón."
+    }
+   ]
+  },
+  {
+   "key": "infracciones-fase-ataque-app",
+   "name_es": "Infracciones en la fase de ataque (APP)",
+   "name_cn": "进攻阶段犯规（APP）",
+   "url": "https://www.card.rfef.es/manual/infracciones-fase-ataque-app/",
+   "intro_es": "",
+   "complexity_es": "",
+   "general_es": "",
+   "groups": [
+    {
+     "code": "APP",
+     "name_es": "CRITERIOS ESPECÍFICOS",
+     "items": [
+      {
+       "id": "APP.1",
+       "situation_es": "Mano accidental de delantero inmediata a gol (gol directo / control – disparo / pequeño autopase / rápida conducción directa a gol / remate - salvada - remate rápido).",
+       "decision_es": "Tiro libre directo",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/APP.1.1.mp4",
+         "id": "APP.1.1",
+         "caption_es": "APP.1: Mano accidental de delantero inmediata a gol (gol directo / control – disparo / pequeño autopase / rápida conducción directa a gol / remate - salvada - remate rápido).",
+         "file": "videos/rfef/APP.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "dfk"
+      },
+      {
+       "id": "APP.2",
+       "situation_es": "Mano accidental de delantero no inmediata a gol (el gol lo anota un compañero o un defensor en propia puerta / hay varios pases / conducción larga / varios regates,…).",
+       "decision_es": "Gol",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "goal_valid"
+      },
+      {
+       "id": "APP.3",
+       "situation_es": "Mano punible de delantero (inmediata o no inmediata a gol) en la misma APP.",
+       "decision_es": "Tiro libre directo",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/APP.3.1.mp4",
+         "id": "APP.3.1",
+         "caption_es": "APP.3: Mano punible de delantero (inmediata o no inmediata a gol) en la misma APP.",
+         "file": "videos/rfef/APP.3.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "dfk"
+      },
+      {
+       "id": "APP.4",
+       "situation_es": "Un atacante comete una clara infracción física en la misma APP (pisotón, zancadilla, patada, uso ilegal de brazos, empujón claro, agarrón claro, ostensible y persistente que limita claramente el movimiento…).",
+       "decision_es": "Tiro libre directo",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/APP.4.1.mp4",
+         "id": "APP.4.1",
+         "caption_es": "APP.4: Un atacante comete una clara infracción física en la misma APP (pisotón, zancadilla, patada, uso ilegal de brazos, empujón claro, agarrón claro, ostensible y persistente que limita claramente el movimiento…).",
+         "file": "videos/rfef/APP.4.1.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/APP.4.2.mp4",
+         "id": "APP.4.2",
+         "caption_es": "APP.4: Un atacante comete una clara infracción física en la misma APP (pisotón, zancadilla, patada, uso ilegal de brazos, empujón claro, agarrón claro, ostensible y persistente que limita claramente el movimiento…).",
+         "file": "videos/rfef/APP.4.2.mp4",
+         "decision_norm": ""
+        },
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/APP.4.3.mp4",
+         "id": "APP.4.3",
+         "caption_es": "APP.4: Un atacante comete una clara infracción física en la misma APP (pisotón, zancadilla, patada, uso ilegal de brazos, empujón claro, agarrón claro, ostensible y persistente que limita claramente el movimiento…).",
+         "file": "videos/rfef/APP.4.3.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "dfk"
+      },
+      {
+       "id": "APP.5",
+       "situation_es": "Un atacante comete una clara infracción sobre el portero derribándole o limitándole claramente sus movimientos (agarrón, empujón, uso ilegal de brazos,…).",
+       "decision_es": "Tiro libre directo",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/APP.5.1.mp4",
+         "id": "APP.5.1",
+         "caption_es": "APP.5: Un atacante comete una clara infracción sobre el portero derribándole o limitándole claramente sus movimientos (agarrón, empujón, uso ilegal de brazos,…).",
+         "file": "videos/rfef/APP.5.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "dfk"
+      },
+      {
+       "id": "APP.6",
+       "situation_es": "Un atacante bloquea de forma clara e intencionada a un defensor que está involucrado en la anotación de un gol.",
+       "decision_es": "Tiro libre directo",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "dfk"
+      },
+      {
+       "id": "APP.7",
+       "situation_es": "Un atacante se sitúa a menos de 1 metro de la barrera. El balón justo pasa por esa misma zona, limitando claramente el movimiento de un defensor / empujándole / sujetándole / derribándole / obstruyéndole,…",
+       "decision_es": "Tiro libre indirecto",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "ifk"
+      },
+      {
+       "id": "APP.8",
+       "situation_es": "Un jugador toca dos veces el balón en un tiro libre, saque de banda, meta, esquina, balón a tierra,… antes de que lo toque ningún otro jugador. Esta infracción forma parte de la misma APP en la que se anota un gol, penalti o DOGSO.",
+       "decision_es": "Tiro libre indirecto",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "ifk"
+      },
+      {
+       "id": "APP.9",
+       "situation_es": "Un atacante está dentro del área de penal cuando se ejecuta un saque de meta y ese jugador interviene de manera decisiva en la consecución de un gol (esta situación no aplica cuando el jugador atacante no haya tenido tiempo a salir del área de meta en el momento de ejecutar el saque de meta).",
+       "decision_es": "Repetición",
+       "sub_es": "",
+       "note_es": "",
+       "decision_norm": "retake"
+      }
+     ],
+     "conclusion_es": "En determinadas ocasiones, pueden existir diferentes opiniones razonables sobre si una acción forma parte de la misma fase de ataque que culmina en gol o si, por el contrario, la jugada ha evolucionado lo suficiente como para considerarse una nueva fase de juego. Esta valoración no siempre admite una respuesta objetiva. En este tipo de situaciones, árbitro y VAR deben tener presente qué espera el fútbol . La anulación de un gol constituye una decisión de enorme impacto y, por ello, la infracción previa debe ser clara, relevante y estar inequívocamente conectada con la acción que conduce al gol. Cuando existan interpretaciones razonables sobre la pertenencia de una acción a la misma APP o sobre su influencia real en el resultado de la jugada, debe prevalecer una aproximación prudente y coherente con el principio de minimizar las intervenciones innecesarias. En definitiva, para invalidar un gol, la infracción previa debe ofrecer un nivel de evidencia y relevancia que justifique claramente una decisión de tanto impacto para el juego. En general, aquellas acciones en las que las consecuencias de la acción de un defensor deriven en una ventaja decisiva en la consecución de un gol deben ser sancionadas en el terreno de juego o revisadas por el VAR. Cuanto más cercana a gol sea la infracción (en distancia y tiempo), y cuanto más determinante sea de cara a la consecución del gol (el jugador que la hace es el que mete el gol o el que da el pase de gol, etc.) más posibilidades de que la anulación del gol sea la decisión esperada."
+    }
+   ]
+  },
+  {
+   "key": "fuera-de-juego",
+   "name_es": "Fuera de juego",
+   "name_cn": "越位",
+   "url": "https://www.card.rfef.es/manual/fuera-de-juego/",
+   "intro_es": "",
+   "complexity_es": "",
+   "general_es": "",
+   "groups": [
+    {
+     "code": "OIO",
+     "name_es": "INTERFERENCIA EN UN ADVERSARIO",
+     "items": [
+      {
+       "id": "OIO.1",
+       "situation_es": "Acción en la que el delantero en posición incorrecta impacta en el portero.",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/OIO.1.1.mp4",
+         "id": "OIO.1.1",
+         "caption_es": "OIO.1: Acción en la que el delantero en posición incorrecta impacta en el portero.",
+         "file": "videos/rfef/OIO.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_on"
+      },
+      {
+       "id": "OIO.2",
+       "situation_es": "Acción en la que el delantero en posición incorrecta impacta en el defensor.",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/OIO.2.1.mp4",
+         "id": "OIO.2.1",
+         "caption_es": "OIO.2: Acción en la que el delantero en posición incorrecta impacta en el defensor.",
+         "file": "videos/rfef/OIO.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_on"
+      }
+     ]
+    },
+    {
+     "code": "NOIO",
+     "name_es": "INTERFERENCIA EN UN ADVERSARIO",
+     "items": [
+      {
+       "id": "NOIO.1",
+       "situation_es": "Acción en la que el delantero en posición incorrecta salta pero no impacta en el defensor.",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/NOIO.1.1.mp4",
+         "id": "NOIO.1.1",
+         "caption_es": "NOIO.1: Acción en la que el delantero en posición incorrecta salta pero no impacta en el defensor.",
+         "file": "videos/rfef/NOIO.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_off"
+      },
+      {
+       "id": "NOIO.2",
+       "situation_es": "NOIO DEFENSOR REAL-ATHL",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/NOIO.2.1.mp4",
+         "id": "NOIO.2.1",
+         "caption_es": "NOIO DEFENSOR REAL-ATHL",
+         "file": "videos/rfef/NOIO.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_off"
+      }
+     ]
+    },
+    {
+     "code": "OGA",
+     "name_es": "GANAR VENTAJA: JUEGO DELIBERADO / FORZADO / REBOTE",
+     "items": [
+      {
+       "id": "OGA.1",
+       "situation_es": "OGA SALVADA ANDORRA-CEUTA",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/OGA.1.1.mp4",
+         "id": "OGA.1.1",
+         "caption_es": "OGA SALVADA ANDORRA-CEUTA",
+         "file": "videos/rfef/OGA.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_on"
+      },
+      {
+       "id": "OGA.2",
+       "situation_es": "Defensor peina de manera forzada que no habilita al delantero en posición.",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/OGA.2.1.mp4",
+         "id": "OGA.2.1",
+         "caption_es": "OGA.2: Defensor peina de manera forzada que no habilita al delantero en posición.",
+         "file": "videos/rfef/OGA.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_on"
+      }
+     ]
+    },
+    {
+     "code": "NOGA",
+     "name_es": "GANAR VENTAJA: JUEGO DELIBERADO / FORZADO / REBOTE",
+     "items": [
+      {
+       "id": "NOGA.1",
+       "situation_es": "Defensor mete el pie y da el balón hacia atrás habilitando al delantero.",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/NOGA.1.1.mp4",
+         "id": "NOGA.1.1",
+         "caption_es": "NOGA.1: Defensor mete el pie y da el balón hacia atrás habilitando al delantero.",
+         "file": "videos/rfef/NOGA.1.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_off"
+      },
+      {
+       "id": "NOGA.2",
+       "situation_es": "Portero salta a por el balón y habilita con el palmeo la posición del delantero.",
+       "decision_es": "",
+       "sub_es": "",
+       "note_es": "",
+       "videos": [
+        {
+         "url": "https://www.card.rfef.es/wp-content/uploads/manual-videos/NOGA.2.1.mp4",
+         "id": "NOGA.2.1",
+         "caption_es": "NOGA.2: Portero salta a por el balón y habilita con el palmeo la posición del delantero.",
+         "file": "videos/rfef/NOGA.2.1.mp4",
+         "decision_norm": ""
+        }
+       ],
+       "decision_norm": "offside_off"
+      }
+     ]
+    }
+   ]
+  }
+ ]
+}

@@ -98,12 +98,23 @@ h1,h2{font-variant-numeric:tabular-nums}
 .topbar .nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
 .topbar .nav::-webkit-scrollbar{display:none}
 .topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
-.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;
   border:1px solid transparent;border-radius:var(--r-sm);background:none;
   color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
   white-space:nowrap;transition:.15s}
 .topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
 .topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+/* 顶栏共 11 个导航项：中等宽度下隐藏导航图标保标签，并收紧搜索框/间距/内边距，
+   避免导航横向滚动溢出（≤1360 再隐品牌副标） */
+@media (max-width:1560px){
+  .topbar{gap:10px}
+  .topbar .nav{gap:1px}
+  .topbar .nav .ic{display:none}
+  .topbar .nav .tbtn{font-size:12.5px;padding:6px 6px}
+  .topbar .tbtn{padding:6px 7px}
+  .topbar input[type=search]{min-width:96px}
+}
+@media (max-width:1460px){.topbar .brand .brand-sub{display:none}}
 .topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
   border:1px solid var(--top-input-line);border-radius:var(--r-sm);
   background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
@@ -188,5 +199,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   .topbar{gap:8px;padding:0 10px}
   .topbar .brand .brand-sub{display:none}
   .topbar .tbtn span{display:none}
+  /* 恢复导航图标：≤1560 的藏图标规则会让小屏导航只剩空盒 */
+  .topbar .nav .ic{display:inline}
   .topbar .tbtn{padding:6px 8px}
 }

@@ -7,7 +7,8 @@ from datetime import date
 
 from lib.theme import inject_theme, icon, topbar
 
-from lib.paths import DATA, LAWS_JSON, SCALE_JSON, SITE, UEFA_JSON
+from lib.paths import (DATA, CONMEBOL_JSON, INTL_JSON, LAWS_JSON, PRO_JSON, RAP_JSON,
+                       RFEF_JSON, SCALE_JSON, SITE, UEFA_JSON)
 
 
 def load_stats():
@@ -58,6 +59,64 @@ def load_uefa_stats():
             groups += 1
             cases += len(g.get("items", []))
     return {"cases": cases, "groups": groups}
+
+
+def load_rap_stats():
+    """UEFA RAP 训练包数字从 data/rap.json 计算（期数/在线期数）。"""
+    eds = online = 0
+    if RAP_JSON.exists():
+        d = json.loads(RAP_JSON.read_text(encoding="utf-8"))
+        eds = len(d.get("editions", []))
+        online = sum(1 for e in d.get("editions", []) if e.get("platform") == "nextaur")
+    return {"editions": eds, "online": online}
+
+
+def load_rfef_stats():
+    """RFEF 判罚标准手册数字从 data/rfef.json 计算（专题/判例/视频）。"""
+    secs = items = vids = 0
+    if RFEF_JSON.exists():
+        d = json.loads(RFEF_JSON.read_text(encoding="utf-8"))
+        for s in d.get("sections", []):
+            secs += 1
+            for g in s.get("groups", []):
+                for it in g.get("items", []):
+                    items += 1
+                    vids += len(it.get("videos", []))
+    return {"secs": secs, "items": items, "vids": vids}
+
+
+def load_pro_stats():
+    """美国 PRO 评议索引数字从 data/pro.json 计算（篇数/MLS/NWSL）。"""
+    arts = 0
+    mls = nwsl = 0
+    if PRO_JSON.exists():
+        d = json.loads(PRO_JSON.read_text(encoding="utf-8"))
+        arts = len(d.get("articles", []))
+        mls = sum(1 for a in d["articles"] if a.get("league") == "MLS")
+        nwsl = sum(1 for a in d["articles"] if a.get("league") == "NWSL")
+    return {"arts": arts, "mls": mls, "nwsl": nwsl}
+
+
+def load_intl_stats():
+    """国际评议导航数字从 data/intl.json 计算（资源数/国家机构数）。"""
+    res = orgs = 0
+    if INTL_JSON.exists():
+        d = json.loads(INTL_JSON.read_text(encoding="utf-8"))
+        for g in d.get("groups", []):
+            res += len(g.get("resources", []))
+            orgs += len({r.get("org") for r in g.get("resources", [])})
+    return {"res": res, "orgs": orgs}
+
+
+def load_conmebol_stats():
+    """南美 VAR 判例数字从 data/conmebol.json 计算（案数/赛事数）。"""
+    cases = 0
+    comps = set()
+    if CONMEBOL_JSON.exists():
+        d = json.loads(CONMEBOL_JSON.read_text(encoding="utf-8"))
+        cases = len(d.get("cases", []))
+        comps = {c.get("comp") for c in d["cases"] if c.get("comp")}
+    return {"cases": cases, "comps": len(comps)}
 
 
 HTML = r"""<!DOCTYPE html>
@@ -237,7 +296,62 @@ __TOPBAR__
       </div>
       <div class="go">进入学习 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-quiz" style="--i:6" href="quiz.html">
+    <a class="ecard c-rap" style="--i:6" href="rap.html">
+      <div class="icon">__I_TARGET__</div>
+      <h2>UEFA RAP 训练包</h2>
+      <p class="desc">欧足联每年两期的「看片段→自己判→对官方答案」判例训练包：__RA_EDS__ 期索引（__RA_ONLINE__ 期 Nextaur 在线）与训练方法指南。</p>
+      <div class="nums">
+        <div><b>__RA_EDS__</b><span>期索引</span></div>
+        <div><b>__RA_ONLINE__</b><span>在线期</span></div>
+        <div><b>__I_EXT_S__</b><span>免费注册</span></div>
+      </div>
+      <div class="go">查看指南 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-rfef" style="--i:7" href="rfef.html">
+      <div class="icon">__I_GLOBE__</div>
+      <h2>西班牙判罚标准</h2>
+      <p class="desc">RFEF/CTA《Criterios Arbitrales》2026/27：__RF_ITEMS__ 条判罚尺度配官方判例视频，中文译制、可切西语原文。</p>
+      <div class="nums">
+        <div><b>__RF_SECS__</b><span>专题</span></div>
+        <div><b>__RF_ITEMS__</b><span>判例</span></div>
+        <div><b>__RF_VIDS__</b><span>视频</span></div>
+      </div>
+      <div class="go">进入学习 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-pro" style="--i:8" href="pro.html">
+      <div class="icon">__I_FLAG__</div>
+      <h2>美国评议</h2>
+      <p class="desc">美国 PRO（MLS/NWSL）周更 VAR 评析全量索引：Inside Video Review / VAR a Fondo / The Definitive Angle，附 USSF 视频入口指南。</p>
+      <div class="nums">
+        <div><b>__P_ARTS__</b><span>篇索引</span></div>
+        <div><b>__P_MLS__</b><span>MLS</span></div>
+        <div><b>__P_NWSL__</b><span>NWSL</span></div>
+      </div>
+      <div class="go">进入索引 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-intl" style="--i:9" href="intl.html">
+      <div class="icon">__I_COMPASS__</div>
+      <h2>国际评议导航</h2>
+      <p class="desc">全球 9 项官方评议节目与周更解析（苏格兰/克罗地亚/乌克兰/南美/英格兰/墨西哥/土耳其/日本/俄罗斯）：语言、频率与注意事项一页掌握。</p>
+      <div class="nums">
+        <div><b>__I_RES__</b><span>资源</span></div>
+        <div><b>__I_ORGS__</b><span>机构</span></div>
+        <div><b>__I_LANG__</b><span>语言</span></div>
+      </div>
+      <div class="go">查看导航 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-cmem" style="--i:10" href="conmebol.html">
+      <div class="icon">__I_PLAY2__</div>
+      <h2>南美 VAR 判例</h2>
+      <p class="desc">CONMEBOL《Situación de Análisis VAR》：世预赛/解放者杯/南美杯逐案 VAR 判例（比赛 · 情境 · 分钟），附官方分析与视频链接。</p>
+      <div class="nums">
+        <div><b>__C_CASES__</b><span>判例</span></div>
+        <div><b>__C_COMPS__</b><span>赛事</span></div>
+        <div><b>__I_EXT_S__</b><span>官方视频</span></div>
+      </div>
+      <div class="go">进入判例 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-quiz" style="--i:11" href="quiz.html">
       <div class="icon">__I_QUIZ__</div>
       <h2>考题模式</h2>
       <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>
@@ -324,6 +438,11 @@ def main():
     s = load_stats()
     sc = load_scale_stats()
     u = load_uefa_stats()
+    ra = load_rap_stats()
+    rf = load_rfef_stats()
+    pro = load_pro_stats()
+    intl = load_intl_stats()
+    cm = load_conmebol_stats()
     from build_quiz import build_bank  # 与 quiz 页同一题库口径
     bank, _, _ = build_bank()
     q_case = sum(1 for b in bank if b["t"] == "case")
@@ -335,7 +454,10 @@ def main():
             "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
             "__I_SEARCH__": icon("search", 13), "__I_DOWN__": icon("download", 13),
             "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13),
-            "__I_QUIZ__": icon("quiz", 20), "__I_EXT_S__": icon("external", 15)}
+            "__I_QUIZ__": icon("quiz", 20), "__I_EXT_S__": icon("external", 15),
+            "__I_TARGET__": icon("target", 20), "__I_GLOBE__": icon("globe", 20),
+            "__I_FLAG__": icon("flag", 20), "__I_COMPASS__": icon("compass", 20),
+            "__I_PLAY2__": icon("play", 20)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
             .replace("__N26__", str(s["2026"]["n"]))
@@ -358,6 +480,19 @@ def main():
             .replace("__S_VIDEOS__", str(sc["videos"]))
             .replace("__U_CASES__", str(u["cases"]))
             .replace("__U_GROUPS__", str(u["groups"]))
+            .replace("__RA_EDS__", str(ra["editions"]))
+            .replace("__RA_ONLINE__", str(ra["online"]))
+            .replace("__RF_SECS__", str(rf["secs"]))
+            .replace("__RF_ITEMS__", str(rf["items"]))
+            .replace("__RF_VIDS__", str(rf["vids"]))
+            .replace("__P_ARTS__", str(pro["arts"]))
+            .replace("__P_MLS__", str(pro["mls"]))
+            .replace("__P_NWSL__", str(pro["nwsl"]))
+            .replace("__I_RES__", str(intl["res"]))
+            .replace("__I_ORGS__", str(intl["orgs"]))
+            .replace("__I_LANG__", "7")
+            .replace("__C_CASES__", str(cm["cases"]))
+            .replace("__C_COMPS__", str(cm["comps"]))
             .replace("__Q_TOTAL__", str(q_case + q_scale))
             .replace("__Q_CASES__", str(q_case))
             .replace("__Q_SCALE__", str(q_scale))

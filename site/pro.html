@@ -1,0 +1,1143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>美国 PRO 评议 & USSF · 裁判学习平台</title>
+<style>
+/* ===== pro 页专属布局 (tokens/组件来自 data-cfa-theme, 骨架同 rap/uefa 页) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{max-width:1000px;margin:0 auto;padding:22px 16px 18px}
+.page-head h1{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
+.page-head .sub{color:var(--muted);font-size:13px;line-height:1.7}
+.src-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.src-banner .ic{color:var(--brand)}
+.src-banner a{color:var(--brand);font-weight:600;text-decoration:none}
+.src-banner a:hover{text-decoration:underline}
+.wrap{max-width:1000px;margin:0 auto;padding:18px 16px 60px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
+.year-h{font-family:var(--font-display);font-size:18px;margin:26px 0 12px;letter-spacing:.4px}
+.year-h small{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+.acard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:12px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  transition:border-color var(--t-fast) var(--ease)}
+.acard:hover{border-color:var(--brand)}
+.acard .t{flex:1;min-width:260px}
+.acard .t b{display:block;font-size:14px;line-height:1.55}
+.acard .t small{color:var(--muted);font-size:12px}
+.acard .badge{white-space:nowrap}
+.acard .go{display:inline-flex;align-items:center;gap:6px;padding:6px 13px;border-radius:999px;
+  border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
+  font-size:12.5px;font-weight:600;text-decoration:none;white-space:nowrap}
+.acard .go:hover{background:var(--brand-strong);color:var(--on-brand)}
+.ussf{margin-top:36px;border-top:1px dashed var(--line);padding-top:22px}
+.ussf h2{font-family:var(--font-display);font-size:19px;margin:0 0 8px}
+.ussf .desc{font-size:13.5px;color:var(--muted);line-height:1.85;margin:0 0 14px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.tool{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 15px;
+  text-decoration:none;color:var(--ink2);transition:.12s}
+.tool:hover{border-color:var(--brand);color:var(--ink)}
+.tool b{display:block;font-size:13.5px;color:var(--ink);margin-bottom:4px}
+.tool span{font-size:12.5px;color:var(--muted);line-height:1.7}
+.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
+@media (max-width:760px){.acard .go{margin-left:auto}}
+</style>
+<style data-cfa-theme>
+/* ============================================================
+   裁判学习平台 · 全站设计系统 (唯一权威样式层)
+   风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
+   衬线大标题/陶土色点缀/发丝线边框/平面卡片
+   - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
+   - 本文件由 scripts/lib/theme.py 以 style 标签内联注入全部生成页 head
+   - 各 builder 的页面 style 块只允许写页面专属布局, 禁止重定义
+     :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
+   ============================================================ */
+
+/* ---------- 设计 tokens ---------- */
+:root{
+  /* 主题色: 陶土(clay)为品牌色, 红/绿/黄为判定语义色 */
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:rgba(178,58,46,.09); --red-line:rgba(178,58,46,.32);
+  --green:#3e7b49; --green-bg:rgba(62,123,73,.1); --green-line:rgba(62,123,73,.32);
+  --amber:#946d1b; --amber-bg:rgba(148,109,27,.11); --amber-line:rgba(148,109,27,.34);
+  --info:#a3502b; --info-bg:rgba(163,80,43,.09); --info-line:rgba(163,80,43,.3);
+
+  /* 表面与文字 (暖炭深色) */
+  --bg:#191813; --bg2:#201e18; --card:#242219; --card2:#2b2820;
+  --ink:#ece8dd; --ink2:#cfc9ba; --muted:#9c9585; --faint:#6e6759;
+  --line:#3a362c; --line2:#2e2b22;
+  --shadow:0 14px 40px rgba(10,9,6,.5);
+  --shadow-sm:0 2px 10px rgba(10,9,6,.35);
+
+  /* 顶栏 (与页面同底色 + 发丝线, 编辑风导航) */
+  --top-bg:#191813; --top-ink:#ece8dd; --top-muted:#9c9585;
+  --top-line:#3a362c; --top-chip:rgba(236,232,221,.07); --top-chip-on:rgba(224,139,98,.16);
+  --top-input-bg:#242219; --top-input-line:#3a362c;
+
+  /* 几何与字体 */
+  --r-sm:6px; --r-md:10px; --r-lg:13px;
+  --top-h:56px;
+  --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
+}
+[data-theme="light"]{
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:#f7e8e2; --red-line:#e6c3b6;
+  --green:#3e7b49; --green-bg:#e8f0e4; --green-line:#c3d6be;
+  --amber:#946d1b; --amber-bg:#f5edda; --amber-line:#e2d3a4;
+  --info:#a3502b; --info-bg:#f4e7dd; --info-line:#e3c8b2;
+
+  --bg:#f3f1ea; --bg2:#eceade; --card:#fbfaf5; --card2:#f1eee3;
+  --ink:#211e1a; --ink2:#46423a; --muted:#7a7466; --faint:#a49d8c;
+  --line:#ddd8ca; --line2:#e9e5d9;
+  --shadow:0 14px 40px rgba(48,42,30,.12);
+  --shadow-sm:0 1px 4px rgba(48,42,30,.06);
+
+  --top-bg:#f3f1ea; --top-ink:#211e1a; --top-muted:#7a7466;
+  --top-line:#ddd8ca; --top-chip:rgba(33,30,26,.05); --top-chip-on:rgba(163,80,43,.12);
+  --top-input-bg:#fbfaf5; --top-input-line:#cfc9b8;
+}
+
+/* ---------- 基础 ---------- */
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:14.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+::selection{background:rgba(163,80,43,.25)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.skip-link{position:absolute;left:-999px;top:0;z-index:200;background:var(--brand);
+  color:var(--on-brand);padding:8px 14px;border-radius:0 0 8px 0}
+.skip-link:focus{left:0}
+h1,h2{font-variant-numeric:tabular-nums}
+
+/* 滚动条 */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 图标 ---------- */
+.ic{vertical-align:-2.5px;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+
+/* ---------- 顶栏(全站统一) ---------- */
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--top-bg);color:var(--top-ink);border-bottom:1px solid var(--top-line);
+  position:sticky;top:0;z-index:60}
+.topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--top-ink);white-space:nowrap;min-width:0}
+.topbar .brand .ic{color:var(--brand)}
+.topbar .brand b{font-family:var(--font-display);font-size:16.5px;letter-spacing:.4px;font-weight:700}
+.topbar .brand .brand-sub{font-size:11.5px;color:var(--top-muted);padding:1px 9px;
+  border:1px solid var(--top-line);border-radius:999px;white-space:nowrap}
+.topbar .nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.topbar .nav::-webkit-scrollbar{display:none}
+.topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;
+  border:1px solid transparent;border-radius:var(--r-sm);background:none;
+  color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
+.topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+/* 顶栏共 11 个导航项：中等宽度下隐藏导航图标保标签，并收紧搜索框/间距/内边距，
+   避免导航横向滚动溢出（≤1360 再隐品牌副标） */
+@media (max-width:1560px){
+  .topbar{gap:10px}
+  .topbar .nav{gap:1px}
+  .topbar .nav .ic{display:none}
+  .topbar .nav .tbtn{font-size:12.5px;padding:6px 6px}
+  .topbar .tbtn{padding:6px 7px}
+  .topbar input[type=search]{min-width:96px}
+}
+@media (max-width:1460px){.topbar .brand .brand-sub{display:none}}
+.topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
+  border:1px solid var(--top-input-line);border-radius:var(--r-sm);
+  background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
+.topbar .search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:480px;min-width:120px}
+.topbar .search-wrap .ic{position:absolute;left:10px;color:var(--top-muted);pointer-events:none}
+
+/* 主题切换按钮: 图标随主题互换 */
+#btnTheme .when-light{display:none}
+[data-theme="light"] #btnTheme .when-dark{display:none}
+[data-theme="light"] #btnTheme .when-light{display:inline-flex}
+
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* ---------- 通用组件 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.btn.primary:hover{opacity:.88;color:var(--bg)}
+.btn.iconbtn{padding:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;white-space:nowrap;transition:.15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.chip.on b{color:var(--brand)}
+
+/* 判定徽章 */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2.5px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.badge.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line)}
+.badge.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.badge.pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-line);font-weight:500}
+.badge.wrong,.badge.correct,.badge.pending,.badge.info{letter-spacing:.3px}
+
+/* 队徽 (跨页共用, JS 注入) */
+.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:4px;background:#fff}
+.team-dot{display:inline-block;border-radius:3px;vertical-align:-3px;margin-right:4px;flex:none}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:4px;margin-right:4px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.wrong{background:var(--red)}.dot.correct{background:var(--green)}.dot.pending{background:var(--amber)}
+.kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
+
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
+/* ---------- 弹层 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
+  z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
+.modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
+.modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
+.modal .close:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- 通用响应式辅助 ---------- */
+@media (max-width:760px){
+  .topbar{gap:8px;padding:0 10px}
+  .topbar .brand .brand-sub{display:none}
+  .topbar .tbtn span{display:none}
+  /* 恢复导航图标：≤1560 的藏图标规则会让小屏导航只剩空盒 */
+  .topbar .nav .ic{display:inline}
+  .topbar .tbtn{padding:6px 8px}
+}
+
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'}catch(e){}</script></head>
+<body class="page-pro">
+<a class="skip-link" href="#content0">跳到内容</a>
+<header class="topbar"><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">美国 PRO & USSF</span></a><nav class="nav" aria-label="站点导航"><a class="tbtn" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025评议</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024评议</span></a><a class="tbtn" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA</span></a><a class="tbtn" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>RAP</span></a><a class="tbtn" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>RFEF</span></a><a class="tbtn cur" aria-current="page" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国评议</span></a><a class="tbtn" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>国际评议</span></a><a class="tbtn" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美评议</span></a><a class="tbtn" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题</span></a></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header>
+<header class="page-head">
+  <div class="wrap">
+    <h1>美国 PRO 裁判评议</h1>
+    <div class="sub">Professional Referee Organization（MLS/NWSL 职业裁判机构）周更 VAR 评析：Inside Video Review（英）· VAR a Fondo（西）· The Definitive Angle（文字判例）· 本页为全量索引，逐篇跳转官方页 · 版权归 PRO 所有</div>
+    <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 每周五发布上一轮评析（Grég Barkey / VAR 评议组）；<a href="https://proreferees.com/category/inside-video-review/" target="_blank" rel="noopener noreferrer">proreferees.com 官方分类页</a></div>
+  </div>
+</header>
+<div class="wrap" id="content0">
+  <div class="chips" data-chips>
+    <button class="chip on" data-f="all">全部 <b>207</b></button>
+    <button class="chip" data-f="ivr">IVR 评析（英） <b>75</b></button>
+    <button class="chip" data-f="vaf">VAR a Fondo（西） <b>41</b></button>
+    <button class="chip" data-f="angle">文字判例 <b>91</b></button>
+    <button class="chip" data-f="MLS">MLS <b>135</b></button>
+    <button class="chip" data-f="NWSL">NWSL <b>72</b></button>
+  </div>
+  <h3 class="year-h" data-year="2026">2026 <small>107 篇</small></h3><div id="ybody-2026"><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #28</b><small>2026-10-03</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #28</span>
+  <a class="go" href="https://proreferees.com/2026/10/03/2026-inside-video-review-mls-28/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #28</b><small>2026-10-03</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #28</span>
+  <a class="go" href="https://proreferees.com/2026/10/03/2026-var-a-fondo-mls-28/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 28</b><small>2026-10-03</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/10/03/2026-the-definitive-angle-mls-matchday-28/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 23</b><small>2026-10-03</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/10/03/2026-the-definitive-angle-nwsl-week-23/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #27</b><small>2026-09-26</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #27</span>
+  <a class="go" href="https://proreferees.com/2026/09/26/2026-inside-video-review-mls-27/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #27</b><small>2026-09-26</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #27</span>
+  <a class="go" href="https://proreferees.com/2026/09/26/2026-var-a-fondo-mls-27/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #22</b><small>2026-09-26</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #22</span>
+  <a class="go" href="https://proreferees.com/2026/09/26/2026-inside-video-review-nwsl-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 27</b><small>2026-09-26</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/09/26/2026-the-definitive-angle-mls-matchday-27/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 22</b><small>2026-09-26</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/09/26/2026-the-definitive-angle-nwsl-week-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #25 + #26</b><small>2026-09-19</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #25+26</span>
+  <a class="go" href="https://proreferees.com/2026/09/19/2026-inside-video-review-mls-25-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #25 + #26</b><small>2026-09-19</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #25+26</span>
+  <a class="go" href="https://proreferees.com/2026/09/19/2026-var-a-fondo-mls-25-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #21</b><small>2026-09-19</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #21</span>
+  <a class="go" href="https://proreferees.com/2026/09/19/2026-inside-video-review-nwsl-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 26</b><small>2026-09-19</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/09/19/2026-the-definitive-angle-mls-matchday-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 25</b><small>2026-09-19</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/09/19/2026-the-definitive-angle-mls-matchday-25/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 21</b><small>2026-09-19</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/09/19/2026-the-definitive-angle-nwsl-week-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #24</b><small>2026-09-12</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #24</span>
+  <a class="go" href="https://proreferees.com/2026/09/12/2026-inside-video-review-mls-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #24</b><small>2026-09-12</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #24</span>
+  <a class="go" href="https://proreferees.com/2026/09/12/2026-var-a-fondo-mls-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #20</b><small>2026-09-12</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #20</span>
+  <a class="go" href="https://proreferees.com/2026/09/12/2026-inside-video-review-nwsl-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 24</b><small>2026-09-12</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/09/12/2026-the-definitive-angle-mls-matchday-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 20</b><small>2026-09-12</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/09/12/2026-the-definitive-angle-nwsl-week-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #23</b><small>2026-09-05</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #23</span>
+  <a class="go" href="https://proreferees.com/2026/09/05/2026-inside-video-review-mls-23/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #23</b><small>2026-09-05</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #23</span>
+  <a class="go" href="https://proreferees.com/2026/09/05/2026-var-a-fondo-mls-23/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #19</b><small>2026-09-05</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #19</span>
+  <a class="go" href="https://proreferees.com/2026/09/05/2026-inside-video-review-nwsl-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 23</b><small>2026-09-05</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/09/05/2026-the-definitive-angle-mls-matchday-23/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 19</b><small>2026-09-05</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/09/05/2026-the-definitive-angle-nwsl-week-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #21 + #22</b><small>2026-08-29</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #21+22</span>
+  <a class="go" href="https://proreferees.com/2026/08/29/2026-inside-video-review-mls-21-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #21 + #22</b><small>2026-08-29</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #21+22</span>
+  <a class="go" href="https://proreferees.com/2026/08/29/2026-var-a-fondo-mls-21-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #18</b><small>2026-08-29</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #18</span>
+  <a class="go" href="https://proreferees.com/2026/08/29/2026-inside-video-review-nwsl-18/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 22</b><small>2026-08-29</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/08/29/2026-the-definitive-angle-mls-matchday-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 21</b><small>2026-08-29</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/08/29/2026-the-definitive-angle-mls-matchday-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 18</b><small>2026-08-29</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/08/29/2026-the-definitive-angle-nwsl-week-18/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #19 + #20</b><small>2026-08-22</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #19+20</span>
+  <a class="go" href="https://proreferees.com/2026/08/22/2026-inside-video-review-mls-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #19 + #20</b><small>2026-08-22</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #19+20</span>
+  <a class="go" href="https://proreferees.com/2026/08/22/2026-var-a-fondo-mls-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #16 + #17</b><small>2026-08-22</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #16+17</span>
+  <a class="go" href="https://proreferees.com/2026/08/22/2026-inside-video-review-nwsl-17/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 20</b><small>2026-08-22</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/08/22/2026-the-definitive-angle-mls-matchday-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 17</b><small>2026-08-22</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/08/22/2026-the-definitive-angle-nwsl-week-17/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 16</b><small>2026-08-15</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/08/15/2026-the-definitive-angle-nwsl-week-16/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #15</b><small>2026-08-08</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #15</span>
+  <a class="go" href="https://proreferees.com/2026/08/08/2026-inside-video-review-nwsl-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 19</b><small>2026-08-08</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/08/08/2026-the-definitive-angle-mls-matchday-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 15</b><small>2026-08-08</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/08/08/2026-the-definitive-angle-nwsl-week-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #16 to #18</b><small>2026-08-01</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #16</span>
+  <a class="go" href="https://proreferees.com/2026/08/01/2026-inside-video-review-mls-1718/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #16 to #18</b><small>2026-08-01</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #16</span>
+  <a class="go" href="https://proreferees.com/2026/08/01/2026-var-a-fondo-mls-1718/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #14</b><small>2026-08-01</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #14</span>
+  <a class="go" href="https://proreferees.com/2026/08/01/2026-inside-video-review-nwsl-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 18</b><small>2026-08-01</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/08/01/2026-the-definitive-angle-mls-matchday-18/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 17</b><small>2026-08-01</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/08/01/2026-the-definitive-angle-mls-matchday-17/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 14</b><small>2026-08-01</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/08/01/2026-the-definitive-angle-nwsl-week-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #13</b><small>2026-07-25</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #13</span>
+  <a class="go" href="https://proreferees.com/2026/07/25/2026-inside-video-review-nwsl-13/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 16</b><small>2026-07-25</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/07/25/2026-the-definitive-angle-mls-matchday-16/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 13</b><small>2026-07-25</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/07/25/2026-the-definitive-angle-nwsl-week-13/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 12</b><small>2026-07-18</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/07/18/2026-the-definitive-angle-nwsl-week-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #11</b><small>2026-07-11</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #11</span>
+  <a class="go" href="https://proreferees.com/2026/07/11/2026-inside-video-review-nwsl-11/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 11</b><small>2026-07-11</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/07/11/2026-the-definitive-angle-nwsl-week-11/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 10</b><small>2026-06-06</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/06/06/2026-the-definitive-angle-nwsl-week-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #15</b><small>2026-05-30</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #15</span>
+  <a class="go" href="https://proreferees.com/2026/05/30/2026-inside-video-review-mls-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #15</b><small>2026-05-30</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #15</span>
+  <a class="go" href="https://proreferees.com/2026/05/30/2026-var-a-fondo-mls-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #9</b><small>2026-05-30</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #9</span>
+  <a class="go" href="https://proreferees.com/2026/05/30/2026-inside-video-review-nwsl-9/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 15</b><small>2026-05-30</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/05/30/2026-the-definitive-angle-mls-matchday-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 9</b><small>2026-05-30</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/05/30/2026-the-definitive-angle-nwsl-week-9/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #13 + #14</b><small>2026-05-23</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #13+14</span>
+  <a class="go" href="https://proreferees.com/2026/05/23/2026-inside-video-review-mls-13-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #13 + #14</b><small>2026-05-23</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #13+14</span>
+  <a class="go" href="https://proreferees.com/2026/05/23/2026-var-a-fondo-mls-13-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #8</b><small>2026-05-23</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #8</span>
+  <a class="go" href="https://proreferees.com/2026/05/23/2026-inside-video-review-nwsl-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 14</b><small>2026-05-23</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/05/23/2026-the-definitive-angle-mls-matchday-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 13</b><small>2026-05-23</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/05/23/2026-the-definitive-angle-mls-matchday-13/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 8</b><small>2026-05-23</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/05/23/2026-the-definitive-angle-nwsl-week-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #12</b><small>2026-05-16</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #12</span>
+  <a class="go" href="https://proreferees.com/2026/05/16/2026-inside-video-review-mls-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #12</b><small>2026-05-16</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #12</span>
+  <a class="go" href="https://proreferees.com/2026/05/16/2026-var-a-fondo-mls-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #7</b><small>2026-05-16</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #7</span>
+  <a class="go" href="https://proreferees.com/2026/05/16/2026-inside-video-review-nwsl-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 12</b><small>2026-05-16</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/05/16/2026-the-definitive-angle-mls-matchday-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 7</b><small>2026-05-16</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/05/16/2026-the-definitive-angle-nwsl-week-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #6</b><small>2026-05-09</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #6</span>
+  <a class="go" href="https://proreferees.com/2026/05/09/2026-inside-video-review-nwsl-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 6</b><small>2026-05-09</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/05/09/2026-the-definitive-angle-nwsl-week-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #9 + #10</b><small>2026-05-02</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #9+10</span>
+  <a class="go" href="https://proreferees.com/2026/05/02/2026-inside-video-review-mls-9-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #9 + #10</b><small>2026-05-02</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #9+10</span>
+  <a class="go" href="https://proreferees.com/2026/05/02/2026-var-a-fondo-mls-9-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 10</b><small>2026-05-02</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/05/02/2026-the-definitive-angle-mls-matchday-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 9</b><small>2026-05-02</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/05/02/2026-the-definitive-angle-mls-matchday-9/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #8</b><small>2026-04-25</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #8</span>
+  <a class="go" href="https://proreferees.com/2026/04/25/2026-inside-video-review-mls-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #8</b><small>2026-04-25</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #8</span>
+  <a class="go" href="https://proreferees.com/2026/04/25/2026-var-a-fondo-mls-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 8</b><small>2026-04-25</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/04/25/2026-the-definitive-angle-mls-matchday-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #7</b><small>2026-04-18</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #7</span>
+  <a class="go" href="https://proreferees.com/2026/04/18/2026-inside-video-review-mls-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #7</b><small>2026-04-18</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #7</span>
+  <a class="go" href="https://proreferees.com/2026/04/18/2026-var-a-fondo-mls-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 7</b><small>2026-04-18</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/04/18/2026-the-definitive-angle-mls-matchday-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #6</b><small>2026-04-11</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #6</span>
+  <a class="go" href="https://proreferees.com/2026/04/11/2026-inside-video-review-mls-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #6</b><small>2026-04-11</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #6</span>
+  <a class="go" href="https://proreferees.com/2026/04/11/2026-var-a-fondo-mls-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #4</b><small>2026-04-11</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #4</span>
+  <a class="go" href="https://proreferees.com/2026/04/11/2026-inside-video-review-nwsl-4/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 6</b><small>2026-04-11</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/04/11/2026-the-definitive-angle-mls-matchday-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 4</b><small>2026-04-11</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/04/11/2026-the-definitive-angle-nwsl-week-4/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #3</b><small>2026-04-04</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #3</span>
+  <a class="go" href="https://proreferees.com/2026/04/04/2026-inside-video-review-nwsl-3/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 3</b><small>2026-04-04</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/04/04/2026-the-definitive-angle-nwsl-week-3/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #5</b><small>2026-03-28</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #5</span>
+  <a class="go" href="https://proreferees.com/2026/03/28/2026-inside-video-review-mls-5/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #5</b><small>2026-03-28</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #5</span>
+  <a class="go" href="https://proreferees.com/2026/03/28/2026-var-a-fondo-mls-5/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #2</b><small>2026-03-28</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #2</span>
+  <a class="go" href="https://proreferees.com/2026/03/28/2026-inside-video-review-nwsl-2/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 5</b><small>2026-03-28</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/03/28/2026-the-definitive-angle-mls-matchday-5/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 2</b><small>2026-03-28</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/03/28/2026-the-definitive-angle-nwsl-week-2/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #4</b><small>2026-03-21</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #4</span>
+  <a class="go" href="https://proreferees.com/2026/03/21/2026-inside-video-review-mls-4/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #4</b><small>2026-03-21</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #4</span>
+  <a class="go" href="https://proreferees.com/2026/03/21/2026-var-a-fondo-mls-4/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #1</b><small>2026-03-21</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #1</span>
+  <a class="go" href="https://proreferees.com/2026/03/21/2026-inside-video-review-nwsl-1/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 4</b><small>2026-03-21</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/03/21/2026-the-definitive-angle-mls-matchday-4/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 1</b><small>2026-03-21</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2026/03/21/2026-the-definitive-angle-nwsl-week-1/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #3</b><small>2026-03-14</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #3</span>
+  <a class="go" href="https://proreferees.com/2026/03/14/2026-inside-video-review-mls-3/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #3</b><small>2026-03-14</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #3</span>
+  <a class="go" href="https://proreferees.com/2026/03/14/2026-var-a-fondo-mls-3/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 3</b><small>2026-03-14</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/03/14/2026-the-definitive-angle-mls-matchday-3/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #2</b><small>2026-03-07</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #2</span>
+  <a class="go" href="https://proreferees.com/2026/03/07/2026-inside-video-review-mls-2/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #2</b><small>2026-03-07</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #2</span>
+  <a class="go" href="https://proreferees.com/2026/03/07/2026-var-a-fondo-mls-2/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 2</b><small>2026-03-07</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/03/07/2026-the-definitive-angle-mls-matchday-2/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #1</b><small>2026-02-28</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #1</span>
+  <a class="go" href="https://proreferees.com/2026/02/28/2026-inside-video-review-mls-1/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #1</b><small>2026-02-28</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #1</span>
+  <a class="go" href="https://proreferees.com/2026/02/28/2026-var-a-fondo-mls-1/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 1</b><small>2026-02-28</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2026/02/28/2026-the-definitive-angle-mls-matchday-1/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div></div><h3 class="year-h" data-year="2025">2025 <small>100 篇</small></h3><div id="ybody-2025"><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Cup Playoffs – Round One</b><small>2025-11-15</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/11/15/2025-the-definitive-angle-mls-cup-playoffs-round-one/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #26</b><small>2025-11-08</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #26</span>
+  <a class="go" href="https://proreferees.com/2025/11/08/2025-inside-video-review-nwsl-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 26</b><small>2025-11-08</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/11/08/2025-the-definitive-angle-nwsl-week-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #40</b><small>2025-10-25</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #40</span>
+  <a class="go" href="https://proreferees.com/2025/10/25/2025-inside-video-review-mls-40/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #40</b><small>2025-10-25</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #40</span>
+  <a class="go" href="https://proreferees.com/2025/10/25/2025-var-a-fondo-mls-40/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #25</b><small>2025-10-25</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #25</span>
+  <a class="go" href="https://proreferees.com/2025/10/25/2025-inside-video-review-nwsl-25/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 40</b><small>2025-10-25</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/10/25/2025-the-definitive-angle-mls-matchday-40/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 25</b><small>2025-10-25</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/10/25/2025-the-definitive-angle-nwsl-week-25/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #39</b><small>2025-10-18</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #39</span>
+  <a class="go" href="https://proreferees.com/2025/10/18/2025-inside-video-review-mls-39/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #39</b><small>2025-10-18</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #39</span>
+  <a class="go" href="https://proreferees.com/2025/10/18/2025-var-a-fondo-mls-39/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #24</b><small>2025-10-18</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #24</span>
+  <a class="go" href="https://proreferees.com/2025/10/18/2025-inside-video-review-nwsl-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 39</b><small>2025-10-18</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/10/18/2025-the-definitive-angle-mls-matchday-39/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 24</b><small>2025-10-18</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/10/18/2025-the-definitive-angle-nwsl-week-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #38</b><small>2025-10-11</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #38</span>
+  <a class="go" href="https://proreferees.com/2025/10/11/2025-inside-video-review-mls-38/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #38</b><small>2025-10-11</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #38</span>
+  <a class="go" href="https://proreferees.com/2025/10/11/2025-var-a-fondo-mls-38/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 38</b><small>2025-10-11</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/10/11/2025-the-definitive-angle-mls-matchday-38/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #36 + #37</b><small>2025-10-04</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #36+37</span>
+  <a class="go" href="https://proreferees.com/2025/10/04/2025-inside-video-review-mls-3637/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #36 + #37</b><small>2025-10-04</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #36+37</span>
+  <a class="go" href="https://proreferees.com/2025/10/04/2025-var-a-fondo-mls-3637/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #22</b><small>2025-10-04</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #22</span>
+  <a class="go" href="https://proreferees.com/2025/10/04/2025-inside-video-review-nwsl-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 37</b><small>2025-10-04</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/10/04/2025-the-definitive-angle-mls-matchday-37/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 22</b><small>2025-10-04</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/10/04/2025-the-definitive-angle-nwsl-week-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #34 + #35</b><small>2025-09-27</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #34+35</span>
+  <a class="go" href="https://proreferees.com/2025/09/27/2025-inside-video-review-mls-3435/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #34 + #35</b><small>2025-09-27</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #34+35</span>
+  <a class="go" href="https://proreferees.com/2025/09/27/2025-var-a-fondo-mls-3435/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #21</b><small>2025-09-27</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #21</span>
+  <a class="go" href="https://proreferees.com/2025/09/27/2025-inside-video-review-nwsl-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 35</b><small>2025-09-27</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/09/27/2025-the-definitive-angle-mls-matchday-35/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 34</b><small>2025-09-27</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/09/27/2025-the-definitive-angle-mls-matchday-34/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 21</b><small>2025-09-27</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/09/27/2025-the-definitive-angle-nwsl-week-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #33</b><small>2025-09-20</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #33</span>
+  <a class="go" href="https://proreferees.com/2025/09/20/2025-inside-video-review-mls-33/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #33</b><small>2025-09-20</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #33</span>
+  <a class="go" href="https://proreferees.com/2025/09/20/2025-var-a-fondo-mls-33/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #20</b><small>2025-09-20</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #20</span>
+  <a class="go" href="https://proreferees.com/2025/09/20/2025-inside-video-review-nwsl-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 33</b><small>2025-09-20</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/09/20/2025-the-definitive-angle-mls-matchday-33/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 20</b><small>2025-09-20</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/09/20/2025-the-definitive-angle-nwsl-week-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #31 + #32</b><small>2025-09-13</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #31+32</span>
+  <a class="go" href="https://proreferees.com/2025/09/13/2025-inside-video-review-mls-3132/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #31 + #32</b><small>2025-09-13</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #31+32</span>
+  <a class="go" href="https://proreferees.com/2025/09/13/2025-var-a-fondo-mls-3132/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #19</b><small>2025-09-13</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #19</span>
+  <a class="go" href="https://proreferees.com/2025/09/13/2025-inside-video-review-nwsl-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 32</b><small>2025-09-13</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/09/13/2025-the-definitive-angle-mls-matchday-32/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 19</b><small>2025-09-13</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/09/13/2025-the-definitive-angle-nwsl-week-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 31</b><small>2025-09-06</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/09/06/2025-the-definitive-angle-mls-matchday-31/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #30</b><small>2025-08-30</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #30</span>
+  <a class="go" href="https://proreferees.com/2025/08/30/2025-inside-video-review-mls-30/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #30</b><small>2025-08-30</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #30</span>
+  <a class="go" href="https://proreferees.com/2025/08/30/2025-var-a-fondo-mls-30/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #17</b><small>2025-08-30</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #17</span>
+  <a class="go" href="https://proreferees.com/2025/08/30/2025-inside-video-review-nwsl-17/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 30</b><small>2025-08-30</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/08/30/2025-the-definitive-angle-mls-matchday-30/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 17</b><small>2025-08-30</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/08/30/2025-the-definitive-angle-nwsl-week-17/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #29</b><small>2025-08-23</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #29</span>
+  <a class="go" href="https://proreferees.com/2025/08/23/2025-inside-video-review-mls-29/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #29</b><small>2025-08-23</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #29</span>
+  <a class="go" href="https://proreferees.com/2025/08/23/2025-var-a-fondo-mls-29/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #16</b><small>2025-08-23</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #16</span>
+  <a class="go" href="https://proreferees.com/2025/08/23/2025-inside-video-review-nwsl-16/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 29</b><small>2025-08-23</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/08/23/2025-the-definitive-angle-mls-matchday-29/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 16</b><small>2025-08-23</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/08/23/2025-the-definitive-angle-nwsl-week-16/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #28</b><small>2025-08-20</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #28</span>
+  <a class="go" href="https://proreferees.com/2025/08/20/2025-inside-video-review-mls-28/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #28</b><small>2025-08-20</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #28</span>
+  <a class="go" href="https://proreferees.com/2025/08/20/2025-var-a-fondo-mls-28/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #15</b><small>2025-08-20</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #15</span>
+  <a class="go" href="https://proreferees.com/2025/08/20/2025-inside-video-review-nwsl-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 28</b><small>2025-08-16</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/08/16/2025-the-definitive-angle-mls-matchday-28/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 15</b><small>2025-08-16</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/08/16/2025-the-definitive-angle-nwsl-week-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #14</b><small>2025-08-09</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #14</span>
+  <a class="go" href="https://proreferees.com/2025/08/09/2025-inside-video-review-nwsl-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 14</b><small>2025-08-09</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/08/09/2025-the-definitive-angle-nwsl-week-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #27</b><small>2025-08-02</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #27</span>
+  <a class="go" href="https://proreferees.com/2025/08/02/2025-inside-video-review-mls-27/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #27</b><small>2025-08-02</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #27</span>
+  <a class="go" href="https://proreferees.com/2025/08/02/2025-var-a-fondo-mls-27/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 27</b><small>2025-08-02</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/08/02/2025-the-definitive-angle-mls-matchday-27/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #25 + #26</b><small>2025-07-26</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #25+26</span>
+  <a class="go" href="https://proreferees.com/2025/07/26/2025-inside-video-review-mls-25-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #25 + #26</b><small>2025-07-26</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #25+26</span>
+  <a class="go" href="https://proreferees.com/2025/07/26/2025-var-a-fondo-mls-25-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 26</b><small>2025-07-26</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/07/26/2025-the-definitive-angle-mls-matchday-26/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 25</b><small>2025-07-26</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/07/26/2025-the-definitive-angle-mls-matchday-25/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #23 + #24</b><small>2025-07-19</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #23+24</span>
+  <a class="go" href="https://proreferees.com/2025/07/19/2025-inside-video-review-mls-23-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #23 + #24</b><small>2025-07-19</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #23+24</span>
+  <a class="go" href="https://proreferees.com/2025/07/19/2025-var-a-fondo-mls-23-24/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 24</b><small>2025-07-19</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/07/19/2025-the-definitive-angle-mls-matchday-2324/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #22</b><small>2025-07-12</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #22</span>
+  <a class="go" href="https://proreferees.com/2025/07/12/2025-inside-video-review-mls-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #22</b><small>2025-07-12</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #22</span>
+  <a class="go" href="https://proreferees.com/2025/07/12/2025-var-a-fondo-mls-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 22</b><small>2025-07-12</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/07/12/2025-the-definitive-angle-mls-matchday-22/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #20 + #21</b><small>2025-07-05</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #20+21</span>
+  <a class="go" href="https://proreferees.com/2025/07/05/var-a-fondo-mls-20-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #20 + #21</b><small>2025-07-05</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #20+21</span>
+  <a class="go" href="https://proreferees.com/2025/07/05/2025-inside-video-review-mls-2021/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 21</b><small>2025-07-05</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/07/05/2025-the-definitive-angle-mls-matchday-21/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 20</b><small>2025-07-05</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/07/05/2025-the-definitive-angle-mls-matchday-20/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #18 + #19</b><small>2025-06-21</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #18+19</span>
+  <a class="go" href="https://proreferees.com/2025/06/21/2025-inside-video-review-mls-18-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #18 + #19</b><small>2025-06-21</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #18+19</span>
+  <a class="go" href="https://proreferees.com/2025/06/21/2025-var-a-fondo-mls-18-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 19</b><small>2025-06-21</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/06/21/2025-the-definitive-angle-mls-matchday-19/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #15</b><small>2025-05-31</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #15</span>
+  <a class="go" href="https://proreferees.com/2025/05/31/2025-inside-video-review-mls-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #15</b><small>2025-05-31</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #15</span>
+  <a class="go" href="https://proreferees.com/2025/05/31/2025-var-a-fondo-mls-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #10</b><small>2025-05-31</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #10</span>
+  <a class="go" href="https://proreferees.com/2025/05/31/2025-inside-video-review-nwsl-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 15</b><small>2025-05-31</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/05/31/2025-the-definitive-angle-mls-matchday-15/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 10</b><small>2025-05-31</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/05/31/2025-the-definitive-angle-nwsl-week-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #13 and #14</b><small>2025-05-24</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #13</span>
+  <a class="go" href="https://proreferees.com/2025/05/24/2025-inside-video-review-mls-1314/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #13 and #14</b><small>2025-05-24</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #13</span>
+  <a class="go" href="https://proreferees.com/2025/05/24/2025-var-a-fondo-mls-1314/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #9</b><small>2025-05-24</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #9</span>
+  <a class="go" href="https://proreferees.com/2025/05/24/2025-inside-video-review-nwsl-9/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 14</b><small>2025-05-24</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/05/24/2025-the-definitive-angle-mls-matchday-14/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 9</b><small>2025-05-24</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/05/24/2025-the-definitive-angle-nwsl-week-9/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #12</b><small>2025-05-17</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #12</span>
+  <a class="go" href="https://proreferees.com/2025/05/17/2025-inside-video-review-mls-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #12</b><small>2025-05-17</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #12</span>
+  <a class="go" href="https://proreferees.com/2025/05/17/2025-var-a-fondo-mls-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #8</b><small>2025-05-17</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #8</span>
+  <a class="go" href="https://proreferees.com/2025/05/17/2025-inside-video-review-nwsl-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 12</b><small>2025-05-17</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/05/17/2025-the-definitive-angle-mls-matchday-12/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 8</b><small>2025-05-17</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/05/17/2025-the-definitive-angle-nwsl-week-8/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #11</b><small>2025-05-10</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #11</span>
+  <a class="go" href="https://proreferees.com/2025/05/10/2025-inside-video-review-mls-11/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #11</b><small>2025-05-10</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #11</span>
+  <a class="go" href="https://proreferees.com/2025/05/10/2025-var-a-fondo-mls-11/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #7</b><small>2025-05-10</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #7</span>
+  <a class="go" href="https://proreferees.com/2025/05/10/2025-inside-video-review-nwsl-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 11</b><small>2025-05-10</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/05/10/2025-the-definitive-angle-mls-matchday-11/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 7</b><small>2025-05-10</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/05/10/2025-the-definitive-angle-nwsl-week-7/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr MLS">
+  <div class="t"><b>Inside Video Review: MLS #10</b><small>2025-05-03</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">MLS #10</span>
+  <a class="go" href="https://proreferees.com/2025/05/03/2025-inside-video-review-mls-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="vaf MLS">
+  <div class="t"><b>VAR a Fondo: MLS #10</b><small>2025-05-03</small></div>
+  <span class="badge pending">VAR a Fondo（西）</span><span class="badge info">MLS #10</span>
+  <a class="go" href="https://proreferees.com/2025/05/03/2025-var-a-fondo-mls-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="ivr NWSL">
+  <div class="t"><b>Inside Video Review: NWSL #6</b><small>2025-05-03</small></div>
+  <span class="badge info">IVR · VAR 评析（英）</span><span class="badge info">NWSL #6</span>
+  <a class="go" href="https://proreferees.com/2025/05/03/2025-inside-video-review-nwsl-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle MLS">
+  <div class="t"><b>The Definitive Angle: MLS Matchday 10</b><small>2025-05-03</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">MLS</span>
+  <a class="go" href="https://proreferees.com/2025/05/03/2025-the-definitive-angle-mls-matchday-10/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div><div class="acard" data-kinds="angle NWSL">
+  <div class="t"><b>The Definitive Angle: NWSL Week 6</b><small>2025-05-03</small></div>
+  <span class="badge correct">The Definitive Angle（文字判例）</span><span class="badge info">NWSL</span>
+  <a class="go" href="https://proreferees.com/2025/05/03/2025-the-definitive-angle-nwsl-week-6/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方页</a>
+</div></div>
+  <section class="ussf" id="ussf">
+    <h2><svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg> 美国足协（USSF）裁判视频</h2>
+    <p class="desc">美国足协的裁判判例内容（Week in Review 系列等）公开形态有限：官网视频页为脚本渲染、完整新集在 Learning Center（免费注册）登录墙内，且无公开的官方 YouTube 播放列表——故本站仅作入口导航，不抓取条目。PRO 的周报（上方索引）是北美最稳定的公开「评议」形态。</p>
+    <div class="tools">
+      <a class="tool" href="https://www.ussoccer.com/refereeing/videos" target="_blank" rel="noopener noreferrer"><b>Refereeing Videos 官方页</b><span>ussoccer.com/refereeing/videos：栏目入口（部分内容需 JS 渲染/注册）</span></a>
+      <a class="tool" href="https://learning.ussoccer.com/referee" target="_blank" rel="noopener noreferrer"><b>U.S. Soccer Learning Center</b><span>learning.ussoccer.com/referee：完整判例课程与 Webinar（免费注册后观看）</span></a>
+      <a class="tool" href="https://www.ussoccer.com/refereeing" target="_blank" rel="noopener noreferrer"><b>Referee Program 首页</b><span>裁判项目总入口：规则、指派、教育资料</span></a>
+    </div>
+  </section>
+  <p class="foot">PRO 文章与视频版权归 Professional Referee Organization 所有；本页仅收录标题/日期/系列等元数据与官方链接（来源 proreferees.com，核对日期 2026-10-05）。USSF 内容归 U.S. Soccer 所有。</p>
+</div>
+<script>
+(function(){
+  var chips = document.querySelectorAll("[data-chips] .chip");
+  var cards = document.querySelectorAll(".acard[data-kinds]");
+  var years = document.querySelectorAll(".year-h[data-year]");
+  chips.forEach(function(c){
+    c.addEventListener("click", function(){
+      chips.forEach(function(x){ x.classList.remove("on"); });
+      c.classList.add("on");
+      var f = c.getAttribute("data-f");
+      cards.forEach(function(a){
+        var hit = f === "all" || (a.getAttribute("data-kinds") || "").indexOf(f) >= 0;
+        a.style.display = hit ? "" : "none";
+      });
+      years.forEach(function(y){
+        var any = false;
+        y.nextElementSibling && y.nextElementSibling.querySelectorAll
+          && y.nextElementSibling.querySelectorAll(".acard").forEach(function(a){
+            if (a.style.display !== "none") any = true;
+          });
+        var grp = document.getElementById("ybody-" + y.getAttribute("data-year"));
+        if (grp) grp.style.display = any ? "" : "none";
+        y.style.display = any ? "" : "none";
+      });
+    });
+  });
+})();
+</script>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
+</html>

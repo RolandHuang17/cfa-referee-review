@@ -15,6 +15,11 @@ ALLOWED_HOSTS = {
     "imageoss.thecfa.cn",
     "rest.thecfa.cn",
     "www.uefa.com",  # UEFA Clear Line 判例库（fetch_uefa.py，节流抓取）
+    "www.card.rfef.es",  # 西班牙裁判委员会《Criterios Arbitrales》（fetch_rfef.py）
+    "www.dutchreferee.com",  # UEFA RAP 各期索引页（fetch_rap.py 核对）
+    "proreferees.com",  # 美国 PRO 评议周报（fetch_pro.py）
+    "hns.family",  # 克罗地亚足协 Sudačka analiza（fetch_hns.py）
+    "www.conmebol.com",  # 南美足联 Situación de Análisis VAR（fetch_conmebol.py）
 }
 # DoH解析器固定为IP直连（无DNS依赖）；本机若开TUN代理，系统DNS返回fake-ip，
 # 因此一律走公共DNS取真实公网IP

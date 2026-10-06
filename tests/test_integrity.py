@@ -24,7 +24,8 @@ from lib.team_names import ALIASES  # noqa: E402
 
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
-         "scale.html", "uefa.html", "quiz.html"]
+         "scale.html", "uefa.html", "rap.html", "rfef.html", "pro.html", "intl.html",
+         "conmebol.html", "quiz.html"]
 SEASONS = ("2024", "2025", "2026")
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),

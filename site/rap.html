@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UEFA RAP 判例训练包 · 裁判学习平台</title>
+<style>
+/* ===== rap 页专属布局 (tokens/组件来自 data-cfa-theme) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{max-width:920px;margin:0 auto;padding:22px 16px 18px}
+.page-head h1{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
+.page-head .sub{color:var(--muted);font-size:13px;line-height:1.7}
+.src-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.src-banner .ic{color:var(--brand)}
+.src-banner a{color:var(--brand);font-weight:600;text-decoration:none}
+.src-banner a:hover{text-decoration:underline}
+.wrap{max-width:920px;margin:0 auto;padding:20px 16px 60px}
+.about p{font-size:14px;line-height:1.9;color:var(--ink2);margin:0 0 12px}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:16px 0 8px}
+.step{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:14px 16px}
+.step b{display:flex;align-items:center;gap:8px;font-family:var(--font-display);font-size:15px;margin-bottom:6px}
+.step .n{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;
+  border-radius:50%;background:var(--brand);color:var(--on-brand);font-size:13px;font-weight:700}
+.step p{margin:0;font-size:13px;color:var(--muted);line-height:1.8}
+.sect{margin-top:34px}
+.sect h2{font-family:var(--font-display);font-size:19px;margin:0 0 10px;letter-spacing:.4px}
+.sect .desc{font-size:13.5px;color:var(--muted);line-height:1.8;margin:0 0 14px}
+.edition{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  padding:14px 18px;margin-bottom:12px;
+  transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
+.edition:hover{transform:translateY(-2px);border-color:var(--brand)}
+.ed-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.ed-head h3{margin:0;font-family:var(--font-display);font-size:16.5px}
+.ed-size{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:6px;
+  padding:1px 8px;background:var(--card2);white-space:nowrap}
+.ed-status{margin-left:auto}
+.ed-note{font-size:13px;color:var(--muted);line-height:1.75;margin:6px 0 0}
+.ed-links{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.tools{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:10px}
+.tool{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:12px 15px;
+  text-decoration:none;color:var(--ink2);transition:.12s}
+.tool:hover{border-color:var(--brand);color:var(--ink)}
+.tool b{display:block;font-size:13.5px;color:var(--ink);margin-bottom:4px}
+.tool span{font-size:12.5px;color:var(--muted);line-height:1.7}
+.related{display:flex;flex-wrap:wrap;gap:10px}
+.foot{margin-top:30px;font-size:12px;color:var(--faint);line-height:1.8}
+@media (max-width:760px){.steps{grid-template-columns:1fr}.ed-status{margin-left:0}}
+</style>
+<style data-cfa-theme>
+/* ============================================================
+   裁判学习平台 · 全站设计系统 (唯一权威样式层)
+   风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
+   衬线大标题/陶土色点缀/发丝线边框/平面卡片
+   - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
+   - 本文件由 scripts/lib/theme.py 以 style 标签内联注入全部生成页 head
+   - 各 builder 的页面 style 块只允许写页面专属布局, 禁止重定义
+     :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
+   ============================================================ */
+
+/* ---------- 设计 tokens ---------- */
+:root{
+  /* 主题色: 陶土(clay)为品牌色, 红/绿/黄为判定语义色 */
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:rgba(178,58,46,.09); --red-line:rgba(178,58,46,.32);
+  --green:#3e7b49; --green-bg:rgba(62,123,73,.1); --green-line:rgba(62,123,73,.32);
+  --amber:#946d1b; --amber-bg:rgba(148,109,27,.11); --amber-line:rgba(148,109,27,.34);
+  --info:#a3502b; --info-bg:rgba(163,80,43,.09); --info-line:rgba(163,80,43,.3);
+
+  /* 表面与文字 (暖炭深色) */
+  --bg:#191813; --bg2:#201e18; --card:#242219; --card2:#2b2820;
+  --ink:#ece8dd; --ink2:#cfc9ba; --muted:#9c9585; --faint:#6e6759;
+  --line:#3a362c; --line2:#2e2b22;
+  --shadow:0 14px 40px rgba(10,9,6,.5);
+  --shadow-sm:0 2px 10px rgba(10,9,6,.35);
+
+  /* 顶栏 (与页面同底色 + 发丝线, 编辑风导航) */
+  --top-bg:#191813; --top-ink:#ece8dd; --top-muted:#9c9585;
+  --top-line:#3a362c; --top-chip:rgba(236,232,221,.07); --top-chip-on:rgba(224,139,98,.16);
+  --top-input-bg:#242219; --top-input-line:#3a362c;
+
+  /* 几何与字体 */
+  --r-sm:6px; --r-md:10px; --r-lg:13px;
+  --top-h:56px;
+  --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
+}
+[data-theme="light"]{
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:#f7e8e2; --red-line:#e6c3b6;
+  --green:#3e7b49; --green-bg:#e8f0e4; --green-line:#c3d6be;
+  --amber:#946d1b; --amber-bg:#f5edda; --amber-line:#e2d3a4;
+  --info:#a3502b; --info-bg:#f4e7dd; --info-line:#e3c8b2;
+
+  --bg:#f3f1ea; --bg2:#eceade; --card:#fbfaf5; --card2:#f1eee3;
+  --ink:#211e1a; --ink2:#46423a; --muted:#7a7466; --faint:#a49d8c;
+  --line:#ddd8ca; --line2:#e9e5d9;
+  --shadow:0 14px 40px rgba(48,42,30,.12);
+  --shadow-sm:0 1px 4px rgba(48,42,30,.06);
+
+  --top-bg:#f3f1ea; --top-ink:#211e1a; --top-muted:#7a7466;
+  --top-line:#ddd8ca; --top-chip:rgba(33,30,26,.05); --top-chip-on:rgba(163,80,43,.12);
+  --top-input-bg:#fbfaf5; --top-input-line:#cfc9b8;
+}
+
+/* ---------- 基础 ---------- */
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:14.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+::selection{background:rgba(163,80,43,.25)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.skip-link{position:absolute;left:-999px;top:0;z-index:200;background:var(--brand);
+  color:var(--on-brand);padding:8px 14px;border-radius:0 0 8px 0}
+.skip-link:focus{left:0}
+h1,h2{font-variant-numeric:tabular-nums}
+
+/* 滚动条 */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 图标 ---------- */
+.ic{vertical-align:-2.5px;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+
+/* ---------- 顶栏(全站统一) ---------- */
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--top-bg);color:var(--top-ink);border-bottom:1px solid var(--top-line);
+  position:sticky;top:0;z-index:60}
+.topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--top-ink);white-space:nowrap;min-width:0}
+.topbar .brand .ic{color:var(--brand)}
+.topbar .brand b{font-family:var(--font-display);font-size:16.5px;letter-spacing:.4px;font-weight:700}
+.topbar .brand .brand-sub{font-size:11.5px;color:var(--top-muted);padding:1px 9px;
+  border:1px solid var(--top-line);border-radius:999px;white-space:nowrap}
+.topbar .nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.topbar .nav::-webkit-scrollbar{display:none}
+.topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;
+  border:1px solid transparent;border-radius:var(--r-sm);background:none;
+  color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
+.topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+/* 顶栏共 11 个导航项：中等宽度下隐藏导航图标保标签，并收紧搜索框/间距/内边距，
+   避免导航横向滚动溢出（≤1360 再隐品牌副标） */
+@media (max-width:1560px){
+  .topbar{gap:10px}
+  .topbar .nav{gap:1px}
+  .topbar .nav .ic{display:none}
+  .topbar .nav .tbtn{font-size:12.5px;padding:6px 6px}
+  .topbar .tbtn{padding:6px 7px}
+  .topbar input[type=search]{min-width:96px}
+}
+@media (max-width:1460px){.topbar .brand .brand-sub{display:none}}
+.topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
+  border:1px solid var(--top-input-line);border-radius:var(--r-sm);
+  background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
+.topbar .search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:480px;min-width:120px}
+.topbar .search-wrap .ic{position:absolute;left:10px;color:var(--top-muted);pointer-events:none}
+
+/* 主题切换按钮: 图标随主题互换 */
+#btnTheme .when-light{display:none}
+[data-theme="light"] #btnTheme .when-dark{display:none}
+[data-theme="light"] #btnTheme .when-light{display:inline-flex}
+
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* ---------- 通用组件 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.btn.primary:hover{opacity:.88;color:var(--bg)}
+.btn.iconbtn{padding:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;white-space:nowrap;transition:.15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.chip.on b{color:var(--brand)}
+
+/* 判定徽章 */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2.5px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.badge.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line)}
+.badge.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.badge.pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-line);font-weight:500}
+.badge.wrong,.badge.correct,.badge.pending,.badge.info{letter-spacing:.3px}
+
+/* 队徽 (跨页共用, JS 注入) */
+.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:4px;background:#fff}
+.team-dot{display:inline-block;border-radius:3px;vertical-align:-3px;margin-right:4px;flex:none}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:4px;margin-right:4px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.wrong{background:var(--red)}.dot.correct{background:var(--green)}.dot.pending{background:var(--amber)}
+.kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
+
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
+/* ---------- 弹层 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
+  z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
+.modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
+.modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
+.modal .close:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- 通用响应式辅助 ---------- */
+@media (max-width:760px){
+  .topbar{gap:8px;padding:0 10px}
+  .topbar .brand .brand-sub{display:none}
+  .topbar .tbtn span{display:none}
+  /* 恢复导航图标：≤1560 的藏图标规则会让小屏导航只剩空盒 */
+  .topbar .nav .ic{display:inline}
+  .topbar .tbtn{padding:6px 8px}
+}
+
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'}catch(e){}</script></head>
+<body class="page-rap">
+<a class="skip-link" href="#content0">跳到内容</a>
+<header class="topbar"><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">UEFA RAP 训练包</span></a><nav class="nav" aria-label="站点导航"><a class="tbtn" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025评议</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024评议</span></a><a class="tbtn" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA</span></a><a class="tbtn cur" aria-current="page" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>RAP</span></a><a class="tbtn" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>RFEF</span></a><a class="tbtn" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国评议</span></a><a class="tbtn" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>国际评议</span></a><a class="tbtn" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美评议</span></a><a class="tbtn" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题</span></a></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header>
+<header class="page-head">
+  <div class="wrap">
+    <h1>UEFA RAP 判例训练包</h1>
+    <div class="sub">Refereeing Assistance Programme：欧足联每年两期的「看片段 → 自己判 → 对官方答案」视频判例训练包，与中国足协评议训练完全同构 · 本页为导航与训练方法指南（内容在注册墙/下载包内，站内不收录判例数据）</div>
+    <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 2025-2 起在 Nextaur 平台在线发布（免费注册）；<a href="https://www.dutchreferee.com/refereeing-assistance-programme/" target="_blank" rel="noopener noreferrer">dutchreferee.com 各期索引</a></div>
+  </div>
+</header>
+<div class="wrap" id="content0">
+  <section class="about">
+    <p>RAP（Refereeing Assistance Programme，裁判援助计划）是欧足联每年发布两期的半官方视频判例训练包：真实比赛片段按主题分类，观看时不立即显示正确判罚——先自己作出决定，再点击查看 UEFA 的官方解释。这一「看片段 → 自己判 → 对答案」的流程与中国足协评议的训练形态完全同构，是自学统一判罚尺度的最佳材料之一。</p><p>与站内已收录的 Clear Line 公开判例库（判例+官方解释直接可见）不同，RAP 是「先判后看」的训练形态。2025-2 期起 RAP 转移到 Nextaur 平台在线发布（免费注册即可观看）；2016–2025 年的旧版为 WeTransfer 下载包（5–14GB），链接大多已失效，且 2020 年起的版本需要第三方 Mulppy App 打开。</p><p>说明：本页仅作导航与训练方法指南，RAP 各期内容受欧足联版权保护且在注册墙/下载包内，站内不收录其判例数据。</p>
+    <div class="steps"><div class="step"><b><span class="n">1</span>看片段</b><p>在 Nextaur（或旧版下载包）中按类别（DOGSO、管理、越位等）观看真实比赛片段，片段停在判罚瞬间。</p></div><div class="step"><b><span class="n">2</span>自己判</b><p>先独立作出判罚决定：是否犯规、判罚方式、纪律处罚（含 VAR 是否介入）。</p></div><div class="step"><b><span class="n">3</span>对答案</b><p>点击右下角按钮查看 UEFA 的官方认定与解释。结果标注「borderline」表示黄牌/红牌均可接受，不视为判罚错误。</p></div></div>
+  </section>
+  <section class="sect">
+    <h2><svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg> 各期索引</h2>
+    <p class="desc">按发布时期分组。下载包时期的 WeTransfer 链接通常在数周后失效，「链接可能已失效」为常态——在线期请直接使用 Nextaur。介意第三方工具的请只用 Nextaur。</p>
+    <h3 style="font-family:var(--font-display);font-size:15.5px;margin:18px 0 10px">Nextaur 在线期（2025-2 起）</h3><p class="desc" style="margin:-6px 0 12px">免费注册 Nextaur 账号后在线观看，无需下载。</p><div class="edition">
+  <div class="ed-head"><h3>RAP 2026-1</h3><span class="ed-status badge correct">在线（免费注册）</span></div>
+  <p class="ed-note">最新一期，欧足联改用 Nextaur 平台发布</p>
+  <div class="ed-links"><a class="btn" href="https://nextaur.com/uefa/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Nextaur 平台</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2025-2</h3><span class="ed-status badge correct">在线（免费注册）</span></div>
+  <p class="ed-note">首个 Nextaur 在线版，判例量较大</p>
+  <div class="ed-links"><a class="btn" href="https://nextaur.com/uefa/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Nextaur 平台</a></div>
+</div><h3 style="font-family:var(--font-display);font-size:15.5px;margin:18px 0 10px">下载包时期（2016 – 2025-1）</h3><p class="desc" style="margin:-6px 0 12px">WeTransfer 下载包（5–14GB），区分 PC/MAC；链接多已失效，2020 起需付费 Mulppy App 打开。下载与付费风险自负。</p><div class="edition">
+  <div class="ed-head"><h3>RAP 2025-1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2025 年夏休版；发布后链接有过更新</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2025-1-update" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载（更新链接）</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP Euro 2024</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">原计划的 2024-2 未发布，欧洲杯版为该周期最终版，2025 年初发布</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2024-euro" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2024:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2024 夏季版</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2024-1-new" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2023:2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2023 年末版；链接曾更新</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2023-2-new" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载（新链接）</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2023:1</h3><span class="ed-size">14.2GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2023 年 8 月发布</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2023-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2022:2</h3><span class="ed-size">9.9GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2023 年 1 月发布（2022-23 冬歇版）</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2022-2" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2022:1</h3><span class="ed-size">11.3GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2022 夏季版</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2022-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2021:2</h3><span class="ed-size">8.5GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">由读者共享给 dutchreferee 发布</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2021-2" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2021:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2021 夏季版</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2021-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP Euro 2020</h3><span class="ed-size">5.1GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">欧足联官方发布的欧洲杯专题版</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/rap-euro-2020" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2020:2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">链接由欧足联流出后在网络流传</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2020-2" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2020:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">自 2020 版起需要 Mulppy App 打开（付费）</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2020-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载（Mac 与 PC）</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2019:2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">区分系统版本</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2019-2-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/rap-2019-2-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a><a class="btn" href="http://bit.ly/rap-2019-2-mac-mojave" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC (Mojave/Sierra)</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2019:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">区分系统版本</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-2019-1-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/rap-2019-1-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a><a class="btn" href="http://bit.ly/rap-2019-1-sierra-mojave" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC (Sierra/Mojave)</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2018:2</h3><span class="ed-size">约10GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">文件巨大，建议 Wi-Fi 下载</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/RAP-2018-2-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-2018-2-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2018:1</h3><span class="ed-size">约10GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">文件巨大，建议 Wi-Fi 下载</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-2018-1-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-2018-1-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a><a class="btn" href="http://bit.ly/RAP-2018-1-mac-sierra" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC Sierra</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2017-2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">近半年新场景合集</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-2017-2-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-2017-2-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP Women&#39;s Euro 2017</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2017 女足欧洲杯专题</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/rap-womens-euro-2017-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/rap-women-euro-2017-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2017-1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">2017 年第一期；链接曾更新</p>
+  <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2017-1-pc-new" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP Euro 2016</h3><span class="ed-size">约5GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">法国欧洲杯专题，仅 PC 版</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/rap-euro-2016-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a></div>
+</div><div class="edition">
+  <div class="ed-head"><h3>RAP 2016（edition 2）</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
+  <p class="ed-note">链接来自 Twitter 上的 Arbiter Café</p>
+  <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
+</div>
+  </section>
+  <section class="sect">
+    <h2><svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> 相关工具与链接</h2>
+    <div class="tools"><a class="tool" href="https://nextaur.com/uefa/" target="_blank" rel="noopener noreferrer"><b>Nextaur 平台（UEFA 组织页）</b><span>2025-2 与 2026-1 两期的官方在线平台，免费注册</span></a><a class="tool" href="https://www.dutchreferee.com/refereeing-assistance-programme/" target="_blank" rel="noopener noreferrer"><b>dutchreferee RAP 索引页</b><span>各期下载链接的来源索引（荷兰裁判社区博客，持续更新）</span></a><a class="tool" href="https://mulppy.softwar.io/" target="_blank" rel="noopener noreferrer"><b>Mulppy App</b><span>打开 2020 年及以后下载包所需的第三方播放器（约 €5，付费）</span></a><a class="tool" href="https://github.com/jack-powers/UEFA-RAP-Viewer" target="_blank" rel="noopener noreferrer"><b>UEFA-RAP-Viewer（第三方）</b><span>社区开发的 PC 端查看器，替代 Mulppy（未经验证，风险自负）</span></a><a class="tool" href="http://bit.ly/rap-mac-users-explanation" target="_blank" rel="noopener noreferrer"><b>MAC 安装帮助文档</b><span>旧版 MAC 安装问题排查（dutchreferee 提供）</span></a></div>
+  </section>
+  <section class="sect">
+    <h2><svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 站内关联</h2>
+    <div class="related">
+      <a class="tool" href="uefa.html"><b>欧足联 Clear Line 判例库</b><span>判例+官方解释直接可见的公开库，与 RAP 的「先判后看」互补；本站已全量中文译制</span></a>
+      <a class="tool" href="quiz.html"><b>考题模式</b><span>用足协评议判例自测判罚决定与纪律处分，RAP 式训练的离线练习场</span></a>
+    </div>
+  </section>
+  <p class="foot">RAP 各期内容版权归 UEFA 所有；dutchreferee.com 为各期下载链接的社区索引来源。本页仅提供导航与训练方法说明。数据核对日期：2026-10-05。</p>
+</div>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
+</html>

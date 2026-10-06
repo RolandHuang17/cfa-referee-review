@@ -6,13 +6,18 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**十一个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（七张入口卡片 + 浏览模式开关）
+核心交付物是 `site/` 下的**十六个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（十二张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 - `site/scale.html` 官方统一判罚尺度宣讲（2024–2026 三季 104 例场景视频+判罚决定矩阵；2024 为第三代 EXE+XML 包，走 extract_season_2024 解析）
 - `site/uefa.html` 欧足联 Clear Line 判例库（中文译制+英文原文开关+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
+- `site/rap.html` UEFA RAP 判例训练包导航页（训练方法说明 + 23 期索引：Nextaur 在线期与历史下载包分区，纯指南页不收录判例内容）
+- `site/rfef.html` 西班牙 CTA《Criterios Arbitrales》判罚标准手册（RFEF 官方手册中文译制 + 西语原文开关 + 本地化判例视频，缺失时回退官方直链）
+- `site/conmebol.html` 南美 VAR 判例（CONMEBOL《Situación de Análisis VAR》60 案：比赛/日期/城市/球场/情境/分钟 + 官方 YouTube 判例视频链接；列表页+文章页双级抓取）
+- `site/intl.html` 全球评议资源导航（美国之外的 9 项官方节目/周更：苏格兰 SFA、克罗地亚 HNS、乌克兰 UAF、南美 CONMEBOL、英格兰 Mic'd Up、墨西哥 FMF、土耳其 TFF、日本 J联赛、俄罗斯 RFS；人工策展 intl.json，指南页）
+- `site/pro.html` 美国 PRO 评议索引（MLS/NWSL 周更 VAR 评析全量 207 篇：Inside Video Review / VAR a Fondo / The Definitive Angle，纯链接索引）+ USSF 视频入口指南
 - `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题随机出卷：判罚决定/纪律处分/复核结论作答判分，错题本 localStorage 记忆错选，支持练习/考试两种模式与错题重练）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
@@ -49,6 +54,11 @@
 │   ├── scale.json          ← 官方统一尺度宣讲内容（build_scale.py 从原包解码提取）
 │   ├── laws.json           ← 竞赛规则章节内容（build_rules.py 产物）
 │   ├── uefa.json / uefa-zh.json ← UEFA 判例抓取产物 / 中文译文层（两者不可互相覆盖）
+│   ├── rap.json            ← UEFA RAP 各期索引（人工策展提交，fetch_rap.py 核对/并入新期）
+│   ├── pro.json            ← 美国 PRO 评议周报索引（fetch_pro.py 产物）
+│   ├── intl.json           ← 全球评议资源导航（人工策展）
+│   ├── conmebol.json       ← 南美 VAR 逐案判例（fetch_conmebol.py 产物）
+│   ├── rfef.json / rfef-zh.json ← 西班牙判罚手册抓取产物 / 中文译文层（不可互相覆盖）
 │   ├── issues/{2024,2025,2026}/ ← 各期官方页面原始 HTML 存档（按赛季子目录！）
 │   └── local/              ← **整目录 gitignored**：规则 PDF、抓取缓存、截图、日志、
 │                             2024 官方材料包；clone 下来不存在，脚本各自 mkdir
@@ -94,6 +104,21 @@ python scripts/fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Cle
                                               #     （缓存 data/local/uefa-cache/，gitignored）；parse 子命令纯本地重解析
 python scripts/build_uefa.py                  # 12. 生成 uefa.html（从提交的 data/uefa.json + data/uefa-zh.json
                                               #     译文层合并构建：中文为主、英文原文开关，CI 安全）
+python scripts/fetch_rap.py [fetch|merge]     # 12.5 (新期发布时) 抓取 dutchreferee RAP 索引核对期数；
+                                              #     merge 把新期以 status=unreviewed 并入 data/rap.json 待人工补注
+python scripts/fetch_rfef.py all              # 12.6 (赛季更新时) 抓取解析西班牙判罚手册 → data/rfef.json
+                                              #     （缓存 data/local/rfef-cache/；parse 子命令纯本地重解析）
+python scripts/download_rfef_videos.py        # 12.7 RFEF 判例视频 → site/videos/rfef/（约 14.9GB/169 段，
+                                              #     断点续传；survey=HEAD 体积普查，verify=完整性比对）
+python scripts/build_rfef.py                  # 12.8 生成 rfef.html（rfef.json + rfef-zh.json 译文层合并）
+python scripts/build_rap.py                   # 12.9 生成 rap.html（读 data/rap.json 纯静态指南页）
+python scripts/fetch_pro.py all               # 12.10 (每周可选) 抓取 PRO 两个分类列表页 → data/pro.json
+                                              #     （WordPress 无 tarpit，8+7 页；只抓列表元数据，文章内视频跳官方页）
+python scripts/build_pro.py                   # 12.11 生成 pro.html（PRO 索引 + USSF 指南区）
+python scripts/build_intl.py                  # 12.12 生成 intl.html（读 data/intl.json 纯静态导航页）
+python scripts/fetch_conmebol.py all          # 12.13 (随赛事更新) 抓取 CONMEBOL VAR 判例 → data/conmebol.json
+                                              #     （列表页 5-10 页 + 逐案文章页增强；conmebol.com 属性常不带引号）
+python scripts/build_conmebol.py              # 12.14 生成 conmebol.html（判例页：赛事/情境筛选 + 年份分组）
 python scripts/build_portal.py                # 13. 生成门户 index.html
 python scripts/build_page.py                  # 14. 生成 season-2026/2025/2024.html（可带赛季参数）
 python scripts/build_stats.py                 # 15. 生成 stats-2026/2025/2024.html（可带赛季参数）
@@ -154,6 +179,37 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 页面中文为主、英文为辅：默认纯中文，页头「英文原文」开关（localStorage `cfa.uefa-en`，html[data-uefa-en] 控制所有 .en 元素显隐）
 - **官方新增判例的工作流**：fetch → 新 item 无译文自动英文显示（构建警告提示 id）→ 在 uefa-zh.json 补译（术语对照 terms 表 + data/cases-*.json / scale.json 足协语料，如 DOGSO=破坏明显进球得分机会、reckless=鲁莽）→ build_uefa 重建至零警告
 
+### rfef.json（西班牙判罚手册，fetch_rfef.py 产物，提交进仓库）
+- `{source, source_name, season: "2026/27", fetched, extra_topics[], sections[]}`——extra_topics 为页内「延伸栏目」纯外链（VAR 手册/术语表等）
+- `sections[]{key, name_es, name_cn, url, intro_es/complexity_es/general_es, groups[]}`——前三者为栏目级判读文本
+- `groups[]{code(MD/ER/OIO…), name_es, conclusion_es, notes_es[{h,items}], items[]}`——conclusion 为表后判读总结，notes 为 h3/h4 子节（punible/no punible、加重/减轻因素）
+- `items[]{id(MD.1), situation_es, decision_es, decision_norm, decision_extra_es?, videos[]{url,id,file,caption_es}}`——decision_norm 归一化认定（penalty/no_penalty/red_card/yellow_card/dfk/ifk/offside_on/offside_off…）驱动徽章配色；视频文件名前缀即判例编号（MD.1.1→MD.1）
+- 解析锚点：`manual-criterion-row` 行组件 + `manual-inline-video-card` 卡片 + base64 lightbox 参数提 mp4 直链；两种判例形态（表格型/视频卡型）共用文件名前缀锚
+
+### rfef-zh.json（rfef.json 中文译文层，并存提交，绝不可互相覆写）
+- `{note, translated, terms{}, decision_labels{norm:中文}, sections{key:{name,intro,complexity,general,groups{code:{name,conclusion,notes[]}}}}, items{id:{situation,extra?,caption?}}}`
+- 匹配规则：栏目按 key、分组按 code、判例/视频说明按 id（与 uefa-zh 的块序对齐不同，全 id 平铺无脆弱性）；未命中回退西语并 ⚠ 警告，译文多余键也警告
+- 与情形文本重复的视频说明在 zh 层省略（构建时复用情形译文，caption_same 标记）
+
+### pro.json（美国 PRO 评议索引，fetch_pro.py 产物，提交进仓库）
+- `{source, source_name, fetched, ussf{videos,learning,refereeing}, articles[]}`——ussf 为页内指南区三个入口
+- `articles[]{title, url, date, series(ivr/vaf/angle), series_name, kind, league(MLS/NWSL/USL), round, lang(en/es)}`——从两个 WordPress 分类列表页解析（inside-video-review 含西语 VAR a Fondo；the-definitive-angle）；系列/联赛/轮次从标题正则提取
+- v1 只抓列表元数据；文章内嵌视频跳官方页。新周报发布后重跑 fetch_pro.py 即增量（按日期去重）
+
+### intl.json（全球评议资源导航，人工策展，提交进仓库）
+- `{checked, intro_cn[], groups[{key, name_cn, desc_cn, resources[]}], related[]}`
+- `resources[]{id, org, name, lang, update, form, status_cn, note_cn, links[{label,url}]}`——官方之外 9 国评议节目的人工核验入口；新节目直接补 JSON 后重跑 build_intl.py
+
+### conmebol.json（南美 VAR 判例，fetch_conmebol.py 产物，提交进仓库）
+- `{source, source_name, fetched, cases[]}`；`cases[]{title, url, date, excerpt_es, comp, comp_cn, match, fecha, ciudad, estadio, situacion_es, situacion_norm, minuto, youtube}`
+- 双级抓取：Elementor 列表页（分页 /2/…/10/，data-max-page 指示）+ 每案文章页增强（字段各自独立成 <p>，全页剥标签后取最后一组完整字段；YouTube 取字段区之后首个 embed）
+- situacion_norm 归一：penalty/no_penalty/red_card/offside/no_goal/ofr_penalty/other（官方西语原文保留在 situacion_es）
+
+### rap.json（UEFA RAP 各期索引，人工策展，提交进仓库）
+- `{source, checked, nextaur_url, about_cn[], howto_cn[3步], eras[], tools[], editions[]}`
+- `editions[]{id, title, year, era(nextaur/download), platform, size, status_cn, links[{label,url}], note_cn}`——下载包链接时效性强，status_cn 按人工核对填写
+- 新期工作流：`fetch_rap.py merge` 自动并入 status=unreviewed 的新期 → 人工核对链接/大小后改注 → `build_rap.py` 重建
+
 ### crest_overrides.json（人工队徽成果登记）
 - `{标准队名: {path, source_url, source_type, status}}`；generate_teams_catalog 重建时合并
 
@@ -168,10 +224,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - **人工成果唯一权威源**：`data/crest_overrides.json`——`generate_teams_catalog.py` 重建 teams.json 时会合并它，所以手改 teams.json 会丢
 - 已知坑：自动采集易采到**更名前旧徽/同名异 club**（曾采到广州富力旧徽当广州豹、永昌旧徽当沧州雄狮、省队语境采俱乐部徽），宁缺毋滥回退 fallback
 
-## 前端架构（src/theme.css 设计系统 + 五个 builder）
+## 前端架构（src/theme.css 设计系统 + 各页面 builder）
 
 - **设计系统**：`src/theme.css` 是全站唯一权威样式层——视觉风格为暖纸色编辑排版（浅色=米白纸面，深色=暖炭色；陶土色为品牌点缀色，红/绿/黄为判定语义色；标题用衬线字栈 `--font-display`，正文用无衬线 `--font`）、共享组件（topbar/btn/chip/badge/dot/card/modal/team-badge）、SVG 图标与明暗切换。`scripts/lib/theme.py` 提供 `inject_theme()`（注入 CSS + 首帧主题脚本 + 切换脚本，localStorage 键 `cfa.theme`，默认跟随系统）与 `topbar()`（统一顶栏生成器：brand/nav/搜索槽/主题切换，season 页另有 sb_btn/help_btn）
-- **builder 职责**：五个 builder 的 `<style>` 只写页面专属布局，禁止重定义 tokens/顶栏/组件；颜色一律用 var(--token)
+- **builder 职责**：各页面 builder 的 `<style>` 只写页面专属布局，禁止重定义 tokens/顶栏/组件；颜色一律用 var(--token)
 - **season 页布局**：顶栏 + `.workspace` 三栏 grid（侧栏筛选 276px / 播放列表 356px / 详情自适应），每列独立滚动；**全部筛选收进侧栏**（判定 chips / 我的收藏 chips / 赛事 chips / 球队列表(带徽) / 期数 6 列数字网格 / 教学分类行），`body.sb-off` 收起侧栏
 - **数据以 `const DATA = {...}` 内联注入**；`bySeq` 为判例索引
 - **状态对象** `state = {cat, v(判定), issue, q(搜索), sel(选中seq), vIdx(多视频序号), fav(收藏筛选), comp(赛事), team(球队)}`
@@ -194,7 +250,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 ## 硬约束（违反会直接出错）
 
-1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG。唯一例外（用户批准）：uefa.html 无内嵌第三方资源，仅以文字+外链方式收录 UEFA 判例（视频受官方 token 门禁与 X-Frame-Options: DENY 限制，无法本地化/嵌入）
+1. **离线单文件**：所有页面禁止引入任何外部 CDN/字体/JS 库；视频/队徽一律相对路径；图标用 theme.py 内联 SVG。唯一例外（用户批准）：uefa.html 无内嵌第三方资源，仅以文字+外链方式收录 UEFA 判例（视频受官方 token 门禁与 X-Frame-Options: DENY 限制，无法本地化/嵌入）。rfef.html 的判例视频为官方同域直链的本地化副本（site/videos/rfef/，git 忽略，约 14.9GB），仅本地学习用途、与各赛季评议视频同策略；视频缺失时运行时回退官方直链（vfb）。
 2. **safe_http.py 安全模块**（`scripts/lib/safe_http.py`）：所有对公网的请求必须走它——域名白名单（`ALLOWED_HOSTS`，新数据源需显式添加）、强制 https、DoH 解析校验公网 IP（本机 TUN 代理会返回 fake-ip）、IP 钉扎连接。**不要**绕过它直接用 requests/urllib。⚠ 扩白名单只能写 `from lib import safe_http as S` + `S.ALLOWED_HOSTS |= {...}`；写成 `from lib.safe_http import ALLOWED_HOSTS` 会让 `_validate_url` 看到的仍是原集合，**白名单静默失效**
 3. **thecfa.cn 没有 404**：失效 URL 一律 301 到"升级维护"页，判活必须用 `status==200` 且内容不含 /upgrade/
 4. **编码**：全部 UTF-8；但 `启动合集网页.bat` 必须存为 **GBK**（cmd 解析），改它时用 `encoding="gbk"` 写入
@@ -219,16 +275,21 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 改动后依次验证（命令一律在仓库根执行）：
 - [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
-- [ ] `python tests/test_integrity.py` 通过（11页面/三赛季数据/impact一致性/页面-数据同步/考题池基准/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] `python tests/test_integrity.py` 通过（16页面/三赛季数据/impact一致性/页面-数据同步/考题池基准/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
 - [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
 - [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题
-- [ ] 浏览器打开 index.html：门户七张卡片数字正确、浏览模式分段开关与说明文字正确
+- [ ] 浏览器打开 index.html：门户十二张卡片数字正确、浏览模式分段开关与说明文字正确
 - [ ] season-2026.html：225 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
 - [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、uefa 页 lite 下隐藏 iframe（如有）只留链接、顶栏「轻量版」随时切回完整版、刷新记忆保持
 - [ ] 完整版在线回退：临时改名 site/videos 后刷新 → 自动改用官方直链播放并出提示条；恢复原名后 → 本地播放
 - [ ] stats-2026/2025/2024.html：双视角切换、联赛筛选（含足协杯）、缺失比分显示"待补"、明细链接跳对应赛季页
 - [ ] rules.html：划词出现高亮工具条、三种颜色可标可删、章节笔记自动保存、导出导入
+- [ ] rfef.html：栏目导航/判例卡片/认定徽章渲染正确、西语原文开关持久化、过滤框（编号/中文/西语）可用、本地视频可播、临时删一个视频文件刷新 → 该视频回退官方直链、lite 模式视频隐藏+官方手册横幅、明暗主题
+- [ ] rap.html：各期索引与外链、训练三步说明、era 分组、明暗主题
+- [ ] pro.html：筛选 chips（系列/联赛）过滤正常、年份分组与 207 篇索引、官方页外链、USSF 指南区、明暗主题
+- [ ] intl.html：两组 9 资源卡（语言/频率/形态 chips + 注意事项 + 官方外链）、站内关联区、明暗主题
+- [ ] conmebol.html：赛事/情境筛选 chips、年份分组 60 案、官方分析+判例视频双链接、明暗主题
 - [ ] `python scripts/verify_videos.py [赛季]`（如动过视频/数据）
 - [ ] 统计口径：2026 错漏判 95、支持原判 121、不予认定 9；2025 错漏判 82、支持 138、不予 7；2024 错漏判 60、支持 99、不予 1（与 cases-*.json 一致）
 
@@ -240,3 +301,5 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 2026 判例的判定与影响标注为按同一方法论复核（非官方逐条人工背书），把握度低的判 pending 并注释
 - 收藏/笔记仅存浏览器本地，无云同步（导出/导入 JSON 作为迁移方案）
 - 轻量版直链与完整版在线回退依赖官方 videooss CDN 现行策略（无 Referer 即可播，见硬约束 9）；若官方收紧防盗链，在线直播路径失效，页面会降级为提示条引导切换轻量版/官方文章页观看
+- rfef.html 的 RFEF 判例视频约 14.9GB（169 段官方直链副本，download_rfef_videos.py 断点续传）；译文层 rfef-zh.json 为 2026-10 首译，欢迎对照西语原文修订
+- rap.json 的下载包时期链接时效性强（WeTransfer 数周即过期，「链接可能已失效」为常态）；UEFA 发布新 RAP 后跑 fetch_rap.py merge 并人工补注

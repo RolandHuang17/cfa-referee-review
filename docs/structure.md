@@ -28,10 +28,20 @@
 │   ├── scale.json / laws.json ← 尺度宣讲 / 规则章节（脚本产物，但必须入库供 CI 重建）
 │   ├── uefa.json           ← UEFA 抓取产物（fetch_uefa.py parse 会整体覆写）
 │   ├── uefa-zh.json        ← UEFA 中文译文层（**绝不可写进 uefa.json**）
+│   ├── rap.json            ← UEFA RAP 各期索引（人工策展，fetch_rap.py merge 并入新期）
+│   ├── rfef.json           ← 西班牙判罚手册抓取产物（fetch_rfef.py parse 会整体覆写）
+│   ├── rfef-zh.json        ← 其中文译文层（**绝不可写进 rfef.json**）
+│   ├── pro.json            ← 美国 PRO 评议周报索引（fetch_pro.py 产物）
+│   ├── intl.json           ← 全球评议资源导航（人工策展）
+│   ├── conmebol.json       ← 南美 VAR 逐案判例（fetch_conmebol.py 产物）
 │   ├── issues/{season}/    ← 各期官方页面原始 HTML 存档
 │   └── local/              ← **整目录 gitignored**，clone 下来不存在
 │       ├── laws/           ← IFAB 规则 PDF
 │       ├── uefa-cache/     ← 抓取缓存（断点续抓）
+│       ├── rfef-cache/     ← RFEF 手册页缓存（断点续抓）
+│       ├── pro-cache/      ← PRO 分类列表页缓存
+│       ├── conmebol-cache/ ← CONMEBOL 列表页+判例文章页缓存
+│       ├── dutchref-cache/ ← dutchreferee RAP 索引页缓存
 │       ├── shots/          ← 页面截图
 │       ├── logs/           ← 下载日志、校验结果、人工复核文本
 │       └── scale-2024/     ← 2024 官方统一尺度材料包（3.3GB）
@@ -85,7 +95,9 @@ exist_ok=True)`**——新 clone 时该目录不存在。
 
 **5. 离线自包含。** 生成的页面运行时零外部依赖——不引 CDN、不引字体、不引 JS 库。
 唯一例外是 `uefa.html` 以纯文字 + 外链收录 UEFA 判例（视频受 token 门禁与
-`X-Frame-Options: DENY` 限制，无法本地化或嵌入）。
+`X-Frame-Options: DENY` 限制，无法本地化或嵌入）。`rfef.html` 的判例视频是官方
+直链的本地化副本（`site/videos/rfef/`，gitignored，约 14.9GB，本地学习用途），
+与各赛季评议视频同一策略；缺失时运行时回退官方直链。
 
 ## 路径契约（改动前必读）
 

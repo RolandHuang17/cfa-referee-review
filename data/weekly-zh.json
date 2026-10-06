@@ -1,0 +1,68 @@
+{
+ "note": "weekly.json 中文译注层：shows 键=节目 key，items 键=视频 id（来自 weekly.json，稳定唯一）。未译条目页面自动回退官方原文说明。译注为人工+AI 协作策展，欢迎对照官方视频修订。",
+ "translated": "2026-10-06",
+ "shows": {
+  "sfa": {
+   "intro": "苏格兰足总与 Sky Sports 联合出品的月更节目：裁判总监威利·科勒姆（Willie Collum）与主持人戈登·邓肯（Gordon Duncan）逐案复盘苏超关键 VAR 判罚，官方直接给出「判对/判错」结论并解释规则依据，另附现场与 VAR 通话音频。"
+  },
+  "tff": {
+   "intro": "土耳其足协周更栏目「VAR Kayıtları – Sahada İnceleme」（VAR 记录·场上审查）：按轮次整周公开土超各场关键判罚的 VAR 休息室音频与现场画面，是音频透明化程度最高的联赛节目之一。"
+  },
+  "jleague": {
+   "intro": "J 联赛官方判例解说节目「Jリーグ審判レポート」（シンレポ）：由 JFA 审判经理、MQA（比赛质量评估员）与艺人主持人共同复盘每轮争议判例，讲解规则适用与主裁-VAR 沟通过程，语气温和、教学性强。"
+  },
+  "england": {
+   "intro": "Sky Sports 与 PGMOL 合作的「Match Officials: Mic'd Up」： Howard Webb 等携现场收音与 VAR 音频解读英超判例，月更、内容最深。注：官方完整正片分散在 Sky 频道中，此处按标题匹配收录官方发布内容（以单案短片为主），不代表节目全量。"
+  },
+  "fmx": {
+   "intro": "墨西哥足协裁判委员会（Comisión de Árbitros）官方频道：按轮次发布 Liga MX 的 VAR 评析（VAR Review），逐案说明介入原因与最终结论。更新不定期。"
+  },
+  "afa": {
+   "intro": "阿根廷职业足球联赛（Liga Profesional de Fútbol · AFA）官方账号：每轮发布各场主裁与 VAR 的对话音频及判例视频（「VAR 2026」系列），按 Fecha（轮次）归档。"
+  },
+  "rfs": {
+   "intro": "俄罗斯足协官方频道 РФС ТВ 的判例解析栏目「Судейский разбор」（裁判复盘）：逐轮解析俄超（Мир РПЛ）与俄罗斯杯（FONBET Кубок）关键判例，含越位帧图与规则讲解。"
+  }
+ },
+ "items": {
+  "HNQaFXr3GgQ": {"note": "2026/27 新季第 1 期（8-9 月判例）：新赛季首月苏超关键 VAR 判罚逐案复盘。"},
+  "yyt--_yNT_Q": {"note": "2026 年 5 月刊：4-5 月苏超关键判罚复盘。"},
+  "LE8bS2L_22I": {"note": "2026 年 4 月刊：4 月苏超关键判罚复盘。"},
+  "Rb8BPN5Z-Fk": {"note": "2026 年 2-3 月合刊。"},
+  "2h6LWwe9_8k": {"note": "2026 年 1-2 月合刊。"},
+  "o1kn6UhLOeA": {"note": "2025 年 12 月-2026 年 1 月合刊。"},
+  "yXsoC3ItK18": {"note": "2026/27 赛季土超第 6 轮：本轮各场「场上审查」VAR 音频+画面合集。"},
+  "gX6KSOxqDcA": {"note": "2026/27 赛季土超第 5 轮。"},
+  "xHApx1kGALI": {"note": "2026/27 赛季土超第 4 轮。"},
+  "aDdeHid0ev4": {"note": "2026/27 赛季土超第 3 轮。"},
+  "udUB0eKSjhI": {"note": "2026/27 赛季土超第 2 轮。"},
+  "E8meVUWOE7A": {"note": "2026/27 赛季土超揭幕轮。"},
+  "sPmsU-Uau3Y": {"note": "新规则适用事象专场：集中解说 2026/27 赛季新规（含门将持球 8 秒等）在 J 联赛的判例。"},
+  "hF1RoZrIN7g": {"note": "2026 赛季揭幕特辑：开季新规适用与首轮判例解说。"},
+  "Hoy6b2kSP9Y": {"note": "特别篇：MQA 与现役裁判的聚餐实录——赛场上听不到的真实执法话题。"},
+  "8ZcsTW9tsUE": {"note": "争议判罚解说 + 球员视角谈 J 联赛执法特辑。"},
+  "C9h2zzTb7ds": {"note": "世界杯特辑：专访森保一监督与执法世界杯的荒木友辅主审、三原纯副审。"},
+  "nU09tupMh-M": {"note": "VAR 室幕后专题：VAR 如何与主裁协作导向正确判罚。"},
+  "_bbJkDD9qQo": {"note": "科尔威尔（Colwill）手球判例：官方短片说明该球 VAR 介入的依据与价值。"},
+  "CUrlkWUpPuQ": {"note": "哈兰德曼市德比争议绝杀进球的完整 VAR 音频官方公开版。"},
+  "NIZisIde7oM": {"note": "相关素材（非节目正片）：尼尔·沃诺克赛后怒斥执法人员的发布会片段，可作裁判-教练关系讨论素材。"},
+  "6QCbKNbCnGA": {"note": "2025 Clausura 第 11 轮：Tigres vs Querétaro 判例复盘。"},
+  "i7EIURZMUXo": {"note": "2025 Clausura 第 7 轮：Tigres vs Cruz Azul。"},
+  "sJP42kGF2Uk": {"note": "2025 Clausura 第 7 轮：América vs Necaxa。"},
+  "9cesvBRzyAE": {"note": "2025 Clausura 第 7 轮：Mazatlán vs Santos。"},
+  "DAb1NgMeQHo": {"note": "2024/25 Apertura 第 2 轮：Atlas vs Tijuana。"},
+  "vk3yVcvDqmw": {"note": "2024 Clausura 第 6 轮：León vs América——禁区手球点球判例。"},
+  "9AW4mSrrIsw": {"note": "2026 国际超级杯（第四届）：Estudiantes vs Rosario Central 判例音频。"},
+  "Fjv4XzpzIVM": {"note": "同场次另一判例的 VAR 对话音频。"},
+  "JjAO58MYaAU": {"note": "2026 Clausura 第 10 轮：Rosario Central vs Argentinos 判例音频。"},
+  "r13igve_wXI": {"note": "2026 Clausura 第 9 轮：Atlético Tucumán vs River——主裁与 VAR 完整对话。"},
+  "F768xBom5kI": {"note": "2026 Clausura 第 9 轮：Independiente Rivadavia 场次判例音频。"},
+  "-oZ6p5MgH84": {"note": "2026 Clausura 第 8 轮：Racing vs Atlético Tucumán 判例音频。"},
+  "Nbi6sEOojP4": {"note": "俄超（Мир РПЛ）第 25 轮判例解析。"},
+  "VcsZw2bDCGI": {"note": "俄超第 23 轮判例解析。"},
+  "6Lrnrk_07G4": {"note": "俄超第 20 轮 + 俄罗斯杯季后赛判例解析（长片 15 分钟）。"},
+  "cObRvbVR0Ls": {"note": "俄超第 21 轮判例解析。"},
+  "rFeLvQgigAI": {"note": "俄超第 22 轮 + 俄罗斯杯半决赛判例解析。"},
+  "AKfai7M6l0Y": {"note": "俄超第 19 轮判例解析。"}
+ }
+}

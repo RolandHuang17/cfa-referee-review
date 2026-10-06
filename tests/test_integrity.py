@@ -25,7 +25,7 @@ from lib.team_names import ALIASES  # noqa: E402
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
          "scale.html", "uefa.html", "rap.html", "rfef.html", "pro.html", "intl.html",
-         "conmebol.html", "quiz.html"]
+         "conmebol.html", "weekly.html", "ifab.html", "quiz.html"]
 SEASONS = ("2024", "2025", "2026")
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
@@ -236,12 +236,72 @@ def test_site_pages_in_sync_with_data():
     print("site 页面与 data JSON 同步")
 
 
+def test_weekly_ifab_data_sanity():
+    """weekly.json / ifab.json 及其中文层的数据健全性（结构断言，不锁数量）。"""
+    problems = []
+    wk = json.loads((DATA / "weekly.json").read_text(encoding="utf-8"))
+    shows = wk.get("shows", {})
+    eps = wk.get("episodes", [])
+    if len(shows) < 4:
+        problems.append(f"weekly.json 节目数过少: {len(shows)}（应为 7 档左右）")
+    if len(eps) < 50:
+        problems.append(f"weekly.json 期目数过少: {len(eps)}")
+    ids = set()
+    for e in eps:
+        vid = e.get("id")
+        if not vid:
+            problems.append(f"weekly.json 期目缺 id: {e}")
+            continue
+        ids.add(vid)
+        for field in ("show", "title", "url"):
+            if not e.get(field):
+                problems.append(f"weekly.json 期目 {vid} 缺字段 {field}")
+        if e.get("date_src") == "exact" and not e.get("date"):
+            problems.append(f"weekly.json 期目 {vid} date_src=exact 但无日期")
+        if e.get("show") not in shows:
+            problems.append(f"weekly.json 期目 {vid} 的节目 {e.get('show')} 不在 shows 中")
+        if not str(e.get("url", "")).startswith("https://www.youtube.com/watch?v="):
+            problems.append(f"weekly.json 期目 {vid} 的 url 非官方观看页")
+    wzh = json.loads((DATA / "weekly-zh.json").read_text(encoding="utf-8"))
+    for k in wzh.get("items", {}):
+        if k not in ids:
+            problems.append(f"weekly-zh.json items 键 {k} 不在 weekly.json 中")
+    for k in wzh.get("shows", {}):
+        if k not in shows:
+            problems.append(f"weekly-zh.json shows 键 {k} 不在 weekly.json 中")
+    ifab = json.loads((DATA / "ifab.json").read_text(encoding="utf-8"))
+    secs = ifab.get("sections", [])
+    faq = ifab.get("faq", [])
+    if len(secs) < 4:
+        problems.append(f"ifab.json 大节数过少: {len(secs)}（应为 4）")
+    if len(faq) < 10:
+        problems.append(f"ifab.json FAQ 数过少: {len(faq)}（应为 12）")
+    if not all(s.get("blocks") for s in secs):
+        problems.append("ifab.json 存在无内容的大节")
+    izh = json.loads((DATA / "ifab-zh.json").read_text(encoding="utf-8"))
+    zsecs = izh.get("sections", {})
+    for s in secs:
+        if s["id"] not in zsecs:
+            problems.append(f"ifab-zh.json 缺大节 {s['id']}（{s.get('h')}）")
+            continue
+        zblocks = zsecs[s["id"]].get("blocks", {})
+        for b in s["blocks"]:
+            if (b.get("h") or "_head") not in zblocks:
+                problems.append(f"ifab-zh.json 缺子节 {s['id']}/{b.get('h') or '_head'}")
+    for q in faq:
+        if q["id"] not in izh.get("faq", {}):
+            problems.append(f"ifab-zh.json 缺 FAQ {q['id']}")
+    _finish(problems)
+    print("weekly/ifab 数据与中文层校验通过")
+
+
 CHECKS = [
     test_pages_exist_and_are_self_contained,
     test_season_case_counts,
     test_impact_and_scores_consistency,
     test_site_pages_in_sync_with_data,
     test_quiz_bank_pool,
+    test_weekly_ifab_data_sanity,
     test_internal_links_resolve,
     test_team_catalog_complete,
     test_crest_files_and_provenance,

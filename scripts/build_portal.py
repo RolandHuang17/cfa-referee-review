@@ -7,8 +7,8 @@ from datetime import date
 
 from lib.theme import inject_theme, icon, topbar
 
-from lib.paths import (DATA, CONMEBOL_JSON, INTL_JSON, LAWS_JSON, PRO_JSON, RAP_JSON,
-                       RFEF_JSON, SCALE_JSON, SITE, UEFA_JSON)
+from lib.paths import (DATA, CONMEBOL_JSON, IFAB_JSON, INTL_JSON, LAWS_JSON, PRO_JSON, RAP_JSON,
+                       RFEF_JSON, SCALE_JSON, SITE, UEFA_JSON, WEEKLY_JSON)
 
 
 def load_stats():
@@ -117,6 +117,30 @@ def load_conmebol_stats():
         cases = len(d.get("cases", []))
         comps = {c.get("comp") for c in d["cases"] if c.get("comp")}
     return {"cases": cases, "comps": len(comps)}
+
+
+def load_weekly_stats():
+    """周更评议节目判例库数字从 data/weekly.json 计算（期数/节目数/语言数）。"""
+    eps = shows = 0
+    langs = set()
+    if WEEKLY_JSON.exists():
+        d = json.loads(WEEKLY_JSON.read_text(encoding="utf-8"))
+        eps = len(d.get("episodes", []))
+        shows = len(d.get("shows", {}))
+        langs = {s.get("lang") for s in d.get("shows", {}).values() if s.get("lang")}
+    return {"eps": eps, "shows": shows, "langs": len(langs)}
+
+
+def load_ifab_stats():
+    """IFAB 材料数字从 data/ifab.json 计算（大节/FAQ/条目）。"""
+    secs = faq = items = 0
+    if IFAB_JSON.exists():
+        d = json.loads(IFAB_JSON.read_text(encoding="utf-8"))
+        secs = len(d.get("sections", []))
+        faq = len(d.get("faq", []))
+        items = sum(len(b.get("items", [])) for s in d.get("sections", [])
+                    for b in s.get("blocks", []))
+    return {"secs": secs, "faq": faq, "items": items}
 
 
 HTML = r"""<!DOCTYPE html>
@@ -332,7 +356,7 @@ __TOPBAR__
     <a class="ecard c-intl" style="--i:9" href="intl.html">
       <div class="icon">__I_COMPASS__</div>
       <h2>国际评议导航</h2>
-      <p class="desc">全球 9 项官方评议节目与周更解析（苏格兰/克罗地亚/乌克兰/南美/英格兰/墨西哥/土耳其/日本/俄罗斯）：语言、频率与注意事项一页掌握。</p>
+      <p class="desc">全球官方评议节目、VAR 音频与课程测验导航（4 组 __I_RES__ 项）：语言、频率、形态与注意事项一页掌握。</p>
       <div class="nums">
         <div><b>__I_RES__</b><span>资源</span></div>
         <div><b>__I_ORGS__</b><span>机构</span></div>
@@ -351,7 +375,29 @@ __TOPBAR__
       </div>
       <div class="go">进入判例 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-quiz" style="--i:11" href="quiz.html">
+    <a class="ecard c-weekly" style="--i:11" href="weekly.html">
+      <div class="icon">__I_TV__</div>
+      <h2>周更评议节目</h2>
+      <p class="desc">全球七档官方评议节目的结构化期目索引（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯）：官方说明原文 + 中文译注，逐期跳官方观看。</p>
+      <div class="nums">
+        <div><b>__W_SHOWS__</b><span>节目</span></div>
+        <div><b>__W_EPS__</b><span>期目</span></div>
+        <div><b>__W_LANGS__</b><span>语言</span></div>
+      </div>
+      <div class="go">进入索引 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-ifab" style="--i:12" href="ifab.html">
+      <div class="icon">__I_FILE__</div>
+      <h2>IFAB 统一尺度</h2>
+      <p class="desc">IFAB《Laws of the Game》VAR 协议官方全文中文译制：原则 / 可回看判定 / 实务 / 程序四节 + 官方 FAQ 判例，可切英文原文。</p>
+      <div class="nums">
+        <div><b>__IF_SECS__</b><span>章节</span></div>
+        <div><b>__IF_ITEMS__</b><span>条款</span></div>
+        <div><b>__IF_FAQ__</b><span>FAQ 判例</span></div>
+      </div>
+      <div class="go">进入阅读 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-quiz" style="--i:13" href="quiz.html">
       <div class="icon">__I_QUIZ__</div>
       <h2>考题模式</h2>
       <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>
@@ -443,6 +489,8 @@ def main():
     pro = load_pro_stats()
     intl = load_intl_stats()
     cm = load_conmebol_stats()
+    wk = load_weekly_stats()
+    ifab = load_ifab_stats()
     from build_quiz import build_bank  # 与 quiz 页同一题库口径
     bank, _, _ = build_bank()
     q_case = sum(1 for b in bank if b["t"] == "case")
@@ -457,7 +505,8 @@ def main():
             "__I_QUIZ__": icon("quiz", 20), "__I_EXT_S__": icon("external", 15),
             "__I_TARGET__": icon("target", 20), "__I_GLOBE__": icon("globe", 20),
             "__I_FLAG__": icon("flag", 20), "__I_COMPASS__": icon("compass", 20),
-            "__I_PLAY2__": icon("play", 20)}
+            "__I_PLAY2__": icon("play", 20), "__I_TV__": icon("tv", 20),
+            "__I_FILE__": icon("file-text", 20)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
             .replace("__N26__", str(s["2026"]["n"]))
@@ -493,6 +542,12 @@ def main():
             .replace("__I_LANG__", "7")
             .replace("__C_CASES__", str(cm["cases"]))
             .replace("__C_COMPS__", str(cm["comps"]))
+            .replace("__W_SHOWS__", str(wk["shows"]))
+            .replace("__W_EPS__", str(wk["eps"]))
+            .replace("__W_LANGS__", str(wk["langs"]))
+            .replace("__IF_SECS__", str(ifab["secs"]))
+            .replace("__IF_ITEMS__", str(ifab["items"]))
+            .replace("__IF_FAQ__", str(ifab["faq"]))
             .replace("__Q_TOTAL__", str(q_case + q_scale))
             .replace("__Q_CASES__", str(q_case))
             .replace("__Q_SCALE__", str(q_scale))

@@ -50,6 +50,10 @@ RFEF_ZH_JSON = DATA / "rfef-zh.json"    # RFEF 中文译文层（与 RFEF_JSON �
 PRO_JSON = DATA / "pro.json"            # 美国 PRO 评议周报索引（fetch_pro.py 产物）
 INTL_JSON = DATA / "intl.json"          # 全球评议资源导航（人工策展）
 CONMEBOL_JSON = DATA / "conmebol.json"  # 南美足联 VAR 逐案判例（fetch_conmebol.py 产物）
+WEEKLY_JSON = DATA / "weekly.json"      # 全球周更评议节目判例索引（fetch_weekly.py 产物）
+WEEKLY_ZH_JSON = DATA / "weekly-zh.json"  # weekly 中文译注层（与 WEEKLY_JSON 并存，勿互相覆写）
+IFAB_JSON = DATA / "ifab.json"          # IFAB VAR 协议/统一尺度材料（fetch_ifab.py 产物）
+IFAB_ZH_JSON = DATA / "ifab-zh.json"    # IFAB 中文译文层（与 IFAB_JSON 并存，勿互相覆写）
 ISSUES = DATA / "issues"
 
 # 本机专用：原始材料、抓取缓存、截图、日志。整个 data/local/ 被 git 忽略，
@@ -63,6 +67,8 @@ RFEF_CACHE = LOCAL / "rfef-cache"
 DUTCHREF_CACHE = LOCAL / "dutchref-cache"
 PRO_CACHE = LOCAL / "pro-cache"
 CONMEBOL_CACHE = LOCAL / "conmebol-cache"
+WEEKLY_CACHE = LOCAL / "weekly-cache"
+IFAB_CACHE = LOCAL / "ifab-cache"
 # 2024 官方统一尺度材料包（3.3GB，第三代 EXE+XML）。2025/2026 两包在仓库外
 # 的 ROOT.parent，见 build_scale.PACKAGES。
 SCALE_PACK_2024 = LOCAL / "scale-2024"

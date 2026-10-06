@@ -6,8 +6,8 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**十八个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（十四张入口卡片 + 浏览模式开关）
+核心交付物是 `site/` 下的**十九个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（十五张入口卡片 + 浏览模式开关）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
@@ -18,9 +18,10 @@
 - `site/conmebol.html` 南美 VAR 判例（CONMEBOL《Situación de Análisis VAR》60 案：比赛/日期/城市/球场/情境/分钟 + 官方 YouTube 判例视频链接；列表页+文章页双级抓取）
 - `site/intl.html` 全球评议资源导航（4 组 23 项：官方周更节目/文章、YouTube 频道型、VAR 音频透明化、官方课程与测验；已在 weekly.html 建立索引的节目特别标注并互链；人工策展 intl.json）
 - `site/pro.html` 美国 PRO 评议索引（MLS/NWSL 周更 VAR 评析全量 207 篇：Inside Video Review / VAR a Fondo / The Definitive Angle，纯链接索引）+ USSF 视频入口指南
-- `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档官方节目的结构化期目索引 221 期：官方说明原文 + 中文译注层，逐期跳官方观看页）
-- `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ 判例，中英原文开关）
-- `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题随机出卷：判罚决定/纪律处分/复核结论作答判分，错题本 localStorage 记忆错选，支持练习/考试两种模式与错题重练）
+- `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档 YouTube 官方节目 + 乌克兰 UAF 文章型源，结构化期目索引 246 期：官方说明原文 + 中文译注层全覆盖，逐期跳官方页）
+- `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ + 8 个配套协议页 173 条款，中英原文开关）
+- `site/hns.html` 克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名逐判例「认定正确/错误」+ 每判例官方视频直链，判例级中文全译；收录随每周新轮自动生长）
+- `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题 + IFAB VAR 协议 12 题随机出卷：判罚决定/纪律处分/复核结论作答判分，协议题四选一判官方决定，错题本 localStorage 记忆错选，支持练习/考试两种模式与错题重练）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -130,6 +131,9 @@ python scripts/fetch_weekly.py [all|discover] # 12.15 (新节目接入/跟更时
 python scripts/build_weekly.py                # 12.16 生成 weekly.html（weekly.json + weekly-zh.json 译注层）
 python scripts/fetch_ifab.py [all]            # 12.17 (IFAB 更新时) 抓取 VAR protocol 页 → data/ifab.json（缓存 ifab-cache/）
 python scripts/build_ifab.py                  # 12.18 生成 ifab.html（ifab.json + ifab-zh.json 全文译制层）
+python scripts/fetch_hns.py [all]             # 12.19 (新轮发布时) 抓 HNS《Sudačka analiza》→ data/hns.json
+                                              #     hns.family/hns/suci 栏目最新数篇 + SEED_IDS 历史种子，增量合并
+python scripts/build_hns.py                   # 12.20 生成 hns.html（hns.json + hns-zh.json 判例级译制层）
 python scripts/build_portal.py                # 13. 生成门户 index.html
 python scripts/build_page.py                  # 14. 生成 season-2026/2025/2024.html（可带赛季参数）
 python scripts/build_stats.py                 # 15. 生成 stats-2026/2025/2024.html（可带赛季参数）
@@ -305,7 +309,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 改动后依次验证（命令一律在仓库根执行）：
 - [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
-- [ ] `python tests/test_integrity.py` 通过（18页面/三赛季数据/impact一致性/页面-数据同步/考题池基准/weekly+ifab 数据层/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] `python tests/test_integrity.py` 通过（19页面/三赛季数据/impact一致性/页面-数据同步/考题池基准含 VAR 协议 12 题/weekly+hns+ifab 数据层/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
 - [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
 - [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题
 - [ ] 浏览器打开 index.html：门户十四张卡片数字正确、浏览模式分段开关与说明文字正确
@@ -319,8 +323,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - [ ] rap.html：各期索引与外链、训练三步说明、era 分组、明暗主题
 - [ ] pro.html：筛选 chips（系列/联赛）过滤正常、年份分组与 207 篇索引、官方页外链、USSF 指南区、明暗主题
 - [ ] conmebol.html：赛事/情境筛选 chips、年份分组 60 案、官方分析+判例视频双链接、明暗主题
-- [ ] weekly.html：节目筛选 chips、搜索（标题/译注/原文说明）、年份分组、≈ 近似日期标记、译注与原文折叠、官方观看直链 rel 属性、明暗主题
-- [ ] ifab.html：章节导航跳转、中英原文开关（刷新持久化）、FAQ 折叠、配套材料区内外链、明暗主题
+- [ ] weekly.html：节目筛选 chips（含 UAF 文章型源「官方文章」链接）、搜索、年份分组、≈ 近似日期标记、译注与原文折叠、官方观看直链 rel 属性、明暗主题
+- [ ] ifab.html：章节导航（含 8 个配套协议章区）、中英原文开关（刷新持久化）、FAQ 折叠、配套材料区内外链、明暗主题
+- [ ] hns.html：认定徽章筛选（正确/错误）、判例卡（对阵/分钟/类型/中文正文）、克罗地亚语原文折叠、判例视频直链、明暗主题
+- [ ] quiz.html：题源选「VAR 协议题」出卷正常、协议题四选一判分与官方答案反馈、错题本记录与重练、`ifab.html#faq-qN` 回跳
 - [ ] intl.html：四组 23 资源卡（语言/频率/形态 + 注意事项 + 官方外链）、站内关联区、明暗主题
 - [ ] `python scripts/verify_videos.py [赛季]`（如动过视频/数据）
 - [ ] 统计口径：2026 错漏判 95、支持原判 121、不予认定 9；2025 错漏判 82、支持 138、不予 7；2024 错漏判 60、支持 99、不予 1（与 cases-*.json 一致）

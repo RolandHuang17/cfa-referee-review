@@ -25,7 +25,7 @@ from lib.team_names import ALIASES  # noqa: E402
 PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
          "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
          "scale.html", "uefa.html", "rap.html", "rfef.html", "pro.html", "intl.html",
-         "conmebol.html", "weekly.html", "ifab.html", "quiz.html"]
+         "conmebol.html", "weekly.html", "ifab.html", "hns.html", "quiz.html"]
 SEASONS = ("2024", "2025", "2026")
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
 EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
@@ -34,6 +34,8 @@ EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
 # 考题模式题库基准：每季「有视频且有认定原文」的判例数 + 尺度场景数（改口径需同步）。
 # 注意 2024 第1期为"结论摘要"式文章，无认定原文的判例（如 seq3）本就不入判例池，属设计内
 EXPECTED_QUIZ = {"2024": 141, "2025": 227, "2026": 224}
+# VAR 协议题基准：IFAB 协议 FAQ 全部 12 条（与 fetch_ifab.py 的 FAQ 集合一致）
+VAR_QUIZ_FAQ_IDS = {f"q{i}" for i in range(1, 13)}
 
 FAILURES = []
 
@@ -141,11 +143,11 @@ def test_quiz_bank_pool():
         per_season[season] = sum(1 for c in data["cases"]
                                  if c.get("video_files") and (c.get("conclusion") or "").strip())
     text = bank_path.read_text(encoding="utf-8")
-    m = re.search(r'"meta":\{"case":(\d+),"scale":(\d+)\}', text)
+    m = re.search(r'"meta":\{"case":(\d+),"scale":(\d+),"var":(\d+)\}', text)
     if not m:
-        problems.append("quiz.html 缺少 meta 题库统计（case/scale）")
+        problems.append("quiz.html 缺少 meta 题库统计（case/scale/var）")
     else:
-        n_case, n_scale = int(m.group(1)), int(m.group(2))
+        n_case, n_scale, n_var = int(m.group(1)), int(m.group(2)), int(m.group(3))
         if n_case != sum(per_season.values()):
             problems.append(f"考题判例池不符: quiz={n_case}，期望 {sum(per_season.values())}（{per_season}）")
         scale_total = 0
@@ -163,12 +165,14 @@ def test_quiz_bank_pool():
                                 scale_total += 1
         if n_scale != scale_total:
             problems.append(f"考题尺度场景池不符: quiz={n_scale}，期望 {scale_total}")
+        if n_var != len(VAR_QUIZ_FAQ_IDS):
+            problems.append(f"考题 VAR 协议题池不符: quiz={n_var}，期望 {len(VAR_QUIZ_FAQ_IDS)}")
         for season, expected in EXPECTED_QUIZ.items():
             if per_season[season] != expected:
                 problems.append(f"{season}考题判例池 {per_season[season]} != 基准 {expected}")
     _finish(problems)
     print(f"考题题库校验通过: 判例 {sum(per_season.values())} + 尺度场景 "
-          f"{int(m.group(2)) if m else '?'} 题")
+          f"{int(m.group(2)) if m else '?'} + VAR 协议 {int(m.group(3)) if m else '?'} 题")
 
 
 def test_impact_and_scores_consistency():
@@ -260,8 +264,12 @@ def test_weekly_ifab_data_sanity():
             problems.append(f"weekly.json 期目 {vid} date_src=exact 但无日期")
         if e.get("show") not in shows:
             problems.append(f"weekly.json 期目 {vid} 的节目 {e.get('show')} 不在 shows 中")
-        if not str(e.get("url", "")).startswith("https://www.youtube.com/watch?v="):
-            problems.append(f"weekly.json 期目 {vid} 的 url 非官方观看页")
+        if e.get("show") == "uaf":
+            ok_url = str(e.get("url", "")).startswith("https://uaf.ua/")
+        else:
+            ok_url = str(e.get("url", "")).startswith("https://www.youtube.com/watch?v=")
+        if not ok_url:
+            problems.append(f"weekly.json 期目 {vid} 的 url 非官方页（{e.get('show')}）")
     wzh = json.loads((DATA / "weekly-zh.json").read_text(encoding="utf-8"))
     for k in wzh.get("items", {}):
         if k not in ids:
@@ -269,6 +277,9 @@ def test_weekly_ifab_data_sanity():
     for k in wzh.get("shows", {}):
         if k not in shows:
             problems.append(f"weekly-zh.json shows 键 {k} 不在 weekly.json 中")
+    uncovered = [e["id"] for e in eps if e.get("id") and e["id"] not in wzh.get("items", {})]
+    if uncovered:
+        problems.append(f"weekly-zh.json 译注未全覆盖: 缺 {len(uncovered)} 期（如 {uncovered[:3]}）")
     ifab = json.loads((DATA / "ifab.json").read_text(encoding="utf-8"))
     secs = ifab.get("sections", [])
     faq = ifab.get("faq", [])
@@ -291,8 +302,34 @@ def test_weekly_ifab_data_sanity():
     for q in faq:
         if q["id"] not in izh.get("faq", {}):
             problems.append(f"ifab-zh.json 缺 FAQ {q['id']}")
+    # HNS《Sudačka analiza》：判例字段齐全 + 译制层全覆盖
+    hns = json.loads((DATA / "hns.json").read_text(encoding="utf-8"))
+    hrounds = hns.get("rounds", [])
+    if not hrounds:
+        problems.append("hns.json 无轮次数据")
+    hids = set()
+    for r in hrounds:
+        hids.add(str(r.get("id")))
+        if not (r.get("title") and r.get("date") and r.get("url")):
+            problems.append(f"hns.json 轮次 {r.get('id')} 缺 title/date/url")
+        for inc in r.get("incidents", []):
+            if not inc.get("paras") or inc.get("verdict") not in ("correct", "incorrect", "other"):
+                problems.append(f"hns.json {r.get('id')} 判例 {inc.get('no')} paras/verdict 异常")
+    hzh = json.loads((DATA / "hns-zh.json").read_text(encoding="utf-8"))
+    for r in hrounds:
+        zr = hzh.get("rounds", {}).get(str(r.get("id")))
+        if not zr:
+            problems.append(f"hns-zh.json 缺轮次 {r.get('id')}")
+            continue
+        for inc in r.get("incidents", []):
+            zi = zr.get("incidents", {}).get(str(inc.get("no")))
+            if not zi or len(zi.get("paras", [])) != len(inc.get("paras", [])):
+                problems.append(f"hns-zh.json 译制不齐: {r.get('id')} 判例 {inc.get('no')}")
+    for k in hzh.get("rounds", {}):
+        if k not in hids:
+            problems.append(f"hns-zh.json rounds 键 {k} 不在 hns.json 中")
     _finish(problems)
-    print("weekly/ifab 数据与中文层校验通过")
+    print("weekly/ifab/hns 数据与中文层校验通过")
 
 
 CHECKS = [

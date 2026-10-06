@@ -76,7 +76,8 @@ def topbar(active="", right="", stats="stats-2026.html", brand_sub="", seasons=(
               ("rap.html", "RAP", "target"), ("rfef.html", "RFEF", "globe"),
               ("pro.html", "美国评议", "flag"), ("intl.html", "国际评议", "compass"),
               ("conmebol.html", "南美评议", "play"), ("weekly.html", "周更评议", "tv"),
-              ("ifab.html", "IFAB", "file-text"), ("quiz.html", "考题", "quiz")]
+              ("hns.html", "克罗地亚", "check"), ("ifab.html", "IFAB", "file-text"),
+              ("quiz.html", "考题", "quiz")]
     nav = ""
     for href, label, ic in items:
         cur = ' class="tbtn cur" aria-current="page"' if href == active else ' class="tbtn"'

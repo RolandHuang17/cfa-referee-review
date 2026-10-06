@@ -18,7 +18,7 @@ import json
 from datetime import date
 
 from lib.crest_catalog import load_catalog, normalize_team
-from lib.paths import DATA, SCALE_JSON, SITE
+from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE
 from lib.theme import icon, inject_theme, js_icons, topbar
 
 WRONG_KEY = "cfa.quiz.wrong"
@@ -32,6 +32,69 @@ C_OPTIONS = [("none", "不出牌"), ("yellow", "黄牌"), ("red", "红牌")]
 V_OPTIONS = [("correct", "支持原判"), ("wrong", "判罚错误"), ("pending", "证据不足不予认定")]
 COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
               "女超": "女超联赛", "女甲": "女甲联赛", "运动会": "全运会"}
+# VAR 协议题干扰项映射（人工指定：每题 4 选项、ans=正确项下标；正确项全部为官方答案）
+VAR_OPTS = {
+    "q1": {"ans": 0, "opts": [
+        "可以——该黄牌（非第二张黄牌）可回看确认犯规球员身份，黄牌取消并改判 B 队直接任意球",
+        "不可以——黄牌判罚一律不可回看，维持原判",
+        "可以，但 VAR 只能提示裁判员注意，原判不可更改",
+        "可以——直接取消黄牌并判给 A 队点球"]},
+    "q2": {"ans": 1, "opts": [
+        "不可以——由第二张黄牌引发的红牌不可回看",
+        "可以——明显错误的第二张黄牌可由 VAR 协助：红牌取消，假摔球员被警告，进攻方获间接任意球",
+        "可以——直接改判进攻方点球",
+        "可以——红牌维持，另补判进攻方间接任意球"]},
+    "q3": {"ans": 0, "opts": [
+        "不可以——VAR 只能纠正「明显错误的第二张黄牌」，不能补漏判第二张黄牌",
+        "可以——这属于严重漏判事件，VAR 应建议回看",
+        "可以——VAR 直接出示第二张黄牌并罚令出场",
+        "不可以——除非裁判员已经出示了红牌"]},
+    "q4": {"ans": 2, "opts": [
+        "维持点球——回看后非清晰错误不得更改",
+        "取消点球，改判防守方球门球",
+        "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
+        "取消点球，坠球恢复比赛"]},
+    "q5": {"ans": 1, "opts": [
+        "可以——任何改变比赛进程的判罚都可回看",
+        "不可以——仅错罚对象，或与暴力行为、吐口水、咬人、极其攻击性/侮辱性言行相关的罚令出场事件例外",
+        "可以——但只能更改纪律处分，不能更改重新开始方式",
+        "不可以——比赛重新开始后一律不可回看"]},
+    "q6": {"ans": 3, "opts": [
+        "必须维持红牌——回看是为红牌发起的，不能降级",
+        "由 VAR 决定最终出示红牌还是黄牌",
+        "取消处罚但不补牌，比赛照常恢复",
+        "以回看所见为准——若裁判员认为该犯规只值警告而非罚令出场，就必须出示黄牌"]},
+    "q7": {"ans": 0, "opts": [
+        "适用「仅 VAR 回看」——VAR 告知回放内容，裁判员做出电视信号手势后取消点球、改判防守方任意球",
+        "必须进行场上回看（OFR）",
+        "维持点球——罚球区内外的判断属于裁判员主观裁量",
+        "取消点球，坠球恢复比赛"]},
+    "q8": {"ans": 3, "opts": [
+        "VAR 直接判罚点球并通知裁判员",
+        "比赛继续——VAR 无权提示这类情形",
+        "立即停止比赛并以坠球恢复",
+        "裁判员在球下次进入中立区域/局面时停止比赛、做出电视信号手势，经场上回看（OFR）后再作最终决定"]},
+    "q9": {"ans": 0, "opts": [
+        "不可以——VAR 只能在裁判员已作出第一决定（包括允许比赛继续）之后使用",
+        "可以——这属于「延迟吹罚」的正常执法形态",
+        "可以——但仅限进球类判定",
+        "不可以——VAR 只能应由队长申请使用"]},
+    "q10": {"ans": 1, "opts": [
+        "不允许——点球执行阶段的犯规不可回看",
+        "允许——罚球点球时守门员和/或主罚队员犯规，裁判员可以获得 VAR 协助",
+        "允许——但仅限主罚队员的犯规",
+        "允许——且该进球必须判定有效"]},
+    "q11": {"ans": 2, "opts": [
+        "维持点球，并向防守队员出示黄牌",
+        "取消点球，坠球恢复比赛",
+        "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
+        "取消点球，改判防守方球门球"]},
+    "q12": {"ans": 1, "opts": [
+        "黄牌维持——已出示的牌不可通过回看取消",
+        "取消黄牌并改判点球；犯规的防守队员视情况被警告或罚令出场",
+        "取消黄牌并改判点球，但不得再处罚防守队员",
+        "维持比赛原样，赛后报告处理"]},
+}
 
 
 def _comp(c):
@@ -103,16 +166,36 @@ def build_bank():
                                           if x["label"] in DECISION_ORDER else 99),
                         })
                         n_scale += 1
-    return bank, teams, n_scale
+    # 第三题型：VAR 协议题（IFAB 协议 FAQ：场景 → 官方决定，四选一）
+    n_var = 0
+    if IFAB_JSON.exists():
+        d = json.loads(IFAB_JSON.read_text(encoding="utf-8"))
+        zh = {}
+        if IFAB_ZH_JSON.exists():
+            zh = json.loads(IFAB_ZH_JSON.read_text(encoding="utf-8")).get("faq", {})
+        for q in d.get("faq", []):
+            zq = zh.get(q["id"], {})
+            cfg = VAR_OPTS.get(q["id"])
+            if not cfg or not zq:
+                continue
+            bank.append({
+                "k": f"var-{q['id']}", "t": "var", "s": "ifab",
+                "qid": q["id"], "q": zq["q"], "q_en": q["q"],
+                "a": zq["a"], "a_en": q["a"],
+                "opts": cfg["opts"], "ans": cfg["ans"],
+                "link": f"ifab.html#faq-{q['id']}",
+            })
+            n_var += 1
+    return bank, teams, n_scale, n_var
 
 
 def build_data():
-    bank, teams, n_scale = build_bank()
+    bank, teams, n_scale, n_var = build_bank()
     n_case = sum(1 for b in bank if b["t"] == "case")
     return {"cfg": {"wrongKey": WRONG_KEY, "built": date.today().isoformat()},
             "bank": bank, "teams": teams,
             "opts": {"r": R_OPTIONS, "c": C_OPTIONS, "v": V_OPTIONS},
-            "meta": {"case": n_case, "scale": n_scale}}
+            "meta": {"case": n_case, "scale": n_scale, "var": n_var}}
 
 
 HTML = r"""<!DOCTYPE html>
@@ -213,6 +296,7 @@ __TOPBAR__
     <div class="stat">
       <div><b>__N_CASE__</b><span>赛季判例</span></div>
       <div><b>__N_SCALE__</b><span>尺度场景</span></div>
+      <div><b>__N_VAR__</b><span>VAR 协议题</span></div>
       <div><b id="nWrong">0</b><span>错题本</span></div>
       <div><b id="nStar">0</b><span>收藏错题</span></div>
     </div>
@@ -231,7 +315,7 @@ __TOPBAR__
     <div class="frow"><span class="flbl">题源</span>
       <div class="seg" id="segSrc">
         <button data-v="all" class="on">全部</button><button data-v="case">赛季判例</button>
-        <button data-v="scale">尺度场景</button>
+        <button data-v="scale">尺度场景</button><button data-v="var">VAR 协议题</button>
       </div>
     </div>
     <div class="frow"><span class="flbl">赛季</span>
@@ -339,9 +423,12 @@ function recordWrong(q, your, score){
 function qTitle(q){
   if (q.t === "case")
     return `${esc(q.comp)}${q.round?esc(q.round):""}${q.minute?" · 第"+q.minute+"分钟":""} · ${q.s}赛季第${q.issue}期-判例${q.no}`;
+  if (q.t === "var")
+    return `VAR 协议题 ${esc(q.qid)} · IFAB 协议官方 FAQ`;
   return `尺度场景 ${esc(q.id)} · ${esc(q.title)}（${q.s}）`;
 }
 function qLink(q){
+  if (q.t === "var") return q.link;
   return q.t === "case" ? `season-${q.s}.html#case-${q.seq}`
                         : `scale.html#h${q.s}-${q.series}-${q.id}`;
 }
@@ -378,7 +465,7 @@ function renderWbList(){
   const entries = Object.entries(wrong);
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
     const q = BANK[k]; if (!q) return "";
-    const yourTxt = e.t==="case" ? axisText(e.your) : (e.your||[]).join("、") || "（未作答）";
+    const yourTxt = e.t==="case" ? axisText(e.your) : e.t==="var" ? (q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
     const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
     return `<div class="wbitem">
       <div class="wbm"><div>${qTitle(q)}</div>
@@ -435,13 +522,18 @@ function renderQuestion(){
       .filter(Boolean).join(" · ");
     head = `<span class="badge info">判例</span><h2 class="match">${match}</h2>
       <span class="qmeta">${q.s}赛季第${q.issue}期-判例${q.no}${q.catname?" · "+esc(q.catname):""}</span>`;
+  } else if (q.t === "var"){
+    head = `<span class="badge info">VAR 协议题</span><h2 class="match">IFAB 协议场景 ${esc(q.qid)}</h2>
+      <span class="qmeta">《竞赛规则》VAR 协议官方 FAQ · 四选一 · 1分</span>`;
   } else {
     head = `<span class="badge info">尺度场景</span><h2 class="match">${esc(q.title)}</h2>
       <span class="qmeta">${q.s}赛季 · ${esc(q.group)} · 编号 ${esc(q.id)}</span>`;
   }
-  // 视频
+  // 视频（var 为纯场景题，无视频）
   let vidHtml = "";
-  if (!LITE){
+  if (q.t === "var"){
+    vidHtml = `<div class="src-actions" style="display:flex"><a class="srcbtn" href="${esc(q.link)}" target="_blank">${IC.external} 前往 IFAB 协议页查看该 FAQ</a><span class="srcsub">纯场景判断题——先想好你的决定再作答</span></div>`;
+  } else if (!LITE){
     const src = q.t==="case" ? "videos/"+q.videos[0] : q.video;
     const poster = q.poster ? ` poster="${esc(q.poster)}"` : "";
     vidHtml = `<div class="qvideo"><video id="qvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"${poster}></video></div>
@@ -455,6 +547,8 @@ function renderQuestion(){
   // 题面
   const text = q.t==="case"
     ? `<p class="qtext">${esc(q.desc.replace(/^判例[一二三四五六七八九十百]+[：:]/,"").trim())}</p>`
+    : q.t==="var"
+    ? `<p class="qtext">${esc(q.q)}</p>`
     : `<p class="qtext">${esc(q.note)}</p>`;
   const appeal = (q.t==="case" && q.appeal)
     ? `<details class="qappeal"><summary>查看申诉方主张（提示）</summary><p>${esc(q.appeal.replace(/^[^：]*申诉意见认为：/,"").trim())}</p></details>` : "";
@@ -483,6 +577,9 @@ function renderQuestion(){
       axes.push(`<div class="axis"><div class="ah">③ 纪律处分 <small>1分</small></div><div class="optrow">` +
         C_OPTS.map(([v,n])=>`<button class="chip opt ${saved&&saved.c===v?"on":""}" data-axis="c" data-v="${v}">${n}</button>`).join("") + `</div></div>`);
     document.getElementById("qForm").innerHTML = axes.join("");
+  } else if (q.t === "var"){
+    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">官方决定 <small>四选一 · 1分</small></div><div class="optrow">` +
+      q.opts.map((o,i)=>`<button class="chip opt ${saved&&+saved===i?"on":""}" data-axis="o" data-v="${i}">${esc(o)}</button>`).join("") + `</div></div>`;
   } else {
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，无错选有漏选1分，有错选0分</small></div><div class="optrow">` +
       q.dec.map(d=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${esc(d.label)}</button>`).join("") + `</div></div>`;
@@ -501,6 +598,10 @@ function currentAnswer(){
       a[b.dataset.axis] = b.dataset.v;
     });
     return a;
+  }
+  if (q.t === "var"){
+    const b = document.querySelector("#qForm .opt.on");
+    return b ? b.dataset.v : null;
   }
   return Array.from(document.querySelectorAll("#qForm .opt.on")).map(b=>b.dataset.dec);
 }
@@ -543,6 +644,13 @@ function scoreScale(q, selArr){
     {name:"错选/漏选", ok:!fp.length, yours:fp.length?("错选 "+fp.join("、")):"无错选", right:miss.length?("漏选 "+miss.join("、")):"无漏选"}
   ]};
 }
+function scoreVar(q, a){
+  const idx = (a===null || a===undefined || a==="") ? -1 : +a;
+  const ok = idx === q.ans;
+  return {got: ok?1:0, max:1, detail:[
+    {name:"官方决定", ok, yours: idx>=0 && q.opts[idx] ? q.opts[idx] : "（未答）", right: q.opts[q.ans]}
+  ]};
+}
 function renderFeedback(q, a){
   const s = round.scores[round.i];
   const allOk = s.got === s.max;
@@ -552,6 +660,9 @@ function renderFeedback(q, a){
     <span>你的答案：${esc(d.yours)}</span>${d.ok?"":`<span>正确：${esc(d.right)}</span>`}</div>`).join("");
   if (q.t === "case"){
     h += `<div class="concl"><b>评议组认定：</b>${esc(q.concl.replace(/^对于此判[例罚]，评议组[^：]*认为：/,"").trim())}</div>`;
+  } else if (q.t === "var"){
+    h += `<div class="concl"><b>官方答案（VAR 协议 FAQ）：</b>${esc(q.a)}</div>`;
+    h += `<details class="qappeal"><summary>English original</summary><p>${esc(q.a_en)}</p></details>`;
   } else {
     if (q.reason) h += `<div class="concl"><b>Reason：</b>${esc(q.reason)}</div>`;
     if (q.varrule) h += `<div class="concl"><b>⚖ VAR 介入：</b>${esc(q.varrule)}</div>`;
@@ -582,7 +693,7 @@ function submitAnswer(){
     const done = round.scores[round.i] != null;
     if (!done){
       const a = currentAnswer();
-      const s = q.t==="case" ? scoreCase(q, a) : scoreScale(q, a);
+      const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
       round.answers[round.i] = a; round.scores[round.i] = s;
       if (s.got < s.max) recordWrong(q, a, s);
       else if (wrong[q.k]){ wrong[q.k].done = true; persistWrong(); }
@@ -602,8 +713,8 @@ function submitAnswer(){
 }
 function finishExam(){
   round.qs.forEach((q,i)=>{
-    const a = round.answers[i] || (q.t==="case" ? {v:null,r:null,c:null} : []);
-    const s = q.t==="case" ? scoreCase(q, a) : scoreScale(q, a);
+    const a = round.answers[i] ?? (q.t==="case" ? {v:null,r:null,c:null} : q.t==="var" ? null : []);
+    const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
     round.scores[i] = s;
     if (s.got < s.max) recordWrong(q, a, s);
     else if (wrong[q.k]){ wrong[q.k].done = true; }
@@ -620,8 +731,8 @@ function gotoPrev(){
 }
 function skipQuestion(){
   const q = round.qs[round.i];
-  const a = q.t==="case" ? {v:null,r:null,c:null} : [];
-  const s = q.t==="case" ? scoreCase(q, a) : scoreScale(q, a);
+  const a = q.t==="case" ? {v:null,r:null,c:null} : q.t==="var" ? null : [];
+  const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
   round.answers[round.i] = a; round.scores[round.i] = s;
   recordWrong(q, a, s);
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
@@ -656,7 +767,7 @@ function showResult(){
     const missTxt = s.detail.filter(d=>!d.ok).map(d=>`${d.name}：正确 ${d.right}`).join("；");
     return `<div class="rrow" style="--i:${Math.min(i,12)}"><span class="rmark ${allOk?"hit":"miss"}">${allOk?"✓":s.got>0?"△":"✗"}</span>
       <div class="rmain"><div>${qTitle(q)}</div>
-      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
+      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):q.t==="var"?(q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a></div>`;
   }).join("");
   renderWbStats();
@@ -735,7 +846,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
 document.getElementById("qForm").addEventListener("click", e=>{
   const b = e.target.closest(".opt"); if (!b || round.locked) return;
   const q = round.qs[round.i];
-  if (q.t === "case"){
+  if (q.t === "case" || q.t === "var"){   // 单选轴（var 的四选项也是单选）
     const axis = b.dataset.axis;
     document.querySelectorAll(`#qForm .opt[data-axis="${axis}"]`).forEach(x=>x.classList.toggle("on", x===b));
   } else {
@@ -801,12 +912,13 @@ def main():
                         .replace("__TOPBAR__", tb)
                         .replace("__I_UP__", icon("up", 14))
                         .replace("__N_CASE__", str(data["meta"]["case"]))
-                        .replace("__N_SCALE__", str(data["meta"]["scale"])))
+                        .replace("__N_SCALE__", str(data["meta"]["scale"]))
+                        .replace("__N_VAR__", str(data["meta"]["var"])))
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "quiz.html"
     out.write_text(html, encoding="utf-8")
-    print(f"生成 {out}（判例 {data['meta']['case']} 题 + 尺度场景 {data['meta']['scale']} 题, "
-          f"{len(html.encode('utf-8'))/1024:.0f} KB）")
+    print(f"生成 {out}（判例 {data['meta']['case']} 题 + 尺度场景 {data['meta']['scale']} 题 "
+          f"+ VAR 协议 {data['meta']['var']} 题, {len(html.encode('utf-8'))/1024:.0f} KB）")
 
 
 if __name__ == "__main__":

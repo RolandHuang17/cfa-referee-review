@@ -8,7 +8,7 @@ from datetime import date
 from lib.theme import inject_theme, icon, topbar
 
 from lib.paths import (DATA, CONMEBOL_JSON, IFAB_JSON, INTL_JSON, LAWS_JSON, PRO_JSON, RAP_JSON,
-                       RFEF_JSON, SCALE_JSON, SITE, UEFA_JSON, WEEKLY_JSON)
+                       RFEF_JSON, SCALE_JSON, SITE, UEFA_JSON, WEEKLY_JSON, HNS_JSON)
 
 
 def load_stats():
@@ -140,7 +140,22 @@ def load_ifab_stats():
         faq = len(d.get("faq", []))
         items = sum(len(b.get("items", [])) for s in d.get("sections", [])
                     for b in s.get("blocks", []))
+        items += sum(len(b.get("items", [])) for ex in d.get("extras", [])
+                     for b in ex.get("blocks", []))
     return {"secs": secs, "faq": faq, "items": items}
+
+
+def load_hns_stats():
+    """克罗地亚 HNS 判例数字从 data/hns.json 计算（轮数/判例/视频）。"""
+    rounds = incs = vids = 0
+    if HNS_JSON.exists():
+        d = json.loads(HNS_JSON.read_text(encoding="utf-8"))
+        rounds = len(d.get("rounds", []))
+        for r in d.get("rounds", []):
+            for i in r.get("incidents", []):
+                incs += 1
+                vids += len(i.get("videos", []))
+    return {"rounds": rounds, "incs": incs, "vids": vids}
 
 
 HTML = r"""<!DOCTYPE html>
@@ -375,7 +390,18 @@ __TOPBAR__
       </div>
       <div class="go">进入判例 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-weekly" style="--i:11" href="weekly.html">
+    <a class="ecard c-hns" style="--i:11" href="hns.html">
+      <div class="icon">__I_CHECK__</div>
+      <h2>克罗地亚评议</h2>
+      <p class="desc">克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名）：逐判例「认定正确/错误」+ 技术考量 + 官方视频，中文全译。</p>
+      <div class="nums">
+        <div><b>__H_ROUNDS__</b><span>轮次</span></div>
+        <div><b>__H_INCS__</b><span>判例</span></div>
+        <div><b>__H_VIDS__</b><span>视频</span></div>
+      </div>
+      <div class="go">进入判例 __I_RIGHT__</div>
+    </a>
+    <a class="ecard c-weekly" style="--i:12" href="weekly.html">
       <div class="icon">__I_TV__</div>
       <h2>周更评议节目</h2>
       <p class="desc">全球七档官方评议节目的结构化期目索引（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯）：官方说明原文 + 中文译注，逐期跳官方观看。</p>
@@ -386,7 +412,7 @@ __TOPBAR__
       </div>
       <div class="go">进入索引 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-ifab" style="--i:12" href="ifab.html">
+    <a class="ecard c-ifab" style="--i:13" href="ifab.html">
       <div class="icon">__I_FILE__</div>
       <h2>IFAB 统一尺度</h2>
       <p class="desc">IFAB《Laws of the Game》VAR 协议官方全文中文译制：原则 / 可回看判定 / 实务 / 程序四节 + 官方 FAQ 判例，可切英文原文。</p>
@@ -397,14 +423,14 @@ __TOPBAR__
       </div>
       <div class="go">进入阅读 __I_RIGHT__</div>
     </a>
-    <a class="ecard c-quiz" style="--i:13" href="quiz.html">
+    <a class="ecard c-quiz" style="--i:14" href="quiz.html">
       <div class="icon">__I_QUIZ__</div>
       <h2>考题模式</h2>
-      <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__）：先看视频自己做判罚，再对照评议组认定算分，错题自动进错题本。</p>
+      <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__ + IFAB 协议 __Q_VAR__）：判例先看视频做判罚，协议题四选一判官方决定，错题自动进错题本。</p>
       <div class="nums">
         <div><b>__Q_TOTAL__</b><span>题库</span></div>
         <div><b>__Q_CASES__</b><span>判例</span></div>
-        <div><b>__Q_SCALE__</b><span>尺度场景</span></div>
+        <div><b>__Q_VAR__</b><span>VAR 协议题</span></div>
       </div>
       <div class="go">开始答题 __I_RIGHT__</div>
     </a>
@@ -491,10 +517,12 @@ def main():
     cm = load_conmebol_stats()
     wk = load_weekly_stats()
     ifab = load_ifab_stats()
+    hns = load_hns_stats()
     from build_quiz import build_bank  # 与 quiz 页同一题库口径
-    bank, _, _ = build_bank()
+    bank, _, _, _ = build_bank()
     q_case = sum(1 for b in bank if b["t"] == "case")
     q_scale = sum(1 for b in bank if b["t"] == "scale")
+    q_var = sum(1 for b in bank if b["t"] == "var")
     tb = topbar(active="index.html", stats="stats-2026.html", brand_sub="评议 · 规则 · 尺度统一",
                 seasons=("2024", "2025", "2026"))
     subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
@@ -506,7 +534,7 @@ def main():
             "__I_TARGET__": icon("target", 20), "__I_GLOBE__": icon("globe", 20),
             "__I_FLAG__": icon("flag", 20), "__I_COMPASS__": icon("compass", 20),
             "__I_PLAY2__": icon("play", 20), "__I_TV__": icon("tv", 20),
-            "__I_FILE__": icon("file-text", 20)}
+            "__I_FILE__": icon("file-text", 20), "__I_CHECK__": icon("check", 20)}
     html = inject_theme(HTML
             .replace("__TOPBAR__", tb)
             .replace("__N26__", str(s["2026"]["n"]))
@@ -548,9 +576,13 @@ def main():
             .replace("__IF_SECS__", str(ifab["secs"]))
             .replace("__IF_ITEMS__", str(ifab["items"]))
             .replace("__IF_FAQ__", str(ifab["faq"]))
-            .replace("__Q_TOTAL__", str(q_case + q_scale))
+            .replace("__H_ROUNDS__", str(hns["rounds"]))
+            .replace("__H_INCS__", str(hns["incs"]))
+            .replace("__H_VIDS__", str(hns["vids"]))
+            .replace("__Q_TOTAL__", str(q_case + q_scale + q_var))
             .replace("__Q_CASES__", str(q_case))
             .replace("__Q_SCALE__", str(q_scale))
+            .replace("__Q_VAR__", str(q_var))
             .replace("__BUILT__", date.today().isoformat()))
     for k, v in subs.items():
         html = html.replace(k, v)

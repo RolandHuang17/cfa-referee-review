@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>克罗地亚评议 · Sudačka analiza · 裁判学习平台</title>
+<style>
+/* ===== hns 页专属布局 (tokens/组件来自 data-cfa-theme, 骨架同 conmebol 页) ===== */
+.page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.page-head .wrap{max-width:1040px;margin:0 auto;padding:22px 16px 18px}
+.page-head h1{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
+.page-head .sub{color:var(--muted);font-size:13px;line-height:1.7}
+.src-banner{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:12px;
+  padding:10px 14px;border:1px solid var(--brand);background:var(--info-bg);
+  border-radius:var(--r-md);font-size:13.5px;color:var(--ink2)}
+.src-banner .ic{color:var(--brand)}
+.src-banner a{color:var(--brand);font-weight:600;text-decoration:none}
+.src-banner a:hover{text-decoration:underline}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
+.year-h{font-family:var(--font-display);font-size:18px;margin:26px 0 12px;letter-spacing:.4px}
+.year-h small{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+.round{margin-bottom:22px}
+.round-h{border-left:3px solid var(--brand);padding-left:14px;margin-bottom:10px}
+.round-h h2{font-family:var(--font-display);font-size:19px;margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.round-h .meta{font-size:12.5px;color:var(--muted);margin-top:3px}
+.round-h .meta a{color:var(--brand);text-decoration:none;font-weight:600}
+.round-h .meta a:hover{text-decoration:underline}
+.ccard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
+  padding:14px 16px;margin-bottom:12px;transition:border-color var(--t-fast) var(--ease)}
+.ccard:hover{border-color:var(--brand)}
+.ccard .chead{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:8px}
+.ccard .chead .cmatch{font-weight:700;font-size:14.5px}
+.ccard .cinfo{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:9px}
+.ccard .cinfo .chip{font-size:12px}
+.ccard .cbody p,.ccard .cbody li{font-size:13.5px;line-height:1.85;color:var(--ink2);margin:5px 0}
+.ccard .cbody ul{padding-left:20px;margin:5px 0}
+.ccard .lbl{font-size:12px;color:var(--faint);letter-spacing:.5px;margin-top:10px}
+.ccard details{margin-top:9px;font-size:12.5px;color:var(--muted)}
+.ccard details summary{cursor:pointer;color:var(--brand);font-size:12.5px;user-select:none}
+.ccard details p,.ccard details li{font-size:12.5px;line-height:1.8;color:var(--muted);white-space:pre-line}
+.ccard .clinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.ccard .go{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+  border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
+  font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap}
+.ccard .go:hover{background:var(--brand-strong);color:var(--on-brand)}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
+@media (max-width:760px){.ccard .clinks .go{margin-top:4px}}
+</style>
+<style data-cfa-theme>
+/* ============================================================
+   裁判学习平台 · 全站设计系统 (唯一权威样式层)
+   风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
+   衬线大标题/陶土色点缀/发丝线边框/平面卡片
+   - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
+   - 本文件由 scripts/lib/theme.py 以 style 标签内联注入全部生成页 head
+   - 各 builder 的页面 style 块只允许写页面专属布局, 禁止重定义
+     :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
+   ============================================================ */
+
+/* ---------- 设计 tokens ---------- */
+:root{
+  /* 主题色: 陶土(clay)为品牌色, 红/绿/黄为判定语义色 */
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:rgba(178,58,46,.09); --red-line:rgba(178,58,46,.32);
+  --green:#3e7b49; --green-bg:rgba(62,123,73,.1); --green-line:rgba(62,123,73,.32);
+  --amber:#946d1b; --amber-bg:rgba(148,109,27,.11); --amber-line:rgba(148,109,27,.34);
+  --info:#a3502b; --info-bg:rgba(163,80,43,.09); --info-line:rgba(163,80,43,.3);
+
+  /* 表面与文字 (暖炭深色) */
+  --bg:#191813; --bg2:#201e18; --card:#242219; --card2:#2b2820;
+  --ink:#ece8dd; --ink2:#cfc9ba; --muted:#9c9585; --faint:#6e6759;
+  --line:#3a362c; --line2:#2e2b22;
+  --shadow:0 14px 40px rgba(10,9,6,.5);
+  --shadow-sm:0 2px 10px rgba(10,9,6,.35);
+
+  /* 顶栏 (与页面同底色 + 发丝线, 编辑风导航) */
+  --top-bg:#191813; --top-ink:#ece8dd; --top-muted:#9c9585;
+  --top-line:#3a362c; --top-chip:rgba(236,232,221,.07); --top-chip-on:rgba(224,139,98,.16);
+  --top-input-bg:#242219; --top-input-line:#3a362c;
+
+  /* 几何与字体 */
+  --r-sm:6px; --r-md:10px; --r-lg:13px;
+  --top-h:56px;
+  --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
+}
+[data-theme="light"]{
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:#f7e8e2; --red-line:#e6c3b6;
+  --green:#3e7b49; --green-bg:#e8f0e4; --green-line:#c3d6be;
+  --amber:#946d1b; --amber-bg:#f5edda; --amber-line:#e2d3a4;
+  --info:#a3502b; --info-bg:#f4e7dd; --info-line:#e3c8b2;
+
+  --bg:#f3f1ea; --bg2:#eceade; --card:#fbfaf5; --card2:#f1eee3;
+  --ink:#211e1a; --ink2:#46423a; --muted:#7a7466; --faint:#a49d8c;
+  --line:#ddd8ca; --line2:#e9e5d9;
+  --shadow:0 14px 40px rgba(48,42,30,.12);
+  --shadow-sm:0 1px 4px rgba(48,42,30,.06);
+
+  --top-bg:#f3f1ea; --top-ink:#211e1a; --top-muted:#7a7466;
+  --top-line:#ddd8ca; --top-chip:rgba(33,30,26,.05); --top-chip-on:rgba(163,80,43,.12);
+  --top-input-bg:#fbfaf5; --top-input-line:#cfc9b8;
+}
+
+/* ---------- 基础 ---------- */
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:14.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+::selection{background:rgba(163,80,43,.25)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.skip-link{position:absolute;left:-999px;top:0;z-index:200;background:var(--brand);
+  color:var(--on-brand);padding:8px 14px;border-radius:0 0 8px 0}
+.skip-link:focus{left:0}
+h1,h2{font-variant-numeric:tabular-nums}
+
+/* 滚动条 */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 图标 ---------- */
+.ic{vertical-align:-2.5px;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+
+/* ---------- 顶栏(全站统一) ---------- */
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--top-bg);color:var(--top-ink);border-bottom:1px solid var(--top-line);
+  position:sticky;top:0;z-index:60}
+.topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--top-ink);white-space:nowrap;min-width:0}
+.topbar .brand .ic{color:var(--brand)}
+.topbar .brand b{font-family:var(--font-display);font-size:16.5px;letter-spacing:.4px;font-weight:700}
+.topbar .brand .brand-sub{font-size:11.5px;color:var(--top-muted);padding:1px 9px;
+  border:1px solid var(--top-line);border-radius:999px;white-space:nowrap}
+.topbar .nav{display:flex;align-items:center;gap:2px;min-width:0;overflow-x:auto;scrollbar-width:none}
+.topbar .nav::-webkit-scrollbar{display:none}
+.topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;
+  border:1px solid transparent;border-radius:var(--r-sm);background:none;
+  color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
+.topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+/* 顶栏共 11 个导航项：中等宽度下隐藏导航图标保标签，并收紧搜索框/间距/内边距，
+   避免导航横向滚动溢出（≤1360 再隐品牌副标） */
+@media (max-width:1560px){
+  .topbar{gap:10px}
+  .topbar .nav{gap:1px}
+  .topbar .nav .ic{display:none}
+  .topbar .nav .tbtn{font-size:12.5px;padding:6px 6px}
+  .topbar .tbtn{padding:6px 7px}
+  .topbar input[type=search]{min-width:96px}
+}
+@media (max-width:1460px){.topbar .brand .brand-sub{display:none}}
+.topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
+  border:1px solid var(--top-input-line);border-radius:var(--r-sm);
+  background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
+.topbar .search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:480px;min-width:120px}
+.topbar .search-wrap .ic{position:absolute;left:10px;color:var(--top-muted);pointer-events:none}
+
+/* 主题切换按钮: 图标随主题互换 */
+#btnTheme .when-light{display:none}
+[data-theme="light"] #btnTheme .when-dark{display:none}
+[data-theme="light"] #btnTheme .when-light{display:inline-flex}
+
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* ---------- 通用组件 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.btn.primary:hover{opacity:.88;color:var(--bg)}
+.btn.iconbtn{padding:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;white-space:nowrap;transition:.15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.chip.on b{color:var(--brand)}
+
+/* 判定徽章 */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2.5px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.badge.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line)}
+.badge.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.badge.pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-line);font-weight:500}
+.badge.wrong,.badge.correct,.badge.pending,.badge.info{letter-spacing:.3px}
+
+/* 队徽 (跨页共用, JS 注入) */
+.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:4px;background:#fff}
+.team-dot{display:inline-block;border-radius:3px;vertical-align:-3px;margin-right:4px;flex:none}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:4px;margin-right:4px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.wrong{background:var(--red)}.dot.correct{background:var(--green)}.dot.pending{background:var(--amber)}
+.kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
+
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
+/* ---------- 弹层 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
+  z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
+.modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
+.modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
+.modal .close:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- 通用响应式辅助 ---------- */
+@media (max-width:760px){
+  .topbar{gap:8px;padding:0 10px}
+  .topbar .brand .brand-sub{display:none}
+  .topbar .tbtn span{display:none}
+  /* 恢复导航图标：≤1560 的藏图标规则会让小屏导航只剩空盒 */
+  .topbar .nav .ic{display:inline}
+  .topbar .tbtn{padding:6px 8px}
+}
+
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'}catch(e){}</script></head>
+<body class="page-hns">
+<a class="skip-link" href="#content0">跳到内容</a>
+<header class="topbar"><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">克罗地亚评议</span></a><nav class="nav" aria-label="站点导航"><a class="tbtn" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025评议</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024评议</span></a><a class="tbtn" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA</span></a><a class="tbtn" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>RAP</span></a><a class="tbtn" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>RFEF</span></a><a class="tbtn" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国评议</span></a><a class="tbtn" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>国际评议</span></a><a class="tbtn" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美评议</span></a><a class="tbtn" href="weekly.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg><span>周更评议</span></a><a class="tbtn cur" aria-current="page" href="hns.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>克罗地亚</span></a><a class="tbtn" href="ifab.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>IFAB</span></a><a class="tbtn" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题</span></a></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header>
+<header class="page-head">
+  <div class="wrap">
+    <h1>克罗地亚评议 · Sudačka analiza</h1>
+    <div class="sub">克罗地亚足协裁判委员会（Layec 署名）逐轮发布《Sudačka analiza》：逐判例给出「认定正确 / 认定错误」结论 + 技术考量 + 预期决定 + 每判例一段官方视频——全球公开源中与足协评议形态最接近的之一 · 克罗地亚语原文可折叠展开 · 版权归 HNS 所有</div>
+    <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 视频为 YouTube 官方页直链（不内嵌）；<a href="https://hns.family/hns/suci" target="_blank" rel="noopener noreferrer">hns.family 裁判栏目</a> · 数据核对日期 2026-10-06</div>
+  </div>
+</header>
+<div class="wrap" id="content0">
+  <div class="chips" data-chips>
+    <button class="chip on" data-f="all">全部 <b>9</b></button>
+    <button class="chip" data-f="correct">认定正确 <b>7</b></button>
+    <button class="chip" data-f="incorrect">认定错误 <b>2</b></button>
+  </div>
+  <h3 class="year-h" data-year="2026">2026 <small>4 轮</small></h3><div id="ybody-2026"><div class="round">
+  <div class="round-h"><h2>克罗地亚超级联赛第 8 轮判例分析</h2>
+    <div class="meta">2026-09-22 · 6 个判例 · <a href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方文章</a></div>
+  </div>
+  <div class="ccard" data-verdict="incorrect">
+  <div class="chead"><span class="cmatch">RUDEŠ - SLAVEN BELUPO</span>
+    <span class="badge wrong">认定错误</span></div>
+  <div class="cinfo"><span class="chip">严重犯规</span><span class="chip">27′</span><span class="chip">主裁 Strukan</span></div>
+  <div class="cbody"><p>鲁德什队 24 号球员在铲球中，以亮出鞋钉、腿伸直的方式踹到斯拉文·贝卢波队 24 号球员的小腿。位于被犯规队员身后的裁判员判罚了犯规，并因这次过重的铲抢警告了主队球员。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>基于保护球员人身安全的建议与要求，裁判员须对每一个危及球员人身安全的鲁莽犯规保持审慎与果断。根据 VAR 协议，VAR 只应在裁判员出现「清晰而明显的错误」时介入。就身体对抗而言，VAR 必须考量犯规的严重程度以及球员动作的强度与力量。</p><p>预期决定：</p><p>基于技术考量与指南，裁判委员会认为鲁德什队球员的铲球应以红牌处罚——其接触点在踝关节以上、鞋钉亮出、腿伸直。对该球员铲抢强度的分析后，裁判委员会认为未出示红牌构成「清晰而明显的错误」，VAR 本应介入并建议裁判员回看录像。</p></div><details><summary>克罗地亚语原文</summary><div><p>U klizećem startu igrač Rudeša s brojem 24 otvorenim đonom i ispruženom nogom udario je po potkoljenici suparničkog igrača Slaven Belupa s brojem 24. Sudac, koji se nalazio iza igrača koji je bio fauliran, dosudio je prekršaj i opomenuo domaćeg igrača zbog preoštrog starta.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>S obzirom na preporuke i želju za zaštitom fizičke sigurnosti igrača, od sudaca se traži da budu oprezni i odlučni u pogledu svakog grubog prekršaja koji ugrožava fizički integritet igrača. Prema VAR Protokolu od VAR-a se traži da interveniraju samo ako sudac napravi jasnu i očitu pogrešku. Što se tiče fizičkih izazova, VAR mora uzeti u obzir težinu prekršaja, intenzitet i silu koju je igrač upotrijebio.</p><p>Očekivana odluka:</p><p>Na temelju tehničkih razmatranja i smjernica Komisija nogometnih sudaca smatra da je klizeći start igrača Rudeša trebao biti kažnjen crvenim kartonom zbog kontakta iznad gležnja s otvorenim đonom i ispruženom nogom. Nakon analize intenziteta koji je igrač Rudeša pokazao tijekom starta Komisija nogometnih sudaca smatra da ne pokazivanje crvenog kartona predstavlja &quot;jasnu i očitu&quot; pogrešku. VAR je u ovoj situaciji trebao intervenirati i preporučiti sucu pregled snimke.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=Gpezu0O_kOw" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div><div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">RUDEŠ - SLAVEN BELUPO</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">严重犯规</span><span class="chip">60′</span><span class="chip">主裁 Strukan</span></div>
+  <div class="cbody"><p>鲁德什队 5 号防守球员在本方半场从背后、无抢球可能的情况下铲向斯拉文·贝卢波队 7 号进攻球员，左脚亮出鞋钉扫到进攻球员的小腿后侧（跟腱与脚跟）。裁判员立即以危及安全的铲抢将该防守球员罚令出场。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>根据《足球竞赛规则》及以球员安全保护为导向的技术考量，出现下列情形时球员必须被罚令出场：</p><ul><li>以力量与强度建立接触、明显危及对方球员人身安全的；</li><li>接触点在踝关节以上时，尤其构成危险。</li></ul><p>从背后失控、亮出鞋钉的铲球，是对犯规球员不利的加重情节。</p><p>预期决定：</p><p>裁判委员会完全支持裁判员在场上作出的决定，并提醒：球员安全保护是裁判工作的首要优先事项之一。</p></div><details><summary>克罗地亚语原文</summary><div><p>Incident u kojemu je obrambeni igrač Rudeša s brojem 5 s leđa, bez mogućnosti igranja loptom, startao na napadača Slaven Belupa s brojem 7 na sredini terena za igru. Branič je lijevom nogom i otvorenim đonom zahvatio stražnji dio lista napadača (Ahilove tetive i pete). Sudac je odmah odlučio isključiti braniča zbog pogibeljnog starta.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>U skladu s Pravilima nogometne igre i našim tehničkim razmatranjima, usmjerenim na zaštitu sigurnosti igrača, igrač mora biti isključen s terena kada:</p><li>očito ugrožava fizičku sigurnost suparničkog igrača uspostavljanjem kontakta silom i intenzitetom;</li><li>udarac stvara opasnost posebno kada se dogodi iznad gležnja.</li><p>Nekontrolirani start s leđa otvorenim đonom otegotne su okolnosti protiv igrača koji je počinio prekršaj.</p><p>Očekivana odluka:</p><p>Komisija nogometnih sudaca u potpunosti podržava odluku suca donesenu na terenu i podsjeća da je zaštita sigurnosti igrača jedan od glavnih prioriteta sudaca.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=CXg55137Dz8" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div><div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">RUDEŠ - SLAVEN BELUPO</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">点球</span><span class="chip">70′</span><span class="chip">主裁 Strukan</span></div>
+  <div class="cbody"><p>传中球进入鲁德什队罚球区后，主队 42 号防守队员跳跃中用手改变了球的路线。裁判员未发现任何犯规，令比赛继续。随后由于通讯系统故障导致回看耗时过长，VAR 就可能存在的手球犯规建议裁判员回看。裁判员回看后判罚了点球（手球犯规）。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>《足球竞赛规则》对手球犯规的定义为：「判定手球犯规时，手臂的上限为腋窝下缘。」判定手球犯规须考量球员意图与所谓「接触点」。VAR 介入须满足「清晰而明显的错误」的证明标准——换言之，VAR 必须掌握清晰而明显的接触点证据方可介入。就现有机位画面而言，无法确定该防守队员是用肘部、肘与肩之间、还是腋窝下缘以上的部位触球（若是后者则不构成犯规）。</p><p>预期决定：</p><p>在缺乏犯规明确证据、可用机位无法令人信服地显示防守队员以身体哪一部位触球的情况下，VAR 不应介入，也不应发生介入。就本案而言，裁判委员会认为：供场上回看的录像准备不充分、事件被过多重复播放（24 次），将裁判员置于极其困难的境地，使其误判自己最初不判点球是错误。鉴于录像并未显示裁判员存在清晰而明显的错误，VAR 不应介入。</p></div><details><summary>克罗地亚语原文</summary><div><p>Nakon centaršuta u kazneni prostor Rudeša branič domaće momčadi s brojem 42 skačući je skrenuo loptu. Sudac je dopustio nastavak igre jer nije uočio nikakav prekršaj. Nakon predugog VAR pregleda, uzrokovanog kvarom komunikacijskog sustava, VAR je preporučio sucu ponovni pregled situacije zbog mogućeg prekršaja igranja rukom. Sudac je pregledao incident i odlučio dosuditi kazneni udarac zbog kažnjivog igranja rukom.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>Pravila nogometne igre definiraju prekršaje igranja rukom na sljedeći način: “Za potrebe utvrđivanja prekršaja igranja rukom, gornja granica ruke je u liniji s donjim dijelom pazuha“. Prilikom utvrđivanja prekršaja igranja rukom treba uzeti u obzir namjeru igrača i tzv. točku kontakta. Za potrebe VAR intervencije moraju biti ispunjeni kriteriji dokaza o “jasnoj i očitoj pogrešci“ - drugim riječima, da bi intervenirao u konkretnom slučaju, VAR mora imati dokaz o jasnoj i očitoj točki kontakta. Na temelju dostupnih kutova kamere, nije jasno je li branič Rudeša s brojem 42 igrao loptu laktom ili dijelom između lakta i ramena ili područjem iznad donjeg dijela pazuha (u kojem slučaju nema prekršaja).</p><p>Očekivana odluka:</p><p>U slučajevima kada nema jasnih dokaza o prekršaju, jer dostupni kutovi kamere ne pokazuju uvjerljivo kojim je dijelom tijela branič odigrao loptu, VAR intervencija se ne očekuje, niti bi se trebala dogoditi. U ovom konkretnom slučaju, Komisija nogometnih sudaca smatra da je neadekvatna priprema snimke za pregled na terenu i prekomjerno ponavljanje incidenta (24 puta) dovela suca u vrlo težak položaj, što ga je navelo da vjeruje da je pogriješio time što izvorno nije dosudio kazneni udarac. S obzirom da snimka ne pokazuje jasnu i očitu pogrešku suca, VAR intervencija se ne očekuje.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=TOxbKtlRlCE" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div><div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">VARAŽDIN - OSIJEK</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">进攻阶段手球犯规</span><span class="chip">42′</span><span class="chip">主裁 Čulina</span></div>
+  <div class="cbody"><p>角球开出后，球到奥西耶克队 98 号球员脚下，其用右手触球后破门。位置贴近的裁判员未注意到手球接触，判定进球有效。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>根据《足球竞赛规则》与 VAR 协议，进球后 VAR 必须回看进球前的进攻阶段，核实进攻方是否存在任何潜在犯规。按《足球竞赛规则》，即将进球的球员以手或手臂触球的任何接触都必须视为犯规——这属于事实性判定，无需 VAR 建议裁判员回看，VAR 直接告知裁判员手球犯规即可。</p><p>预期决定：</p><p>基于提交的录像，裁判委员会支持 VAR 的介入以及裁判员判进球无效的最终决定。</p></div><details><summary>克罗地亚语原文</summary><div><p>Nakon izvedenog udarca iz kuta lopta je došla do igrača Osijeka s brojem 98 koji je loptu odigrao svojom desnom rukom te postigao pogodak. Sudac, koji se nalazio blizu situacije, nije primijetio kontakt ruke i lopte te je priznao pogodak.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>U skladu s Pravilima nogometne igre i VAR protokolom, kad se postigne pogodak VAR mora analizirati napadačku fazu koja prethodi golu kako bi provjerio postoji li bilo kakav potencijalni prekršaj od strane momčadi koja je postigla pogodak. Prema Pravilima nogometne igre svaki kontakt ruke ili šake s loptom igrača koji odmah postigne pogodak mora se smatrati prekršajem. To predstavlja činjeničnu situaciju koja ne zahtijeva da VAR preporuči sucu pregled situacije, nego VAR jednostavno mora obavijestiti suca o prekršaju igranja rukom.</p><p>Očekivana odluka:</p><p>Na temelju dostavljene snimke, Komisija nogometnih sudaca podržava VAR intervenciju i konačnu odluku suca o nepriznavanju pogotka.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=uSjB8_Mc4Lo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div><div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">RIJEKA - HAJDUK</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">竞赛规则（第 5 章——受伤处理）</span><span class="chip">33′</span><span class="chip">主裁 Erceg</span></div>
+  <div class="cbody"><p>里耶卡队 26 号球员因接受场内治疗而离场，按 2026 年 6 月 1 日起施行的《足球竞赛规则》要求等待至少 1 分钟后重返比赛，随即投入比赛并取得进球。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>自 2026 年 6 月 1 日起，IFAB 对因受伤而延迟恢复比赛的处理作出了重大修改：任何因故延迟恢复比赛的球员，由裁判员酌情决定，须自比赛恢复之时起离场至少 1 分钟；期满后由第四官员允许其从边线重新入场。</p><p>预期决定：</p><p>回看录像后，裁判委员会认为该规则被正确执行。受伤球员于 33:52 离场，第四官员于 34:54 准确批准其重新入场——在其离开场地边界超过 1 分钟之后。</p></div><details><summary>克罗地亚语原文</summary><div><p>Igrač Rijeke s brojem 26 koji je napustio teren zbog pružanja pomoći na terenu za igru vratio se u utakmicu nakon što je čekao minimalno jednu minutu propisanu Pravilima nogometne igre od 1. lipnja 2026. godine. Pri ponovnom ulasku na teren za igru odmah se uključio u aktivnu igru i potom postigao pogodak.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>Od 1. lipnja 2026. godine IFAB je značajno izmijenio Pravila nogometne igre o postupanjima s igračima koji odgađaju nastavak igre zbog ozljede. Svaki igrač koji iz bilo kojeg razloga odgađa nastavak igre mora, prema diskrecijskom pravu suca, napustiti teren za igru na najmanje jednu minutu, počevši od trenutka kada sudac nastavi igru. Nakon tog razdoblja četvrti sudac dopušta igraču da se ponovno vrati u igru preko uzdužne crte terena za igru.</p><p>Očekivana odluka:</p><p>Nakon pregleda snimke Komisija nogometnih sudaca smatra da je ovo Pravilo ispravno primijenjeno. Ozlijeđeni igrač napustio je teren u 33:52, a četvrti sudac odobrio mu je ponovni ulazak na teren točno u 34:54 - više od minute nakon što je napustio granice terena za igru.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=h2VZ0OdRjOo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div><div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">DINAMO - LOKOMOTIVA</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">进攻阶段犯规</span><span class="chip">11′</span><span class="chip">主裁 Kolarić</span></div>
+  <div class="cbody"><p>界外球掷入对方罚球区后，萨格勒布迪纳摩队 6 号进攻球员跳得比洛科莫蒂瓦队 13 号防守球员更高，轻微触及对方背部。位于罚球区边缘的裁判员令比赛继续，迪纳摩由此进球。球入网后裁判员决定判罚进攻犯规；几分钟后 VAR 就「进攻阶段犯规致进球被错误取消/确认」建议回看。裁判员回看后很快意识到自己的错误并判进球有效。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>根据 VAR 协议，裁判员欲因进攻阶段犯规取消进球时必须：</p><ul><li>确认进球前存在清晰犯规，即对防守队员的清晰影响；</li><li>等待进攻阶段结束（进球达成）后再作决定，从而给 VAR 介入留出可能。</li></ul><p>预期决定：</p><p>回看录像后，裁判委员会认为 VAR 协议被正确执行，VAR 的介入与裁判员判进球有效的最终决定均属正确。</p></div><details><summary>克罗地亚语原文</summary><div><p>Nakon ubačaja unutar gostujućeg kaznenog prostora napadač Dinama s brojem 6 skače više od braniča Lokomotive s brojem 13 lagano dodirujući leđa braniča. Sudac, pozicioniran na rubu kaznenog prostora, dopušta nastavak igre, što rezultira pogotkom za Dinamo. Nakon što je lopta ušla u gostujuća vrata sudac odlučuje dosuditi prekršaj u napadu. Nekoliko trenutaka kasnije VAR preporučuje ponovni pregled situacije zbog očite pogreške nepriznavanja pogotka zbog prekršaja u napadačkoj fazi. Nakon što je ponovno pogledao situaciju sudac brzo shvaća svoju pogrešku i dosuđuje pogodak.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>U skladu s VAR Protokolom kada sudac želi poništiti pogodak zbog prekršaja u napadačkoj fazi mora:</p><li>utvrditi je li prije pogotka počinjen jasan prekršaj tj. jasan utjecaj na braniča</li><li>pričekati do kraja napadačke faze (postignutog pogotka) kako bi donio odluku, čime će VAR-u omogućiti intervenciju ako je potrebno.</li><p>Očekivana odluka:</p><p>Nakon pregleda snimke Komisija nogometnih sudaca smatra da je VAR Protokol ispravno primijenjen te da je VAR intervencija i konačna odluka suca o dosuđivanju pogotka bila ispravna.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=rKV1A4knAgk" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31756/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div>
+</div><div class="round">
+  <div class="round-h"><h2>克罗地亚超级联赛第 7 轮判例分析</h2>
+    <div class="meta">2026-09-16 · 1 个判例 · <a href="https://hns.family/vijesti/31732/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方文章</a></div>
+  </div>
+  <div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">OSIJEK - DINAMO</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">点球（含四个子情形）</span><span class="chip">3′</span><span class="chip">主裁 Terzić</span></div>
+  <div class="cbody"><p>奥斯耶克队 48 号球员攻门，球碰到萨格勒布迪纳摩队 22 号防守队员的腿后反弹到其张开的左臂。位置完美的裁判员不认为该手球接触应予处罚，判给角球。VAR 确认场上决定。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>关于手球犯规，裁判委员会的技术考量如下：</p><ul><li>防守队员以非自然方式扩大身体面积的；</li><li>防守队员向球作出主动动作的。</li></ul><p>相反，当球从队员自身身体反弹、且球的方向明显改变后碰到其手臂（无论手臂位置如何），不构成犯规。</p><p>预期决定：</p><p>裁判委员会完全支持裁判员不给奥斯耶克队判罚点球的决定。</p><p>主队罚球区内事件：萨格勒布迪纳摩队 15 号球员率先触球，随后被奥斯耶克队 31 号门将放倒。进攻球员倒在草坪上，位置理想的裁判员立即判罚点球。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>分析罚球区内对抗时，裁判员必须考量：</p><ul><li>存在清晰且影响对方球员的接触；</li><li>判断门将是否先触球、随后才使对方球员失去平衡。</li></ul><p>预期决定：</p><p>裁判委员会完全支持裁判员判罚点球的决定。</p><p>客队进攻阶段：洛科莫蒂瓦队 5 号防守球员与里耶卡队 18 号进攻球员发生接触，防守球员倒在草坪上，里耶卡队 26 号球员进球。位于罚球区边缘的裁判员目睹了事件，判断进球前双方接触不构成直接任意球判罚。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>根据进球判罚的技术考量，若进攻阶段确认存在犯规，该犯规必须是：</p><ul><li>鲁莽或欠考虑的——即具有清晰而明显的影响；</li><li>越位；</li><li>进球者进球前的手球；</li><li>《足球竞赛规则》定义的任何其他犯规。</li></ul><p>预期决定：</p><p>裁判委员会认为进攻阶段不存在判罚进攻球员犯规的要素——进攻球员的接触完全符合足球运动的合理对抗。裁判委员会完全支持场上裁判员的决定，VAR 亦无需介入。</p><p>客队罚球区内事件：伊斯特拉 1961 队 30 号进攻球员带球进入罚球区时，被鲁德什队 14 号防守队员用手拉住右臂。位置贴近的裁判员在防守队员拉拽进攻球员手臂后判罚点球。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>根据技术考量，拉拽或抱住球员须对其移动产生显著影响：</p><ul><li>清晰而有效的拉拽动作；</li><li>主观意图。</li></ul><p>预期决定：</p><p>裁判委员会完全支持裁判员判罚点球的决定。</p></div><details><summary>克罗地亚语原文</summary><div><p>Nakon udarca lopte prema vratima gostujuće momčadi igrača Osijeka s brojem 48, lopta udara nogu braniča Dinama s brojem 22 te se odbija u njegovu lijevu ruku koja je raširena. Sudac, koji je savršeno pozicioniran, ovaj kontakt ruke i lopte nije smatrao kažnjivim, dosudivši udarac iz kuta. VAR potvrđuje sučevu odluku na terenu.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>Što se tiče kažnjivih prekršaja igranja rukom, tehnička razmatranja Komisije nogometnih sudaca su sljedeća:</p><li>Ako branič neprirodno poveća svoje tijelo</li><li>Ako branič napravi namjeran pokret prema lopti</li><p>Suprotno tome, nema prekršaja kada branič dodirne loptu rukom (bez obzira na njezin položaj) nakon što je lopta odbijena od vlastitog tijela te je smjer lopte očito promijenjen.</p><p>Očekivana odluka:</p><p>Komisija nogometnih sudaca u potpunosti podržava odluku suca da ne dosudi kazneni udarac za momčad Osijeka.</p><p>Incident u kaznenom prostoru domaće momčadi gdje igrač Dinama s brojem 15 prvi dolazi do lopte, a nakon toga ga domaći vratar Osijeka s brojem 31 ruši. Napadač je pao na travnjak, a sudac, koji je bio u idealnoj poziciji, odmah dosudio kazneni udarac.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>Prilikom analize duela u kaznenom prostoru sudac mora uzeti u obzir:</p><li>Postojanje kontakta koji je jasan i utječe na suparničkog igrača</li><li>Procijeniti je li vratar prvi odigrao loptu, a zatim izbacio suparničkog igrača iz ravnoteže</li><p>Očekivana odluka:</p><p>Komisija nogometnih sudaca u potpunosti podržava odluku suca o dosuđivanju kaznenog udarca.</p><p>Tijekom napadačke faze gostujuće momčadi došlo je do kontakta obrambenog igrača Lokomotive s brojem 5 i napadača Rijeke s brojem 18, nakon čega obrambeni igrač pada na travnjak, a igrač Rijeke s brojem 26 postiže pogodak. Sudac, koji je bio na rubu kaznenog prostora, vidio je incident te procijenio da kontakt braniča i napadača, koji je prethodio pogotku, ne zaslužuje dosuđivanje izravnog slobodnog udarca.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>U skladu s našim tehničkim razmatranjima u vezi s postignutim pogotkom, ako se tijekom napadačke faze utvrdi prekršaj, on mora biti:</p><li>Neoprezan ili nepromišljen, što znači da ima jasan i očit utjecaj</li><li>Zaleđe</li><li>Igranje rukom strijelca neposredno prije postizanja pogotka</li><li>Bilo koji drugi prekršaj definiran Pravilima nogometne igre</li><p>Očekivana odluka:</p><p>Komisija nogometnih sudaca smatra da nije bilo elemenata za dosuđivanje prekršaja napadača tijekom napadačke faze. Kontakt napadača je potpuno nogometno prihvatljiv. Komisija nogometnih sudaca u potpunosti podržava odluku suca na terenu i ne očekuje VAR intervenciju.</p><p>Incident u kaznenom prostoru gostujuće momčadi gdje je napadač Istre 1961 s brojem 30 ušao u kazneni prostor s loptom kada ga je branič Rudeša s brojem 14 rukom zadržao za njegovu desnu ruku. Sudac, koji se nalazio blizu akcije, dosudio je kazneni udarac nakon što je obrambeni igrač povlačio napadačevu ruku.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>U skladu s našim tehničkim razmatranjima sputavanje ili zadržavanje igrača mora imati značajan utjecaj na njegovo kretanje:</p><li>Jasan i učinkovit zahvat</li><li>Namjera</li><p>Očekivana odluka:</p><p>Komisija nogometnih sudaca u potpunosti podržava odluku suca o dosuđivanju kaznenog udarca.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=Yp1lap-wDQg" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://www.youtube.com/watch?v=raoxmSvFo1s" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 2</a><a class="go" href="https://www.youtube.com/watch?v=UvooTycXI54" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 3</a><a class="go" href="https://www.youtube.com/watch?v=CuCu5opVviI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 4</a><a class="go" href="https://hns.family/vijesti/31732/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div>
+</div><div class="round">
+  <div class="round-h"><h2>克罗地亚超级联赛第 6 轮判例分析</h2>
+    <div class="meta">2026-09-08 · 1 个判例 · <a href="https://hns.family/vijesti/31698/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方文章</a></div>
+  </div>
+  <div class="ccard" data-verdict="correct">
+  <div class="chead"><span class="cmatch">RUDEŠ - HAJDUK</span>
+    <span class="badge correct">认定正确</span></div>
+  <div class="cinfo"><span class="chip">点球</span><span class="chip">26′</span><span class="chip">主裁 Škobić</span></div>
+  <div class="cbody"><p>鲁德什队 44 号防守球员在客队罚球区内铲倒哈伊杜克队 23 号进攻球员。铲球中防守球员踹到进攻球员右腿，位置完美的裁判员判罚点球。</p><p>技术考量（《足球竞赛规则》及指南）：</p><p>根据铲球的技术指南，我们认为出现下列情形时防守队员必须被处罚：</p><ul><li>接触清晰且影响对方球员的移动；</li><li>先触腿、后触球；</li><li>进攻球员没有夸大接触、没有蓄意制造接触、也没有过度反应。</li></ul><p>预期决定：</p><p>裁判委员会完全支持判罚点球的决定。</p></div><details><summary>克罗地亚语原文</summary><div><p>Nakon driblinga u gostujućem kaznenom prostoru obrambeni igrač Rudeša s brojem 44 srušio je na travnjak napadača Hajduka s brojem 23. U klizećem startu obrambeni igrač udario je napadača po desnoj nozi, a sudac, koji je bio savršeno pozicioniran, dosudio je kazneni udarac.</p><p>Tehnička razmatranja (Pravila nogometne igre, smjernice):</p><p>U skladu s našim tehničkim smjernicama u vezi s klizećim startom, smatramo da branič mora biti kažnjen ako:</p><li>je kontakt očit i utječe na kretanje suparničkog igrača</li><li>je kontakt prvo s nogom, a potom s loptom</li><li>nema naglašavanja kontakta, namjernog pokušaja izazivanja kontakta ili pretjerane reakcije napadača</li><p>Očekivana odluka:</p><p>Komisija nogometnih sudaca u potpunosti podržava dosuđivanje kaznenog udarca.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=bdkm1TyVtwQ" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/31698/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div>
+</div><div class="round">
+  <div class="round-h"><h2>克罗地亚超级联赛第 25 轮判例分析</h2>
+    <div class="meta">2026-03-10 · 1 个判例 · <a href="https://hns.family/vijesti/30802/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方文章</a></div>
+  </div>
+  <div class="ccard" data-verdict="incorrect">
+  <div class="chead"><span class="cmatch">VUKOVAR 1991 - RIJEKA</span>
+    <span class="badge wrong">认定错误</span></div>
+  <div class="cinfo"><span class="chip">点球</span><span class="chip">46′</span></div>
+  <div class="cbody"><p>主队罚球区内的对抗中，客队 77 号进攻球员与主队 13 号防守球员以同样的「足球动作」争抢来球——这不构成《足球竞赛规则》意义上的犯规。</p><p>位置非常好的裁判员对事件有完整掌控，令比赛继续。在一次在规则考量上缺乏依据、不应发生的 VAR 介入之后，裁判员被叫去回看——理由是潜在点球。</p><p>依据我们的技术指南：</p><p>防守球员试图踢球的动作完全是符合足球规律的自然反应；</p><p>接触极轻、极其轻微，不影响对方球员的移动与动作发挥。</p><p>我们认为：裁判员回看过程中的解读与判断——判罚点球的决定，以及引发点球判罚的 VAR 介入——均属错误决定，既不符合指南，也不符合 VAR 协议。</p></div><details><summary>克罗地亚语原文</summary><div><p>Duel u kaznenom prostoru domaće momčadi kada gostujući napadač br. 77 i branič domaćina br. 13 na isti “nogometni” način žele igrati loptom nije prekršaj iz Pravila nogometne igre.</p><p>Vrlo dobro pozicionirani sudac, potpunog nadzora incidenta, dopustio je nastavak igre. Nakon neopravdane i neutemeljene VAR intervencije u razmatranjima Pravila nogometne igre sudac je pozvan na pregled snimke zbog potencijalnog kaznenog udarca.</p><p>Slijedom naših tehničkih smjernica:</p><p>potpuno legitimne prirodne nogometne reakcije braniča u želji da igra loptom</p><p>vrlo laganog i minornog kontakta koji nije utjecaj na kretanje i izvedbu suparničkog igrača</p><p>interpretaciju i prosudbu suca tijekom pregleda snimke smatramo neispravnom odlukom o dosuđivanju kaznenog udarca kao i intervenciju VAR-a, koja inicira dosuđivanje kaznenog udarca, neutemeljenu u smjernicama i VAR Protokolu.</p></div></details>
+  <div class="clinks"><a class="go" href="https://www.youtube.com/watch?v=sKl6s68Jooo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频 1</a><a class="go" href="https://hns.family/vijesti/30802/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 官方分析</a></div>
+</div>
+</div></div>
+  <p class="empty" id="emptyTip">没有匹配的判例。</p>
+  <p class="foot">判例内容（克罗地亚语原文、认定结论与分析）版权归克罗地亚足球联合会 HNS 所有；本页收录结构化元数据、官方译制与 YouTube 官方页直链（来源 hns.family，核对日期 2026-10-06）。中文译制为学习用途，欢迎对照克罗地亚语原文修订。栏目页仅露最新数轮，历史轮经种子表并入（fetch_hns.py SEED_IDS）。</p>
+</div>
+<script>
+(function(){
+  var chips=document.querySelectorAll("[data-chips] .chip");
+  var cards=document.querySelectorAll(".ccard[data-verdict]");
+  var years=document.querySelectorAll(".year-h[data-year]");
+  chips.forEach(function(c){
+    c.addEventListener("click",function(){
+      chips.forEach(function(x){x.classList.remove("on");});
+      c.classList.add("on");
+      var f=c.getAttribute("data-f");
+      var any=false;
+      cards.forEach(function(a){
+        var hit=f==="all"||a.getAttribute("data-verdict")===f;
+        a.style.display=hit?"":"none";
+        if(hit)any=true;
+      });
+      years.forEach(function(y){
+        var body=document.getElementById("ybody-"+y.getAttribute("data-year"));
+        var anyY=false;
+        if(body)body.querySelectorAll(".ccard").forEach(function(a){if(a.style.display!=="none")anyY=true;});
+        y.style.display=anyY?"":"none";
+        if(body)body.style.display=anyY?"":"none";
+      });
+      var em=document.getElementById("emptyTip");
+      if(em)em.style.display=any?"none":"";
+    });
+  });
+})();
+</script>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
+</html>

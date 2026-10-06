@@ -33,6 +33,7 @@ def main():
     run("build_conmebol.py")
     run("build_weekly.py")
     run("build_ifab.py")
+    run("build_hns.py")
     run("build_quiz.py")
     if SITE_ASSETS.exists():
         shutil.rmtree(SITE_ASSETS)

@@ -6,7 +6,16 @@
 [语义化版本](https://semver.org/lang/zh-CN/)。仓库尚未打过 tag，首次切分发布时会
 把 `Unreleased` 段落并入对应版本号并补上对比链接。
 
-## 2026-10-06
+## 2026-10-06（第二批）
+
+### 增强（第六批：各国板块信息密度对标 CFA 评议）
+- **周更节目全量译注 + 日期补齐**：weekly-zh 译注 37→**246/246 全覆盖**（SFA/TFF/RFS/AFA 公式化期目脚本生成 + J 联赛/英格兰手写专稿）；`fetch_weekly.py dates` 模式逐条抓 watch 页 `playerMicroformatRenderer.publishDate` 补精确日期——**226 条 YouTube 期目精确日期 100%**；英格兰 Mic'd Up 多查询检索 3→8 期；**UAF（乌克兰）文章型源并入**（第 8 档，`?page=N` 分页 + 乌语月份解析，20 期含官方描述与译注）。
+- **CONMEBOL 中文译制层**：`data/conmebol-zh.json`（url 键，50 案情境映射全译 + 10 案无官方标签走归一徽章），conmebol.html 情境主显中文、西语原文保留标注。
+- **IFAB 配套协议页 8 篇全译**：fetch_ifab 扩 guidelines 引言 + 临时罚令/回换人/仅队长/掷界外球倒计时/脑震荡换人/场外治疗/限时换人 7 个协议页（173 条，页脚噪声过滤），ifab.html 新增「配套协议与指南」章区（同中英开关），ifab-zh extras 全覆盖。
+- **克罗地亚 HNS《Sudačka analiza》深度整合（新页面 hns.html，站点 19 页）**：`fetch_hns.py` 枚举 hns.family/hns/suci 栏目 + SEED_IDS 种子，逐判例解析「Situacija br. N」头（对阵/主裁/分钟/类型）+ 每判例官方 YouTube 视频直链 + 认定归一（correct/incorrect 句式规则）→ `data/hns.json` 4 轮 9 判例 12 视频；`data/hns-zh.json` 判例级全译（paras 1:1 对齐）；`build_hns.py` 渲染认定徽章/原文折叠/官方视频直链。门户第 11 张卡，顶栏「克罗地亚」（check 图标）。
+- **考题模式第三题型「VAR 协议题」**：IFAB 协议 12 条 FAQ 场景四选一（官方答案 + 人工指定干扰项映射 `VAR_OPTS`），`scoreVar` 单选判分、错题本/回跳 ifab.html#faq-qN/起始屏统计与题源筛选；题库 **592 判例 + 97 尺度 + 12 协议**。
+- **PRO 文章内嵌视频直链**：`fetch_pro.py` v2 逐篇抓文章页提取 YouTube embed → `articles[].videos[]`（207 篇增量断点），pro.html 卡片加「官方视频」直链。
+- 接线：`safe_http` 白名单 +uaf.ua；paths.py +HNS_*/CONMEBOL_ZH_JSON；build_all 挂 build_hns；测试 PAGES 19 页、新增 hns 数据/译制断言、weekly-zh 100% 覆盖断言、quiz meta 含 var 基准。
 
 ### 新增（第五批：周更节目判例库 + IFAB 统一尺度译制）
 - **全球周更评议节目判例库 weekly.html**（新页面 + `scripts/fetch_weekly.py` + 数据 `data/weekly.json` / `data/weekly-zh.json`）：七档官方评议节目的**结构化期目索引 221 期**——苏格兰 SFA《The VAR Review》（19，官方播放列表×2）、土耳其 TFF《VAR Kayıtları》（81，四个赛季播放列表）、日本 J 联赛《シンレポ》（49，官方播放列表）、英格兰《Match Officials: Mic'd Up》（3，Sky 频道内检索）、墨西哥裁判委员会《VAR Review》（8，官方频道全量）、阿根廷 LPF《VAR Revisión》（36，官方播放列表+频道检索）、俄罗斯 РФС ТВ《Судейский разбор》（25，频道内检索）。抓取双通道：YouTube RSS（精确日期 + 完整官方说明 + 播放量，≤15 条/源）为主，播放列表/频道检索页 `ytInitialData`（新版 lockupViewModel 与旧版 renderer 双兼容）做存量回补，相对时间（含 `1mo ago` 紧凑式）按抓取日近似并标 `≈`；按 videoId 字段级增量合并（重跑只增不减）。页面：节目筛选 chips + 搜索（标题/译注/说明）+ 年份分组 + 逐期卡片（官方观看直链、中文译注优先、原文说明折叠）。⚠ YouTube 视频受官方条款约束不下载不内嵌——纯链接模式（uefa/pro 先例，用户批准例外）；SOURCES 注册表 ID 已逐一人工核验（注意 `@TFF`、`@ScottishFA` 句柄有撞车/空壳陷阱，一律用频道 ID 直访）。

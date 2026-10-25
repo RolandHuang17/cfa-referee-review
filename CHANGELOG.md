@@ -6,6 +6,21 @@
 [语义化版本](https://semver.org/lang/zh-CN/)。发版由 `.github/workflows/release.yml`
 自动化（打 `v*` tag 即构建+测试+打包轻量站点 zip 附到 GitHub Release）。
 
+## 2026-10-26（第四批：质量保证长跑——E2E/题库校验/新期接入/依赖升级）
+
+### 数据正确性
+- **理论题出处逐字校验**（integrity 断言）：92 题引文全量对齐 laws.json 原文（38 题模糊匹配自动对齐 + 18 处人工裁定 + t84-87 章节锚点修正）——杜绝凭记忆写错数字的题目。
+- **接入 2026 第 23 期评议**（2026-10-14 发布，3 判例：seq226/227 支持原判、seq228 漏判越位）：基准更新为 23期/228判例/227视频（96/123/9）；3 段新视频下载校验完整；队徽目录 112 队。
+- **修复存量 bug**：`fetch_issues.py` 模块级 ISSUES（URL 表）遮蔽 paths.ISSUES（目录常量），任何调用都在输出目录计算处 TypeError。
+
+### 质量保证
+- **真浏览器 E2E 全站验证**（22 页）：修复 3 处——学习足迹把页面打开时的自动选中计为「已学」；学习路径「清除」按钮监听器漏写；挑战模式 `?hideans=1` 未同步 HIDE 状态导致答案直接展开。另修复 stats 分类分布图图例错位。
+- 六张实机截图入 README（门户/详情/雷达/速查卡/趋势/搜索）+ 全站 og:image 分享卡（assets/og-card.png）。
+
+### 工程与依赖
+- 新增 PR 验证 workflow（lint+build+test）；6 个 Dependabot PR 全部验证合并（checkout v7 / setup-python v7 / codeql-action v4 / upload-pages-artifact v5 / deploy-pages v5 / pymupdf 1.28.2）。
+- 三赛季视频完整性校验全绿（161+229+227 段）。
+
 ## 2026-10-26（第三批：备考工具化——学习闭环六批次）
 
 ### 学习留存（批次A）

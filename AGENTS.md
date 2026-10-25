@@ -104,7 +104,12 @@ python scripts/classify_cases.py 2026         # 5. 教学分类与结论复核�
                                               #    CLS_2024 / CLS_2026 是纯数据表，分别在
                                               #    scripts/lib/classify_cls_2024.py 与 _2026.py）
 python scripts/make_impact_2026.py            # 6. 错漏判影响标注（make_impact.py=2025，make_impact_2024.py=2024；
-                                              #    比分人工查证后填 data/match-scores-2026.json）
+                                              #    比分人工查证后填 data/match-scores-2026.json；
+                                              #    查证源偏好（用户指定）：SofaScore 数据最准（中超/中甲/中乙全覆盖，
+                                              #    但站点反爬 403，须经搜索引用核对、勿直接抓站），批量取分可用维基
+                                              #    赛季条目赛果表（en.wikipedia《2026 Chinese Super League》等），
+                                              #    再以新华社/腾讯/搜狐等中文战报交叉验证，批次做法见两份
+                                              #    match-scores-*.json 的 note 字段）
 python scripts/generate_teams_catalog.py      # 7. 队伍目录重建（读全部 cases-*.json + crest_overrides.json）
 python scripts/fetch_crests.py                # 8. 队徽目录校验（校验器，不联网）
 python scripts/fetch_laws.py                  # 9. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/local/laws/

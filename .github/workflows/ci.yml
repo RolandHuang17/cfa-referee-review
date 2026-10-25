@@ -1,0 +1,32 @@
+name: CI
+
+# PR 验证（不含部署）：lint + 构建 + 测试。Dependabot 与贡献者 PR 都走这里；
+# main 分支的构建部署仍由 pages.yml 负责。
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install build dependencies
+        run: python -m pip install -r requirements-build.txt
+      - name: Lint (ruff check + format)
+        run: |
+          python -m pip install ruff
+          ruff check scripts tests
+          ruff format --check scripts tests
+      - name: Build static site
+        run: python scripts/build_all.py
+      - name: Verify project
+        run: python -m pytest tests/ -q

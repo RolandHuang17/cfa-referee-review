@@ -814,6 +814,11 @@ document.getElementById("pathList").addEventListener("click", e=>{
   renderPaths();
   applyFilter();
 });
+document.getElementById("pathBar").addEventListener("click", ()=>{
+  state.path = null;
+  renderPaths();
+  applyFilter();
+});
 const fSearch = document.getElementById("fSearch");
 
 const COMP_ORDER = [["中超联赛","中超"],["中甲联赛","中甲"],["中乙联赛","中乙"],
@@ -1179,9 +1184,12 @@ function select(seq, scrollRow=true){
   if (row && scrollRow) row.scrollIntoView({block:"nearest"});
   if (row) row.classList.add("sel");
   history.replaceState(null, "", "#case-"+seq);
-  // 学习足迹：看过即记 + 记录「上次学习」供继续入口
-  markSeen(seq);
-  try { localStorage.setItem(LAST_KEY, JSON.stringify({seq, ts: Date.now()})); } catch(_) {}
+  // 学习足迹：仅用户主动选择才记（scrollRow=false = applyFilter/init 的自动选中，
+  // 打开页面不算「学过」）；上次学习入口同理
+  if (scrollRow !== false){
+    markSeen(seq);
+    try { localStorage.setItem(LAST_KEY, JSON.stringify({seq, ts: Date.now()})); } catch(_) {}
+  }
   // 放映模式跟随切题（视频 src 已由上方逻辑更新）
   if (presentOn){ prRevealed = false; presentRefresh(); }
   // 详情内容淡入重触发（opacity-only，滚动容器上不用 transform 以免影响内部定位）
@@ -1555,6 +1563,7 @@ let CHALLENGE = false;
   if (up.get("hideans") === "1"){
     CHALLENGE = true;
     document.documentElement.dataset.hideans = "1";
+    HIDE = true;  // 与 dataset 同步：否则 select() 的 toggle("revealed",!HIDE) 会展开答案
     const bar = document.getElementById("chBar");
     bar.style.display = "";
     document.getElementById("btnChCopy").onclick = ()=>{
@@ -1568,6 +1577,7 @@ let CHALLENGE = false;
     };
     document.getElementById("btnChExit").onclick = ()=>{
       CHALLENGE = false;
+      HIDE = false;
       document.documentElement.removeAttribute("data-hideans");
       bar.style.display = "none";
     };

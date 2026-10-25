@@ -267,7 +267,7 @@ CLS_2025 = {
     212: ("penalty_area", ["红牌不成立", "DOGSO不成立", "附应判犯规并黄牌"], "correct", "correct"),
     213: ("offside", ["阻碍视线", "进球无效"], "correct", "correct"),
     214: ("penalty_area", ["点球", "黄牌", "VAR介入正确"], "correct", "correct"),
-    215: ("sfp_vc", ["证据不足", "附应黄牌警告"], "pending", "none"),
+    215: ("sfp_vc", ["证据不足", "附应黄牌警告", "漏判黄牌"], "wrong", "none"),
     216: ("sfp_vc", ["黄牌", "红牌不成立", "铲球"], "correct", "correct"),
     217: ("sfp_vc", ["黄牌", "红牌不成立", "铲球"], "correct", "correct"),
     218: ("penalty_area", ["进球有效"], "correct", "correct"),

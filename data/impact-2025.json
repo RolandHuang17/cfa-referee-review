@@ -1203,6 +1203,23 @@
     }
    ]
   },
+  "215": {
+   "league": "中超联赛",
+   "round": 28,
+   "home": "上海申花",
+   "away": "大连英博",
+   "issue": 31,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "大连英博",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "上海申花10号动作构成非体育行为应黄牌警告，红牌问题评议组不予认定但黄牌认定明确，未出示属漏判"
+    }
+   ]
+  },
   "222": {
    "league": "中超联赛",
    "round": 29,

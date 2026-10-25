@@ -6735,7 +6735,7 @@
    "home": "上海申花",
    "away": "大连英博",
    "minute": "",
-   "referee_verdict": "pending",
+   "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
     "2025/i31c04-1.mp4"
@@ -6747,9 +6747,10 @@
    "category_name": "严重犯规与暴力行为",
    "tags": [
     "证据不足",
-    "附应黄牌警告"
+    "附应黄牌警告",
+    "漏判黄牌"
    ],
-   "referee_verdict_name": "不予认定",
+   "referee_verdict_name": "错漏判",
    "var_verdict_name": "未涉及"
   },
   {

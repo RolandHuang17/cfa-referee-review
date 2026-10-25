@@ -97,6 +97,7 @@ IMPACT = {
     205: [{"team": "大连英博", "type": "missed_penalty", "note": "青岛西海岸36号拉扯犯规，应判点球"}],
     206: [{"team": "上海嘉定汇龙", "type": "missed_penalty", "note": "陕西联合35号手球漏判，应判点球"}],
     210: [{"team": "广东铭途", "type": "missed_penalty", "note": "杭州临平吴越队员跳向对方属草率犯规，应判点球"}],
+    215: [{"team": "大连英博", "type": "missed_yellow_opponent", "note": "上海申花10号动作构成非体育行为应黄牌警告，红牌问题评议组不予认定但黄牌认定明确，未出示属漏判"}],
     222: [{"team": "成都蓉城", "type": "denied_goal", "note": "对方手球应掌握有利使进球有效；因鸣哨在先无法改判进球"}],
     223: [{"team": "成都蓉城", "type": "missed_penalty", "note": "河南俱乐部11号手球漏判，应判点球"}],
     225: [{"team": "上海嘉定汇龙", "type": "wrong_red_self", "note": "9号挥臂不构成暴力行为，红牌错误、应黄牌"},

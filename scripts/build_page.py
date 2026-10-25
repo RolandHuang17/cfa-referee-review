@@ -412,6 +412,20 @@ body.sb-off .sidebar{display:none}
   border-radius:999px;color:var(--brand);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;
   cursor:pointer;text-decoration:none}
 .note-view .ntime:hover{background:var(--info-bg)}
+/* 笔记汇总弹层 */
+.nv-search{margin:6px 0 12px}
+.nv-search input{width:100%;padding:9px 14px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--ink);font-size:13.5px;outline:none}
+.nv-search input:focus{border-color:var(--brand)}
+.nv-item{padding:10px 2px;border-bottom:1px dashed var(--line2);cursor:pointer}
+.nv-item:hover .nv-head b{color:var(--brand)}
+.nv-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:4px}
+.nv-head b{font-size:13.5px}
+.nv-head span{font-size:11.5px;color:var(--muted);flex:none}
+.nv-text{font-size:12.8px;color:var(--ink2);line-height:1.8;white-space:pre-wrap;
+  max-height:110px;overflow:hidden}
+.nv-text .ntime{display:inline-block;padding:0 6px;border:1px solid var(--brand);border-radius:999px;
+  color:var(--brand);font-size:11.5px;font-weight:700}
 .mobile-back{display:none}
 
 /* ---- 轻量版(html[data-lite]) 与 视频回退提示 ---- */
@@ -534,6 +548,7 @@ __TOPBAR__
       <div class="side-actions">
         <button class="btn" id="btnExport">__I_UP__ 导出</button>
         <button class="btn" id="btnImport">__I_DOWN__ 导入</button>
+        <button class="btn" id="btnNotesView" title="全季笔记一览：搜索、点击跳转对应判例">🗒 笔记汇总</button>
         <input type="file" id="importFile" accept=".json,application/json" style="display:none">
       </div>
       <h3 class="side-h">赛事</h3>
@@ -618,6 +633,16 @@ __TOPBAR__
     <button class="close" data-close>关闭</button>
     <h3>使用说明与统计口径</h3>
     <div id="helpBody"></div>
+  </div>
+</div>
+
+<!-- 笔记汇总弹层：全季笔记一览 + 笔记内搜索 + 点击跳判例 -->
+<div class="modal-mask" id="modalNotes">
+  <div class="modal help">
+    <button class="close" data-close>关闭</button>
+    <h3>我的笔记汇总（本季）</h3>
+    <div class="nv-search"><input id="nvQ" type="search" placeholder="搜索笔记内容（如：手球 / 越位 / 12:34）…" aria-label="搜索笔记"></div>
+    <div id="nvList"></div>
   </div>
 </div>
 
@@ -1269,9 +1294,45 @@ document.getElementById("noteBox").addEventListener("input", ()=>{
       "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
     renderFavList();
     const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-    if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
+    if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
     renderNoteView();
   }, 800);
+});
+
+// ---------- 笔记汇总弹层：全季一览 + 笔记内搜索 + 点击跳判例 ----------
+function renderNotesView(){
+  const q = (document.getElementById("nvQ").value || "").trim().toLowerCase();
+  const entries = Object.entries(notes)
+    .filter(([, n]) => n.text && n.text.trim())
+    .map(([seq, n]) => ({ c: bySeq[seq], n }))
+    .filter(x => x.c && (!q || (x.n.text + " " + x.c.home + " " + x.c.away).toLowerCase().includes(q)))
+    .sort((a, b) => (b.n.ts || 0) - (a.n.ts || 0));
+  document.getElementById("nvList").innerHTML = entries.length ? entries.map(x=>{
+    const d = new Date(x.n.ts || 0), pad = v=>String(v).padStart(2, "0");
+    return `<div class="nv-item" data-seq="${x.c.seq}">
+      <div class="nv-head"><b>${esc(x.c.home)} vs ${esc(x.c.away)}</b>
+        <span>第${x.c.issue}期-判例${x.c.no} · ${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}</span></div>
+      <div class="nv-text">${esc(x.n.text).replace(/\[(\d{1,3}):(\d{1,2})\]/g,
+        (m, mm, ss)=>`<span class="ntime" data-sec="${(+mm)*60+(+ss)}">${esc(m)}</span>`)}</div>
+    </div>`;
+  }).join("") : `<p style="color:var(--muted);font-size:13px">${q ? "没有匹配的笔记。" : "还没有笔记——在判例详情区写下第一条学习笔记吧。"}</p>`;
+}
+document.getElementById("btnNotesView").onclick = ()=>{ renderNotesView(); openModal("modalNotes"); };
+document.getElementById("nvQ").addEventListener("input", renderNotesView);
+document.getElementById("nvList").addEventListener("click", e=>{
+  const it = e.target.closest(".nv-item[data-seq]");
+  if (!it) return;
+  const seq = +it.dataset.seq;
+  const tm = e.target.closest(".ntime");
+  document.getElementById("modalNotes").classList.remove("open");
+  select(seq);
+  if (tm){
+    const sec = +tm.dataset.sec;
+    setTimeout(()=>{
+      const v = document.getElementById("dvid");
+      if (v && v.currentSrc){ v.currentTime = sec; try { v.play(); } catch(_) {} }
+    }, 350);
+  }
 });
 function renderFavList(){
   const tags = {};

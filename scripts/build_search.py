@@ -316,6 +316,13 @@ function renderBar(){
     q = (si.value||"").trim().toLowerCase();
     render();
   }));
+  // 深链预填：search.html?q=关键词（404 页搜索框 / 外部链接入口）
+  const qp = new URLSearchParams(location.search).get("q");
+  if (qp){
+    si.value = qp;
+    q = qp.trim().toLowerCase();
+    if (q) si.focus();
+  }
 }
 function renderChips(){
   const n = g => g==="all" ? DOCS.length : DOCS.filter(d=>d[0]===g).length;

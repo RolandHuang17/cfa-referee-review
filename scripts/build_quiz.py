@@ -22,6 +22,7 @@ from lib.crest_catalog import load_catalog, normalize_team
 from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE
 from lib.seo import meta_tags
 from lib.theme import icon, inject_theme, js_icons, topbar
+from lib.xlinks import resolve as resolve_xlinks
 
 WRONG_KEY = "cfa.quiz.wrong"
 # 与 build_scale.DECISION_ORDER 保持一致的展示顺序
@@ -338,6 +339,8 @@ def build_data():
         "teams": teams,
         "opts": {"r": R_OPTIONS, "c": C_OPTIONS, "v": V_OPTIONS},
         "meta": {"case": n_case, "scale": n_scale, "var": n_var, "theory": n_theory},
+        # 判例题反馈区「关联规则」链接（data/xlinks.json 策表，与 season 页同源）
+        "xlinks": resolve_xlinks()[0],
     }
 
 
@@ -1088,10 +1091,13 @@ function renderFeedback(q, a){
     if (q.varrule) h += `<div class="concl"><b>⚖ VAR 介入：</b>${esc(q.varrule)}</div>`;
   }
   const e = wrong[q.k];
+  const xl = q.t === "case" ? (DATA.xlinks && DATA.xlinks[q.cat]) : null;
   h += `<div class="srclinks">
     <button class="btn" id="fbStar">${e&&e.star?IC["star-f"]+" 已收藏":IC.star+" 收藏错题"}</button>
-    <a class="btn" href="${qLink(q)}" target="_blank">${IC.external} 查看原判例</a>
-    ${wrong[q.k]&&wrong[q.k].wrong>1?`<span style="font-size:12px;color:var(--muted)">已错 ${wrong[q.k].wrong} 次</span>`:""}
+    <a class="btn" href="${qLink(q)}" target="_blank">${IC.external} 查看原判例</a>` +
+    (xl && xl.laws.length ? xl.laws.map(l =>
+      `<a class="btn" href="${esc(l.url)}" target="_blank">${IC.book} ${esc(l.title)}</a>`).join("") : "") +
+    `${wrong[q.k]&&wrong[q.k].wrong>1?`<span style="font-size:12px;color:var(--muted)">已错 ${wrong[q.k].wrong} 次</span>`:""}
   </div>`;
   const fb = document.getElementById("qFb");
   fb.classList.remove("fb-ok", "fb-part", "fb-miss");

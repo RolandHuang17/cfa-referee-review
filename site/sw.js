@@ -1,6 +1,6 @@
 "use strict";
 // 裁判学习平台 Service Worker：在线版断网可读（file:// 离线用法不经此处）
-const VERSION = "202610260246";
+const VERSION = "202610260252";
 const CACHE = "cfa-site-" + VERSION;
 
 self.addEventListener("install", (e) => {

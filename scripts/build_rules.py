@@ -672,9 +672,37 @@ function markRead(id){
   syncReadUI();
 }
 
+// ---------- 朗读本章（浏览器 speechSynthesis，通勤听规则；不支持的浏览器按钮拦截） ----------
+let ttsOn = false;
+function ttsStop(){
+  if (!ttsOn) return;
+  try { window.speechSynthesis.cancel(); } catch(_) {}
+  ttsOn = false;
+  const b = document.getElementById("btnTTS");
+  if (b) b.textContent = "🔊 朗读";
+}
+{
+  const b = document.getElementById("btnTTS");
+  if (b) b.onclick = ()=>{
+    if (!("speechSynthesis" in window)){ alert("当前浏览器不支持语音朗读（Edge / Chrome 可用）"); return; }
+    if (ttsOn){ ttsStop(); return; }
+    const s = byId[cur]; if (!s) return;
+    const u = new SpeechSynthesisUtterance(
+      s.title + "。" + document.getElementById("secHtml").innerText);
+    u.lang = "zh-CN";
+    u.rate = 1;
+    u.onend = ttsStop;
+    u.onerror = ttsStop;
+    window.speechSynthesis.speak(u);
+    ttsOn = true;
+    b.textContent = "⏹ 停止";
+  };
+}
+
 function select(id, scroll=true){
   const s = byId[id]; if(!s) return;
   cur = id;
+  ttsStop();  // 切章即停上一章的朗读
   document.getElementById("emptyBox").style.display = "none";
   document.getElementById("secBody").style.display = "block";
   document.getElementById("secTitle").textContent = s.title;
@@ -988,6 +1016,7 @@ def build_html_page(sections):
         f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'
         f'<button class="tbtn" id="fsMinus" title="缩小字号">A－</button>'
         f'<button class="tbtn" id="fsPlus" title="放大字号">A＋</button>'
+        f'<button class="tbtn" id="btnTTS" title="朗读本章（浏览器语音，通勤路上听规则）">🔊 朗读</button>'
     )
     tb = topbar(
         active="rules.html",

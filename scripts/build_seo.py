@@ -85,9 +85,15 @@ def build_404():
 .err-code{{font-family:var(--font-display);font-size:88px;font-weight:700;
   color:var(--brand);line-height:1;letter-spacing:2px}}
 .err-wrap h1{{font-family:var(--font-display);font-size:21px;margin:18px 0 6px}}
-.err-wrap p{{color:var(--muted);font-size:13.5px;margin:0 0 26px}}
+.err-wrap p{{color:var(--muted);font-size:13.5px;margin:0 0 14px}}
+.e-search{{display:flex;gap:8px;max-width:420px;margin:0 auto 12px}}
+.e-search input{{flex:1;padding:10px 16px;border:1px solid var(--line);border-radius:999px;
+  background:var(--card);color:var(--ink);font-size:13.5px;outline:none}}
+.e-search input:focus{{border-color:var(--brand)}}
+.e-search button{{padding:10px 20px;border:1px solid var(--brand);border-radius:999px;
+  background:var(--brand-strong);color:var(--on-brand);font-weight:700;font-size:13.5px;cursor:pointer}}
 .e-links{{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:10px;
-  text-align:left}}
+  text-align:left;margin-top:12px}}
 .e-link{{display:flex;align-items:center;gap:10px;padding:12px 14px;border:1px solid var(--line);
   border-radius:var(--r-md);background:var(--card);color:var(--ink);text-decoration:none}}
 .e-link:hover{{border-color:var(--brand);transform:translateY(-2px)}}
@@ -101,9 +107,26 @@ def build_404():
 <main class="err-wrap">
   <div class="err-code">404</div>
   <h1>页面不存在或已移动</h1>
-  <p>地址可能输入有误，或页面已更名。本站全部内容都在下面这些入口里：</p>
+  <p>地址可能输入有误，或页面已更名。输入关键词全站搜一搜：</p>
+  <div class="e-search">
+    <input id="q404" type="search" placeholder="如：手球 / 越位 / DOGSO / 第12章…" aria-label="全站搜索">
+    <button id="go404">搜索</button>
+  </div>
+  <p>或从常用入口进入：</p>
   <div class="e-links">{cards}</div>
 </main>
+<script>
+(function(){{
+  function go(){{
+    var q = document.getElementById("q404").value.trim();
+    location.href = q ? "search.html?q=" + encodeURIComponent(q) : "search.html";
+  }}
+  document.getElementById("go404").onclick = go;
+  document.getElementById("q404").addEventListener("keydown", function(e){{
+    if (e.key === "Enter") go();
+  }});
+}})();
+</script>
 </body>
 </html>
 """

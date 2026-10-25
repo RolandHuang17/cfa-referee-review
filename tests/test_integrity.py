@@ -332,6 +332,132 @@ def test_weekly_ifab_data_sanity():
     print("weekly/ifab/hns 数据与中文层校验通过")
 
 
+def test_issue_url_tables_in_sync():
+    """硬约束 7 的自动化：fetch_issues.ISSUES 与 parse_issues.ISSUE_URL 是同一套 URL 的两份拷贝。
+
+    两脚本均带 __main__ guard，直接 import 取表比对；不一致 = 加新期时漏同步一处，
+    会在抓取或解析时静默漏期。顺带断言表中每期都已有官方页面存档。"""
+    import fetch_issues
+    import parse_issues
+    problems = []
+    for season in sorted(set(fetch_issues.ISSUES) | set(parse_issues.ISSUE_URL)):
+        left = fetch_issues.ISSUES.get(season, {})
+        right = parse_issues.ISSUE_URL.get(season, {})
+        if set(left) != set(right):
+            problems.append(f"{season} 两 URL 表期数不一致: fetch_issues={sorted(left)} "
+                            f"parse_issues={sorted(right)}")
+            continue
+        for no in sorted(left):
+            if fetch_issues.BASE + left[no][0] != right[no]:
+                problems.append(f"{season} 第{no}期 URL 不一致: {left[no][0]} vs {right[no]}")
+        archived = {int(m.group(1)) for f in (DATA / "issues" / season).glob("issue_*.html")
+                    for m in [re.match(r"issue_(\d+)\.html", f.name)] if m}
+        missing = sorted(set(left) - archived)
+        if missing:
+            problems.append(f"{season} URL 表中的期尚未抓取存档: {missing}（先跑 fetch_issues）")
+    _finish(problems)
+    print("两 URL 表同步且每期均有存档")
+
+
+def test_uefa_rfef_conmebol_zh_aligned():
+    """uefa-zh / rfef-zh / conmebol-zh 译文层与源数据对齐（镜像各 builder 的 ⚠ 回退条件）。
+
+    weekly/ifab/hns 的对齐已由 test_weekly_ifab_data_sanity 覆盖；这三个源在 fetch 更新后
+    译文缺口只会以构建 ⚠ 打印出现、CI 不拦——这里把「构建零警告」变成硬断言。"""
+    problems = []
+    # --- UEFA：组按 key、criteria 按块序对齐、判例按 id（镜像 build_uefa.apply_zh）---
+    uefa = json.loads((DATA / "uefa.json").read_text(encoding="utf-8"))
+    uzh = json.loads((DATA / "uefa-zh.json").read_text(encoding="utf-8"))
+    zg, zi = uzh.get("groups", {}), uzh.get("items", {})
+    used_g = set()
+    for g in uefa.get("groups", []):
+        key = g.get("key", "")
+        z = zg.get(key)
+        if not z:
+            problems.append(f"uefa-zh 缺组译文: {key}")
+            continue
+        used_g.add(key)
+        if g.get("intro") and not z.get("intro"):
+            problems.append(f"uefa-zh 组 {key} 缺 intro 译文")
+        en_c = g.get("criteria") or []
+        zc = z.get("criteria") or []
+        if en_c and not zc:
+            problems.append(f"uefa-zh 组 {key} 缺 criteria 译文")
+        elif zc and not (len(zc) == len(en_c) and all(
+                len(b.get("items") or []) == len(a.get("items") or [])
+                for a, b in zip(en_c, zc))):
+            problems.append(f"uefa-zh 组 {key} criteria 块数/条数与英文不一致")
+        for it in g.get("items", []):
+            if not (zi.get(it.get("id", "")) or {}).get("title"):
+                problems.append(f"uefa-zh 缺判例标题译文: {it.get('id', '')}")
+    for k in sorted(set(zg) - used_g):
+        problems.append(f"uefa-zh 组 key 不在 uefa.json 中（疑似过期）: {k}")
+    src_ids = {it.get("id") for g in uefa.get("groups", []) for it in g.get("items", [])}
+    for k in sorted(set(zi) - src_ids):
+        problems.append(f"uefa-zh items 键不在 uefa.json 中（疑似过期）: {k}")
+    # --- RFEF：栏目按 key、分组 notes 条数、判例按 id（镜像 build_rfef.apply_zh）---
+    rfef = json.loads((DATA / "rfef.json").read_text(encoding="utf-8"))
+    rzh = json.loads((DATA / "rfef-zh.json").read_text(encoding="utf-8"))
+    zs, zitems = rzh.get("sections", {}), rzh.get("items", {})
+    used_s, src_items, src_vids = set(), set(), set()
+    for s in rfef.get("sections", []):
+        key = s.get("key", "")
+        z = zs.get(key)
+        if not z:
+            problems.append(f"rfef-zh 缺栏目译文: {key}")
+            continue
+        used_s.add(key)
+        for g in s.get("groups", []):
+            zg_ = (z.get("groups") or {}).get(g.get("code", ""))
+            if zg_ and zg_.get("notes") is not None and \
+                    len(zg_["notes"]) != len(g.get("notes_es") or []):
+                problems.append(f"rfef-zh 分组 {g.get('code')} notes 条数与西语不一致")
+            for it in g.get("items", []):
+                if it.get("situation_es") and \
+                        not (zitems.get(it.get("id", "")) or {}).get("situation"):
+                    problems.append(f"rfef-zh 缺判例情形译文: {it.get('id', '')}")
+                src_items.add(it.get("id", ""))
+                for v in it.get("videos", []):
+                    src_vids.add(v.get("id", ""))
+    for k in sorted(set(zs) - used_s):
+        problems.append(f"rfef-zh sections 键不在 rfef.json 中（疑似过期）: {k}")
+    for k in sorted(set(zitems) - src_items - src_vids):
+        problems.append(f"rfef-zh items 键不在 rfef.json 中（疑似过期）: {k}")
+    # --- CONMEBOL：按 url 键，有官方情境的案子必须有中文（镜像 build_conmebol 回退警告）---
+    con = json.loads((DATA / "conmebol.json").read_text(encoding="utf-8"))
+    czh = json.loads((DATA / "conmebol-zh.json").read_text(encoding="utf-8"))
+    zcases = czh.get("cases", {})
+    applied = set()
+    for c in con.get("cases", []):
+        url = c.get("url", "")
+        if (zcases.get(url) or {}).get("situation"):
+            applied.add(url)
+        elif c.get("situacion_es"):
+            problems.append(f"conmebol-zh 缺情境译文（构建时会回退西语）: {url[:70]}")
+    for k in sorted(set(zcases) - applied):
+        problems.append(f"conmebol-zh cases 键未生效（源无此案或译文缺 situation）: {k[:70]}")
+    _finish(problems)
+    print("uefa/rfef/conmebol 译文层与源数据对齐")
+
+
+def test_bat_file_gbk_encoded():
+    """硬约束 4：启动合集网页.bat 必须存为 GBK（cmd 按 ANSI 码页解析，UTF-8 会乱码中断）。"""
+    raw = (ROOT / "启动合集网页.bat").read_bytes()
+    problems = []
+    if raw.startswith(b"\xef\xbb\xbf"):
+        problems.append("启动合集网页.bat 带 UTF-8 BOM（必须 GBK 无 BOM）")
+    try:
+        text = raw.decode("gbk")
+    except UnicodeDecodeError as e:
+        problems.append(f"启动合集网页.bat 不是合法 GBK: {e}")
+        _finish(problems)
+        return
+    if not text.lstrip().startswith("@echo off"):
+        problems.append("启动合集网页.bat 内容异常（未见 @echo off 开头）")
+    _finish(problems)
+    print("启动合集网页.bat 为 GBK 编码")
+
+
 CHECKS = [
     test_pages_exist_and_are_self_contained,
     test_season_case_counts,
@@ -339,6 +465,9 @@ CHECKS = [
     test_site_pages_in_sync_with_data,
     test_quiz_bank_pool,
     test_weekly_ifab_data_sanity,
+    test_issue_url_tables_in_sync,
+    test_uefa_rfef_conmebol_zh_aligned,
+    test_bat_file_gbk_encoded,
     test_internal_links_resolve,
     test_team_catalog_complete,
     test_crest_files_and_provenance,

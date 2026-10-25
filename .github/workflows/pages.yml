@@ -22,8 +22,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
+          cache: pip
       - name: Install build dependencies
         run: python -m pip install -r requirements-build.txt
+      - name: Lint (ruff, pyflakes-level only)
+        run: |
+          python -m pip install ruff
+          ruff check scripts tests
       - name: Build static site
         run: python scripts/build_all.py
       - name: Verify project

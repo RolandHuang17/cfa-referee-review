@@ -36,8 +36,6 @@ SCALE_SOURCE_URLS = {
     "2025": "https://www.thecfa.cn/cpwjxz/20250224/35659.html",
     "2024": "https://www.thecfa.cn/cpwjxz/20240229/33785.html",
 }
-SERIES_NAMES = {"highlights": "判罚案例", "reckless": "纪律处罚", "var": "VAR 视频助理裁判",
-                "tam": "战术犯规"}
 EN2CN = {"No Foul": "不犯规", "No Card": "不出牌", "Indirect Free Kick": "间接任意球",
          "Direct Free Kick": "直接任意球", "Penalty Kick": "罚球点球", "Yellow Card": "黄牌",
          "Red Card": "红牌", "Goal": "进球", "Penalty": "罚球点球"}
@@ -227,7 +225,6 @@ def parse_highlight(path: Path, year: str, cat: str, series: str):
     title = re.sub(r"^[A-Z]*\d+\s*-\s*", "", title)  # 去"A1 - "/"1 - "编号前缀（文件号与标题号可能错位）
     if title == hl_id or not title:  # VAR 等无名页
         title = f"场景 {hl_id}"
-    vm = re.search(r'<source[^>]*src="([^"]+\.mp4)"', body)
     reason = ""
     rm = re.search(r'<h2>\s*Reason\s*</h2>([\s\S]*?)</div>', body)
     if rm:
@@ -254,7 +251,6 @@ def extract_season(year: str, pkg: Path):
         order = []
         for series_dir in sorted(p for p in cat_dir.iterdir() if p.is_dir()):
             series = series_dir.name
-            name = SERIES_NAMES.get(series, series)
             for p in sorted(series_dir.glob("*.html"),
                             key=lambda x: int(x.stem) if x.stem.isdigit() else 999):
                 item, files = parse_highlight(p, year, cat_dir.name, series)

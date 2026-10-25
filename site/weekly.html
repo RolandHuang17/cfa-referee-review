@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>全球周更评议节目 · 裁判学习平台</title>
 <style>
-/* ===== weekly 页专属布局 (tokens/组件来自 data-cfa-theme, 骨架同 pro 页) ===== */
+/* ===== weekly 页专属布局 (tokens/组件来自 data-cfa-theme；页头/筛选骨架来自 lib/pagelib) ===== */
 .page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
 .page-head .wrap{max-width:1040px;margin:0 auto;padding:22px 16px 18px}
 .page-head h1{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
@@ -16,13 +16,17 @@
 .src-banner .ic{color:var(--brand)}
 .src-banner a{color:var(--brand);font-weight:600;text-decoration:none}
 .src-banner a:hover{text-decoration:underline}
+.wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
+.year-h{font-family:var(--font-display);font-size:16px;margin:18px 0 10px;letter-spacing:.4px}
+.year-h small{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
 .searchbar{margin-top:14px;position:relative;max-width:460px}
 .searchbar .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
 .searchbar input{width:100%;padding:9px 34px 9px 36px;border:1px solid var(--line);
   border-radius:999px;background:var(--card);color:var(--ink);font-size:13.5px;outline:none}
 .searchbar input:focus{border-color:var(--brand)}
-.wrap{max-width:1040px;margin:0 auto;padding:18px 16px 60px}
-.chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 20px}
 .show{margin-bottom:34px}
 .show-h{border-left:3px solid var(--brand);padding-left:14px;margin-bottom:6px}
 .show-h h2{font-family:var(--font-display);font-size:20px;margin:0;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
@@ -32,8 +36,6 @@
 .show-h .org a:hover{text-decoration:underline}
 .show-h .intro{font-size:13px;color:var(--ink2);line-height:1.8;margin:8px 0 0;max-width:72em}
 .badge{white-space:nowrap}
-.year-h{font-family:var(--font-display);font-size:16px;margin:18px 0 10px;letter-spacing:.4px}
-.year-h small{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
 .ecard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
   padding:12px 16px;margin-bottom:10px;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;
   transition:border-color var(--t-fast) var(--ease)}
@@ -50,8 +52,6 @@
   border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
   font-size:12.5px;font-weight:600;text-decoration:none;white-space:nowrap;margin-top:2px}
 .ecard .go:hover{background:var(--brand-strong);color:var(--on-brand)}
-.empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
-.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
 @media (max-width:760px){.ecard .go{margin-left:auto}}
 </style>
 <style data-cfa-theme>
@@ -270,7 +270,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
     <h1>全球周更评议节目判例库</h1>
     <div class="sub">七档官方周更/定期评议节目（苏格兰·土耳其·日本·英格兰·墨西哥·阿根廷·俄罗斯）的结构化期目索引：官方标题 / 精确或近似日期 / 时长 / 播放量 / 官方说明原文 + 中文译注 · 每期跳官方观看页 · 版权归各机构所有</div>
     <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> YouTube 视频受官方条款约束不本地化，本页只收录元数据并跳转官方观看；数据核对日期 2026-10-06</div>
-    <div class="searchbar"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="q" type="search" placeholder="搜索期目标题 / 中文译注 / 官方说明…" aria-label="搜索期目"></div>
+    <div class="searchbar"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="q" type="search" placeholder="搜索期目标题 / 中文译注 / 官方说明…" aria-label="搜索"></div>
   </div>
 </header>
 <div class="wrap" id="content0">
@@ -1684,19 +1684,19 @@ WhatsApp: https://whatsapp.com/channel/0029VaDAKLfHFxOwQiv23g3d
 </div>
 <script>
 (function(){
-  var curShow="all", q="";
+  var cur="all", q="";
   var chips=document.querySelectorAll("[data-chips] .chip");
-  var secs=document.querySelectorAll("section.show");
   var emptyTip=document.getElementById("emptyTip");
   function apply(){
-    var anyVisible=false;
+    var any=false;
+    var secs=document.querySelectorAll("section.show");
     secs.forEach(function(sec){
-      var hitShow=curShow==="all"||sec.getAttribute("data-show")===curShow;
-      var any=false;
+      var hitShow=cur==="all"||sec.getAttribute("data-show")===cur;
+      var anyS=false;
       sec.querySelectorAll(".ecard").forEach(function(c){
         var hit=hitShow&&(!q||(c.getAttribute("data-search")||"").indexOf(q)>=0);
         c.style.display=hit?"":"none";
-        if(hit)any=true;
+        if(hit)anyS=true;
       });
       sec.querySelectorAll(".year-h").forEach(function(y){
         var body=y.nextElementSibling,anyY=false;
@@ -1704,16 +1704,16 @@ WhatsApp: https://whatsapp.com/channel/0029VaDAKLfHFxOwQiv23g3d
         y.style.display=anyY?"":"none";
         if(body)body.style.display=anyY?"":"none";
       });
-      sec.style.display=any?"":"none";
-      if(any)anyVisible=true;
+      sec.style.display=anyS?"":"none";
+      if(anyS)any=true;
     });
-    if(emptyTip)emptyTip.style.display=anyVisible?"none":"";
+    if(emptyTip)emptyTip.style.display=any?"none":"block";
   }
   chips.forEach(function(c){
     c.addEventListener("click",function(){
       chips.forEach(function(x){x.classList.remove("on");});
       c.classList.add("on");
-      curShow=c.getAttribute("data-f")||"all";
+      cur=c.getAttribute("data-f")||"all";
       apply();
     });
   });
@@ -1722,6 +1722,7 @@ WhatsApp: https://whatsapp.com/channel/0029VaDAKLfHFxOwQiv23g3d
     si.addEventListener(ev,function(){q=(si.value||"").trim().toLowerCase();apply();});
   });
 })();
+
 </script>
 <script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
 </html>

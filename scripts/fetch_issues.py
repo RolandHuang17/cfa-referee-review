@@ -9,8 +9,6 @@ import time
 
 from lib.safe_http import fetch_text
 
-from lib.paths import ISSUES
-
 BASE = "https://www.thecfa.cn"
 
 # 期数 -> (URL路径, 预期发布日期)

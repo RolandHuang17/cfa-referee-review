@@ -6,6 +6,15 @@
 [语义化版本](https://semver.org/lang/zh-CN/)。仓库尚未打过 tag，首次切分发布时会
 把 `Unreleased` 段落并入对应版本号并补上对比链接。
 
+## 2026-10-25
+
+### 增强（工程精进：护栏、公共库与一键更新）
+- **测试护栏新增 3 项**（`tests/test_integrity.py` 现 12 项全绿）：`test_issue_url_tables_in_sync` 把硬约束 7 自动化（import 比对 fetch_issues.ISSUES 与 parse_issues.ISSUE_URL 两份 URL 表 + 表内每期存档在位）；`test_uefa_rfef_conmebol_zh_aligned` 镜像三个 builder 的 ⚠ 回退条件，把 uefa/rfef/conmebol 译文层的键漂移与缺口从「构建警告」升级为硬断言（对齐 weekly/ifab/hns 已有覆盖）；`test_bat_file_gbk_encoded` 锁住硬约束 4（启动合集网页.bat 必须 GBK 无 BOM）。
+- **CI 加固**（pages.yml）：`setup-python` 加 `cache: pip`；新增 ruff lint 步骤（`select=["E9","F"]` pyflakes 级真错误，配置入 pyproject `[tool.ruff]`，不做风格噪音）；顺手修掉存量 7 处 lint 发现（未用导入/变量，及 fetch_issues 里被本地 ISSUES 字典遮蔽的 `lib.paths` 导入）。
+- **列表页公共骨架 `scripts/lib/pagelib.py`**（pro/conmebol/weekly/hns 四页共用）：收敛四份 builder 各自复制的 esc()/页头 CSS/chips+年份分组过滤 JS/年份分组/main() 骨架约 350 行；**hns/conmebol/pro 三页补齐搜索框**（此前全站仅 weekly 有——hns 搜对阵/类型/中文正文、conmebol 搜对阵/球场/情境、pro 搜标题/系列/联赛，统一空态提示），conmebol 判例链接补上此前缺失的 `.go` 药丸按钮样式；四页过滤 JS 经 node --check 语法校验 + 本地浏览器功能回归（搜索/筛选/空态/恢复逐页通过），并**修复空态提示从不显示的沿袭缺陷**（无结果时 `style.display=""` 会回退 CSS `display:none`，改为显式 block）。
+- **赛季更新一键编排 `scripts/update_season.py`**：按数据管线固定顺序串起 fetch→parse→(2025 自动插 fix_issue27)→classify→impact→catalog→crests→build_all→test，支持 `--skip-fetch` / `--dry-run` / `--discover`，人工环节（比分查证/pending 复核/视频下载）跑完打提醒——消除十步手敲的漏序错位风险。
+- 文档同步：README 补全八个国际板块介绍与目录结构（考题数 689→701 = 592 判例+97 尺度+12 VAR 协议，移除硬编码数据截止日期）；AGENTS.md 收录 conmebol-zh.json schema、pagelib/update_season 入口说明，自验清单为三页补搜索框描述。
+
 ## 2026-10-06（第二批）
 
 ### 增强（第六批：各国板块信息密度对标 CFA 评议）

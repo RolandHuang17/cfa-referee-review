@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """Serve site/ locally with HTTP Range support for video seeking."""
-import os
 import subprocess
 import sys
 

@@ -114,7 +114,6 @@ def build_page(data):
         f'<div class="step"><b><span class="n">{esc(h["step"])}</span>{esc(h["title"])}</b>'
         f'<p>{esc(h["text"])}</p></div>'
         for h in data.get("howto_cn", []))
-    eras = {e["key"]: e for e in data.get("eras", [])}
     editions_html = ""
     for era in data.get("eras", []):
         eds = [e for e in data.get("editions", []) if e.get("era") == era["key"]]

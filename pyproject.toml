@@ -46,6 +46,15 @@ py-modules = []
 [tool.setuptools.dynamic]
 optional-dependencies = { build = { file = ["requirements-build.txt"] } }
 
+# lint 只开 pyflakes 级真错误（语法/未定义名/未用导入等），不做风格检查——
+# 本仓库脚本风格已自洽，风格规则只会制造噪音。CI 与本地同跑 `ruff check scripts tests`。
+[tool.ruff]
+target-version = "py39"
+extend-exclude = ["site", "data"]
+
+[tool.ruff.lint]
+select = ["E9", "F"]
+
 [tool.pytest.ini_options]
 minversion = "7.0"
 testpaths = ["tests"]

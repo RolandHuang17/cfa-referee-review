@@ -15,7 +15,7 @@ from datetime import date
 
 from lib.crest_catalog import load_catalog
 from lib.team_names import normalize_name
-from lib.theme import inject_theme, icon, js_icons, topbar
+from lib.theme import inject_theme, js_icons, topbar
 
 from lib.paths import DATA, SITE
 

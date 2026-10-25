@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>南美 VAR 判例 · 裁判学习平台</title>
 <style>
-/* ===== conmebol 页专属布局 (tokens/组件来自 data-cfa-theme, 骨架同 pro 页) ===== */
+/* ===== conmebol 页专属布局 (tokens/组件来自 data-cfa-theme；页头/筛选骨架来自 lib/pagelib) ===== */
 .page-head{border-bottom:1px solid var(--line);background:var(--bg2)}
 .page-head .wrap{max-width:1000px;margin:0 auto;padding:22px 16px 18px}
 .page-head h1{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}
@@ -18,8 +18,15 @@
 .src-banner a:hover{text-decoration:underline}
 .wrap{max-width:1000px;margin:0 auto;padding:18px 16px 60px}
 .chips{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}
-.year-h{font-family:var(--font-display);font-size:18px;margin:26px 0 12px}
+.year-h{font-family:var(--font-display);font-size:18px;margin:26px 0 12px;letter-spacing:.4px}
 .year-h small{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}
+.empty{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}
+.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
+.searchbar{margin-top:14px;position:relative;max-width:460px}
+.searchbar .ic{position:absolute;left:12px;top:50%;transform:translateY(-50%);color:var(--muted)}
+.searchbar input{width:100%;padding:9px 34px 9px 36px;border:1px solid var(--line);
+  border-radius:999px;background:var(--card);color:var(--ink);font-size:13.5px;outline:none}
+.searchbar input:focus{border-color:var(--brand)}
 .ccard{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
   padding:14px 18px;margin-bottom:12px;
   transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
@@ -30,7 +37,10 @@
 .cinfo{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .cinfo .chip{cursor:default;padding:3px 10px;font-size:11.5px}
 .clinks{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
-.foot{margin-top:28px;font-size:12px;color:var(--faint);line-height:1.8}
+.ccard .go{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
+  border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
+  font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap}
+.ccard .go:hover{background:var(--brand-strong);color:var(--on-brand)}
 @media (max-width:760px){.chead .badge{margin-left:0}}
 </style>
 <style data-cfa-theme>
@@ -249,6 +259,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
     <h1>南美足联 VAR 判例</h1>
     <div class="sub">CONMEBOL《Situación de Análisis VAR》：世预赛（南美区）/ 解放者杯 / 南美杯 / 优胜者杯逐案 VAR 判例分析（比赛 · 情境 · 分钟）· 官方视频为 YouTube 链接 · 版权归 CONMEBOL 所有</div>
     <div class="src-banner"><svg class="ic" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 每案附官方分析文章与判例视频链接；<a href="https://www.conmebol.com/sistema-asistencia-arbitral-por-video/" target="_blank" rel="noopener noreferrer">conmebol.com VAR 分析专栏</a></div>
+    <div class="searchbar"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><input id="q" type="search" placeholder="搜索判例：对阵 / 球场 / 情境…" aria-label="搜索"></div>
   </div>
 </header>
 <div class="wrap" id="content0">
@@ -257,332 +268,346 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
     <button class="chip" data-f="conmebol-recopa">优胜者杯 <b>4</b></button><button class="chip" data-f="eliminatorias">世预赛 <b>36</b></button><button class="chip" data-f="sudamericana">南美杯 <b>20</b></button>
     <button class="chip" data-f="no_goal">进球无效 <b>4</b></button><button class="chip" data-f="offside">越位 <b>9</b></button><button class="chip" data-f="ofr_penalty">点球（现场回看） <b>1</b></button><button class="chip" data-f="other">判例 <b>26</b></button><button class="chip" data-f="penalty">点球 <b>14</b></button><button class="chip" data-f="red_card">红牌 <b>6</b></button>
   </div>
-  <h3 class="year-h" data-year="2025">2025 <small>5 案</small></h3><div id="ybody-2025"><div class="ccard" data-kinds="eliminatorias penalty">
+  <h3 class="year-h" data-year="2025">2025 <small>5 案</small></h3><div id="ybody-2025"><div class="ccard" data-kinds="eliminatorias penalty" data-search="bolivia vs. brasil 09-09-2025 el alto municipal de el alto 世预赛 点球判罚 penal 点球">
   <div class="chead"><span class="cmatch">Bolivia vs. Brasil</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">09-09-2025</span><span class="chip">44′</span><span class="chip">El Alto</span><span class="chip">Municipal de El Alto</span><span class="chip">世预赛</span><span class="chip">情境：点球判罚</span><span class="chip" title="官方西语原文">原文: Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil-2/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=7pZrl8bIgxI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="venezuela vs perú 25-03-2025 maturín estadio monumental de maturín 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Venezuela vs Perú</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">25-03-2025</span><span class="chip">90+1′</span><span class="chip">Maturín</span><span class="chip">Estadio Monumental de Maturín</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-venezuela-vs-peru/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=cqIswbOpZ_I" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias red_card">
+</div><div class="ccard" data-kinds="eliminatorias red_card" data-search="uruguay vs. argentina 21-03-2025 montevideo centenario 世预赛 红牌 tarjeta roja 红牌">
   <div class="chead"><span class="cmatch">Uruguay vs. Argentina</span>
     <span class="badge wrong">红牌</span></div>
   <div class="cinfo"><span class="chip">21-03-2025</span><span class="chip">95′</span><span class="chip">Montevideo</span><span class="chip">Centenario</span><span class="chip">世预赛</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Tarjeta Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-argentina/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=rnPFXVLpwUI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="brasil vs. colombia 20-03-2025 brasilia mané garrincha 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Brasil vs. Colombia</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">20-03-2025</span><span class="chip">90′</span><span class="chip">Brasilia</span><span class="chip">Mané Garrincha</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-colombia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=wKO51YOqyQA" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="bolivia vs. brasil 09-09-2025 el alto municipal de el alto 世预赛 点球判罚 penal 点球">
   <div class="chead"><span class="cmatch">Bolivia vs. Brasil</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">09-09-2025</span><span class="chip">44′</span><span class="chip">El Alto</span><span class="chip">Municipal de El Alto</span><span class="chip">世预赛</span><span class="chip">情境：点球判罚</span><span class="chip" title="官方西语原文">原文: Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=7pZrl8bIgxI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div></div><h3 class="year-h" data-year="2024">2024 <small>3 案</small></h3><div id="ybody-2024"><div class="ccard" data-kinds="eliminatorias ofr_penalty">
+</div></div><h3 class="year-h" data-year="2024">2024 <small>3 案</small></h3><div id="ybody-2024"><div class="ccard" data-kinds="eliminatorias ofr_penalty" data-search="colombia vs. argentina 10-09-2024 barranquilla metropolitano roberto meléndez 世预赛 点球（场上回看 ofr） on field review – penal 点球（现场回看）">
   <div class="chead"><span class="cmatch">Colombia vs. Argentina</span>
     <span class="badge wrong">点球（现场回看）</span></div>
   <div class="cinfo"><span class="chip">10-09-2024</span><span class="chip">53′</span><span class="chip">Barranquilla</span><span class="chip">Metropolitano Roberto Meléndez</span><span class="chip">世预赛</span><span class="chip">情境：点球（场上回看 OFR）</span><span class="chip" title="官方西语原文">原文: On Field Review – Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-argentina/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=uJr0R3ESprI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias offside">
+</div><div class="ccard" data-kinds="eliminatorias offside" data-search="perú vs. colombia 06-09-2024 lima monumental 世预赛 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Perú vs. Colombia</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">06-09-2024</span><span class="chip">24′</span><span class="chip">Lima</span><span class="chip">Monumental</span><span class="chip">世预赛</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-colombia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=pkov90o3wBE" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="conmebol-recopa other">
+</div><div class="ccard" data-kinds="conmebol-recopa other" data-search="ldu vs. fluminense 优胜者杯 判例">
   <div class="chead"><span class="cmatch">LDU vs. Fluminense</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">优胜者杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-recopa-ldu-vs-fluminense/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=vp1PB4b24ls" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div></div><h3 class="year-h" data-year="2023">2023 <small>23 案</small></h3><div id="ybody-2023"><div class="ccard" data-kinds="eliminatorias penalty">
+</div></div><h3 class="year-h" data-year="2023">2023 <small>23 案</small></h3><div id="ybody-2023"><div class="ccard" data-kinds="eliminatorias penalty" data-search="paraguay vs. colombia 21-11-2023 asunción defensores del chaco 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Paraguay vs. Colombia</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">21-11-2023</span><span class="chip">4′</span><span class="chip">Asunción</span><span class="chip">Defensores del Chaco</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-colombia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=mflaS7sW0r8" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias red_card">
+</div><div class="ccard" data-kinds="eliminatorias red_card" data-search="chile vs. paraguay 16-11-2023 santiago monumental 世预赛 红牌 tarjeta roja 红牌">
   <div class="chead"><span class="cmatch">Chile vs. Paraguay</span>
     <span class="badge wrong">红牌</span></div>
   <div class="cinfo"><span class="chip">16-11-2023</span><span class="chip">41′</span><span class="chip">Santiago</span><span class="chip">Monumental</span><span class="chip">世预赛</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Tarjeta Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-chile-vs-paraguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=pPCiQ74_aEc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="bolivia vs. perú 16-11-2023 la paz hernando siles 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Bolivia vs. Perú</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">16-11-2023</span><span class="chip">90′</span><span class="chip">La Paz</span><span class="chip">Hernando Siles</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-peru/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=bRtHUuWFzsI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias offside">
+</div><div class="ccard" data-kinds="eliminatorias offside" data-search="paraguay vs. bolivia 17-10-2023 asunción defensores del chaco 世预赛 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Paraguay vs. Bolivia</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">17-10-2023</span><span class="chip">61′</span><span class="chip">Asunción</span><span class="chip">Defensores del Chaco</span><span class="chip">世预赛</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-bolivia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=p9wXYdEA4VA" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias offside">
+</div><div class="ccard" data-kinds="eliminatorias offside" data-search="ecuador vs. colombia 17-10-2023 quito estadio rodrigo paz delgado 世预赛 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Ecuador vs. Colombia</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">17-10-2023</span><span class="chip">62′</span><span class="chip">Quito</span><span class="chip">Estadio Rodrigo Paz Delgado</span><span class="chip">世预赛</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-colombia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=b1vZb4riI0s" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias offside">
+</div><div class="ccard" data-kinds="eliminatorias offside" data-search="perú vs. argentina 17-10-2023 lima estadio nacional 世预赛 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Perú vs. Argentina</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">17-10-2023</span><span class="chip">56′</span><span class="chip">Lima</span><span class="chip">Estadio Nacional</span><span class="chip">世预赛</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-argentina/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=TLcIFphtFe8" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="colombia vs. uruguay 13-10-2023 barranquilla metropolitano 世预赛 进球判定 gol 判例">
   <div class="chead"><span class="cmatch">Colombia vs. Uruguay</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">13-10-2023</span><span class="chip">51′</span><span class="chip">Barranquilla</span><span class="chip">Metropolitano</span><span class="chip">世预赛</span><span class="chip">情境：进球判定</span><span class="chip" title="官方西语原文">原文: Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-uruguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=Rw1yVbm5Ai0" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias red_card">
+</div><div class="ccard" data-kinds="eliminatorias red_card" data-search="bolivia vs. argentina 12-09-2023 la paz hernando siles 世预赛 红牌 tarjeta roja 红牌">
   <div class="chead"><span class="cmatch">Bolivia vs. Argentina</span>
     <span class="badge wrong">红牌</span></div>
   <div class="cinfo"><span class="chip">12-09-2023</span><span class="chip">35′</span><span class="chip">La Paz</span><span class="chip">Hernando Siles</span><span class="chip">世预赛</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Tarjeta Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-argentina/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=6Q1aLtuxiQA" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="venezuela vs. paraguay 12-09-2023 maturín monumental de maturín 世预赛 手球判点球 mano penal 点球">
   <div class="chead"><span class="cmatch">Venezuela vs. Paraguay</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">12-09-2023</span><span class="chip">90′</span><span class="chip">Maturín</span><span class="chip">Monumental de Maturín</span><span class="chip">世预赛</span><span class="chip">情境：手球判点球</span><span class="chip" title="官方西语原文">原文: Mano penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-venezuela-vs-paraguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=UxWLlQU4Aio" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="ecuador vs. uruguay 12-09-2023 quito rodrigo paz delgado 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Ecuador vs. Uruguay</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">12-09-2023</span><span class="chip">97′</span><span class="chip">Quito</span><span class="chip">Rodrigo Paz Delgado</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-uruguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=G-d_1wQBvbk" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="brasil vs. bolivia 08-09-2023 belém olímpico do pará 世预赛 点球判罚 penal 点球">
   <div class="chead"><span class="cmatch">Brasil vs. Bolivia</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">08-09-2023</span><span class="chip">13′</span><span class="chip">Belém</span><span class="chip">Olímpico Do Pará</span><span class="chip">世预赛</span><span class="chip">情境：点球判罚</span><span class="chip" title="官方西语原文">原文: Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-bolivia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=QU3hFP4INk4" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="uruguay vs. chile 08-09-2023 montevideo centenario 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Uruguay vs. Chile</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">08-09-2023</span><span class="chip">70′</span><span class="chip">Montevideo</span><span class="chip">Centenario</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-chile/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=_7FgHuICQaE" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="paraguay vs. perú 07-09-2023 ciudad del este antonio aranda 世预赛 手球（不构成犯规） mano no sancionable 判例">
   <div class="chead"><span class="cmatch">Paraguay vs. Perú</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">07-09-2023</span><span class="chip">27′</span><span class="chip">Ciudad del Este</span><span class="chip">Antonio Aranda</span><span class="chip">世预赛</span><span class="chip">情境：手球（不构成犯规）</span><span class="chip" title="官方西语原文">原文: Mano no sancionable</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-peru/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=I1PCphejLFk" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="colombia vs. venezuela 07-09-2023 barranquilla metropolitano 世预赛 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Colombia vs. Venezuela</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">07-09-2023</span><span class="chip">47′</span><span class="chip">Barranquilla</span><span class="chip">Metropolitano</span><span class="chip">世预赛</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-venezuela/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=6BS1qT8CX5Y" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="emelec vs. deportivo cuenca 09-03-2023 guayaquil george capwell 南美杯 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Emelec vs. Deportivo Cuenca</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">09-03-2023</span><span class="chip">32′</span><span class="chip">Guayaquil</span><span class="chip">George Capwell</span><span class="chip">南美杯</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No Mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-emelec-vs-deportivo-cuenca/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=vTSM5ILAGSo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="blooming vs. atlético palma flor 09-03-2023 santa cruz ramón aguilera costas 南美杯 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Blooming vs. Atlético Palma Flor</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">09-03-2023</span><span class="chip">85′</span><span class="chip">Santa Cruz</span><span class="chip">Ramón Aguilera Costas</span><span class="chip">南美杯</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No Mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-blooming-vs-atletico-palma-flor/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=LVqlxfJkKL4" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="estudiantes de mérida vs. deportivo táchira 08-03-2023 mérida estadio metropolitano de mérida 南美杯 错罚对象 error de identidad 判例">
   <div class="chead"><span class="cmatch">Estudiantes de Mérida vs. Deportivo Táchira</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">08-03-2023</span><span class="chip">13′</span><span class="chip">Mérida</span><span class="chip">Estadio Metropolitano de Mérida</span><span class="chip">南美杯</span><span class="chip">情境：错罚对象</span><span class="chip" title="官方西语原文">原文: Error de identidad</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-estudiantes-de-merida-vs-deportivo-tachira/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=se6Nbbj63WE" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana offside">
+</div><div class="ccard" data-kinds="sudamericana offside" data-search="cesar vallejo vs. binacional 08-03-2023 lima estadio nacional 南美杯 不构成越位 no fuera de juego 越位">
   <div class="chead"><span class="cmatch">Cesar Vallejo vs. Binacional</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">08-03-2023</span><span class="chip">1′</span><span class="chip">Lima</span><span class="chip">Estadio Nacional</span><span class="chip">南美杯</span><span class="chip">情境：不构成越位</span><span class="chip" title="官方西语原文">原文: No fuera de juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-cesar-vallejo-vs-binacional/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=1haBd4cgoBw" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana no_goal">
+</div><div class="ccard" data-kinds="sudamericana no_goal" data-search="defensor sporting vs. danubio 08-03-2023 montevideo estadio gran parque central 南美杯 进球无效 no gol 进球无效">
   <div class="chead"><span class="cmatch">Defensor Sporting vs. Danubio</span>
     <span class="badge pending">进球无效</span></div>
   <div class="cinfo"><span class="chip">08-03-2023</span><span class="chip">76′</span><span class="chip">Montevideo</span><span class="chip">Estadio Gran Parque Central</span><span class="chip">南美杯</span><span class="chip">情境：进球无效</span><span class="chip" title="官方西语原文">原文: No Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-defensor-sporting-vs-danubio/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=hBtUHb2awek" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="audax italiano vs. universidad católica 07-03-2023 rancagua eestadio teniente 南美杯 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Audax Italiano vs. Universidad Católica</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">07-03-2023</span><span class="chip">5′</span><span class="chip">Rancagua</span><span class="chip">EEstadio Teniente</span><span class="chip">南美杯</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No Mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-audax-italiano-vs-universidad-catolica/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=hypqAqeEH6I" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana red_card">
+</div><div class="ccard" data-kinds="sudamericana red_card" data-search="tacuary vs. general caballero 07-03-2023 asunción defensores del chaco 南美杯 红牌 tarjeta roja 红牌">
   <div class="chead"><span class="cmatch">Tacuary vs. General Caballero</span>
     <span class="badge wrong">红牌</span></div>
   <div class="cinfo"><span class="chip">07-03-2023</span><span class="chip">19′</span><span class="chip">Asunción</span><span class="chip">Defensores del Chaco</span><span class="chip">南美杯</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Tarjeta Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-tacuary-vs-general-caballero/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=HaC9modQS2Q" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="river plate vs. peñarol 南美杯 判例">
   <div class="chead"><span class="cmatch">River Plate vs. Peñarol</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">南美杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-river-plate-vs-penarol/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=285OcbMwx5M" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="conmebol-recopa penalty">
+</div><div class="ccard" data-kinds="conmebol-recopa penalty" data-search="flamengo vs. independiente del valle 28-02-2023 rio de janeiro maracaná 优胜者杯 非点球 no penal 点球">
   <div class="chead"><span class="cmatch">Flamengo vs. Independiente del Valle</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">28-02-2023</span><span class="chip">20′</span><span class="chip">Rio de Janeiro</span><span class="chip">Maracaná</span><span class="chip">优胜者杯</span><span class="chip">情境：非点球</span><span class="chip" title="官方西语原文">原文: No Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-recopa-flamengo-vs-idv/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=qfZzutbouf0" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div></div><h3 class="year-h" data-year="2022">2022 <small>29 案</small></h3><div id="ybody-2022"><div class="ccard" data-kinds="sudamericana offside">
+</div></div><h3 class="year-h" data-year="2022">2022 <small>29 案</small></h3><div id="ybody-2022"><div class="ccard" data-kinds="sudamericana offside" data-search="melgar vs. independiente del valle 07-08-2022 arequipa, perú. monumental de la unsa 南美杯 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Melgar vs. Independiente del Valle</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">07-08-2022</span><span class="chip">43′</span><span class="chip">Arequipa, Perú.</span><span class="chip">Monumental de la UNSA</span><span class="chip">南美杯</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=lWGtEBppPNo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="atlético goianiense vs. são paulo 南美杯 判例">
   <div class="chead"><span class="cmatch">Atlético Goianiense vs. São Paulo</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">南美杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-atletico-goianiense-vs-sao-paulo/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=TiL3fX_oKpU" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana red_card">
+</div><div class="ccard" data-kinds="sudamericana red_card" data-search="independiente del valle vs. melgar 09-08-2022 porto alegre beira-rio 南美杯 红牌 tarjeta roja 红牌">
   <div class="chead"><span class="cmatch">Independiente del Valle vs. Melgar</span>
     <span class="badge wrong">红牌</span></div>
   <div class="cinfo"><span class="chip">09-08-2022</span><span class="chip">73′</span><span class="chip">Porto Alegre</span><span class="chip">Beira-Rio</span><span class="chip">南美杯</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Tarjeta Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-internacional-vs-melgar/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=hYeLE2xqhh4" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana offside">
+</div><div class="ccard" data-kinds="sudamericana offside" data-search="melgar vs. independiente del valle 07-08-2022 arequipa, perú. monumental de la unsa 南美杯 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Melgar vs. Independiente del Valle</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">07-08-2022</span><span class="chip">43′</span><span class="chip">Arequipa, Perú.</span><span class="chip">Monumental de la UNSA</span><span class="chip">南美杯</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-deportivo-tachira/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=lWGtEBppPNo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="atlético goianiense vs. nacional 南美杯 判例">
   <div class="chead"><span class="cmatch">Atlético Goianiense vs. Nacional</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">南美杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-atletico-goianiense-vs-nacional/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=TiL3fX_oKpU" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana red_card">
+</div><div class="ccard" data-kinds="sudamericana red_card" data-search="melgar vs. internacional 04-08-2022 arequipa monumental de la unsa 南美杯 红牌 tarjeta roja 红牌">
   <div class="chead"><span class="cmatch">Melgar vs. Internacional</span>
     <span class="badge wrong">红牌</span></div>
   <div class="cinfo"><span class="chip">04-08-2022</span><span class="chip">65′</span><span class="chip">Arequipa</span><span class="chip">Monumental de la UNSA</span><span class="chip">南美杯</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Tarjeta Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-melgar-vs-internacional/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=2GGFN-QXLQU" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="paulo vs. ceará 03-08-2022 são paulo morumbi 南美杯 场上回看（ofr） ofr 判例">
   <div class="chead"><span class="cmatch">Paulo vs. Ceará</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">03-08-2022</span><span class="chip">76′</span><span class="chip">São Paulo</span><span class="chip">Morumbi</span><span class="chip">南美杯</span><span class="chip">情境：场上回看（OFR）</span><span class="chip" title="官方西语原文">原文: OFR</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-sao-paulo-vs-ceara/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=cyATCbb3puI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana offside">
+</div><div class="ccard" data-kinds="sudamericana offside" data-search="melgar vs. independiente del valle 07-08-2022 arequipa, perú. monumental de la unsa 南美杯 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Melgar vs. Independiente del Valle</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">07-08-2022</span><span class="chip">43′</span><span class="chip">Arequipa, Perú.</span><span class="chip">Monumental de la UNSA</span><span class="chip">南美杯</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-lanus/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=lWGtEBppPNo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="universidad católica vs. são paulo 南美杯 判例">
   <div class="chead"><span class="cmatch">Universidad Católica vs. São Paulo</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">南美杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-universidad-catolica-vs-sao-paulo/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=O8O9Eulc9So" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="deportivo táchira vs. santos 29-06-2022 san cristóbal polideportivo pueblo nuevo 南美杯 进球判定 gol 判例">
   <div class="chead"><span class="cmatch">Deportivo Táchira vs. Santos</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">29-06-2022</span><span class="chip">80′</span><span class="chip">San Cristóbal</span><span class="chip">Polideportivo Pueblo Nuevo</span><span class="chip">南美杯</span><span class="chip">情境：进球判定</span><span class="chip" title="官方西语原文">原文: Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-deportivo-tachira-vs-santos/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=-wr3bty7Y3M" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana no_goal">
+</div><div class="ccard" data-kinds="sudamericana no_goal" data-search="the strongest vs. ceará 29-06-2022 la paz hernando siles 南美杯 进球 / 进球无效判定 gol – no gol 进球无效">
   <div class="chead"><span class="cmatch">The Strongest vs. Ceará</span>
     <span class="badge pending">进球无效</span></div>
   <div class="cinfo"><span class="chip">29-06-2022</span><span class="chip">81′</span><span class="chip">La Paz</span><span class="chip">Hernando Siles</span><span class="chip">南美杯</span><span class="chip">情境：进球 / 进球无效判定</span><span class="chip" title="官方西语原文">原文: Gol – No Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-the-strongest-vs-ceara/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=CG4tMa1I4oM" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="sudamericana other">
+</div><div class="ccard" data-kinds="sudamericana other" data-search="colo colo vs. internacional 28-06-2022 santiago manuel david arellano 南美杯 手球（进攻阶段 app） mano app 判例">
   <div class="chead"><span class="cmatch">Colo Colo vs. Internacional</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">28-06-2022</span><span class="chip">88′</span><span class="chip">Santiago</span><span class="chip">Manuel David Arellano</span><span class="chip">南美杯</span><span class="chip">情境：手球（进攻阶段 APP）</span><span class="chip" title="官方西语原文">原文: Mano APP</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-colo-colo-vs-internacional/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=BJ-dfEKiwVc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias no_goal">
+</div><div class="ccard" data-kinds="eliminatorias no_goal" data-search="venezuela vs. colombia 29-03-2022 puerto ordaz cachamay 世预赛 进球无效 no gol 进球无效">
   <div class="chead"><span class="cmatch">Venezuela vs. Colombia</span>
     <span class="badge pending">进球无效</span></div>
   <div class="cinfo"><span class="chip">29-03-2022</span><span class="chip">14′</span><span class="chip">Puerto Ordaz</span><span class="chip">Cachamay</span><span class="chip">世预赛</span><span class="chip">情境：进球无效</span><span class="chip" title="官方西语原文">原文: No Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-venezuela-vs-colombia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=WJE1ElXjjqo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="perú vs. paraguay 29-03-2022 lima nacional 世预赛 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Perú vs. Paraguay</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">29-03-2022</span><span class="chip">78′</span><span class="chip">Lima</span><span class="chip">Nacional</span><span class="chip">世预赛</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No Mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-paraguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=e0IR3tXs9xs" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="ecuador vs. argentina 29-03-2022 guayaquil isidro romero carbo 世预赛 鲁莽犯规（危及对方安全） juego temerario 判例">
   <div class="chead"><span class="cmatch">Ecuador vs. Argentina</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">29-03-2022</span><span class="chip">56′</span><span class="chip">Guayaquil</span><span class="chip">Isidro Romero Carbo</span><span class="chip">世预赛</span><span class="chip">情境：鲁莽犯规（危及对方安全）</span><span class="chip" title="官方西语原文">原文: Juego Temerario</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-argentina/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=AIZi37r6pII" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="chile vs. uruguay 29-03-2022 santiago san carlos de apoquindo 世预赛 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Chile vs. Uruguay</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">29-03-2022</span><span class="chip">70′</span><span class="chip">Santiago</span><span class="chip">San Carlos de Apoquindo</span><span class="chip">世预赛</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No Mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-chile-vs-uruguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=9v6hGmgsndY" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="colombia vs. bolivia 24-03-2022 barranquilla metropolitano 世预赛 进球判定 gol 判例">
   <div class="chead"><span class="cmatch">Colombia vs. Bolivia</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">24-03-2022</span><span class="chip">71′</span><span class="chip">Barranquilla</span><span class="chip">Metropolitano</span><span class="chip">世预赛</span><span class="chip">情境：进球判定</span><span class="chip" title="官方西语原文">原文: Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-bolivia/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=o6OeGEhUGhs" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="brasil vs. chile 24-03-2022 río de janeiro maracaná 世预赛 点球判罚 penal 点球">
   <div class="chead"><span class="cmatch">Brasil vs. Chile</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">24-03-2022</span><span class="chip">41′</span><span class="chip">Río de Janeiro</span><span class="chip">Maracaná</span><span class="chip">世预赛</span><span class="chip">情境：点球判罚</span><span class="chip" title="官方西语原文">原文: Penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-chile/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=Czsmvvs4988" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="paraguay vs. ecuador 世预赛 判例">
   <div class="chead"><span class="cmatch">Paraguay vs. Ecuador</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">世预赛</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-ecuador/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=UlFG9-LVm1E" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias no_goal">
+</div><div class="ccard" data-kinds="eliminatorias no_goal" data-search="uruguay vs. perú 24-03-2022 montevideo centenario 世预赛 进球无效 no gol 进球无效">
   <div class="chead"><span class="cmatch">Uruguay vs. Perú</span>
     <span class="badge pending">进球无效</span></div>
   <div class="cinfo"><span class="chip">24-03-2022</span><span class="chip">91′</span><span class="chip">Montevideo</span><span class="chip">Centenario</span><span class="chip">世预赛</span><span class="chip">情境：进球无效</span><span class="chip" title="官方西语原文">原文: No Gol</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-peru/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=KW1AEy-I1n0" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="conmebol-recopa other">
+</div><div class="ccard" data-kinds="conmebol-recopa other" data-search="palmeiras vs. athletico paranaense 优胜者杯 判例">
   <div class="chead"><span class="cmatch">Palmeiras vs. Athletico Paranaense</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">优胜者杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-recopa-palmeiras-vs-athletico-paranaense/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=fMhnnDsCDw0" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="conmebol-recopa other">
+</div><div class="ccard" data-kinds="conmebol-recopa other" data-search="athletico paranaense vs. palmeiras 优胜者杯 判例">
   <div class="chead"><span class="cmatch">Athletico Paranaense vs. Palmeiras</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">优胜者杯</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-recopa-athletico-paranaense-vs-palmeiras/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=xdKOpyvp_WY" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="bolivia vs. chile 01-02-2022 la paz hernando siles 世预赛 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Bolivia vs. Chile</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">01-02-2022</span><span class="chip">74′</span><span class="chip">La Paz</span><span class="chip">Hernando Siles</span><span class="chip">世预赛</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-chile/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=A6sm-7B8HRo" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias penalty">
+</div><div class="ccard" data-kinds="eliminatorias penalty" data-search="uruguay vs. venezuela 01-02-2022 montevideo centenario 世预赛 罚球区内违规侵入 invasión en el área penal 点球">
   <div class="chead"><span class="cmatch">Uruguay vs. Venezuela</span>
     <span class="badge wrong">点球</span></div>
   <div class="cinfo"><span class="chip">01-02-2022</span><span class="chip">49′</span><span class="chip">Montevideo</span><span class="chip">Centenario</span><span class="chip">世预赛</span><span class="chip">情境：罚球区内违规侵入</span><span class="chip" title="官方西语原文">原文: Invasión en el área penal</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-uruguay-vs-venezuela/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=usdakO9PwVA" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="perú vs. ecuador 世预赛 判例">
   <div class="chead"><span class="cmatch">Perú vs. Ecuador</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">世预赛</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-peru-vs-ecuador/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=2rvE11IJ6t8" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="brasil vs. paraguay 世预赛 判例">
   <div class="chead"><span class="cmatch">Brasil vs. Paraguay</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">世预赛</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-brasil-vs-paraguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=EL3d8p63Ihk" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias offside">
+</div><div class="ccard" data-kinds="eliminatorias offside" data-search="colombia vs. perú 28-01-2022 barranquilla roberto meléndez 世预赛 越位 fuera de juego 越位">
   <div class="chead"><span class="cmatch">Colombia vs. Perú</span>
     <span class="badge info">越位</span></div>
   <div class="cinfo"><span class="chip">28-01-2022</span><span class="chip">70′</span><span class="chip">Barranquilla</span><span class="chip">Roberto Meléndez</span><span class="chip">世预赛</span><span class="chip">情境：越位</span><span class="chip" title="官方西语原文">原文: Fuera de Juego</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-peru/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=B5o98oThMuY" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="paraguay vs. uruguay 27-01-2022 asunción gral. pablo rojas 世预赛 非手球 no mano 判例">
   <div class="chead"><span class="cmatch">Paraguay vs. Uruguay</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">27-01-2022</span><span class="chip">40′</span><span class="chip">Asunción</span><span class="chip">Gral. Pablo Rojas</span><span class="chip">世预赛</span><span class="chip">情境：非手球</span><span class="chip" title="官方西语原文">原文: No Mano</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-paraguay-vs-uruguay/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=qp1E2t-37QI" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
-</div><div class="ccard" data-kinds="eliminatorias other">
+</div><div class="ccard" data-kinds="eliminatorias other" data-search="las eliminatorias sudamericanas ecuador vs. brasil 27-01-2022 quito rodrigo paz delgado 世预赛 红牌 roja 判例">
   <div class="chead"><span class="cmatch">las Eliminatorias Sudamericanas Ecuador vs. Brasil</span>
     <span class="badge info">判例</span></div>
   <div class="cinfo"><span class="chip">27-01-2022</span><span class="chip">10′</span><span class="chip">Quito</span><span class="chip">Rodrigo Paz Delgado</span><span class="chip">世预赛</span><span class="chip">情境：红牌</span><span class="chip" title="官方西语原文">原文: Roja</span></div>
   <div class="clinks"><a class="go" href="https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-brasil/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> 官方分析</a><a class="go" href="https://www.youtube.com/watch?v=gfWsavnRE2s" target="_blank" rel="noopener noreferrer"><svg class="ic" width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg> 判例视频</a></div>
 </div></div>
+  <p class="empty" id="emptyTip">没有匹配的判例——换个关键词或筛选试试。</p>
   <p class="foot">判例内容版权归 CONMEBOL 所有；本页收录结构化元数据与官方链接（来源 conmebol.com，核对日期 2026-10-06）。情境已中文译制（conmebol-zh 译制层），官方西语原文保留标注，以原文为准。</p>
 </div>
 <script>
 (function(){
-  var chips = document.querySelectorAll("[data-chips] .chip");
-  var cards = document.querySelectorAll(".ccard[data-kinds]");
-  var years = document.querySelectorAll(".year-h[data-year]");
+  var cur="all", q="";
+  var chips=document.querySelectorAll("[data-chips] .chip");
+  var emptyTip=document.getElementById("emptyTip");
+  function apply(){
+    var any=false;
+    var cards=document.querySelectorAll(".ccard");
+    var years=document.querySelectorAll(".year-h[data-year]");
+    cards.forEach(function(c){
+      var hit=(cur==="all"||(c.getAttribute("data-kinds")||"").indexOf(cur)>=0)&&(!q||(c.getAttribute("data-search")||"").indexOf(q)>=0);
+      c.style.display=hit?"":"none";
+      if(hit)any=true;
+    });
+    years.forEach(function(y){
+      var grp=document.getElementById("ybody-"+y.getAttribute("data-year")),anyY=false;
+      if(grp)grp.querySelectorAll(".ccard").forEach(function(c){if(c.style.display!=="none")anyY=true;});
+      y.style.display=anyY?"":"none";
+      if(grp)grp.style.display=anyY?"":"none";
+    });
+    if(emptyTip)emptyTip.style.display=any?"none":"block";
+  }
   chips.forEach(function(c){
-    c.addEventListener("click", function(){
-      chips.forEach(function(x){ x.classList.remove("on"); });
+    c.addEventListener("click",function(){
+      chips.forEach(function(x){x.classList.remove("on");});
       c.classList.add("on");
-      var f = c.getAttribute("data-f");
-      cards.forEach(function(a){
-        var hit = f === "all" || (a.getAttribute("data-kinds") || "").indexOf(f) >= 0;
-        a.style.display = hit ? "" : "none";
-      });
-      years.forEach(function(y){
-        var grp = document.getElementById("ybody-" + y.getAttribute("data-year"));
-        var any = grp ? grp.querySelectorAll('.ccard:not([style*="none"])').length > 0 : false;
-        if (grp) grp.style.display = any ? "" : "none";
-        y.style.display = any ? "" : "none";
-      });
+      cur=c.getAttribute("data-f")||"all";
+      apply();
     });
   });
+  var si=document.getElementById("q");
+  if(si)["input","search"].forEach(function(ev){
+    si.addEventListener(ev,function(){q=(si.value||"").trim().toLowerCase();apply();});
+  });
 })();
+
 </script>
 <script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();</script></body>
 </html>

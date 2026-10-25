@@ -61,16 +61,19 @@
 │   ├── rap.json            ← UEFA RAP 各期索引（人工策展提交，fetch_rap.py 核对/并入新期）
 │   ├── pro.json            ← 美国 PRO 评议周报索引（fetch_pro.py 产物）
 │   ├── intl.json           ← 全球评议资源导航（人工策展）
-│   ├── conmebol.json       ← 南美 VAR 逐案判例（fetch_conmebol.py 产物）
+│   ├── conmebol.json / conmebol-zh.json ← 南美 VAR 逐案判例 / 情境中文译制层（不可互相覆盖）
 │   ├── rfef.json / rfef-zh.json ← 西班牙判罚手册抓取产物 / 中文译文层（不可互相覆盖）
 │   ├── weekly.json / weekly-zh.json ← 周更节目期目索引 / 中文译注层（不可互相覆盖）
 │   ├── ifab.json / ifab-zh.json ← IFAB VAR 协议抓取产物 / 中文全文译制层（不可互相覆盖）
 │   ├── issues/{2024,2025,2026}/ ← 各期官方页面原始 HTML 存档（按赛季子目录！）
 │   └── local/              ← **整目录 gitignored**：规则 PDF、抓取缓存、截图、日志、
 │                             2024 官方材料包；clone 下来不存在，脚本各自 mkdir
-├── scripts/                ← 可执行入口脚本（凡直接在本层的都能 python 跑）
+├── scripts/                ← 可执行入口脚本（凡直接在本层的都能 python 跑；
+│                             update_season.py=赛季增量一键编排，lib/pagelib.py=列表页骨架）
 │   └── lib/                ← **只被 import，永不直接执行**：paths.py（路径常量唯一
-│                             权威源）/ theme.py / safe_http.py / crest_catalog.py /
+│                             权威源）/ theme.py / pagelib.py（列表页骨架：页头 CSS/
+│                             esc/搜索框/过滤 JS/年份分组，pro/conmebol/weekly/hns 共用）/
+│                             safe_http.py / crest_catalog.py /
 │                             team_names.py（队名归一唯一权威源，硬约束6）/
 │                             classify_cls_{2024,2026}.py
 ├── tests/test_integrity.py ← 完整性断言（裸跑或 pytest 皆可，fail-collecting）
@@ -82,6 +85,11 @@
 ```
 
 ## 数据管线（按序执行）
+
+**一键入口**：`python scripts/update_season.py <赛季> [--skip-fetch] [--dry-run] [--discover]`
+按本节固定顺序串起 fetch→parse→(fix_issue27)→classify→impact→catalog→crests→build_all→test
+（2025 自动在 classify 前插入 fix_issue27_merge）；比分查证/pending 复核/视频下载等人工
+环节跑完会打提醒。新期 URL 仍需先人工写入两处表（--discover 可先探测）。
 
 命令一律在**仓库根**执行（脚本靠 `sys.path[0]` 解析 `lib`，两种 cwd 都可用，但文档
 统一用仓库根形式）：
@@ -220,6 +228,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 双级抓取：Elementor 列表页（分页 /2/…/10/，data-max-page 指示）+ 每案文章页增强（字段各自独立成 <p>，全页剥标签后取最后一组完整字段；YouTube 取字段区之后首个 embed）
 - situacion_norm 归一：penalty/no_penalty/red_card/offside/no_goal/ofr_penalty/other（官方西语原文保留在 situacion_es）
 
+### conmebol-zh.json（conmebol 情境译制层，并存提交，绝不可互相覆写）
+- `{note, translated, cases{url: {situation}}}`——按判例文章 url 平铺（rfef-zh 同构，无块序脆弱性）；命中即中文情境主显、西语原文保留标注，未命中回退西语并 ⚠；无官方情境标签（situacion_es 空）的案子不要求译文
+- 与 uefa-zh/rfef-zh 一致的对齐断言在 tests/test_integrity.py（test_uefa_rfef_conmebol_zh_aligned）
+
 ### weekly.json（全球周更评议节目期目索引，fetch_weekly.py 产物，提交进仓库）
 - `{source, source_name, fetched, shows: {key: {name, org, lang, update, url}}, episodes[]}`
 - `episodes[]{id(videoId), show(=shows 键), title, url(官方观看页), date(ISO), date_src(exact/approx), duration, views, desc(官方说明原文，≤3500 字符)}`——exact 来自 RSS，approx 由页面相对时间按抓取日近似（页面显示 ≈ 前缀）
@@ -321,11 +333,11 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - [ ] rules.html：划词出现高亮工具条、三种颜色可标可删、章节笔记自动保存、导出导入
 - [ ] rfef.html：栏目导航/判例卡片/认定徽章渲染正确、西语原文开关持久化、过滤框（编号/中文/西语）可用、本地视频可播、临时删一个视频文件刷新 → 该视频回退官方直链、lite 模式视频隐藏+官方手册横幅、明暗主题
 - [ ] rap.html：各期索引与外链、训练三步说明、era 分组、明暗主题
-- [ ] pro.html：筛选 chips（系列/联赛）过滤正常、年份分组与 207 篇索引、官方页外链、USSF 指南区、明暗主题
-- [ ] conmebol.html：赛事/情境筛选 chips、年份分组 60 案、官方分析+判例视频双链接、明暗主题
+- [ ] pro.html：筛选 chips（系列/联赛）+ 搜索框（标题/系列/联赛）过滤正常、年份分组与 207 篇索引、官方页外链、USSF 指南区、明暗主题
+- [ ] conmebol.html：赛事/情境筛选 chips + 搜索框（对阵/球场/情境）、年份分组 60 案、官方分析+判例视频双链接、明暗主题
 - [ ] weekly.html：节目筛选 chips（含 UAF 文章型源「官方文章」链接）、搜索、年份分组、≈ 近似日期标记、译注与原文折叠、官方观看直链 rel 属性、明暗主题
 - [ ] ifab.html：章节导航（含 8 个配套协议章区）、中英原文开关（刷新持久化）、FAQ 折叠、配套材料区内外链、明暗主题
-- [ ] hns.html：认定徽章筛选（正确/错误）、判例卡（对阵/分钟/类型/中文正文）、克罗地亚语原文折叠、判例视频直链、明暗主题
+- [ ] hns.html：认定徽章筛选（正确/错误）+ 搜索框（对阵/类型/正文）、判例卡（对阵/分钟/类型/中文正文）、克罗地亚语原文折叠、判例视频直链、明暗主题
 - [ ] quiz.html：题源选「VAR 协议题」出卷正常、协议题四选一判分与官方答案反馈、错题本记录与重练、`ifab.html#faq-qN` 回跳
 - [ ] intl.html：四组 23 资源卡（语言/频率/形态 + 注意事项 + 官方外链）、站内关联区、明暗主题
 - [ ] `python scripts/verify_videos.py [赛季]`（如动过视频/数据）

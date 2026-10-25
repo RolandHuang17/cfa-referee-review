@@ -387,20 +387,20 @@ def _svg_cat_dist(cats):
     parts = [
         f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="教学分类判定分布图" class="tsvg">'
     ]
-    parts.append(
-        f'<text x="{w - 4}" y="12" class="ts-legend" text-anchor="end">'
-        "■ 错漏判 ■ 支持原判 ■ 不予认定</text>"
-    )
-    parts.append(
-        '<rect x="' + str(w - 210) + '" y="4" width="10" height="8" class="ts-b-w"/>'
-        '<rect x="' + str(w - 148) + '" y="4" width="10" height="8" class="ts-b-c"/>'
-        '<rect x="' + str(w - 86) + '" y="4" width="10" height="8" class="ts-b-p"/>'
-    )
     legend = (
         ("ts-b-w", "wrong", "错漏判"),
         ("ts-b-c", "correct", "支持原判"),
         ("ts-b-p", "pending", "不予认定"),
     )
+    # 图例：色块+文字成组水平排布（右上，自右向左），避免文字与色块错位重叠
+    lx = w - 6
+    for cls, _key, cname in reversed(legend):
+        tw = 11 + len(cname) * 11 + 8
+        lx -= tw
+        parts.append(
+            f'<rect x="{lx}" y="4" width="10" height="9" class="{cls}" rx="2"/>'
+            f'<text x="{lx + 14}" y="12" class="ts-legend">{cname}</text>'
+        )
     for i, (name, v) in enumerate(cats):
         y = 22 + i * row_h
         n_all = sum(v.values())

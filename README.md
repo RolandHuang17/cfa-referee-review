@@ -11,6 +11,12 @@
 并提供**考题模式**（quiz.html，793 道题四题源随机出卷：三赛季判例 592 + 统一尺度场景 97 + IFAB VAR 协议 12 + 规则理论 92；限时模考（倒计时/及格线/历史成绩）、Leitner 间隔复习、逐题作答历史的分类薄弱点雷达与 Anki TSV 导出）与**考点速查卡**（cheatsheet.html，八张考前速记翻卡，打印即讲义）。首页有**今日判例**与「我的学习」打卡卡（学习足迹/连续天数/到期复习），判例页支持学习路径（新人精选/专项/考前冲刺）、挑战链接、放映模式与视频帧截图。另有**全站搜索**（search.html，一次搜遍 612 个判例、规则全文、尺度场景与全部国际资料）。
 
 在线版本：<https://rolandhuang17.github.io/cfa-referee-review/>
+
+| | |
+|---|---|
+| ![门户首页](docs/img/portal.png) | ![判例详情](docs/img/season.png) |
+| ![考题模式与薄弱点雷达](docs/img/quiz.png) | ![考点速查卡](docs/img/cheatsheet.png) |
+| ![趋势概览](docs/img/stats.png) | ![全站搜索](docs/img/search.png) |
 · 更新订阅（Atom）：<https://rolandhuang17.github.io/cfa-referee-review/feed.xml>（在线版支持 PWA，断网可浏览已访问页面）
 
 - 数据来源：中国足球协会官方网站「裁判评议结果发布」栏目；竞赛规则来自 The IFAB 官方下载（版权说明见 [NOTICE.md](NOTICE.md)）。

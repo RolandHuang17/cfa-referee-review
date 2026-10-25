@@ -86,6 +86,8 @@ def meta_tags(page_file, extra_jsonld=None):
         '<link rel="alternate" type="application/atom+xml" '
         f'title="{SITE_NAME}·评议更新订阅" href="feed.xml">',
     ]
+    # og:image：社交分享卡（assets/og-card.png 由 build_all 复制到 site/assets/）
+    lines.append(f'<meta property="og:image" content="{SITE_URL}/assets/og-card.png">')
     blocks = (
         list(extra_jsonld)
         if isinstance(extra_jsonld, (list, tuple))

@@ -144,6 +144,16 @@ body.sb-off .sidebar{display:none}
 .notewrap textarea{width:100%;min-height:76px;padding:10px 12px;border:1px solid var(--line);
   border-radius:var(--r-md);font-size:14px;font-family:inherit;resize:vertical;background:var(--card2);color:var(--ink)}
 .notewrap .nstatus{font-size:12px;color:var(--muted)}
+.note-tools{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.ntbtn{display:inline-flex;align-items:center;gap:5px;padding:4px 11px;border:1px solid var(--line);
+  border-radius:999px;background:var(--card2);color:var(--ink2);font-size:12.5px;cursor:pointer}
+.ntbtn:hover{border-color:var(--brand);color:var(--brand)}
+.note-view{margin-top:8px;padding:10px 12px;border:1px dashed var(--line);border-radius:var(--r-md);
+  font-size:13.5px;line-height:1.9;color:var(--ink2);white-space:pre-wrap;background:var(--card2)}
+.note-view .ntime{display:inline-block;padding:0 7px;margin:0 1px;border:1px solid var(--brand);
+  border-radius:999px;color:var(--brand);font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;
+  cursor:pointer;text-decoration:none}
+.note-view .ntime:hover{background:var(--info-bg)}
 .mobile-back{display:none}
 
 /* ---- 轻量版(html[data-lite]) 与 视频回退提示 ---- */
@@ -550,8 +560,12 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       <details class="d-note-box" id="dCatNote"><summary></summary><div></div></details>
       <div class="favtags" id="favTags" style="display:none"></div>
       <div class="notewrap" id="noteWrap" style="display:none">
-        <textarea id="noteBox" placeholder="写下你的学习笔记…（自动保存）"></textarea>
-        <span class="nstatus" id="noteStatus"></span>
+        <div class="note-tools">
+          <button class="ntbtn" id="btnNoteTime" title="在光标处插入当前视频时间标记（如 [12:34]，完整版有视频时可用）">⏱ 插入时间标记</button>
+          <span class="nstatus" id="noteStatus"></span>
+        </div>
+        <textarea id="noteBox" placeholder="写下你的学习笔记…（自动保存；复盘时可用「⏱ 插入时间标记」记录视频时刻，预览中的 [时间] 可点击跳转）"></textarea>
+        <div class="note-view" id="noteView" style="display:none"></div>
       </div>
       <div class="tags" id="dTags"></div>
       <div class="d-foot" id="dFoot"></div>
@@ -1086,7 +1100,43 @@ function renderNoteUI(c){
   document.getElementById("noteBox").value = (notes[c.seq]&&notes[c.seq].text)||"";
   document.getElementById("noteStatus").textContent =
     hasNote(c.seq) ? "已保存" : "自动保存，无需手动确认";
+  renderNoteView();
 }
+// ---------- 时间戳笔记：[mm:ss] 标记可点击跳转视频 ----------
+function fmtTs(sec){
+  const m = Math.floor(sec/60), s = Math.floor(sec%60);
+  return "[" + String(m).padStart(2,"0") + ":" + String(s).padStart(2,"0") + "]";
+}
+function renderNoteView(){
+  const view = document.getElementById("noteView");
+  if (!view) return;
+  const t = (notes[state.sel]&&notes[state.sel].text)||"";
+  if (!/\[\d{1,3}:\d{1,2}\]/.test(t)) { view.style.display = "none"; view.innerHTML = ""; return; }
+  view.innerHTML = esc(t).replace(/\[(\d{1,3}):(\d{1,2})\]/g, (m, mm, ss) =>
+    `<a class="ntime" data-sec="${(+mm)*60+(+ss)}">${esc(m)}</a>`);
+  view.style.display = "block";
+}
+document.getElementById("noteView").addEventListener("click", e=>{
+  const a = e.target.closest(".ntime"); if (!a) return;
+  const v = document.getElementById("dvid");
+  if (!v || !v.currentSrc) return;
+  v.currentTime = +a.dataset.sec;
+  try { v.play(); } catch(_) {}
+  v.scrollIntoView({behavior:"smooth", block:"center"});
+});
+document.getElementById("btnNoteTime").addEventListener("click", ()=>{
+  const v = document.getElementById("dvid");
+  if (!v || !v.currentSrc){ vkeyTip("完整版播放视频时可用"); return; }
+  const box = document.getElementById("noteBox");
+  const mark = fmtTs(v.currentTime);
+  const pos = box.selectionStart ?? box.value.length;
+  const before = box.value.slice(0, pos), after = box.value.slice(pos);
+  const pad = before && !/\s$/.test(before) ? " " : "";
+  box.value = before + pad + mark + after;
+  const np = pos + pad.length + mark.length;
+  box.focus(); box.setSelectionRange(np, np);
+  box.dispatchEvent(new Event("input", {bubbles:true}));
+});
 let noteTimer = null;
 document.getElementById("noteBox").addEventListener("input", ()=>{
   const seq = state.sel; if(!seq) return;
@@ -1103,6 +1153,7 @@ document.getElementById("noteBox").addEventListener("input", ()=>{
     renderFavList();
     const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
     if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
+    renderNoteView();
   }, 800);
 });
 function renderFavList(){

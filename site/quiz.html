@@ -404,6 +404,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
         <button data-v="all" class="on">全部题库</button>
         <button data-v="wrong">错题重练</button>
         <button data-v="star">收藏错题</button>
+        <button data-v="due" id="btnDue" title="间隔复习：答对晋级拉长间隔，答错归零重来">复习到期</button>
       </div>
     </div>
     <div class="frow">
@@ -417,7 +418,10 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
     <div id="wbBox" style="display:none">
       <div class="frow" style="justify-content:space-between">
         <b style="font-size:14px">错题本（<span id="wbCount">0</span>）</b>
-        <button class="btn" id="btnWbClear">清空错题本</button>
+        <span>
+          <button class="btn" id="btnAnki" title="导出 TSV：Anki「文件→导入」，字段分隔符选 Tab、勾选「允许在字段中使用 HTML」">导出 Anki</button>
+          <button class="btn" id="btnWbClear">清空错题本</button>
+        </span>
       </div>
       <div id="wbList"></div>
     </div>
@@ -490,6 +494,19 @@ function crest(team, h, mark){
 let wrong = {};
 try { wrong = JSON.parse(localStorage.getItem(CFG.wrongKey) || "{}") || {}; } catch(_) { wrong = {}; }
 function persistWrong(){ try { localStorage.setItem(CFG.wrongKey, JSON.stringify(wrong)); } catch(_) {} }
+// ---------- 间隔复习（Leitner 六档：0/1/3/7/14/30 天；答错归零、答对晋级） ----------
+// 旧条目无 stage/due 字段 → (e.due||0)<=now 恒真 = 立即可复习，向后兼容
+const SRS_DAYS = [0, 1, 3, 7, 14, 30];
+function dueCount(){
+  const now = Date.now();
+  return Object.values(wrong).filter(e => !e.done && (e.due||0) <= now).length;
+}
+function srsAdvance(k){
+  const e = wrong[k]; if (!e) return;
+  e.stage = Math.min((e.stage||0) + 1, SRS_DAYS.length - 1);
+  e.due = Date.now() + SRS_DAYS[e.stage] * 86400000;
+  e.done = e.stage >= SRS_DAYS.length - 1;  // 毕业档标记已掌握，退出到期池
+}
 function recordWrong(q, your, score){
   const e = wrong[q.k] || {t:q.t, s:q.s, star:false, wrong:0};
   // 记下正确答案文本，错题本才能对照复盘（旧版本条目无此字段，渲染时兼容）
@@ -497,6 +514,7 @@ function recordWrong(q, your, score){
     ? score.detail.map(d=>d.right).join(q.t==="case" ? " + " : "、") : "";
   e.t = q.t; e.s = q.s; e.your = your;
   e.wrong = (e.wrong||0) + 1; e.last = Date.now(); e.done = false;
+  e.stage = 0; e.due = Date.now();  // 答错归零，立即可再复习
   wrong[q.k] = e; persistWrong();
 }
 function qTitle(q){
@@ -526,6 +544,7 @@ function pool(){
   if (sel.seasons.size) list = list.filter(q=>sel.seasons.has(q.s));
   if (sel.range === "wrong") list = list.filter(q=>wrong[q.k]);
   if (sel.range === "star") list = list.filter(q=>wrong[q.k] && wrong[q.k].star);
+  if (sel.range === "due") list = list.filter(q=>wrong[q.k] && !wrong[q.k].done && (wrong[q.k].due||0)<=Date.now());
   return list;
 }
 function updatePoolTip(){
@@ -539,16 +558,21 @@ function renderWbStats(){
   document.getElementById("nWrong").textContent = n;
   document.getElementById("nStar").textContent = st;
   document.getElementById("wbCount").textContent = n;
+  const bd = document.getElementById("btnDue");
+  if (bd){ const d = dueCount(); bd.textContent = d ? `复习到期 ${d}` : "复习到期"; }
 }
 function renderWbList(){
   const entries = Object.entries(wrong);
+  const now = Date.now();
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
     const q = BANK[k]; if (!q) return "";
     const yourTxt = e.t==="case" ? axisText(e.your) : e.t==="var" ? (q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
     const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
+    const dueTxt = e.done ? "已掌握" : (e.due||0)<=now ? "⏰ 复习到期" :
+      `${Math.ceil(((e.due||0)-now)/86400000)} 天后复习`;
     return `<div class="wbitem">
       <div class="wbm"><div>${qTitle(q)}</div>
-      <div class="wbyour">上次错选：${esc(yourTxt)}${corrTxt?` · 正确：${esc(corrTxt)}`:""}${e.done?" · 已掌握":""}</div></div>
+      <div class="wbyour">上次错选：${esc(yourTxt)}${corrTxt?` · 正确：${esc(corrTxt)}`:""} · ${esc(dueTxt)}${e.wrong>1?` · 已错 ${e.wrong} 次`:""}</div></div>
       <button class="btn wbbtn" data-star="${k}">${e.star?"★":"☆"}</button>
       <button class="btn wbbtn" data-del="${k}">移除</button>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a>
@@ -777,7 +801,7 @@ function submitAnswer(){
       const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
       round.answers[round.i] = a; round.scores[round.i] = s;
       if (s.got < s.max) recordWrong(q, a, s);
-      else if (wrong[q.k]){ wrong[q.k].done = true; persistWrong(); }
+      else if (wrong[q.k]){ srsAdvance(q.k); persistWrong(); }
       round.locked = true;
       renderFeedback(q, a);
       syncButtons();
@@ -798,7 +822,7 @@ function finishExam(){
     const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
     round.scores[i] = s;
     if (s.got < s.max) recordWrong(q, a, s);
-    else if (wrong[q.k]){ wrong[q.k].done = true; }
+    else if (wrong[q.k]){ srsAdvance(q.k); }
   });
   persistWrong();
   showResult();
@@ -905,6 +929,40 @@ document.getElementById("btnExport").onclick = ()=>{
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
   a.download = "考题错题本.json";
+  a.click(); URL.revokeObjectURL(a.href);
+};
+// ---------- Anki 导出（TSV：题面 / 答案与认定 / 来源链接） ----------
+// Anki 导入设置：字段分隔符 Tab、勾选「允许在字段中使用 HTML」；# 开头行会被 Anki 当注释忽略
+document.getElementById("btnAnki").onclick = ()=>{
+  const SITE_BASE = "https://rolandhuang17.github.io/cfa-referee-review/";
+  const clean = s => (s||"").replace(/\t/g," ").replace(/\r?\n/g,"<br>").trim();
+  const rows = [];
+  Object.entries(wrong).forEach(([k,e])=>{
+    const q = BANK[k]; if (!q) return;
+    let front = "", back = "";
+    if (q.t === "case"){
+      front = `${qTitle(q)}<br><br>${esc((q.desc||"").replace(/^判例[一二三四五六七八九十百]+[：:]/,"").trim())}`;
+      if (q.appeal) front += `<br><br><b>申诉：</b>${esc(q.appeal.replace(/^[^：]*申诉意见认为：/,"").trim())}`;
+      back = `<b>正确：</b>${esc(e.correct||"")}<br><br><b>评议组认定：</b>${esc((q.concl||"").replace(/^对于此判[例罚]，评议组[^：]*认为：/,"").trim())}`;
+    } else if (q.t === "var"){
+      front = `${qTitle(q)}<br><br>${esc(q.q)}`;
+      back = `<b>官方答案：</b>${esc(q.opts ? q.opts[q.ans] : "")}<br><br>${esc(q.a)}`;
+    } else {
+      front = `尺度场景 ${esc(q.id)} · ${esc(q.title)}（${q.s}）<br><br>${esc(q.note)}`;
+      const active = (q.dec||[]).filter(d=>d.active).map(d=>d.label).join("、");
+      back = `<b>判罚决定：</b>${esc(active||"（无）")}`;
+      if (q.reason) back += `<br><br>${esc(q.reason)}`;
+    }
+    const link = SITE_BASE + qLink(q);
+    rows.push([clean(front), clean(back), link].join("\t"));
+  });
+  if (!rows.length){ alert("错题本为空，先答一轮题再导出。"); return; }
+  const head = "#separator:tab\n#html:true\n";  // Anki 2.1.55+ 文件头直读设置（# 行自动忽略）
+  const blob = new Blob(["\ufeff" + head + rows.join("\n") + "\n"], {type:"text/tab-separated-values"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob);
+  const d = new Date(), pad = n=>String(n).padStart(2,"0");
+  a.download = `裁判考题错题-${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}.tsv`;
   a.click(); URL.revokeObjectURL(a.href);
 };
 document.getElementById("btnImport").onclick = ()=>document.getElementById("importFile").click();

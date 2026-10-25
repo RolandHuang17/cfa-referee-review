@@ -511,11 +511,11 @@ __TOPBAR__
     <a class="ecard c-quiz" style="--i:14" href="quiz.html">
       <div class="icon">__I_QUIZ__</div>
       <h2>考题模式</h2>
-      <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__ + IFAB 协议 __Q_VAR__）：判例先看视频做判罚，协议题四选一判官方决定，错题自动进错题本。</p>
+      <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__ + IFAB 协议 __Q_VAR__ + 规则理论 __Q_THEORY__）：判例先看视频做判罚，理论题刷规则条文，限时模考、间隔复习与 Anki 导出齐备。</p>
       <div class="nums">
         <div><b>__Q_TOTAL__</b><span>题库</span></div>
         <div><b>__Q_CASES__</b><span>判例</span></div>
-        <div><b>__Q_VAR__</b><span>VAR 协议题</span></div>
+        <div><b>__Q_THEORY__</b><span>规则理论</span></div>
       </div>
       <div class="go">开始答题 __I_RIGHT__</div>
     </a>
@@ -652,10 +652,11 @@ def main():
     hns = load_hns_stats()
     from build_quiz import build_bank  # 与 quiz 页同一题库口径
 
-    bank, _, _, _ = build_bank()
+    bank, _, _, _, _ = build_bank()
     q_case = sum(1 for b in bank if b["t"] == "case")
     q_scale = sum(1 for b in bank if b["t"] == "scale")
     q_var = sum(1 for b in bank if b["t"] == "var")
+    q_theory = sum(1 for b in bank if b["t"] == "theory")
     today_pool = build_today_pool()
     tb = topbar(
         active="index.html",
@@ -739,10 +740,11 @@ def main():
         .replace("__H_ROUNDS__", str(hns["rounds"]))
         .replace("__H_INCS__", str(hns["incs"]))
         .replace("__H_VIDS__", str(hns["vids"]))
-        .replace("__Q_TOTAL__", str(q_case + q_scale + q_var))
+        .replace("__Q_TOTAL__", str(q_case + q_scale + q_var + q_theory))
         .replace("__Q_CASES__", str(q_case))
         .replace("__Q_SCALE__", str(q_scale))
         .replace("__Q_VAR__", str(q_var))
+        .replace("__Q_THEORY__", str(q_theory))
         .replace("__BUILT__", date.today().isoformat()),
         meta=meta_tags("index.html", extra_jsonld=[jsonld_website(), jsonld_dataset()]),
     )

@@ -171,7 +171,7 @@ def test_quiz_bank_pool():
             if c.get("video_files") and (c.get("conclusion") or "").strip()
         )
     text = bank_path.read_text(encoding="utf-8")
-    m = re.search(r'"meta":\{"case":(\d+),"scale":(\d+),"var":(\d+)\}', text)
+    m = re.search(r'"meta":\{"case":(\d+),"scale":(\d+),"var":(\d+)', text)
     if not m:
         problems.append("quiz.html 缺少 meta 题库统计（case/scale/var）")
     else:
@@ -204,6 +204,43 @@ def test_quiz_bank_pool():
             problems.append(
                 f"考题 VAR 协议题池不符: quiz={n_var}，期望 {len(VAR_QUIZ_FAQ_IDS)}"
             )
+        # 规则理论题：quiz meta 计数与题库文件一致 + 题目结构合法（law 锚点存在）
+        theory_path = DATA / "theory-questions.json"
+        if not theory_path.exists():
+            problems.append("缺少 data/theory-questions.json")
+        else:
+            tq = json.loads(theory_path.read_text(encoding="utf-8")).get(
+                "questions", []
+            )
+            law_ids = {
+                s["id"]
+                for s in json.loads((DATA / "laws.json").read_text(encoding="utf-8"))[
+                    "sections"
+                ]
+            }
+            seen_ids = set()
+            for q in tq:
+                where = f"theory {q.get('id')}"
+                if q.get("id") in seen_ids:
+                    problems.append(f"{where} id 重复")
+                seen_ids.add(q.get("id"))
+                if len(q.get("opts", [])) != 4:
+                    problems.append(f"{where} 选项数不是 4")
+                if not (0 <= q.get("ans", -1) < 4):
+                    problems.append(f"{where} 答案下标非法")
+                if q.get("law") not in law_ids:
+                    problems.append(
+                        f"{where} law 锚点不存在于 laws.json: {q.get('law')}"
+                    )
+                if not (q.get("src") or "").strip():
+                    problems.append(f"{where} 缺条文出处引文（src）")
+            m2 = re.search(r',"theory":(\d+)\}', text)
+            if not m2:
+                problems.append("quiz.html meta 缺 theory 计数")
+            elif int(m2.group(1)) != len(tq):
+                problems.append(
+                    f"考题理论题池不符: quiz={int(m2.group(1))}，期望 {len(tq)}"
+                )
         for season, expected in EXPECTED_QUIZ.items():
             if per_season[season] != expected:
                 problems.append(

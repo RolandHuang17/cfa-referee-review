@@ -307,18 +307,37 @@ def build_bank():
                 }
             )
             n_var += 1
-    return bank, teams, n_scale, n_var
+    # 第四题型：规则理论题（data/theory-questions.json，数字/定义/程序专项；
+    # 每题带 laws.json 章节锚点与出处引文，页面端选项按次打乱）
+    n_theory = 0
+    tq_path = DATA / "theory-questions.json"
+    if tq_path.exists():
+        for q in json.loads(tq_path.read_text(encoding="utf-8")).get("questions", []):
+            bank.append(
+                {
+                    "k": f"th-{q['id']}",
+                    "t": "theory",
+                    "s": "rules",
+                    "q": q["q"],
+                    "opts": q["opts"],
+                    "ans": q["ans"],
+                    "law": q["law"],
+                    "src": q["src"],
+                }
+            )
+            n_theory += 1
+    return bank, teams, n_scale, n_var, n_theory
 
 
 def build_data():
-    bank, teams, n_scale, n_var = build_bank()
+    bank, teams, n_scale, n_var, n_theory = build_bank()
     n_case = sum(1 for b in bank if b["t"] == "case")
     return {
         "cfg": {"wrongKey": WRONG_KEY, "built": date.today().isoformat()},
         "bank": bank,
         "teams": teams,
         "opts": {"r": R_OPTIONS, "c": C_OPTIONS, "v": V_OPTIONS},
-        "meta": {"case": n_case, "scale": n_scale, "var": n_var},
+        "meta": {"case": n_case, "scale": n_scale, "var": n_var, "theory": n_theory},
     }
 
 
@@ -492,6 +511,7 @@ __TOPBAR__
       <div class="seg" id="segSrc">
         <button data-v="all" class="on">全部</button><button data-v="case">赛季判例</button>
         <button data-v="scale">尺度场景</button><button data-v="var">VAR 协议题</button>
+        <button data-v="theory">规则理论</button>
       </div>
     </div>
     <div class="frow"><span class="flbl">赛季</span>
@@ -637,10 +657,13 @@ function qTitle(q){
     return `${esc(q.comp)}${q.round?esc(q.round):""}${q.minute?" · 第"+q.minute+"分钟":""} · ${q.s}赛季第${q.issue}期-判例${q.no}`;
   if (q.t === "var")
     return `VAR 协议题 ${esc(q.qid)} · IFAB 协议官方 FAQ`;
+  if (q.t === "theory")
+    return `规则理论 ${esc(q.k.slice(3))} · ${q.law && q.law.startsWith("law-") ? "第"+q.law.slice(4)+"章" : "VAR 协定"}`;
   return `尺度场景 ${esc(q.id)} · ${esc(q.title)}（${q.s}）`;
 }
 function qLink(q){
   if (q.t === "var") return q.link;
+  if (q.t === "theory") return `rules.html#${q.law}`;
   return q.t === "case" ? `season-${q.s}.html#case-${q.seq}`
                         : `scale.html#h${q.s}-${q.series}-${q.id}`;
 }
@@ -819,7 +842,7 @@ function renderWbList(){
   const now = Date.now();
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
     const q = BANK[k]; if (!q) return "";
-    const yourTxt = e.t==="case" ? axisText(e.your) : e.t==="var" ? (q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
+    const yourTxt = e.t==="case" ? axisText(e.your) : (e.t==="var"||e.t==="theory") ? (q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
     const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
     const dueTxt = e.done ? "已掌握" : (e.due||0)<=now ? "⏰ 复习到期" :
       `${Math.ceil(((e.due||0)-now)/86400000)} 天后复习`;
@@ -886,14 +909,20 @@ function renderQuestion(){
   } else if (q.t === "var"){
     head = `<span class="badge info">VAR 协议题</span><h2 class="match">IFAB 协议场景 ${esc(q.qid)}</h2>
       <span class="qmeta">《竞赛规则》VAR 协议官方 FAQ · 四选一 · 1分</span>`;
+  } else if (q.t === "theory"){
+    const lawName = q.law && q.law.startsWith("law-") ? `规则第${q.law.slice(4)}章` : "VAR 协定";
+    head = `<span class="badge info">规则理论</span><h2 class="match">${esc(lawName)} · 条文判断</h2>
+      <span class="qmeta">《足球竞赛规则 2026/27》条文专项 · 四选一 · 1分</span>`;
   } else {
     head = `<span class="badge info">尺度场景</span><h2 class="match">${esc(q.title)}</h2>
       <span class="qmeta">${q.s}赛季 · ${esc(q.group)} · 编号 ${esc(q.id)}</span>`;
   }
-  // 视频（var 为纯场景题，无视频）
+  // 视频（var/theory 为纯场景题，无视频）
   let vidHtml = "";
   if (q.t === "var"){
     vidHtml = `<div class="src-actions" style="display:flex"><a class="srcbtn" href="${esc(q.link)}" target="_blank">${IC.external} 前往 IFAB 协议页查看该 FAQ</a><span class="srcsub">纯场景判断题——先想好你的决定再作答</span></div>`;
+  } else if (q.t === "theory"){
+    vidHtml = `<div class="src-actions" style="display:flex"><a class="srcbtn" href="${esc(qLink(q))}" target="_blank">${IC.book} 前往竞赛规则对应章节</a><span class="srcsub">纯条文判断题——先凭掌握作答，答后可见条文出处</span></div>`;
   } else if (!LITE){
     const src = q.t==="case" ? "videos/"+q.videos[0] : q.video;
     const poster = q.poster ? ` poster="${esc(q.poster)}"` : "";
@@ -908,24 +937,27 @@ function renderQuestion(){
   // 题面
   const text = q.t==="case"
     ? `<p class="qtext">${esc(q.desc.replace(/^判例[一二三四五六七八九十百]+[：:]/,"").trim())}</p>`
-    : q.t==="var"
+    : (q.t==="var" || q.t==="theory")
     ? `<p class="qtext">${esc(q.q)}</p>`
     : `<p class="qtext">${esc(q.note)}</p>`;
   const appeal = (q.t==="case" && q.appeal)
     ? `<details class="qappeal"><summary>查看申诉方主张（提示）</summary><p>${esc(q.appeal.replace(/^[^：]*申诉意见认为：/,"").trim())}</p></details>` : "";
   document.getElementById("qCard").innerHTML = `<div class="qhead">${head}</div>${vidHtml}${text}${appeal}`;
-  // 视频接线（本地 404 → 官方直链）
+  // 视频接线（本地 404 → 官方直链）；var/theory 无视频元素（修复：v 为空时整个跳过，
+  // 此前 var 题在完整版会在此抛空引用、表单渲染中断）
   if (!LITE){
     const v = document.getElementById("qvid");
     const tip = document.getElementById("vidTip");
-    if (q.t==="case" && vidsMissing && (q.vurls||[])[0]){
-      v.dataset.oss = "1";
-      v.src = q.vurls[0];
-      if (tip){ tip.textContent = "本地视频缺失，已自动改用官方直链在线播放。"; tip.style.display = ""; }
+    if (v){
+      if (q.t==="case" && vidsMissing && (q.vurls||[])[0]){
+        v.dataset.oss = "1";
+        v.src = q.vurls[0];
+        if (tip){ tip.textContent = "本地视频缺失，已自动改用官方直链在线播放。"; tip.style.display = ""; }
+      }
+      else if (q.t==="case") v.src = "videos/"+q.videos[0];
+      else if (q.video) v.src = q.video;
+      applyRate();
     }
-    else if (q.t==="case") v.src = "videos/"+q.videos[0];
-    else v.src = q.video;
-    applyRate();
   }
   // 表单（已作答且练习已提交时还原为锁定态）
   const saved = round.answers[round.i];
@@ -942,6 +974,17 @@ function renderQuestion(){
   } else if (q.t === "var"){
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">官方决定 <small>四选一 · 1分</small></div><div class="optrow">` +
       q.opts.map((o,i)=>`<button class="chip opt ${saved&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
+  } else if (q.t === "theory"){
+    // 选项按次打乱显示（题库文件中正确项均在首位）；saved 存的是原始下标，经 _disp 反查高亮
+    if (!q._disp){
+      q._disp = q.opts.map((_,i)=>i);
+      for (let i = q._disp.length - 1; i > 0; i--){
+        const j = Math.floor(Math.random() * (i + 1));
+        [q._disp[i], q._disp[j]] = [q._disp[j], q._disp[i]];
+      }
+    }
+    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">正确条文 <small>四选一 · 1分</small></div><div class="optrow">` +
+      q._disp.map((orig,i)=>`<button class="chip opt ${saved&&+saved===orig?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(q.opts[orig])}</button>`).join("") + `</div></div>`;
   } else {
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，无错选有漏选1分，有错选0分</small></div><div class="optrow">` +
       q.dec.map((d,i)=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${i<9?`<span class="okn">${i+1}</span>`:""}${esc(d.label)}</button>`).join("") + `</div></div>`;
@@ -964,6 +1007,11 @@ function currentAnswer(){
   if (q.t === "var"){
     const b = document.querySelector("#qForm .opt.on");
     return b ? b.dataset.v : null;
+  }
+  if (q.t === "theory"){
+    // 显示位 → 原始下标（错题本/统计都存原始下标，避免再抽打乱后对不上）
+    const b = document.querySelector("#qForm .opt.on");
+    return b ? q._disp[+b.dataset.v] : null;
   }
   return Array.from(document.querySelectorAll("#qForm .opt.on")).map(b=>b.dataset.dec);
 }
@@ -1014,6 +1062,13 @@ function scoreVar(q, a){
     {name:"官方决定", ok, yours: idx>=0 && q.opts[idx] ? q.opts[idx] : "（未答）", right: q.opts[q.ans]}
   ]};
 }
+function scoreTheory(q, a){
+  const idx = (a===null || a===undefined || a==="") ? -1 : +a;
+  const ok = idx === q.ans;
+  return {got: ok?1:0, max:1, detail:[
+    {name:"正确条文", ok, yours: idx>=0 && q.opts[idx] ? q.opts[idx] : "（未答）", right: q.opts[q.ans]}
+  ]};
+}
 function renderFeedback(q, a){
   const s = round.scores[round.i];
   const allOk = s.got === s.max;
@@ -1026,6 +1081,8 @@ function renderFeedback(q, a){
   } else if (q.t === "var"){
     h += `<div class="concl"><b>官方答案（VAR 协议 FAQ）：</b>${esc(q.a)}</div>`;
     h += `<details class="qappeal"><summary>English original</summary><p>${esc(q.a_en)}</p></details>`;
+  } else if (q.t === "theory"){
+    h += `<div class="concl"><b>条文出处（${q.law && q.law.startsWith("law-") ? "规则第"+q.law.slice(4)+"章" : "VAR 协定"}）：</b>${esc(q.src)}</div>`;
   } else {
     if (q.reason) h += `<div class="concl"><b>Reason：</b>${esc(q.reason)}</div>`;
     if (q.varrule) h += `<div class="concl"><b>⚖ VAR 介入：</b>${esc(q.varrule)}</div>`;
@@ -1056,7 +1113,7 @@ function submitAnswer(){
     const done = round.scores[round.i] != null;
     if (!done){
       const a = currentAnswer();
-      const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
+      const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : q.t==="theory" ? scoreTheory(q, a) : scoreScale(q, a);
       round.answers[round.i] = a; round.scores[round.i] = s;
       recordStat(q.k, s.got === s.max);
       if (s.got < s.max) recordWrong(q, a, s);
@@ -1080,8 +1137,8 @@ function finishExam(){
   stopTimer();
   let totalGot = 0, totalMax = 0;
   round.qs.forEach((q,i)=>{
-    const a = round.answers[i] ?? (q.t==="case" ? {v:null,r:null,c:null} : q.t==="var" ? null : []);
-    const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
+    const a = round.answers[i] ?? (q.t==="case" ? {v:null,r:null,c:null} : (q.t==="var"||q.t==="theory") ? null : []);
+    const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : q.t==="theory" ? scoreTheory(q, a) : scoreScale(q, a);
     round.scores[i] = s;
     totalGot += s.got; totalMax += s.max;
     recordStat(q.k, s.got === s.max);
@@ -1102,10 +1159,10 @@ function gotoPrev(){
 function skipQuestion(){
   // 仅练习模式立即判分记错；考试模式只暂存未答（finishExam 交卷统一判分，避免双计错次）
   const q = round.qs[round.i];
-  const a = q.t==="case" ? {v:null,r:null,c:null} : q.t==="var" ? null : [];
+  const a = q.t==="case" ? {v:null,r:null,c:null} : (q.t==="var"||q.t==="theory") ? null : [];
   round.answers[round.i] = a;
   if (round.mode === "practice"){
-    const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
+    const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : q.t==="theory" ? scoreTheory(q, a) : scoreScale(q, a);
     round.scores[round.i] = s;
     recordStat(q.k, false);
     recordWrong(q, a, s);
@@ -1170,7 +1227,7 @@ function showResult(){
     const missTxt = s.detail.filter(d=>!d.ok).map(d=>`${d.name}：正确 ${d.right}`).join("；");
     return `<div class="rrow" style="--i:${Math.min(i,12)}"><span class="rmark ${allOk?"hit":"miss"}">${allOk?"✓":s.got>0?"△":"✗"}</span>
       <div class="rmain"><div>${qTitle(q)}</div>
-      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):q.t==="var"?(q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
+      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(q.t==="var"||q.t==="theory")?(q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a></div>`;
   }).join("");
   renderWbStats();
@@ -1243,6 +1300,9 @@ document.getElementById("btnAnki").onclick = ()=>{
     } else if (q.t === "var"){
       front = `${qTitle(q)}<br><br>${esc(q.q)}`;
       back = `<b>官方答案：</b>${esc(q.opts ? q.opts[q.ans] : "")}<br><br>${esc(q.a)}`;
+    } else if (q.t === "theory"){
+      front = `${qTitle(q)}<br><br>${esc(q.q)}`;
+      back = `<b>正确条文：</b>${esc(q.opts ? q.opts[q.ans] : "")}<br><br><b>出处：</b>${esc(q.src||"")}`;
     } else {
       front = `尺度场景 ${esc(q.id)} · ${esc(q.title)}（${q.s}）<br><br>${esc(q.note)}`;
       const active = (q.dec||[]).filter(d=>d.active).map(d=>d.label).join("、");

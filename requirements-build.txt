@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# 规则模块构建依赖（仅 fetch_laws.py / build_rules.py 需要；生成的页面运行时零依赖）
+# CI/构建依赖（规则模块构建 + 测试运行器；生成的页面运行时零依赖）
 # 安装: pip install -r requirements-build.txt
 #
 # 第 1 行的编码声明是必需的，不是装饰：pip 读 requirements 文件时若无 BOM，会退回
@@ -12,3 +12,6 @@
 # 通过 [tool.setuptools.dynamic] 读它，因此两条安装路径的版本永远不会漂移。
 pymupdf>=1.24
 opencc-python-reimplemented>=0.1.7
+# 测试运行器：CI 的 Verify 步骤跑 python -m pytest（test_integrity 裸跑不需要它，
+# 但 pytest 收集 tests/ 全量——本地也可只装上面两个依赖后裸跑 test_integrity）
+pytest>=7.0

@@ -6,6 +6,7 @@
 import json
 from datetime import date
 
+from lib.seo import jsonld_dataset, jsonld_website, meta_tags
 from lib.theme import inject_theme, icon, topbar
 
 from lib.paths import (
@@ -626,7 +627,8 @@ def main():
         .replace("__Q_CASES__", str(q_case))
         .replace("__Q_SCALE__", str(q_scale))
         .replace("__Q_VAR__", str(q_var))
-        .replace("__BUILT__", date.today().isoformat())
+        .replace("__BUILT__", date.today().isoformat()),
+        meta=meta_tags("index.html", extra_jsonld=[jsonld_website(), jsonld_dataset()]),
     )
     for k, v in subs.items():
         html = html.replace(k, v)

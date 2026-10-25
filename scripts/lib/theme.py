@@ -249,8 +249,10 @@ _TOGGLE_JS = (
 )
 
 
-def inject_theme(html):
-    html = html.replace(
-        "</head>", f"<style data-cfa-theme>\n{THEME}\n</style>{_EARLY_JS}</head>", 1
-    )
+def inject_theme(html, meta=""):
+    """注入主题 CSS/首帧脚本/切换脚本；meta 为 lib.seo.meta_tags() 的输出（可选）。"""
+    head_extra = f"<style data-cfa-theme>\n{THEME}\n</style>{_EARLY_JS}"
+    if meta:
+        head_extra = f"{meta}\n{head_extra}"
+    html = html.replace("</head>", head_extra + "</head>", 1)
     return html.replace("</body>", f"{_TOGGLE_JS}</body>", 1)

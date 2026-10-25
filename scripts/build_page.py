@@ -10,6 +10,7 @@ import sys
 from datetime import date
 
 from lib.crest_catalog import load_catalog, normalize_team
+from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
 
 from lib.paths import DATA, SITE
@@ -1299,7 +1300,8 @@ def build_season(season):
         .replace("__I_CHART__", sub["__I_CHART__"])
         .replace("__I_LEFT__", sub["__I_LEFT__"])
         .replace("__I_DOWN__", sub["__I_DOWN__"])
-        .replace("__I_UP__", sub["__I_UP__"])
+        .replace("__I_UP__", sub["__I_UP__"]),
+        meta=meta_tags(f"season-{season}.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]

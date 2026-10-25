@@ -9,6 +9,7 @@ cfa.ifab-en）；译文按 section id / block 英文标题 / FAQ id 平铺匹配
 
 import json
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import IFAB_JSON, IFAB_ZH_JSON, SITE
@@ -306,7 +307,8 @@ def build_page(data, zh):
         .replace("__FAQ__", faq_html)
         .replace("__LINKS__", links_html)
         .replace("__CHECKED__", esc(data.get("fetched", "")))
-        .replace("__TRANSLATED__", esc((zh or {}).get("translated", "")))
+        .replace("__TRANSLATED__", esc((zh or {}).get("translated", ""))),
+        meta=meta_tags("ifab.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "ifab.html").write_text(html, encoding="utf-8")

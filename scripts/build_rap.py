@@ -9,6 +9,7 @@ RAP 判例内容在 Nextaur 登录墙后或已失效的下载包内，不可抓�
 
 import json
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import RAP_JSON, SITE
@@ -179,7 +180,8 @@ def build_page(data):
         .replace("__STEPS__", steps)
         .replace("__EDITIONS__", editions_html)
         .replace("__TOOLS__", tools)
-        .replace("__CHECKED__", esc(data.get("checked", "")))
+        .replace("__CHECKED__", esc(data.get("checked", ""))),
+        meta=meta_tags("rap.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "rap.html").write_text(html, encoding="utf-8")

@@ -13,6 +13,7 @@ EMBED 开关保留（若 UEFA 未来放开嵌入，一行切换为卡片内 ifra
 
 import json
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import DATA, SITE, UEFA_JSON
@@ -293,7 +294,8 @@ def build_page(data):
         .replace("__SOURCE_LINK__", src_link)
         .replace("__I_EXTERNAL__", icon("external", 14))
         .replace("__NAVS__", navs)
-        .replace("__SECS__", secs)
+        .replace("__SECS__", secs),
+        meta=meta_tags("uefa.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "uefa.html").write_text(html, encoding="utf-8")

@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://rolandhuang17.github.io/cfa-referee-review/sitemap.xml

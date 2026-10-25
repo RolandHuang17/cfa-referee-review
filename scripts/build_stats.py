@@ -15,6 +15,7 @@ import sys
 from datetime import date
 
 from lib.crest_catalog import load_catalog
+from lib.seo import meta_tags
 from lib.team_names import normalize_name
 from lib.theme import inject_theme, js_icons, topbar
 
@@ -692,7 +693,8 @@ def build_season(season):
             ),
         )
         .replace("__ICONS__", js_icons())
-        .replace("__TOPBAR__", tb)
+        .replace("__TOPBAR__", tb),
+        meta=meta_tags(f"stats-{season}.html"),
     )
     html = (
         html.replace("__SEASON__", season)

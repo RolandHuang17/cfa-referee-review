@@ -162,6 +162,13 @@ PAGES = [
         "priority": "0.8",
         "changefreq": "weekly",
     },
+    {
+        "file": "404.html",
+        "title": "页面不存在",
+        "desc": "页面不存在——回到裁判学习一站式平台首页。",
+        "priority": "0.1",
+        "changefreq": "yearly",
+    },
 ]
 
 # 仅文件名序列（测试断言/sitemap 生成用）

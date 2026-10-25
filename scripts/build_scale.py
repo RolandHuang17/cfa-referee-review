@@ -18,6 +18,7 @@ import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import unquote
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import (
@@ -591,7 +592,8 @@ def build_page(data):
         .replace("__LITE_BANNER__", banner)
         .replace("__TABS__", tabs)
         .replace("__NAVS__", navs)
-        .replace("__SECS__", secs)
+        .replace("__SECS__", secs),
+        meta=meta_tags("scale.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "scale.html").write_text(html, encoding="utf-8")

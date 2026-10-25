@@ -8,6 +8,7 @@
 import json
 import re
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
 
 import pymupdf
@@ -973,7 +974,8 @@ def build_html_page(sections):
         )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)
-        .replace("__I_BOOK__", icon("book", 30))
+        .replace("__I_BOOK__", icon("book", 30)),
+        meta=meta_tags("rules.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     RULES_HTML.write_text(html, encoding="utf-8")

@@ -555,6 +555,78 @@ def test_data_conform_to_schemas():
     print("cases/impact/quiz-answers/weekly 符合 schema 契约")
 
 
+def _safe_xml(path):
+    """防 XML 实体扩展（与 fetch_weekly.parse_rss 同一防线）：拒绝 DTD/实体 + 限输入大小。
+
+    sitemap/feed 虽是本仓库构建产物，但测试按不可信输入处理——防御式解析零成本。
+    """
+    import xml.etree.ElementTree as ET
+
+    raw = path.read_bytes()
+    if len(raw) > 2_000_000:
+        raise ValueError(f"{path.name} 超过 2MB")
+    head = raw[:2048]
+    if b"<!DOCTYPE" in head or b"<!ENTITY" in head:
+        raise ValueError(f"{path.name} 含 DTD/实体声明")
+    return ET.fromstring(raw)
+
+
+def test_seo_discovery_layer():
+    """发现层护栏：每页 meta/canonical/favicon/feed 链接 + sitemap/robots/feed 文件健全。"""
+    problems = []
+    for name in PAGES:
+        path = SITE / name
+        text = path.read_text(encoding="utf-8") if path.exists() else ""
+        if not text:
+            continue
+        if name == "404.html":
+            if 'name="robots"' not in text:
+                problems.append("404.html 缺 robots noindex")
+        else:
+            if '<meta name="description"' not in text:
+                problems.append(f"{name} 缺 meta description")
+            if 'rel="canonical"' not in text:
+                problems.append(f"{name} 缺 canonical")
+        if "data:image/svg+xml" not in text:
+            problems.append(f"{name} 缺 favicon（data-URI）")
+        if 'type="application/atom+xml"' not in text:
+            problems.append(f"{name} 缺 feed 发现链接")
+    try:
+        root = _safe_xml(SITE / "sitemap.xml")
+    except (FileNotFoundError, ValueError) as exc:
+        problems.append(f"sitemap 异常: {exc}")
+    else:
+        locs = {
+            el.text
+            for el in root.iter("{http://www.sitemaps.org/schemas/sitemap/0.9}loc")
+        }
+        from lib.seo import SITE_URL
+
+        for name in PAGES:
+            if name == "404.html":
+                continue
+            if f"{SITE_URL}/{name}" not in locs:
+                problems.append(f"sitemap 缺少 {name}")
+    robots = SITE / "robots.txt"
+    if not robots.exists():
+        problems.append("缺少 site/robots.txt")
+    elif "sitemap.xml" not in robots.read_text(encoding="utf-8"):
+        problems.append("robots.txt 未指向 sitemap")
+    try:
+        froot = _safe_xml(SITE / "feed.xml")
+    except (FileNotFoundError, ValueError) as exc:
+        problems.append(f"feed.xml 异常: {exc}")
+    else:
+        ns = "{http://www.w3.org/2005/Atom}"
+        ids = [el.text for el in froot.iter(f"{ns}id")]
+        if len(ids) < 2:
+            problems.append("feed.xml entry 过少")
+        if len(ids) != len(set(ids)):
+            problems.append("feed.xml entry id 重复")
+    _finish(problems)
+    print("发现层校验通过: meta/sitemap/robots/feed")
+
+
 def test_bat_file_gbk_encoded():
     """硬约束 4：启动合集网页.bat 必须存为 GBK（cmd 按 ANSI 码页解析，UTF-8 会乱码中断）。"""
     raw = (ROOT / "启动合集网页.bat").read_bytes()
@@ -583,6 +655,7 @@ CHECKS = [
     test_issue_url_tables_in_sync,
     test_uefa_rfef_conmebol_zh_aligned,
     test_data_conform_to_schemas,
+    test_seo_discovery_layer,
     test_bat_file_gbk_encoded,
     test_internal_links_resolve,
     test_team_catalog_complete,

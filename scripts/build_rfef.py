@@ -14,6 +14,7 @@
 
 import json
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import DATA, SITE, RFEF_JSON
@@ -500,7 +501,8 @@ def build_page(data):
         .replace("__I_PLAY__", icon("play", 13))
         .replace("__I_EXT__", icon("external", 12))
         .replace("__NAVS__", navs)
-        .replace("__SECS__", secs_html)
+        .replace("__SECS__", secs_html),
+        meta=meta_tags("rfef.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "rfef.html").write_text(html, encoding="utf-8")

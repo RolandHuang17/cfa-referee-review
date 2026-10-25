@@ -8,6 +8,7 @@ YouTube 视频直链（跳官方页，不内嵌——硬约束 1）；认定徽�
 页头/chips/搜索/年份分组骨架来自 lib/pagelib.py。
 """
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.pagelib import (
@@ -233,15 +234,16 @@ def build_page(data, zh):
                 ".ccard",
                 filter_attr="data-verdict",
                 match="eq",
-                search=True,
-                group="ybody",
-            ),
+                 search=True,
+                 group="ybody",
+             ),
         )
         .replace("__N_ALL__", str(n_ok + n_bad + n_other))
         .replace("__N_OK__", str(n_ok))
         .replace("__N_BAD__", str(n_bad))
         .replace("__CHECKED__", esc(data.get("fetched", "")))
-        .replace("__SECTIONS__", secs)
+        .replace("__SECTIONS__", secs),
+        meta=meta_tags("hns.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "hns.html").write_text(html, encoding="utf-8")

@@ -8,6 +8,7 @@
 页头/chips/搜索/年份分组骨架来自 lib/pagelib.py（sections 两级折叠模式）。
 """
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.pagelib import (
@@ -209,7 +210,8 @@ def build_page(data, zh):
         .replace("__N_ALL__", str(len(eps)))
         .replace("__SHOW_CHIPS__", chips)
         .replace("__SECTIONS__", secs)
-        .replace("__CHECKED__", esc(data.get("fetched", "")))
+        .replace("__CHECKED__", esc(data.get("fetched", ""))),
+        meta=meta_tags("weekly.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "weekly.html").write_text(html, encoding="utf-8")

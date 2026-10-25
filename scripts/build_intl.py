@@ -8,6 +8,7 @@
 
 import json
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import INTL_JSON, SITE
@@ -146,7 +147,8 @@ def build_page(data):
         .replace("__ABOUT__", about)
         .replace("__GROUPS__", groups_html)
         .replace("__RELATED__", related)
-        .replace("__CHECKED__", esc(data.get("checked", "")))
+        .replace("__CHECKED__", esc(data.get("checked", ""))),
+        meta=meta_tags("intl.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "intl.html").write_text(html, encoding="utf-8")

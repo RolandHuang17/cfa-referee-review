@@ -20,6 +20,7 @@ from datetime import date
 
 from lib.crest_catalog import load_catalog, normalize_team
 from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE
+from lib.seo import meta_tags
 from lib.theme import icon, inject_theme, js_icons, topbar
 
 WRONG_KEY = "cfa.quiz.wrong"
@@ -1133,7 +1134,8 @@ def main():
         .replace("__I_UP__", icon("up", 14))
         .replace("__N_CASE__", str(data["meta"]["case"]))
         .replace("__N_SCALE__", str(data["meta"]["scale"]))
-        .replace("__N_VAR__", str(data["meta"]["var"]))
+        .replace("__N_VAR__", str(data["meta"]["var"])),
+        meta=meta_tags("quiz.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "quiz.html"

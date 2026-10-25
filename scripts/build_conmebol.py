@@ -7,6 +7,7 @@
 （不内嵌、不本地化）。页头/chips/搜索/年份分组骨架来自 lib/pagelib.py。
 """
 
+from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.pagelib import (
@@ -216,15 +217,16 @@ def build_page(data, zh=None):
                 ".ccard",
                 filter_attr="data-kinds",
                 match="substr",
-                search=True,
-                group="ybody",
-            ),
+                 search=True,
+                 group="ybody",
+             ),
         )
         .replace("__N_ALL__", str(len(cases)))
         .replace("__COMP_CHIPS__", comp_chips)
         .replace("__SIT_CHIPS__", sit_chips)
         .replace("__CHECKED__", esc(data.get("fetched", "")))
-        .replace("__SECTIONS__", secs)
+        .replace("__SECTIONS__", secs),
+        meta=meta_tags("conmebol.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "conmebol.html").write_text(html, encoding="utf-8")

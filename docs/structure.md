@@ -57,11 +57,17 @@
 │   │   ├── safe_http.py    ← 所有对外请求的安全层（白名单 + 强制 https + DoH + IP 钉扎）
 │   │   ├── crest_catalog.py← 队徽目录读写与校验
 │   │   ├── team_names.py   ← 队名归一**唯一权威源**（ALIASES/normalize_name）
+│   │   ├── pages.py        ← 全站页面清单**唯一权威源**（测试/sitemap/搜索/SEO 共用）
+│   │   ├── seo.py          ← meta/og/canonical/favicon/JSON-LD（inject_theme 的 meta 参数）
+│   │   ├── xlinks.py       ← 互链策表解析（分类→规则章节/尺度场景锚点）
+│   │   ├── jsonschema_lite.py ← JSON Schema 迷你校验器（schemas/ 契约用，零依赖）
 │   │   └── classify_cls_{2024,2026}.py ← 纯数据分类表（无 I/O、无 __main__）
 │   └── build_all.py        ← 一键重建全站
-├── tests/test_integrity.py ← 完整性断言（裸跑 / pytest 皆可，fail-collecting）
-├── docs/                   ← 本文 + 新赛季接入 + 队徽指南
-├── .github/                ← workflows/pages.yml + Issue/PR 模板
+├── schemas/                ← 核心数据 JSON Schema 契约（validate_schemas.py 校验，可对外发布）
+├── tests/                  ← test_integrity.py（完整性断言）+ test_golden_parsers.py（解析器 golden + 2025 人工数据锚点）
+├── dist/                   ← package_site.py 产物（轻量站点 zip，gitignored）
+├── docs/                   ← 本文 + 新赛季接入 + 队徽指南 + 翻译指南 + 路线图 + 交接说明
+├── .github/                ← workflows（pages/release/codeql）+ dependabot.yml + Issue/PR 模板
 ├── pyproject.toml          ← 纯元数据（py-modules=[]，不打包任何模块）
 ├── requirements-build.txt  ← 构建依赖**唯一权威源**
 ├── .gitattributes          ← EOL 与二进制策略（保护 GBK 的 .bat）

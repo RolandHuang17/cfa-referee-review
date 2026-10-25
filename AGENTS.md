@@ -6,10 +6,11 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**十九个自包含 HTML 文件**（CSS/JS/数据全部内联）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（十五张入口卡片 + 浏览模式开关）
+核心交付物是 `site/` 下的**二十一个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+- `site/index.html` 门户首页（十六张入口卡片 + 浏览模式开关）
+- `site/search.html` 全站统一搜索（构建期内联 1500 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
-- `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点
+- `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点（顶部「趋势概览」构建期 SVG：逐期错漏判/VAR 错误趋势 + 教学分类×判定分布）
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
 - `site/scale.html` 官方统一判罚尺度宣讲（2024–2026 三季 104 例场景视频+判罚决定矩阵；2024 为第三代 EXE+XML 包，走 extract_season_2024 解析）
 - `site/uefa.html` 欧足联 Clear Line 判例库（中文译制+英文原文开关+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
@@ -21,9 +22,13 @@
 - `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档 YouTube 官方节目 + 乌克兰 UAF 文章型源，结构化期目索引 246 期：官方说明原文 + 中文译注层全覆盖，逐期跳官方页）
 - `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ + 8 个配套协议页 173 条款，中英原文开关）
 - `site/hns.html` 克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名逐判例「认定正确/错误」+ 每判例官方视频直链，判例级中文全译；收录随每周新轮自动生长）
-- `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题 + IFAB VAR 协议 12 题随机出卷：判罚决定/纪律处分/复核结论作答判分，协议题四选一判官方决定，错题本 localStorage 记忆错选，支持练习/考试两种模式与错题重练）
+- `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题 + IFAB VAR 协议 12 题随机出卷：判罚决定/纪律处分/复核结论作答判分，协议题四选一判官方决定，错题本 localStorage 记忆错选 + Leitner 间隔复习（0/1/3/7/14/30 天，答对晋级答错归零）+ Anki TSV 导出，支持练习/考试两种模式与错题重练）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
+
+**发现层/PWA（build_seo/build_feed/build_pwa 产物）**：每页 meta description/canonical/og/favicon（SVG data-URI）+ Atom 订阅 feed.xml（三赛季最新期目）+ sitemap.xml/robots.txt + 404.html；在线版注册 Service Worker（http(s)-only，file:// 不受影响；页面 network-first、静态资源 stale-while-revalidate、videos/ 与外域绝不缓存）。页面清单唯一权威源在 `scripts/lib/pages.py`（测试/sitemap/搜索同源消费）。
+
+**三方互链（data/xlinks.json 策表 + lib/xlinks.py 解析）**：10 教学分类 → 规则章节（rules.html#law-N）+ 尺度场景组（scale.html#s年-节-组）；season 页详情区渲染「关联规则/尺度场景」链接行并支持 `#cat-<分类id>` 深链；rules 页每章底部反链三季分类入口。引用失配在构建与 test_integrity 双拦。
 
 数据抓取与页面生成由 Python 脚本完成，可复用于后续赛季（管线已三赛季参数化）。
 
@@ -147,13 +152,21 @@ python scripts/build_ifab.py                  # 12.18 生成 ifab.html（ifab.js
 python scripts/fetch_hns.py [all]             # 12.19 (新轮发布时) 抓 HNS《Sudačka analiza》→ data/hns.json
                                               #     hns.family/hns/suci 栏目最新数篇 + SEED_IDS 历史种子，增量合并
 python scripts/build_hns.py                   # 12.20 生成 hns.html（hns.json + hns-zh.json 判例级译制层）
+python scripts/build_search.py                # 12.21 生成 search.html（全站统一搜索，~1500 份文档内联）
+python scripts/build_pwa.py                   # 12.22 生成 manifest.webmanifest + icon.svg + sw.js（在线版离线）
+python scripts/build_seo.py                   # 12.23 生成 sitemap.xml + robots.txt + 404.html（页面清单来自 lib/pages.py）
+python scripts/build_feed.py                  # 12.24 生成 feed.xml（Atom 订阅：三赛季各取最新 8 期）
 python scripts/build_portal.py                # 13. 生成门户 index.html
 python scripts/build_page.py                  # 14. 生成 season-2026/2025/2024.html（可带赛季参数）
-python scripts/build_stats.py                 # 15. 生成 stats-2026/2025/2024.html（可带赛季参数）
+python scripts/build_stats.py                 # 15. 生成 stats-2026/2025/2024.html（可带赛季参数，含趋势概览 SVG）
 python scripts/verify_videos.py [赛季]        # 辅助：视频完整性校验（大小 vs 服务器 HEAD）
+python scripts/validate_schemas.py            # 辅助：数据 JSON 契约校验（test_integrity 亦调用）
+python scripts/translation_status.py [-v]     # 辅助：各译文层覆盖率盘点（-v 逐条缺失）
+python scripts/package_site.py [版本]         # 辅助：轻量站点 zip 打包（release.yml 调用，剔除 videos/）
 python scripts/serve.py [端口]                # 本地预览服务（内部以绝对路径起 range_server.py，
                                               #     支持Range，视频可拖进度条）
-python tests/test_integrity.py                # 收尾：完整性断言（也可 python -m pytest tests/）
+python tests/test_integrity.py                # 收尾：完整性断言（也可 python -m pytest tests/，golden 解析器
+                                              #       测试在 tests/test_golden_parsers.py）
 ```
 
 ⚠️ 顺序要点：fix_issue27_merge 必须在 classify 之前（它拆分结构），classify 末尾含赛季特判（2025 第27期 #195 拆分校正、2026 #195 补全对阵）；漏掉任何一步都会导致统计错位。改了前面步骤后按序重跑，最后必须运行 `python scripts/build_all.py`。
@@ -264,6 +277,10 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 ### crest_overrides.json（人工队徽成果登记）
 - `{标准队名: {path, source_url, source_type, status}}`；generate_teams_catalog 重建时合并
 
+### xlinks.json（教学分类互链策表，人工维护）
+- `{note, category_names, law_of_category: {分类id: [laws.json 章节id]}, scale_groups_of_category: {分类id: [[年份, 组名]]}}`
+- `lib/xlinks.resolve()` 构建期解析为锚点链接（rules.html#章节id / scale.html#s年-节-组），引用失配抛 KeyError（构建失败）且 test_integrity 独立断言；season/rules 页消费
+
 ## 队徽体系（当前架构）
 
 操作流程与目检清单见 [docs/crest-guide.md](docs/crest-guide.md)，此处只留架构要点：
@@ -309,6 +326,8 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 6. **球队名归一是单点**：`scripts/lib/team_names.py` 的 `ALIASES`/`normalize_name`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；generate_teams_catalog 与 make_impact* 都从这里取，build_stats 构建时兜底再归一一次；impact/scores 里的队名必须是归一化后名字（test_integrity 强制）；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
 7. **两 URL 表同步**：fetch_issues.py 的 `ISSUES` 与 parse_issues.py 的 `ISSUE_URL` 是同一套 URL 的两份拷贝，加新期必须同步
 8. **expectation 断言**：`tests/test_integrity.py` 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
+8b. **cases-2025.json 含管线外人工数据**：seq11 对阵、19 处 comp、seq126/128/131 结论申诉引语、seq215 改判均非当前 parse 产物（历史精修）——**不要对 2025 重跑 parse→fix→classify 全链**（会静默覆盖丢失）；`tests/test_golden_parsers.py` 把这些字段钉死，覆盖即红。2024/2026 全链重跑已验证字节级幂等
+8c. **页面清单单源**：`scripts/lib/pages.py` 是全站页面清单唯一权威源（测试/sitemap/搜索/SEO 共用）；新增页面只改这里 + 对应 builder，不要在消费方复制清单
 9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。凡指向它的 `<video>` 或 `<a>` 必须带 `referrerpolicy="no-referrer"`（直链再加 `rel="noreferrer"`），否则轻量版直链与完整版在线回退全部失效
 
 ## 扩展任务指南
@@ -325,8 +344,13 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 ## AI 开发自验清单
 
 改动后依次验证（命令一律在仓库根执行）：
-- [ ] `python scripts/build_portal.py && python scripts/build_page.py && python scripts/build_stats.py && python scripts/build_rules.py` 无报错
-- [ ] `python tests/test_integrity.py` 通过（19页面/三赛季数据/impact一致性/页面-数据同步/考题池基准含 VAR 协议 12 题/weekly+hns+ifab 数据层/离线资源/内部链接/队徽目录）；或 `python -m pytest tests/ -q`
+- [ ] `python scripts/build_all.py` 无报错（改动任何 builder 后的全量重建入口）
+- [ ] `python -m pytest tests/ -q` 通过（integrity：21页面/三赛季数据/schema契约/互链策表/发现层/PWA/impact一致性/页面-数据同步/考题池基准/weekly+hns+ifab 数据层/离线资源/内部链接/队徽目录；golden：解析器结构坑 + 2025 人工数据锚点）；裸跑 `python tests/test_integrity.py` 等价
+- [ ] search.html：关键词（手球/越位/DOGSO/某队名）搜索命中、分组 chips 过滤、判例结果锚点直达 `#case-N`、规则结果直达 `#law-N`、`/` 聚焦
+- [ ] quiz.html：开始屏「复习到期」按钮显到期数、答对晋级/答错归零（错题本可见 N 天后复习）、「导出 Anki」产出 TSV 且 Anki 可导入（#separator:tab/#html:true 文件头）、其余原有清单项
+- [ ] season 页：详情「关联规则/尺度场景」链接行可跳转、`#cat-handball` 深链进入分类筛选、笔记 ⏱ 按钮插 [mm:ss] 且预览层点击跳画面、rules 页章节底部「相关判例分类」反链三季入口
+- [ ] stats 页：趋势概览两图渲染（柱/折线/堆叠条悬停有 title）、明暗主题下配色正常
+- [ ] PWA：http 服务下 SW 注册成功、二次访问断网可读已访问页面；file:// 双击无 SW 报错
 - [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
 - [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题；键盘操作（数字键 1-9 选答/Enter 提交翻题/Shift+Enter 上一题，考试模式无「跳过」且跳题不双计错次）、视频快捷键同判例页
 - [ ] 浏览器打开 index.html：门户十四张卡片数字正确、浏览模式分段开关与说明文字正确
@@ -353,6 +377,8 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 ## 已知不足（欢迎改进）
 
 - 2026 赛季进行中：持续跑 fetch→parse→classify→impact 增量更新；影响统计的 79 场比分已全量核验（2026-10-25，维基赛季条目赛果表+抽样交叉验证）；2024 第1期判例三（seq3）因原文未载明对阵与防守方无法归因受损队，未纳入影响统计（make_impact_2024.py UNATTRIBUTABLE 有注）；2025 seq215 红牌问题官方不予认定但黄牌认定明确，按合集口径计为漏判黄牌（ISSUE_NOTES 期31 有注）
+- search.html 索引内联 ~950KB（判例/规则/尺度全量 + 国际资料截断），中文子串线性扫描已够快；进一步瘦身可用前缀索引（见 docs/ROADMAP.md 候选）；PRO/HNS/CONMEBOL/RFEF 的国际资料条目无逐条锚点，搜索结果跳页面级
+- xlinks.json 的 dogso/sfp_vc/simulation/goal_decision 四类暂无专属尺度场景组（官方三季宣讲未单设），只链规则章节；官方增设后补策表即可
 - weekly.html 的中文译注层目前覆盖节目简介与各节目近期期目，其余回退官方原文说明（按 weekly-zh 增量补译）；英格兰《Mic'd Up》因官方发布形态分散（Sky 频道内短片、无完整播放列表）仅收录 3 期；YouTube 存量回补依赖页面 ytInitialData 结构，若其变更则仅影响回补通道（RSS 主通道不受影响）；ifab-zh.json 为 2026-10 首译，欢迎对照官方英文原文修订
 - 111 支标准队伍中 39 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽
 - 官方标题认定数与合集口径存在差异（漏判黄牌/低级别联赛/本轮中超口径），已在页面"说明"弹层按期注释（ISSUE_NOTES）

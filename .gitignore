@@ -20,3 +20,6 @@ __pycache__/
 .mimosa/
 .zcode/
 .zcodeignore
+
+# package_site.py 产物（本地打包 zip）
+dist/

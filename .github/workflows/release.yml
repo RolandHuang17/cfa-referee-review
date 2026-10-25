@@ -1,0 +1,45 @@
+name: Release
+
+# 打 tag（v*）即发版：构建 + 测试 + 打包轻量站点 zip 附到 GitHub Release。
+# 发版流程见 docs/add-new-season.md 与 AGENTS.md（赛季收尾打 tag，如 v2026.10.0）。
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install build dependencies
+        run: python -m pip install -r requirements-build.txt
+      - name: Lint
+        run: |
+          python -m pip install ruff
+          ruff check scripts tests
+          ruff format --check scripts tests
+      - name: Build static site
+        run: python scripts/build_all.py
+      - name: Verify project
+        run: python -m pytest tests/ -q
+      - name: Package lite site bundle
+        run: python scripts/package_site.py "${GITHUB_REF_NAME#v}"
+      - name: Create release with bundle
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          generate_release_notes: true
+          body: |
+            轻量站点包（不含视频与尺度海报，解压后双击 index.html 即可用；需要视频运行
+            `python scripts/download_videos_parallel.py <赛季>` 下载，尺度海报在
+            `python scripts/build_all.py` 后由原包复原）。
+            完整说明见 README。

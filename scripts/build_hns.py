@@ -234,9 +234,9 @@ def build_page(data, zh):
                 ".ccard",
                 filter_attr="data-verdict",
                 match="eq",
-                 search=True,
-                 group="ybody",
-             ),
+                search=True,
+                group="ybody",
+            ),
         )
         .replace("__N_ALL__", str(n_ok + n_bad + n_other))
         .replace("__N_OK__", str(n_ok))

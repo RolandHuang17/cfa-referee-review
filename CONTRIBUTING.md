@@ -2,6 +2,9 @@
 
 Issues and pull requests are welcome for data corrections, broken links,
 accessibility improvements, documentation, and build reproducibility.
+Translation contributions (UEFA/RFEF/CONMEBOL/weekly/IFAB/HNS Chinese layers)
+follow the workflow in [docs/translation-guide.md](docs/translation-guide.md) —
+run `python scripts/translation_status.py -v` to find gaps.
 
 ## Local setup
 

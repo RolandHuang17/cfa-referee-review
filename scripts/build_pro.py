@@ -169,9 +169,9 @@ def build_page(data):
                 ".acard",
                 filter_attr="data-kinds",
                 match="substr",
-                 search=True,
-                 group="ybody",
-             ),
+                search=True,
+                group="ybody",
+            ),
         )
         .replace("__N_ALL__", str(len(arts)))
         .replace("__N_IVR__", str(n["ivr"]))

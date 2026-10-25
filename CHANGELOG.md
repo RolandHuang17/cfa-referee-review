@@ -3,8 +3,35 @@
 本项目所有值得注意的变更都记录在此文件。
 
 格式遵循 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，版本号遵循
-[语义化版本](https://semver.org/lang/zh-CN/)。仓库尚未打过 tag，首次切分发布时会
-把 `Unreleased` 段落并入对应版本号并补上对比链接。
+[语义化版本](https://semver.org/lang/zh-CN/)。发版由 `.github/workflows/release.yml`
+自动化（打 `v*` tag 即构建+测试+打包轻量站点 zip 附到 GitHub Release）。
+
+## 2026-10-26（第二批：全量升级七批次）
+
+### 工程基建
+- **测试基建**：页面清单单一权威源 `scripts/lib/pages.py`（测试/sitemap/搜索同源）；`parse_issues.py` 抽出 `parse_issue()` 纯函数（2024/2026 全链重跑字节级幂等验证）；新增 `tests/test_golden_parsers.py`（结构坑期次归档 HTML 直测 + **2025 人工精修数据锚点**——重跑 parse 覆盖即红）；`schemas/` 四份数据契约 + `lib/jsonschema_lite.py` 迷你校验器挂进 CI；ruff 升级默认规则集 + `ruff format` 全量格式化（57 文件）；CI 改跑 pytest 全量 + format --check。
+- **解析器修复**：`video_urls` 按归一化 URL 去重（官方 HTML 同视频 http/https 各嵌一次，2025 第22期实测不去重会把 229 基准撑成 231）；`video_count` 改按去重口径。
+
+### 发现层（SEO/订阅/404/PWA）
+- 每页 meta description/canonical/og/twitter/favicon（SVG data-URI）；门户 WebSite+Dataset JSON-LD。
+- `sitemap.xml`（20 页）+ `robots.txt` + `404.html`（全主题五入口）+ **Atom `feed.xml`**（三赛季最新期目 24 条，链接直达官方文章）。
+- **PWA**：`manifest.webmanifest` + `icon.svg` + `sw.js`（页面 network-first / 静态 stale-while-revalidate / videos 与外域绝不缓存），在线版断网可读已访问页面；file:// 双击用法不受影响（http(s)-only 注册）。
+
+### 学习功能
+- **间隔复习（Leitner）**：错题本扩展 `{stage,due}`（0/1/3/7/14/30 天六档，答对晋级/答错归零/毕业标记已掌握，旧条目向后兼容），开始屏「复习到期」实时显数，错题本显示到期状态。
+- **Anki 导出**：一键 TSV（`#separator:tab`/`#html:true` 文件头，字段=题面/答案与认定原文/来源链接，Anki 2.1.55+ 直读）。
+- **时间戳笔记**：season 页 ⏱ 按钮取当前视频帧插 `[mm:ss]` 到光标；含时间戳的笔记渲染可点击预览层，点击 seek+播放；纯文本存储不变。
+
+### 互链与搜索
+- **三方互链**：`data/xlinks.json` 策表（10 教学分类 → 规则章节 + 尺度场景组）+ `lib/xlinks.py`（引用失配构建即败）；season 页详情「关联规则/尺度场景」链接行 + `#cat-<id>` 深链；rules 页每章「相关判例分类」三季反链。
+- **全站搜索 `search.html`**：1500 份可搜文档内联（判例 612 + 规则 25 章 + 尺度 104 + 国际资料 755，~950KB），中文子串匹配 + 四分组过滤 + 命中高亮摘录 + 锚点/官方外链直达；顶栏与门户入口。
+
+### 统计增强
+- stats 三页新增「趋势概览」：构建期零依赖 SVG——逐期错漏判柱状 + VAR 错误折线叠加（悬停明细）、教学分类×判定堆叠横条；CSS 变量配色，明暗/打印自适应。
+
+### 社区与发布
+- `release.yml`（tag v* 自动构建+测试+打包）+ `package_site.py`（轻量站点 zip，剔除 30GB 视频）；首个 Release v2026.10.0。Dependabot（pip+actions）与 CodeQL 工作流；GitHub Discussions 开启。
+- 新文档：`docs/translation-guide.md`（译文层贡献指南）+ `scripts/translation_status.py`（六层覆盖率盘点，当前 100%）、`docs/ROADMAP.md`、`docs/succession.md`（维护交接说明）、`README.en.md` 英文概览。
 
 ## 2026-10-26
 

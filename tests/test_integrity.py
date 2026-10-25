@@ -661,8 +661,12 @@ def test_pwa_offline_layer():
         problems.append("缺少 site/sw.js")
     else:
         text = sw.read_text(encoding="utf-8")
-        for token, what in (("/videos/", "跳过 videos"), ("navigate", "导航策略"),
-                            ("VERSION", "版本戳"), ("caches.delete", "旧缓存清理")):
+        for token, what in (
+            ("/videos/", "跳过 videos"),
+            ("navigate", "导航策略"),
+            ("VERSION", "版本戳"),
+            ("caches.delete", "旧缓存清理"),
+        ):
             if token not in text:
                 problems.append(f"sw.js 缺 {what}")
     mf = SITE / "manifest.webmanifest"

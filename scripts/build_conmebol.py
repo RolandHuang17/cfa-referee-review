@@ -217,9 +217,9 @@ def build_page(data, zh=None):
                 ".ccard",
                 filter_attr="data-kinds",
                 match="substr",
-                 search=True,
-                 group="ybody",
-             ),
+                search=True,
+                group="ybody",
+            ),
         )
         .replace("__N_ALL__", str(len(cases)))
         .replace("__COMP_CHIPS__", comp_chips)

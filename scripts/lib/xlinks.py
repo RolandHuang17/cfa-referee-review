@@ -10,6 +10,7 @@ scale.html#s<年>-<节序>-<组序>（build_scale 的组锚点，深链自动切
 引用失配（law id 不存在 / 组名在该年找不到）抛 KeyError——构建即失败，
 test_integrity 另有独立断言（不依赖页面构建路径）。
 """
+
 import json
 
 from lib.paths import DATA, LAWS_JSON, SCALE_JSON
@@ -23,8 +24,14 @@ def load_table():
 
 def resolve(table=None, laws=None, scale=None):
     table = table or load_table()
-    laws = laws if laws is not None else json.loads(LAWS_JSON.read_text(encoding="utf-8"))
-    scale = scale if scale is not None else json.loads(SCALE_JSON.read_text(encoding="utf-8"))
+    laws = (
+        laws if laws is not None else json.loads(LAWS_JSON.read_text(encoding="utf-8"))
+    )
+    scale = (
+        scale
+        if scale is not None
+        else json.loads(SCALE_JSON.read_text(encoding="utf-8"))
+    )
 
     law_titles = {s["id"]: s["title"] for s in laws.get("sections", [])}
 
@@ -45,11 +52,15 @@ def resolve(table=None, laws=None, scale=None):
         for lid in law_ids:
             if lid not in law_titles:
                 raise KeyError(f"xlinks: laws.json 无章节 {lid}")
-            laws_out.append({"id": lid, "title": law_titles[lid], "url": f"rules.html#{lid}"})
+            laws_out.append(
+                {"id": lid, "title": law_titles[lid], "url": f"rules.html#{lid}"}
+            )
             sections_to_cats.setdefault(lid, []).append(cat)
         scale_out = []
         for year, gname in table["scale_groups_of_category"].get(cat, []):
             anchor, n = scale_anchor(year, gname)
-            scale_out.append({"label": f"{year}·{gname}（{n}例）", "url": f"scale.html#{anchor}"})
+            scale_out.append(
+                {"label": f"{year}·{gname}（{n}例）", "url": f"scale.html#{anchor}"}
+            )
         by_category[cat] = {"laws": laws_out, "scale": scale_out}
     return by_category, sections_to_cats

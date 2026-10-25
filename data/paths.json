@@ -1,0 +1,9 @@
+{
+  "note": "学习路径策表：build_page.py 按规则在每赛季数据上确定性求出判例 seq 清单（选中路径=列表按该集合过滤）。rule.type ∈ cat_top（每分类取典型 N 例，优先错漏判且有视频，按期数升序）/ category（单一分类取 N 例）/ recent_wrong（最近各期错漏判 N 例）。改规则或新增路径只改本文件。",
+  "paths": [
+    {"id": "rookie", "name": "新人精选", "desc": "每个教学分类精选 5 个典型判例（优先错漏判），适合第一周建立尺度锚点", "rule": {"type": "cat_top", "n": 5}},
+    {"id": "handball", "name": "手球专项", "desc": "手球分类 20 例：从意外触球到不自然扩大，集中突破最难的尺度", "rule": {"type": "category", "cat": "handball", "n": 20}},
+    {"id": "penalty", "name": "罚球区专项", "desc": "罚球区内判罚（点球相关）20 例", "rule": {"type": "category", "cat": "penalty_area", "n": 20}},
+    {"id": "sprint", "name": "考前冲刺", "desc": "最近各期的错漏判 30 例——考前用最新尺度自测", "rule": {"type": "recent_wrong", "n": 30}}
+  ]
+}

@@ -119,6 +119,44 @@ ISSUE_NOTES = {
 VERDICT_NAME = {"wrong": "错漏判", "correct": "支持原判", "pending": "不予认定"}
 # 教学分类 ↔ 规则章节 ↔ 尺度场景 互链（data/xlinks.json 策表解析产物，三季共用）
 XLINKS, _ = resolve_xlinks()
+
+
+def build_paths(raw_cases):
+    """学习路径（data/paths.json 规则 → 本赛季 seq 清单，确定性求值）。
+
+    cat_top: 每分类取 n 例（优先错漏判且有认定原文，按期数升序——早期判例更典型）；
+    category: 单分类取 n 例；recent_wrong: 最近各期错漏判 n 例。"""
+    rules = json.loads((DATA / "paths.json").read_text(encoding="utf-8"))["paths"]
+    eligible = [
+        c
+        for c in raw_cases
+        if c.get("video_files") and (c.get("conclusion") or "").strip()
+    ]
+    out = []
+    for p in rules:
+        rule, seqs = p["rule"], []
+        if rule["type"] == "cat_top":
+            for k, _n, _ic in CATEGORY_ORDER:
+                pool = [c for c in eligible if c["category"] == k]
+                pool.sort(
+                    key=lambda c: (c["referee_verdict"] != "wrong", c["issue"], c["no"])
+                )
+                seqs += [c["seq"] for c in pool[: rule["n"]]]
+        elif rule["type"] == "category":
+            pool = [c for c in eligible if c["category"] == rule["cat"]]
+            pool.sort(key=lambda c: (c["issue"], c["no"]))
+            seqs = [c["seq"] for c in pool[: rule["n"]]]
+        elif rule["type"] == "recent_wrong":
+            pool = [c for c in eligible if c["referee_verdict"] == "wrong"]
+            pool.sort(key=lambda c: (-c["issue"], c["no"]))
+            seqs = [c["seq"] for c in pool[: rule["n"]]]
+        if seqs:
+            out.append(
+                {"id": p["id"], "name": p["name"], "desc": p["desc"], "seqs": seqs}
+            )
+    return out
+
+
 VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
@@ -190,6 +228,7 @@ def build_data(season):
         "meta": {"n_cases": len(cases), "n_issues": len(issues)},
         "cases": cases,
         "issues": issues,
+        "paths": build_paths(data["cases"]),
         "crests": {},
         "teams": teams,
         "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
@@ -455,6 +494,27 @@ html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
   .d-video video{max-height:44vh}
   #issueList{grid-template-columns:repeat(5,1fr)}
 }
+/* 视频操作行（帧截图/放映；轻量版隐藏） */
+.v-acts{display:flex;gap:8px;margin:8px 0 0;max-width:960px}
+html[data-lite] .v-acts{display:none}
+/* 挑战模式横幅 */
+.ch-bar{position:fixed;left:50%;transform:translateX(-50%);bottom:18px;z-index:60;
+  display:flex;align-items:center;gap:10px;padding:10px 18px;border:1px solid var(--brand);
+  border-radius:999px;background:var(--card);box-shadow:var(--shadow);font-size:13px}
+.ch-bar span{color:var(--ink2)}
+.ch-bar b{color:var(--brand)}
+/* 放映模式覆盖层 */
+.present{position:fixed;inset:0;z-index:100;background:#0c0a08;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:14px;padding:24px}
+.present .pr-stage{width:min(96vw,1200px);display:flex;justify-content:center}
+.present .pr-stage video{width:100%;max-height:66vh;background:#000;border-radius:8px}
+.present .pr-title{color:#f3ead9;font-size:20px;font-weight:600;text-align:center}
+.present .pr-ans{max-width:900px;color:#e8ddc8;font-size:16px;line-height:1.9;text-align:center;
+  padding:0 16px;transition:opacity .2s}
+.present .pr-ans.hidden{visibility:hidden}
+.present .pr-hint{color:#8d8677;font-size:12.5px}
+.present .pr-exit{position:absolute;top:18px;right:18px}
+@media print{.present,.ch-bar,.v-acts{display:none !important}}
 </style>
 </head>
 <body class="page-season">
@@ -465,6 +525,8 @@ __TOPBAR__
 
   <aside class="sidebar" id="sidebar" aria-label="筛选侧栏">
     <div class="side-scroll">
+      <h3 class="side-h">学习路径</h3>
+      <div id="pathList"></div>
       <h3 class="side-h">判定</h3>
       <div id="verList"></div>
       <h3 class="side-h">我的收藏</h3>
@@ -490,6 +552,7 @@ __TOPBAR__
     <div class="plist-head">
       <div class="iss" id="issueTitle"></div>
       <button class="resume" id="resumeBtn" style="display:none"></button>
+      <button class="resume" id="pathBar" style="display:none"></button>
       <div class="cnt">显示 <b id="shownCount">0</b> 例 · 已学 <b id="seenCount">0</b>/<span id="totalCount">0</span> · 点击行查看详情 · <span class="kbd">↑</span><span class="kbd">↓</span> 切换 · <span class="kbd">/</span> 搜索</div>
     </div>
     <div class="plist-rows" id="plistRows"></div>
@@ -504,6 +567,10 @@ __TOPBAR__
       <div class="vfail-tip" id="vfailTip"></div>
       <div class="d-video"><div class="vkey-tip" id="vkeyTip"></div><video id="dvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"></video></div>
       <div class="vsw-row" id="vswRow" style="display:none"></div>
+      <div class="v-acts">
+        <button class="btn" id="btnShot" title="导出当前画面为图片（含判例编号与认定水印）">📸 帧截图</button>
+        <button class="btn" id="btnPresent" title="放映模式：大屏视频 + 按键揭示认定，讲师投影用">⛶ 放映</button>
+      </div>
       <p class="d-note" id="dNote"></p>
       <p class="d-note vhint" id="vHint">⌨ <span class="kbd">←</span><span class="kbd">→</span> 5秒 · <span class="kbd">,</span><span class="kbd">.</span> 逐帧 · <span class="kbd">R</span> 循环 · <span class="kbd">[</span><span class="kbd">]</span> 倍速</p>
       <div class="txt" id="dText"></div>
@@ -555,6 +622,22 @@ __TOPBAR__
 </div>
 
 <button class="top-btn" id="btnTop">__I_UP__ 回到顶部</button>
+
+<!-- 挑战模式横幅（?case=N&hideans=1 进入，仅本会话生效） -->
+<div class="ch-bar" id="chBar" style="display:none">
+  <span>🎯 <b>挑战模式</b>——来自队友的判罚挑战：先看视频自己判断，再点「显示本题答案」。</span>
+  <button class="btn" id="btnChCopy">复制挑战链接</button>
+  <button class="btn" id="btnChExit">退出挑战</button>
+</div>
+
+<!-- 放映模式覆盖层（讲师投影：复用唯一 #dvid，退出时归位） -->
+<div class="present" id="presentLayer" style="display:none">
+  <div class="pr-stage" id="prStage"></div>
+  <div class="pr-title" id="prTitle"></div>
+  <div class="pr-ans" id="prAns"></div>
+  <div class="pr-hint">↑↓ 上一例/下一例 · 空格 播放/暂停 · <span class="kbd">Enter</span> 揭示/收起认定 · <span class="kbd">Esc</span> 退出放映</div>
+  <button class="btn pr-exit" id="prExit">退出放映</button>
+</div>
 
 <script>
 const DATA = __DATA__;
@@ -664,7 +747,21 @@ document.getElementById("verList").innerHTML =
 
 // ---------- 状态与筛选 ----------
 const state = {cat:"", v:"", issue:"", q:"", sel:null, vIdx:0, fav:null,
-               comp:"", team:""};
+               comp:"", team:"", path:null};
+// 学习路径（DATA.paths 构建期由 data/paths.json 规则确定性求出）
+const PATH_SETS = {};
+(DATA.paths||[]).forEach(p => PATH_SETS[p.id] = new Set(p.seqs));
+function renderPaths(){
+  document.getElementById("pathList").innerHTML = (DATA.paths||[]).map(p=>
+    `<button class="cat-item ${state.path===p.id?"on":""}" data-path="${p.id}" title="${esc(p.desc)}">` +
+    `<span class="nm">${esc(p.name)}</span><b>${p.seqs.length}</b></button>`).join("");
+}
+document.getElementById("pathList").addEventListener("click", e=>{
+  const b = e.target.closest("[data-path]"); if (!b) return;
+  state.path = state.path === b.dataset.path ? null : b.dataset.path;
+  renderPaths();
+  applyFilter();
+});
 const fSearch = document.getElementById("fSearch");
 
 const COMP_ORDER = [["中超联赛","中超"],["中甲联赛","中甲"],["中乙联赛","中乙"],
@@ -685,6 +782,7 @@ function teamBadge(t){
 function baseMatch(c, skip){
   skip = Array.isArray(skip) ? skip : (skip ? [skip] : []);
   const sk = k => skip.includes(k);
+  if (!sk("path") && state.path && !PATH_SETS[state.path].has(c.seq)) return false;
   if (!sk("cat") && state.cat && c.category!==state.cat) return false;
   if (!sk("v") && state.v && c.v!==state.v) return false;
   if (!sk("issue") && state.issue && String(c.issue)!==state.issue) return false;
@@ -742,6 +840,14 @@ function renderList(){
     issueTitle.innerHTML = "";
   }
   document.getElementById("shownCount").textContent = list.length;
+  { // 学习路径横幅：显示当前路径并可一键清除
+    const pb = document.getElementById("pathBar");
+    const p = (DATA.paths||[]).find(x=>x.id===state.path);
+    if (p){
+      pb.innerHTML = `🗺 学习路径：${esc(p.name)}（本季 ${PATH_SETS[p.id].size} 例）<b style="margin-left:6px">✕ 清除</b>`;
+      pb.style.display = "";
+    } else pb.style.display = "none";
+  }
   const groups = {};
   list.forEach(c => (groups[c.category] = groups[c.category]||[]).push(c));
   let ri = 0;
@@ -1024,6 +1130,8 @@ function select(seq, scrollRow=true){
   // 学习足迹：看过即记 + 记录「上次学习」供继续入口
   markSeen(seq);
   try { localStorage.setItem(LAST_KEY, JSON.stringify({seq, ts: Date.now()})); } catch(_) {}
+  // 放映模式跟随切题（视频 src 已由上方逻辑更新）
+  if (presentOn){ prRevealed = false; presentRefresh(); }
   // 详情内容淡入重触发（opacity-only，滚动容器上不用 transform 以免影响内部定位）
   const dsec = document.getElementById("detail");
   dsec.classList.remove("d-enter"); void dsec.offsetWidth; dsec.classList.add("d-enter");
@@ -1292,11 +1400,103 @@ document.querySelectorAll(".modal-mask").forEach(m=>
   m.addEventListener("click", e=>{ if(e.target===m) m.classList.remove("open"); }));
 function openModal(id){ document.getElementById(id).classList.add("open"); }
 
+// ---------- 放映模式（讲师投影）：复用唯一 .d-video 节点，退出时精确归位 ----------
+let presentOn = false, prRevealed = false, prParent = null, prNext = null;
+function presentRefresh(){
+  const c = bySeq[state.sel];
+  if (!c || !presentOn) return;
+  document.getElementById("prTitle").textContent =
+    `${c.comp}${c.round||""} · ${c.home} vs ${c.away}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no}`;
+  const ans = document.getElementById("prAns");
+  ans.textContent = `${VN[c.v]}——${c.conclusion.replace(/^对于此判[例罚]，评议组[^：]*认为：/,"").trim()}`;
+  ans.classList.toggle("hidden", !prRevealed);
+}
+function openPresent(){
+  if (LITE){ vkeyTip("轻量版无视频窗口，切回完整版可用"); return; }
+  const c = bySeq[state.sel];
+  if (!c || !hasVideos(c)){ vkeyTip("当前判例无视频"); return; }
+  presentOn = true; prRevealed = false;
+  const wrap = document.querySelector(".d-video");
+  prParent = wrap.parentNode; prNext = wrap.nextSibling;
+  document.getElementById("prStage").appendChild(wrap);
+  document.getElementById("presentLayer").style.display = "";
+  presentRefresh();
+  try { document.getElementById("dvid").play(); } catch(_) {}
+}
+function closePresent(){
+  if (!presentOn) return;
+  presentOn = false;
+  document.getElementById("presentLayer").style.display = "none";
+  const wrap = document.querySelector(".d-video");
+  if (prParent) prParent.insertBefore(wrap, prNext);
+}
+document.getElementById("btnPresent").onclick = openPresent;
+document.getElementById("prExit").onclick = closePresent;
+
+// ---------- 帧截图导出（本地视频可导出；在线直链跨域污染 canvas 时优雅降级） ----------
+document.getElementById("btnShot").onclick = ()=>{
+  const v = document.getElementById("dvid");
+  const c = bySeq[state.sel];
+  if (!v || !v.videoWidth || !v.currentSrc){ vkeyTip("先播放视频再截图"); return; }
+  try {
+    const cv = document.createElement("canvas");
+    cv.width = v.videoWidth; cv.height = v.videoHeight;
+    const ctx = cv.getContext("2d");
+    ctx.drawImage(v, 0, 0);
+    const bh = Math.max(36, Math.round(cv.height * 0.09));
+    ctx.fillStyle = "rgba(10,8,6,.75)";
+    ctx.fillRect(0, cv.height - bh, cv.width, bh);
+    ctx.fillStyle = "#f7f2e7";
+    ctx.font = `${Math.max(16, Math.round(cv.height * 0.042))}px sans-serif`;
+    const info = `第${c.issue}期-判例${c.no} · ${c.home} vs ${c.away} · ${VN[c.v]} · 裁判学习平台`;
+    ctx.fillText(info, Math.round(cv.width * 0.02), cv.height - bh / 2 + 6);
+    const a = document.createElement("a");
+    a.href = cv.toDataURL("image/png");
+    a.download = `判例${c.seq}-${c.home}vs${c.away}.png`;
+    a.click();
+    vkeyTip("截图已导出");
+  } catch(err){
+    vkeyTip("在线直链模式无法截图（跨域限制），本地视频可用");
+  }
+};
+
+// ---------- 挑战模式（?case=N&hideans=1：仅本会话隐藏答案，不写 localStorage） ----------
+let CHALLENGE = false;
+{
+  const up = new URLSearchParams(location.search);
+  if (up.get("hideans") === "1"){
+    CHALLENGE = true;
+    document.documentElement.dataset.hideans = "1";
+    const bar = document.getElementById("chBar");
+    bar.style.display = "";
+    document.getElementById("btnChCopy").onclick = ()=>{
+      const url = location.origin !== "null"
+        ? `${location.origin}${location.pathname}?case=${state.sel}&hideans=1`
+        : `${location.href.split("?")[0]}?case=${state.sel}&hideans=1`;
+      const done = ()=>alert("挑战链接已复制——发给队友，打开即进入本判例的隐藏答案模式。");
+      if (navigator.clipboard && navigator.clipboard.writeText)
+        navigator.clipboard.writeText(url).then(done, ()=>{ prompt("复制此挑战链接：", url); });
+      else prompt("复制此挑战链接：", url);
+    };
+    document.getElementById("btnChExit").onclick = ()=>{
+      CHALLENGE = false;
+      document.documentElement.removeAttribute("data-hideans");
+      bar.style.display = "none";
+    };
+  }
+}
+
 document.addEventListener("keydown", e=>{
   const tag = (e.target.tagName||"").toLowerCase();
   if (tag==="input"||tag==="select"||tag==="textarea") {
     if (e.key==="Escape") e.target.blur();
     return;
+  }
+  // 放映模式快捷键：空格 播放/暂停 · Enter 揭示/收起认定 · Esc 退出（↑↓ 沿用下方通用导航）
+  if (presentOn){
+    if (e.key===" "){ e.preventDefault(); const pv=document.getElementById("dvid"); if(pv){ try{ pv.paused?pv.play():pv.pause(); }catch(_){} } return; }
+    if (e.key==="Enter"){ e.preventDefault(); prRevealed=!prRevealed; presentRefresh(); return; }
+    if (e.key==="Escape"){ closePresent(); return; }
   }
   if (e.key==="/"){ e.preventDefault(); fSearch.focus(); return; }
   // 视频复盘快捷键（完整版且当前判例有视频）：←→ ±5s，, . 逐帧(1/25s)，R 循环，[ ] 倍速
@@ -1361,8 +1561,14 @@ const hasPen = t => (t||[]).includes("点球");
 // ---------- 初始化 ----------
 syncEmptyState();
 streakTouch();
+renderPaths();
 document.getElementById("totalCount").textContent = DATA.cases.length;
 document.getElementById("seenCount").textContent = Object.keys(seen).length;
+{ // 挑战模式 ?case=N 与锚点 #case-N 同为深链目标
+  const up = new URLSearchParams(location.search);
+  const chCase = up.get("case");
+  if (chCase && bySeq[+chCase] && !initialHashSeq) window.initialTargetSeq = +chCase;
+}
 { // 继续上次学习（无锚点深链时显示；从 localStorage 上次选中恢复）
   try {
     const last = JSON.parse(localStorage.getItem(LAST_KEY) || "null");
@@ -1386,13 +1592,15 @@ document.getElementById("seenCount").textContent = Object.keys(seen).length;
   }
 }
 applyFilter();
-{ // 支持 #case-N 锚点（来自 stats.html 的跳转或刷新恢复）
-  const target = initialHashSeq ? bySeq[+initialHashSeq] : null;
+{ // 支持 #case-N 锚点与 ?case=N 挑战深链（来自 stats.html / 挑战链接）
+  const targetSeq = initialHashSeq || window.initialTargetSeq || null;
+  const target = targetSeq ? bySeq[+targetSeq] : null;
   if (target && !visibleCases().some(x=>x.seq===target.seq)) {
     // 目标判例被当前筛选挡住时，清空各筛选（锚点跳转优先）
     state.cat = target.category; state.v = ""; state.issue = ""; state.q = "";
-    state.comp = ""; state.team = "";
+    state.comp = ""; state.team = ""; state.path = null;
     fSearch.value = "";
+    renderPaths();
     document.querySelectorAll(".cat-item").forEach(x=>
       x.classList.toggle("on", x.dataset.cat===target.category));
     document.querySelectorAll(".ver-item").forEach(x=>

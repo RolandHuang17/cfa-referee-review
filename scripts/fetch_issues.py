@@ -37,6 +37,7 @@ ISSUES = {
         20: ("/cppy/20260909/38123.html", "2026-09-09"),
         21: ("/cppy/20260916/38169.html", "2026-09-16"),
         22: ("/cppy/20260923/38210.html", "2026-09-23"),
+        23: ("/cppy/20261014/38283.html", "2026-10-14"),
     },
     "2025": {
         1: ("/zyls1/20250227/35667.html", "2025-02-27"),
@@ -109,10 +110,12 @@ def strip_tags(html: str) -> str:
 
 
 def main():
+    from lib.paths import ISSUES as ISSUES_DIR
+
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
     issues = ISSUES[season]
     only = [int(x) for x in sys.argv[2:]] or sorted(issues)
-    outdir = ISSUES / season
+    outdir = ISSUES_DIR / season
     outdir.mkdir(parents=True, exist_ok=True)
     fails = []
     for n in only:

@@ -47,6 +47,7 @@ ISSUE_URL = {
         20: "https://www.thecfa.cn/cppy/20260909/38123.html",
         21: "https://www.thecfa.cn/cppy/20260916/38169.html",
         22: "https://www.thecfa.cn/cppy/20260923/38210.html",
+        23: "https://www.thecfa.cn/cppy/20261014/38283.html",
     },
     "2025": {
         1: "https://www.thecfa.cn/zyls1/20250227/35667.html",

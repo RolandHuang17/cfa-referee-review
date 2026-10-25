@@ -690,6 +690,40 @@ def test_seo_discovery_layer():
     print("发现层校验通过: meta/sitemap/robots/feed")
 
 
+def test_learning_features_data():
+    """学习功能数据策表：cheatsheet 卡结构 / paths 规则类型 / paths 求值非空。"""
+    problems = []
+    cs = json.loads((DATA / "cheatsheet.json").read_text(encoding="utf-8"))
+    if len(cs.get("cards", [])) < 6:
+        problems.append(f"cheatsheet 卡数过少: {len(cs.get('cards', []))}")
+    for card in cs.get("cards", []):
+        where = f"cheatsheet {card.get('id')}"
+        if not (card.get("front") and card.get("back")):
+            problems.append(f"{where} 缺 front/back")
+        for sec in card.get("back", []):
+            if not (sec.get("h") and sec.get("items")):
+                problems.append(f"{where} back 小节缺 h/items")
+    paths = json.loads((DATA / "paths.json").read_text(encoding="utf-8"))["paths"]
+    valid_types = {"cat_top", "category", "recent_wrong"}
+    for p in paths:
+        if p["rule"]["type"] not in valid_types:
+            problems.append(f"paths {p['id']} 规则类型未知: {p['rule']['type']}")
+    # 构建期求值非空（镜像 build_page.build_paths 的关键路径）
+    for season in SEASONS:
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+        rookie = next((p for p in paths if p["id"] == "rookie"), None)
+        if rookie:
+            n = sum(
+                1
+                for c in data["cases"]
+                if c.get("video_files") and (c.get("conclusion") or "").strip()
+            )
+            if n and season == "2026" and n < 50:
+                problems.append(f"{season} 可用判例过少，rookie 路径可能为空")
+    _finish(problems)
+    print(f"学习功能策表校验通过: {len(cs['cards'])} 张速查卡 / {len(paths)} 条路径")
+
+
 def test_pwa_offline_layer():
     """PWA 离线层：sw.js/manifest/icon 存在且策略正确；每页有注册片段与 manifest 链接。"""
     problems = []
@@ -757,6 +791,7 @@ CHECKS = [
     test_uefa_rfef_conmebol_zh_aligned,
     test_data_conform_to_schemas,
     test_xlinks_references_resolve,
+    test_learning_features_data,
     test_seo_discovery_layer,
     test_pwa_offline_layer,
     test_bat_file_gbk_encoded,

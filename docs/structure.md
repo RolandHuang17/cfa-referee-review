@@ -64,6 +64,7 @@
 │   │   └── classify_cls_{2024,2026}.py ← 纯数据分类表（无 I/O、无 __main__）
 │   └── build_all.py        ← 一键重建全站
 ├── schemas/                ← 核心数据 JSON Schema 契约（validate_schemas.py 校验，可对外发布）
+├── data/theory-questions.json / cheatsheet.json / paths.json ← 人工策表（理论题库/速查卡/学习路径）
 ├── tests/                  ← test_integrity.py（完整性断言）+ test_golden_parsers.py（解析器 golden + 2025 人工数据锚点）
 ├── dist/                   ← package_site.py 产物（轻量站点 zip，gitignored）
 ├── docs/                   ← 本文 + 新赛季接入 + 队徽指南 + 翻译指南 + 路线图 + 交接说明

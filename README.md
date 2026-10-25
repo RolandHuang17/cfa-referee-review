@@ -8,7 +8,7 @@
 
 **国际板块**（八个页面，全球官方评议源的中文一站式导航与译制）：**IFAB VAR 协议**（ifab.html，官方协议全文 + 12 条 FAQ + 8 篇配套协议中文译制，中英对照）、**西班牙 RFEF 判罚手册**（rfef.html，《Criterios Arbitrales》中文译制 + 169 段判例视频）、**美国 PRO 评议**（pro.html，MLS/NWSL 周更 VAR 评析 207 篇全量索引 + USSF 指南）、**克罗地亚 HNS 逐轮判例**（hns.html，逐判例「认定正确/错误」+ 官方视频）、**南美 CONMEBOL VAR 判例**（conmebol.html，60 案 + 情境中文译制）、**全球周更评议节目库**（weekly.html，七档官方节目 246 期结构化索引 + 中文译注）、**UEFA RAP 训练包导航**（rap.html）与**全球评议资源导航**（intl.html，23 项官方资源入口）。
 
-并提供**考题模式**（quiz.html，701 道题随机出卷：三赛季判例 592 题 + 统一尺度场景 97 题 + IFAB VAR 协议 12 题；判罚决定/红黄牌/复核结论作答判分，错题本记忆错选、Leitner 间隔复习（答对晋级拉长间隔）与 Anki TSV 导出）。另有**全站搜索**（search.html，一次搜遍 612 个判例、规则全文、尺度场景与全部国际资料）。
+并提供**考题模式**（quiz.html，793 道题四题源随机出卷：三赛季判例 592 + 统一尺度场景 97 + IFAB VAR 协议 12 + 规则理论 92；限时模考（倒计时/及格线/历史成绩）、Leitner 间隔复习、逐题作答历史的分类薄弱点雷达与 Anki TSV 导出）与**考点速查卡**（cheatsheet.html，八张考前速记翻卡，打印即讲义）。首页有**今日判例**与「我的学习」打卡卡（学习足迹/连续天数/到期复习），判例页支持学习路径（新人精选/专项/考前冲刺）、挑战链接、放映模式与视频帧截图。另有**全站搜索**（search.html，一次搜遍 612 个判例、规则全文、尺度场景与全部国际资料）。
 
 在线版本：<https://rolandhuang17.github.io/cfa-referee-review/>
 · 更新订阅（Atom）：<https://rolandhuang17.github.io/cfa-referee-review/feed.xml>（在线版支持 PWA，断网可浏览已访问页面）
@@ -68,7 +68,8 @@
 项目根目录/
 ├── site/               ← 生成后的离线站点与 GitHub Pages 发布目录（勿手改）
 │   ├── index.html      ← 门户首页
-│   ├── search.html     ← 全站统一搜索（判例/规则/尺度/国际资料一次搜遍）
+│   ├── search.html     ← 全站统一搜索（判例/规则/尺度/速查卡/国际资料一次搜遍，支持 ?q= 深链）
+│   ├── cheatsheet.html ← 考点速查卡（八张翻卡，打印即讲义）
 │   ├── season-*.html   ← 三赛季判例合集
 │   ├── stats-*.html    ← 三赛季得失盘点（顶部含趋势概览图表）
 │   ├── rules.html      ← 竞赛规则与学习标注

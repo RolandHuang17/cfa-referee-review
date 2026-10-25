@@ -6,7 +6,7 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收22期225判例224视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**二十一个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+核心交付物是 `site/` 下的**二十二个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（十六张入口卡片 + 浏览模式开关）
 - `site/search.html` 全站统一搜索（构建期内联 1500 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
@@ -22,7 +22,8 @@
 - `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档 YouTube 官方节目 + 乌克兰 UAF 文章型源，结构化期目索引 246 期：官方说明原文 + 中文译注层全覆盖，逐期跳官方页）
 - `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ + 8 个配套协议页 173 条款，中英原文开关）
 - `site/hns.html` 克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名逐判例「认定正确/错误」+ 每判例官方视频直链，判例级中文全译；收录随每周新轮自动生长）
-- `site/quiz.html` 考题模式（三赛季判例 592 题 + 统一尺度场景 97 题 + IFAB VAR 协议 12 题随机出卷：判罚决定/纪律处分/复核结论作答判分，协议题四选一判官方决定，错题本 localStorage 记忆错选 + Leitner 间隔复习（0/1/3/7/14/30 天，答对晋级答错归零）+ Anki TSV 导出，支持练习/考试两种模式与错题重练）
+- `site/quiz.html` 考题模式（793 题四题源随机出卷：三赛季判例 592 + 统一尺度场景 97 + IFAB VAR 协议 12 + 规则理论 92——理论题全部从 laws.json 条文撰写并附出处引文，选项按次打乱）：判罚决定/纪律处分/复核结论作答判分；错题本 + Leitner 间隔复习 + Anki TSV 导出；限时模考（75s/120s 每题倒计时、超时自动交卷、及格线 90%、历史成绩）；逐题作答历史 + 10 分类正确率雷达薄弱点分析
+- `site/cheatsheet.html` 考点速查卡（八张：手球考量链/犯规三档/DOGSO·SPA/VAR 介入/红黄牌速查/点球程序/越位三步/重新开始方式——卡面速记+翻面细则，手机 3D 翻卡 + 打印单页讲义；data/cheatsheet.json 策表）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -152,6 +153,7 @@ python scripts/build_ifab.py                  # 12.18 生成 ifab.html（ifab.js
 python scripts/fetch_hns.py [all]             # 12.19 (新轮发布时) 抓 HNS《Sudačka analiza》→ data/hns.json
                                               #     hns.family/hns/suci 栏目最新数篇 + SEED_IDS 历史种子，增量合并
 python scripts/build_hns.py                   # 12.20 生成 hns.html（hns.json + hns-zh.json 判例级译制层）
+python scripts/build_cheatsheet.py            # 12.20b 生成 cheatsheet.html（data/cheatsheet.json 策表 → 翻卡+打印讲义）
 python scripts/build_search.py                # 12.21 生成 search.html（全站统一搜索，~1500 份文档内联）
 python scripts/build_pwa.py                   # 12.22 生成 manifest.webmanifest + icon.svg + sw.js（在线版离线）
 python scripts/build_seo.py                   # 12.23 生成 sitemap.xml + robots.txt + 404.html（页面清单来自 lib/pages.py）
@@ -212,7 +214,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - `{version, rLabels, cLabels, answers: {"{season}-{seq}": {r?, c?, auto, reviewed, conf?}}}`——r=判罚决定（playon/directfk/indirectfk/penalty/retake/goal_valid/goal_invalid），c=纪律处分（none/yellow/red）
 - 由脚本对认定原文按句极性起草（auto=true），**人工校对后 reviewed 才为 true**；`scripts/build_quiz.py` 只对 reviewed 条目出「判罚决定/纪律处分」两问，未复核题只出「复核结论」一问
 - 校对工作流：`gen_quiz_answers.py` 生成 `data/local/quiz-review/review.tsv` 全量对照表 → 人工复核写 `approved.txt`（认可）/`overrides.tsv`（修正，r/c 为 "-" 表示删除该轴）→ `gen_quiz_answers.py --apply-review` 回写；`--recheck` 只重建未 reviewed 条目，`--approve-high` 批量认可 high 条目
-- 错题本键 `cfa.quiz.wrong`（quiz 页 localStorage）：`{key: {t, s, your(上次错选), correct, star, wrong, last, done}}`
+- 错题本键 `cfa.quiz.wrong`（quiz 页 localStorage）：`{key: {t, s, your(上次错选), correct, star, wrong, last, done, stage(Leitner 档), due(到期时间戳)}}`；作答历史 `cfa.quiz.stats`（{key:{r,w}} 对错都记，雷达分析用）；考试历史 `cfa.quiz.history`（最近 20 次）
 
 ### uefa-zh.json（UEFA 判例中文译制层，与 uefa.json 并存，提交进仓库）
 - `{note, translated, terms{英:中译名表}, groups: {组key: {intro, criteria: [{h, items[]}]}}, items: {判例id: {title}}}`——只存译文，不存链接等英文数据
@@ -281,6 +283,17 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - `{note, category_names, law_of_category: {分类id: [laws.json 章节id]}, scale_groups_of_category: {分类id: [[年份, 组名]]}}`
 - `lib/xlinks.resolve()` 构建期解析为锚点链接（rules.html#章节id / scale.html#s年-节-组），引用失配抛 KeyError（构建失败）且 test_integrity 独立断言；season/rules 页消费
 
+### theory-questions.json（规则理论题库，人工撰写提交）
+- `{note, source, questions[]}`；question：`{id(t1…), q, opts[4], ans, law(laws.json 章节id), src(条文出处引文——必填，test_integrity 强制)}`
+- 题目必须对照 laws.json 原文撰写（页面端选项按次打乱，题库文件中正确项恒在首位 ans=0）
+
+### cheatsheet.json（考点速查卡策表，人工维护）
+- `{cards[]}`；card：`{id, icon, title, tagline, front[速记点], back[{h, items[]}]}`；重跑 build_cheatsheet.py 生效
+
+### paths.json（学习路径规则，人工维护）
+- `{paths[]}`；path：`{id, name, desc, rule:{type: cat_top|category|recent_wrong, n, cat?}}`
+- build_page.build_paths() 构建期在本赛季数据上确定性求值 → DATA.paths（seq 清单），侧栏载入即按集合筛选
+
 ## 队徽体系（当前架构）
 
 操作流程与目检清单见 [docs/crest-guide.md](docs/crest-guide.md)，此处只留架构要点：
@@ -302,6 +315,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - 筛选统一走 `visibleCases()` → `renderList()` → `applyFilter()`（选中项被筛掉时自动跳到第一条）
 - **JS 分层契约**：逻辑层（state/baseMatch/存储/锚点/键盘/单播放器）与渲染层（render* 函数 + innerHTML 模板）分离；事件委托挂在容器 ID 上，**重写渲染层时保持容器 ID 与 `data-*` 属性契约**（data-seq/data-cat/data-v/data-comp/data-team/data-issue/data-fav/data-tag/data-i）
 - **视频内存策略**：详情区只有一个 `<video>`，`select()` 时替换 src（视频路径已含赛季前缀）。**绝不要**恢复为列表内联 video 元素——几百个播放器会让浏览器内存膨胀到 4-5GB（已经踩过并修复的坑）
+- **学习功能层（localStorage）**：学习足迹 `cfa{季}.seen`（看过即记）/ `cfa{季}.last`（继续上次学习）/ `cfa.streak`（连续天数，season 访问与 quiz 出卷都记）；**放映模式**复用唯一 `.d-video` 节点移入覆盖层、退出按记录的 parent+nextSibling 精确归位；**挑战模式** `?case=N&hideans=1` 仅本会话（不写 cfa.hideans）；**帧截图** canvas 抓帧+水印（在线直链跨域污染时降级提示）；**学习路径** state.path + PATH_SETS 集合过滤（baseMatch 的 path 维度，锚点深链优先于路径）
 - **响应式断点**：season 页唯一一套 1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）。其余页面另有自己的断点（topbar 压缩 760px、rules/scale/uefa 抽屉 900px、portal 960px），不与 season 页共用
 - 收藏/笔记存 localStorage：键 `cfa2026.fav/notes`、`cfa2025.fav/notes`、`cfa2024.fav/notes`（按赛季隔离，且按 origin 隔离，file:// 与 http:// 不同源，故有导出/导入 JSON 功能）
 - **quiz 页（build_quiz.py）**：客户端渲染三屏（开始/答题/结果）；题库 DATA 内联（判例+尺度场景两种题型）；判分「复核结论 1 分 + 判罚决定 1 分 + 纪律处分 1 分」（无答案库轴不出题）、尺度矩阵多选满分 2 分；错题本键 `cfa.quiz.wrong`；season 页隐藏答案模式开关 `#btnHideAns`（`cfa.hideans`，`html[data-hideans]` CSS 门控 + `.d-card.revealed` 逐题揭示，切题自动重隐）

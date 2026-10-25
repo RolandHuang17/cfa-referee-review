@@ -17,6 +17,7 @@
 - 越位页无判例行，条目由视频文件名前缀合成（OIO.1.1 → OIO.1），描述取视频卡说明
 视频文件名前缀即判例编号，是两种形态共同的锚。
 """
+
 import html as htmllib
 import json
 import random
@@ -30,9 +31,9 @@ from lib.paths import RFEF_CACHE, RFEF_JSON
 
 BASE = "https://www.card.rfef.es"
 INDEX = BASE + "/manual/indice/"
-DELAY = (3, 8)          # 页间随机间隔（秒）；WordPress 无已知 tarpit，礼貌节流即可
-BACKOFFS = [30, 90]     # 失败退避
-MIN_BODY = 20000        # 页面 HTML 最小字节数（WP 外壳本身远大于此，低于即判异常页）
+DELAY = (3, 8)  # 页间随机间隔（秒）；WordPress 无已知 tarpit，礼貌节流即可
+BACKOFFS = [30, 90]  # 失败退避
+MIN_BODY = 20000  # 页面 HTML 最小字节数（WP 外壳本身远大于此，低于即判异常页）
 
 # 判罚专题（slug → 中文栏目名）；protestas/encroachment 为纯文字页无判例，
 # 与 glosario 等一样只作 rfef.html 页内「延伸栏目」外链
@@ -62,15 +63,19 @@ CARD_RE = re.compile(r'<article class="manual-inline-video-card">[\s\S]*?</artic
 ROW_SPLIT_RE = re.compile(r'class="manual-criterion-row(?![\w-])')
 CELL_MARK = re.compile(r'class="manual-criterion-(code|situation|decision)"[^>]*>')
 # 判例表之后的结构标记：末行 decision 格以此截断，防止吞进表后解读/视频区
-BOUND_RE = re.compile(r"manual-copy-|manual-inline-videos|<section[\s>]|manual-subheading")
+BOUND_RE = re.compile(
+    r"manual-copy-|manual-inline-videos|<section[\s>]|manual-subheading"
+)
 H2_RE = re.compile(r"<h2[^>]*>([\s\S]*?)</h2>")
 H234_RE = re.compile(r"<h([1-4])[^>]*>([\s\S]*?)</h\1>")
 P_RE = re.compile(r"<p[^>]*>([\s\S]*?)</p>", re.I)
 LI_RE = re.compile(r"<li[^>]*>([\s\S]*?)</li>", re.I)
 MP4_RE = re.compile(r"(https://www\.card\.rfef\.es[^\s\"'<>]+\.mp4)", re.I)
 # 结构性标题（不作为判例组名）
-STRUCT_H = re.compile(r"(?i)v[ií]deos asociados|[ií]ndice del tema|elementos agravantes|"
-                      r"elementos atenuantes|v[ií]deos?")
+STRUCT_H = re.compile(
+    r"(?i)v[ií]deos asociados|[ií]ndice del tema|elementos agravantes|"
+    r"elementos atenuantes|v[ií]deos?"
+)
 SEC_INTRO = re.compile(r"(?i)descripci")
 SEC_COMPLEX = re.compile(r"(?i)complejidad")
 SEC_GENERAL = re.compile(r"(?i)criterios generales")
@@ -102,17 +107,27 @@ OFFSIDE_OFF_CODES = {"NOIO", "NOGA"}
 
 # 已知认定短语（长前缀优先）：末行 decision 格偶有吞并表内判读注记，按前缀切开
 KNOWN_DECISIONS = [
-    "Tiro libre indirecto y tarjeta amarilla", "Penalti y tarjeta roja",
-    "Penalti y tarjeta amarilla", "Penalti sin tarjeta", "Tiro libre indirecto",
-    "Tiro libre directo", "No penalti", "Tarjeta roja", "Tarjeta amarilla",
-    "No infracción", "Sin tarjeta", "Repetición", "Penalti", "Gol",
+    "Tiro libre indirecto y tarjeta amarilla",
+    "Penalti y tarjeta roja",
+    "Penalti y tarjeta amarilla",
+    "Penalti sin tarjeta",
+    "Tiro libre indirecto",
+    "Tiro libre directo",
+    "No penalti",
+    "Tarjeta roja",
+    "Tarjeta amarilla",
+    "No infracción",
+    "Sin tarjeta",
+    "Repetición",
+    "Penalti",
+    "Gol",
 ]
 
 
 def split_decision(dec: str) -> tuple:
     for k in sorted(KNOWN_DECISIONS, key=len, reverse=True):
         if dec.startswith(k):
-            return k, dec[len(k):].strip()
+            return k, dec[len(k) :].strip()
     return dec, ""
 
 
@@ -150,7 +165,7 @@ def fetch_page(url: str) -> str:
             st, txt = fetch_text(url, timeout=45, retries=2)
             if st == 200 and len(txt) > MIN_BODY:
                 cache_f.write_text(txt, encoding="utf-8")
-                print(f"  已缓存 {len(txt)//1024}KB → {cache_f.name}", flush=True)
+                print(f"  已缓存 {len(txt) // 1024}KB → {cache_f.name}", flush=True)
                 return txt
             print(f"  HTTP {st}, {len(txt)}B", flush=True)
         except Exception as e:  # noqa: BLE001
@@ -163,7 +178,7 @@ def fetch_all():
     ok = 0
     for i, (slug, _cn) in enumerate(TOPICS):
         url = topic_url(slug)
-        print(f"[{i+1}/{len(TOPICS)}] {url}", flush=True)
+        print(f"[{i + 1}/{len(TOPICS)}] {url}", flush=True)
         if fetch_page(url):
             ok += 1
         if i < len(TOPICS) - 1:
@@ -172,6 +187,7 @@ def fetch_all():
 
 
 # ---------------- 解析 ----------------
+
 
 def _norm_url(raw: str) -> str:
     url = htmllib.unescape(raw).replace("\\/", "/")
@@ -222,7 +238,7 @@ def parse_rows(page: str) -> list:
     positions = [m.start() for m in ROW_SPLIT_RE.finditer(page)]
     rows = []
     for i, pos in enumerate(positions):
-        seg = page[pos: positions[i + 1] if i + 1 < len(positions) else pos + 9000]
+        seg = page[pos : positions[i + 1] if i + 1 < len(positions) else pos + 9000]
         marks = [(m.group(1), m.end()) for m in CELL_MARK.finditer(seg)]
         if len(marks) < 3:
             continue
@@ -234,12 +250,18 @@ def parse_rows(page: str) -> list:
                 end = b.start()
             # 从下一标记的 class 属性头回退到其所属开标签起点，避免把标签残留算进文本
             back = seg.rfind("<div", start, end)
-            cells[cls] = clean(seg[start: back if back > start else end])
+            cells[cls] = clean(seg[start : back if back > start else end])
         code, sit = cells.get("code", ""), cells.get("situation", "")
         if not code or not sit or sit.startswith("Situación"):
             continue
-        rows.append({"_pos": pos, "id": code, "situation_es": sit,
-                     "decision_es": cells.get("decision", "")})
+        rows.append(
+            {
+                "_pos": pos,
+                "id": code,
+                "situation_es": sit,
+                "decision_es": cells.get("decision", ""),
+            }
+        )
     return rows
 
 
@@ -250,8 +272,9 @@ def parse_sections(page: str) -> dict:
     for i, (pos, name) in enumerate(hs):
         end = hs[i + 1][0] if i + 1 < len(hs) else len(page)
         chunk = page[pos:end]
-        paras = [clean(p) for p in P_RE.findall(chunk)] + \
-                [clean(p) for p in LI_RE.findall(chunk)]
+        paras = [clean(p) for p in P_RE.findall(chunk)] + [
+            clean(p) for p in LI_RE.findall(chunk)
+        ]
         paras = [p for p in paras if len(p) > 40]
         key = None
         if SEC_INTRO.search(name):
@@ -267,8 +290,11 @@ def parse_sections(page: str) -> dict:
 
 def parse_page(page: str, slug: str) -> dict:
     hs = list(H2_RE.finditer(page))
-    h2s = [(m.start(), clean(m.group(1))) for m in hs
-           if clean(m.group(1)) and not STRUCT_H.search(clean(m.group(1)))]
+    h2s = [
+        (m.start(), clean(m.group(1)))
+        for m in hs
+        if clean(m.group(1)) and not STRUCT_H.search(clean(m.group(1)))
+    ]
     h234 = [(m.start(), m.group(1), clean(m.group(2))) for m in H234_RE.finditer(page)]
     rows = parse_rows(page)
     vids = parse_video_cards(page)
@@ -293,12 +319,13 @@ def parse_page(page: str, slug: str) -> dict:
             elif lvl == "3" and not STRUCT_H.search(hname):
                 sub, note = hname, ""
             elif lvl == "4" and sub:
-                end = next((p for p, l, n in h234 if p > hpos), pos)
+                end = next((p for p, _l, n in h234 if p > hpos), pos)
                 if end > pos:
                     end = pos
                 chunk = page[hpos:end]
-                bullets = [clean(x) for x in LI_RE.findall(chunk)] + \
-                          [clean(x) for x in P_RE.findall(chunk)]
+                bullets = [clean(x) for x in LI_RE.findall(chunk)] + [
+                    clean(x) for x in P_RE.findall(chunk)
+                ]
                 bullets = [b for b in bullets if len(b) > 8]
                 if bullets:
                     note = "；".join(bullets)[:1200]
@@ -307,25 +334,39 @@ def parse_page(page: str, slug: str) -> dict:
     # 判例行装配
     items, by_id = [], {}
     for r in rows:
-        it = {"id": r["id"], "situation_es": r["situation_es"],
-              "decision_es": r["decision_es"], "_pos": r["_pos"],
-              **item_extras(r["_pos"])}
+        it = {
+            "id": r["id"],
+            "situation_es": r["situation_es"],
+            "decision_es": r["decision_es"],
+            "_pos": r["_pos"],
+            **item_extras(r["_pos"]),
+        }
         items.append(it)
         by_id[r["id"]] = it
     # 视频装配：前缀锚定到判例；无判例行的（越位型）由卡片合成条目
     for v in vids:
-        base = re.sub(r"\.\d+$", "", v["id"]) if re.match(
-            r"^[A-ZÑÁÉÍÓÚÜ]{1,8}\.\d+\.\d+$", v["id"]) else v["id"]
+        base = (
+            re.sub(r"\.\d+$", "", v["id"])
+            if re.match(r"^[A-ZÑÁÉÍÓÚÜ]{1,8}\.\d+\.\d+$", v["id"])
+            else v["id"]
+        )
         it = by_id.get(base)
         if it is None:
-            desc = re.sub(r"^[A-ZÑÁÉÍÓÚÜ]{1,8}\.\d+(\.\d+)?\s*[:：]\s*", "",
-                          v["caption_es"]).strip()
-            it = {"id": base, "situation_es": desc, "decision_es": "",
-                  "_pos": v["_pos"], **item_extras(v["_pos"])}
+            desc = re.sub(
+                r"^[A-ZÑÁÉÍÓÚÜ]{1,8}\.\d+(\.\d+)?\s*[:：]\s*", "", v["caption_es"]
+            ).strip()
+            it = {
+                "id": base,
+                "situation_es": desc,
+                "decision_es": "",
+                "_pos": v["_pos"],
+                **item_extras(v["_pos"]),
+            }
             items.append(it)
             by_id[base] = it
         it.setdefault("videos", []).append(
-            {"url": v["url"], "id": v["id"], "caption_es": v["caption_es"]})
+            {"url": v["url"], "id": v["id"], "caption_es": v["caption_es"]}
+        )
     # 文件名冲突兜底（同 stem 异路径）→ 加父目录名前缀
     used = {}
     for it in items:
@@ -352,8 +393,9 @@ def parse_page(page: str, slug: str) -> dict:
         if code not in order:
             gname, gh2pos = nearest_h2(it["_pos"])
             order[code] = len(groups)
-            groups.append({"code": code, "name_es": gname or code,
-                           "_h2pos": gh2pos, "items": []})
+            groups.append(
+                {"code": code, "name_es": gname or code, "_h2pos": gh2pos, "items": []}
+            )
         groups[order[code]]["items"].append(it)
     # 组级判读注记：组 h2 与下一 h2 之间的 h3/h4 分节
     # （如 Mano punible / no punible 与 Elementos agravantes / atenuantes 列表），
@@ -366,21 +408,26 @@ def parse_page(page: str, slug: str) -> dict:
         conclusions = []
         for m in re.finditer(r'class="manual-copy-text[^"]*"[^>]*>', page[lo:hi]):
             start = lo + m.end()
-            nxt = re.search(r'manual-copy-|manual-inline-videos|<section[\s>]|'
-                            r'manual-subheading|<h[1-6][\s>]', page[start:hi])
-            chunk = page[start: hi if not nxt else start + nxt.start()]
-            paras = [clean(x) for x in P_RE.findall(chunk)] + \
-                    [clean(x) for x in LI_RE.findall(chunk)]
+            nxt = re.search(
+                r"manual-copy-|manual-inline-videos|<section[\s>]|"
+                r"manual-subheading|<h[1-6][\s>]",
+                page[start:hi],
+            )
+            chunk = page[start : hi if not nxt else start + nxt.start()]
+            paras = [clean(x) for x in P_RE.findall(chunk)] + [
+                clean(x) for x in LI_RE.findall(chunk)
+            ]
             paras = [p for p in paras if len(p) > 40]
             if paras:
                 conclusions.append(" ".join(paras)[:3000])
         for hpos, lvl, hname in h234:
             if not (lo < hpos < hi):
                 continue
-            nxt = next((p for p, l, n in h234 if p > hpos), hi)
-            chunk = page[hpos: min(nxt, hi)]
-            bullets = [clean(x) for x in LI_RE.findall(chunk)] + \
-                      [clean(x) for x in P_RE.findall(chunk)]
+            nxt = next((p for p, _l, n in h234 if p > hpos), hi)
+            chunk = page[hpos : min(nxt, hi)]
+            bullets = [clean(x) for x in LI_RE.findall(chunk)] + [
+                clean(x) for x in P_RE.findall(chunk)
+            ]
             bullets = [b for b in bullets if len(b) > 8]
             if lvl == "3":
                 cur = None
@@ -405,12 +452,16 @@ def parse_page(page: str, slug: str) -> dict:
         it.pop("_pos", None)
     sec = parse_sections(page)
     h1 = re.search(r"<h1[^>]*>([\s\S]*?)</h1>", page, re.I)
-    return {"key": slug, "name_es": clean(h1.group(1)) if h1 else slug.replace("-", " "),
-            "name_cn": TOPIC_CN.get(slug, slug), "url": topic_url(slug),
-            "intro_es": sec.get("intro_es", ""),
-            "complexity_es": sec.get("complexity_es", ""),
-            "general_es": sec.get("general_es", ""),
-            "groups": groups}
+    return {
+        "key": slug,
+        "name_es": clean(h1.group(1)) if h1 else slug.replace("-", " "),
+        "name_cn": TOPIC_CN.get(slug, slug),
+        "url": topic_url(slug),
+        "intro_es": sec.get("intro_es", ""),
+        "complexity_es": sec.get("complexity_es", ""),
+        "general_es": sec.get("general_es", ""),
+        "groups": groups,
+    }
 
 
 def parse_all():
@@ -423,22 +474,38 @@ def parse_all():
         page = cache_f.read_text(encoding="utf-8", errors="replace")
         sec = parse_page(page, slug)
         n_it = sum(len(g["items"]) for g in sec["groups"])
-        n_vid = sum(len(it.get("videos", [])) for g in sec["groups"] for it in g["items"])
+        n_vid = sum(
+            len(it.get("videos", [])) for g in sec["groups"] for it in g["items"]
+        )
         print(f"{slug}: {len(sec['groups'])} 组 / {n_it} 例 / {n_vid} 视频", flush=True)
         if n_it:
             sections.append(sec)
         else:
             print(f"⚠ 无判例，检查解析: {slug}", flush=True)
-    data = {"source": INDEX, "source_name": "RFEF/CTA《Criterios Arbitrales》判罚标准手册",
-            "season": "2026/27", "fetched": time.strftime("%Y-%m-%d"),
-            "extra_topics": [{"key": k, "name_cn": cn, "url": topic_url(k)}
-                             for k, cn in EXTRA_TOPICS],
-            "sections": sections}
-    RFEF_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    data = {
+        "source": INDEX,
+        "source_name": "RFEF/CTA《Criterios Arbitrales》判罚标准手册",
+        "season": "2026/27",
+        "fetched": time.strftime("%Y-%m-%d"),
+        "extra_topics": [
+            {"key": k, "name_cn": cn, "url": topic_url(k)} for k, cn in EXTRA_TOPICS
+        ],
+        "sections": sections,
+    }
+    RFEF_JSON.write_text(
+        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
     n = sum(len(g["items"]) for s in sections for g in s["groups"])
-    v = sum(len(it.get("videos", [])) for s in sections
-            for g in s["groups"] for it in g["items"])
-    print(f"parse 完成: {len(sections)} 栏目 / {n} 例 / {v} 视频 → {RFEF_JSON}", flush=True)
+    v = sum(
+        len(it.get("videos", []))
+        for s in sections
+        for g in s["groups"]
+        for it in g["items"]
+    )
+    print(
+        f"parse 完成: {len(sections)} 栏目 / {n} 例 / {v} 视频 → {RFEF_JSON}",
+        flush=True,
+    )
 
 
 def main():

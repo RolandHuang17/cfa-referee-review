@@ -6,22 +6,45 @@
 （url 键情境译制层）。判例视频托管在 YouTube（官方），本页为纯链接模式
 （不内嵌、不本地化）。页头/chips/搜索/年份分组骨架来自 lib/pagelib.py。
 """
+
 from lib.theme import inject_theme, topbar, icon
 
-from lib.pagelib import (SEARCH_CSS, esc, filter_js, group_by_year, head_css,
-                         load_json_with_zh, search_blob, searchbar)
+from lib.pagelib import (
+    SEARCH_CSS,
+    esc,
+    filter_js,
+    group_by_year,
+    head_css,
+    load_json_with_zh,
+    search_blob,
+    searchbar,
+)
 from lib.paths import CONMEBOL_JSON, CONMEBOL_ZH_JSON, SITE
 
 SIT_LABEL = {
-    "penalty": "点球", "ofr_penalty": "点球（现场回看）", "no_penalty": "非点球",
-    "red_card": "红牌", "offside": "越位", "no_goal": "进球无效", "other": "判例",
+    "penalty": "点球",
+    "ofr_penalty": "点球（现场回看）",
+    "no_penalty": "非点球",
+    "red_card": "红牌",
+    "offside": "越位",
+    "no_goal": "进球无效",
+    "other": "判例",
 }
 SIT_BADGE = {
-    "penalty": "wrong", "ofr_penalty": "wrong", "red_card": "wrong",
-    "no_penalty": "correct", "no_goal": "pending", "offside": "info", "other": "info",
+    "penalty": "wrong",
+    "ofr_penalty": "wrong",
+    "red_card": "wrong",
+    "no_penalty": "correct",
+    "no_goal": "pending",
+    "offside": "info",
+    "other": "info",
 }
-COMP_CN = {"eliminatorias": "世预赛", "libertadores": "解放者杯",
-           "sudamericana": "南美杯", "conmebol-recopa": "优胜者杯"}
+COMP_CN = {
+    "eliminatorias": "世预赛",
+    "libertadores": "解放者杯",
+    "sudamericana": "南美杯",
+    "conmebol-recopa": "优胜者杯",
+}
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -95,14 +118,20 @@ def build_page(data, zh=None):
     sits = sorted({c.get("situacion_norm") for c in cases if c.get("situacion_norm")})
     comp_chips = "".join(
         f'<button class="chip" data-f="{esc(k)}">{esc(COMP_CN.get(k, k))} '
-        f'<b>{sum(1 for c in cases if c.get("comp") == k)}</b></button>' for k in comps)
+        f"<b>{sum(1 for c in cases if c.get('comp') == k)}</b></button>"
+        for k in comps
+    )
     sit_chips = "".join(
         f'<button class="chip" data-f="{esc(k)}">{esc(SIT_LABEL.get(k, k))} '
-        f'<b>{sum(1 for c in cases if c.get("situacion_norm") == k)}</b></button>' for k in sits)
+        f"<b>{sum(1 for c in cases if c.get('situacion_norm') == k)}</b></button>"
+        for k in sits
+    )
     secs = ""
     for y, ycases in group_by_year(
-            cases, date_of=lambda c: (c.get("fecha") or c.get("date") or "")[-4:],
-            fallback="其他"):
+        cases,
+        date_of=lambda c: (c.get("fecha") or c.get("date") or "")[-4:],
+        fallback="其他",
+    ):
         rows = ""
         for c in ycases:
             kinds = " ".join(filter(None, [c.get("comp"), c.get("situacion_norm")]))
@@ -111,56 +140,98 @@ def build_page(data, zh=None):
             label = SIT_LABEL.get(norm, "判例")
             meta = "".join(
                 f'<span class="chip">{esc(v)}</span>'
-                for v in (c.get("fecha", ""), c.get("minuto", "") and c["minuto"] + "′",
-                          c.get("ciudad", ""), c.get("estadio", ""),
-                          COMP_CN.get(c.get("comp", ""), "")) if v)
+                for v in (
+                    c.get("fecha", ""),
+                    c.get("minuto", "") and c["minuto"] + "′",
+                    c.get("ciudad", ""),
+                    c.get("estadio", ""),
+                    COMP_CN.get(c.get("comp", ""), ""),
+                )
+                if v
+            )
             if c.get("situacion_zh"):
                 es_sit = f'<span class="chip">情境：{esc(c["situacion_zh"])}</span>'
                 if c.get("situacion_es") and c["situacion_es"].lower() != label.lower():
                     es_sit += f'<span class="chip" title="官方西语原文">原文: {esc(c["situacion_es"])}</span>'
             else:
                 if c.get("situacion_es"):
-                    print(f"⚠ conmebol-zh 缺该案情境译制，回退西语: {c.get('url', '')[:70]}")
-                es_sit = f'<span class="chip" title="官方原文">Situación: {esc(c["situacion_es"])}</span>' \
-                    if c.get("situacion_es") and c["situacion_es"].lower() != label.lower() else ""
-            links = (f'<a class="go" href="{esc(c["url"])}" target="_blank" rel="noopener noreferrer">'
-                     f'{icon("note", 11)} 官方分析</a>')
+                    print(
+                        f"⚠ conmebol-zh 缺该案情境译制，回退西语: {c.get('url', '')[:70]}"
+                    )
+                es_sit = (
+                    f'<span class="chip" title="官方原文">Situación: {esc(c["situacion_es"])}</span>'
+                    if c.get("situacion_es")
+                    and c["situacion_es"].lower() != label.lower()
+                    else ""
+                )
+            links = (
+                f'<a class="go" href="{esc(c["url"])}" target="_blank" rel="noopener noreferrer">'
+                f"{icon('note', 11)} 官方分析</a>"
+            )
             if c.get("youtube"):
-                links += (f'<a class="go" href="{esc(c["youtube"])}" target="_blank" '
-                          f'rel="noopener noreferrer">{icon("play", 11)} 判例视频</a>')
-            blob = search_blob(c.get("match") or c.get("title"), c.get("fecha"),
-                               c.get("ciudad"), c.get("estadio"), COMP_CN.get(c.get("comp", ""), ""),
-                               c.get("situacion_zh"), c.get("situacion_es"), label)
+                links += (
+                    f'<a class="go" href="{esc(c["youtube"])}" target="_blank" '
+                    f'rel="noopener noreferrer">{icon("play", 11)} 判例视频</a>'
+                )
+            blob = search_blob(
+                c.get("match") or c.get("title"),
+                c.get("fecha"),
+                c.get("ciudad"),
+                c.get("estadio"),
+                COMP_CN.get(c.get("comp", ""), ""),
+                c.get("situacion_zh"),
+                c.get("situacion_es"),
+                label,
+            )
             rows += f"""<div class="ccard" data-kinds="{esc(kinds)}" data-search="{blob}">
   <div class="chead"><span class="cmatch">{esc(c.get("match") or c["title"])}</span>
     <span class="badge {badge}">{esc(label)}</span></div>
   <div class="cinfo">{meta}{es_sit}</div>
   <div class="clinks">{links}</div>
 </div>"""
-        secs += (f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>'
-                 f'{len(ycases)} 案</small></h3><div id="ybody-{esc(y)}">{rows}</div>')
-    tb = topbar(active="conmebol.html", stats="stats-2026.html", brand_sub="南美 VAR 判例",
-                seasons=("2026", "2025", "2024"))
-    src_link = (f'<a href="{esc(data.get("source", ""))}" target="_blank" '
-                f'rel="noopener noreferrer">conmebol.com VAR 分析专栏</a>')
-    html = inject_theme(HTML
-                        .replace("__TOPBAR__", tb)
-                        .replace("__SOURCE_LINK__", src_link)
-                        .replace("__I_EXTERNAL__", icon("external", 14))
-                        .replace("__SEARCHBAR__", searchbar("搜索判例：对阵 / 球场 / 情境…"))
-                        .replace("__HEAD_CSS__", head_css(max_width=1000))
-                        .replace("__SEARCH_CSS__", SEARCH_CSS)
-                        .replace("__FILTER_JS__", filter_js(".ccard", filter_attr="data-kinds",
-                                                            match="substr", search=True, group="ybody"))
-                        .replace("__N_ALL__", str(len(cases)))
-                        .replace("__COMP_CHIPS__", comp_chips)
-                        .replace("__SIT_CHIPS__", sit_chips)
-                        .replace("__CHECKED__", esc(data.get("fetched", "")))
-                        .replace("__SECTIONS__", secs))
+        secs += (
+            f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>'
+            f'{len(ycases)} 案</small></h3><div id="ybody-{esc(y)}">{rows}</div>'
+        )
+    tb = topbar(
+        active="conmebol.html",
+        stats="stats-2026.html",
+        brand_sub="南美 VAR 判例",
+        seasons=("2026", "2025", "2024"),
+    )
+    src_link = (
+        f'<a href="{esc(data.get("source", ""))}" target="_blank" '
+        f'rel="noopener noreferrer">conmebol.com VAR 分析专栏</a>'
+    )
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__SOURCE_LINK__", src_link)
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__SEARCHBAR__", searchbar("搜索判例：对阵 / 球场 / 情境…"))
+        .replace("__HEAD_CSS__", head_css(max_width=1000))
+        .replace("__SEARCH_CSS__", SEARCH_CSS)
+        .replace(
+            "__FILTER_JS__",
+            filter_js(
+                ".ccard",
+                filter_attr="data-kinds",
+                match="substr",
+                search=True,
+                group="ybody",
+            ),
+        )
+        .replace("__N_ALL__", str(len(cases)))
+        .replace("__COMP_CHIPS__", comp_chips)
+        .replace("__SIT_CHIPS__", sit_chips)
+        .replace("__CHECKED__", esc(data.get("fetched", "")))
+        .replace("__SECTIONS__", secs)
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "conmebol.html").write_text(html, encoding="utf-8")
-    print(f"生成 {SITE / 'conmebol.html'}（{len(cases)} 案 / "
-          f"{len({y for y, _ in group_by_year(cases, date_of=lambda c: (c.get('fecha') or c.get('date') or '')[-4:], fallback='其他')})} 个年份）")
+    print(
+        f"生成 {SITE / 'conmebol.html'}（{len(cases)} 案 / "
+        f"{len({y for y, _ in group_by_year(cases, date_of=lambda c: (c.get('fecha') or c.get('date') or '')[-4:], fallback='其他')})} 个年份）"
+    )
 
 
 def main():

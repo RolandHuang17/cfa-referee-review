@@ -7,14 +7,31 @@
 每期跳官方观看页；硬约束 1 的用户批准例外之一。
 页头/chips/搜索/年份分组骨架来自 lib/pagelib.py（sections 两级折叠模式）。
 """
+
 from lib.theme import inject_theme, topbar, icon
 
-from lib.pagelib import (SEARCH_CSS, esc, filter_js, group_by_year, head_css,
-                         load_json_with_zh, search_blob, searchbar)
+from lib.pagelib import (
+    SEARCH_CSS,
+    esc,
+    filter_js,
+    group_by_year,
+    head_css,
+    load_json_with_zh,
+    search_blob,
+    searchbar,
+)
 from lib.paths import SITE, WEEKLY_JSON, WEEKLY_ZH_JSON
 
-LANG_LABEL = {"en": "英语", "tr": "土耳其语", "ja": "日语", "es": "西语", "ru": "俄语",
-              "pt": "葡语", "uk": "乌克兰语", "hr": "克罗地亚语"}
+LANG_LABEL = {
+    "en": "英语",
+    "tr": "土耳其语",
+    "ja": "日语",
+    "es": "西语",
+    "ru": "俄语",
+    "pt": "葡语",
+    "uk": "乌克兰语",
+    "hr": "克罗地亚语",
+}
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -115,8 +132,10 @@ def build_page(data, zh):
         if not items:
             continue
         intro = zh_shows.get(key, {}).get("intro", "")
-        chips += (f'<button class="chip" data-f="{esc(key)}">{esc(show.get("name", key))} '
-                  f'<b>{len(items)}</b></button>')
+        chips += (
+            f'<button class="chip" data-f="{esc(key)}">{esc(show.get("name", key))} '
+            f"<b>{len(items)}</b></button>"
+        )
         body = ""
         for y, yitems in group_by_year(items, fallback="待定"):
             rows = ""
@@ -139,44 +158,59 @@ def build_page(data, zh):
                 if lang:
                     meta.append(lang)
                 blob = search_blob(e.get("title", ""), note, desc[:400])
-                inner = (f'<div class="t"><b>{esc(e.get("title", ""))}</b>'
-                         f'<div class="meta">{esc(" · ".join(meta))}</div>')
+                inner = (
+                    f'<div class="t"><b>{esc(e.get("title", ""))}</b>'
+                    f'<div class="meta">{esc(" · ".join(meta))}</div>'
+                )
                 if note:
                     inner += f'<div class="note">{esc(note)}</div>'
                 if desc:
-                    inner += (f'<details><summary>官方说明（原文）</summary>'
-                              f'<p>{esc(desc)}</p></details>')
+                    inner += (
+                        f"<details><summary>官方说明（原文）</summary>"
+                        f"<p>{esc(desc)}</p></details>"
+                    )
                 inner += "</div>"
                 is_video = "youtube.com" in (e.get("url") or "")
                 go_lbl = "官方观看" if is_video else "官方文章"
-                rows += (f'<div class="ecard" data-search="{blob}">{inner}'
-                         f'<a class="go" href="{esc(e.get("url", ""))}" target="_blank" '
-                         f'rel="noopener noreferrer">{icon("play", 11)} {go_lbl}</a></div>')
+                rows += (
+                    f'<div class="ecard" data-search="{blob}">{inner}'
+                    f'<a class="go" href="{esc(e.get("url", ""))}" target="_blank" '
+                    f'rel="noopener noreferrer">{icon("play", 11)} {go_lbl}</a></div>'
+                )
             label = f"{y} 年" if y != "待定" else "日期待定"
-            body += (f'<h3 class="year-h" data-year="{esc(y)}">{esc(label)} '
-                     f'<small>{len(yitems)} 期</small></h3><div>{rows}</div>')
+            body += (
+                f'<h3 class="year-h" data-year="{esc(y)}">{esc(label)} '
+                f"<small>{len(yitems)} 期</small></h3><div>{rows}</div>"
+            )
         surl = show.get("url", "#")
         secs += f"""<section class="show" data-show="{esc(key)}">
   <div class="show-h">
     <h2>{esc(show.get("name", key))} <span class="badge info">{esc(show.get("update", ""))}</span></h2>
-    <div class="org">{esc(show.get("org", ""))} · <a href="{esc(surl)}" target="_blank" rel="noopener noreferrer">{icon('external', 11)} 官方频道</a></div>
-    {f'<p class="intro">{esc(intro)}</p>' if intro else ''}
+    <div class="org">{esc(show.get("org", ""))} · <a href="{esc(surl)}" target="_blank" rel="noopener noreferrer">{icon("external", 11)} 官方频道</a></div>
+    {f'<p class="intro">{esc(intro)}</p>' if intro else ""}
   </div>
   {body}
 </section>"""
-    html = inject_theme(HTML
-                         .replace("__TOPBAR__", topbar(active="weekly.html", stats="stats-2026.html",
-                                                       brand_sub="全球周更节目"))
-                         .replace("__I_EXTERNAL__", icon("external", 14))
-                         .replace("__SEARCHBAR__", searchbar("搜索期目标题 / 中文译注 / 官方说明…"))
-                         .replace("__HEAD_CSS__", head_css(max_width=1040, compact_years=True))
-                         .replace("__SEARCH_CSS__", SEARCH_CSS)
-                         .replace("__FILTER_JS__", filter_js(".ecard", search=True,
-                                                             sections="section.show", group="sibling"))
-                         .replace("__N_ALL__", str(len(eps)))
-                         .replace("__SHOW_CHIPS__", chips)
-                         .replace("__SECTIONS__", secs)
-                         .replace("__CHECKED__", esc(data.get("fetched", ""))))
+    html = inject_theme(
+        HTML.replace(
+            "__TOPBAR__",
+            topbar(
+                active="weekly.html", stats="stats-2026.html", brand_sub="全球周更节目"
+            ),
+        )
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__SEARCHBAR__", searchbar("搜索期目标题 / 中文译注 / 官方说明…"))
+        .replace("__HEAD_CSS__", head_css(max_width=1040, compact_years=True))
+        .replace("__SEARCH_CSS__", SEARCH_CSS)
+        .replace(
+            "__FILTER_JS__",
+            filter_js(".ecard", search=True, sections="section.show", group="sibling"),
+        )
+        .replace("__N_ALL__", str(len(eps)))
+        .replace("__SHOW_CHIPS__", chips)
+        .replace("__SECTIONS__", secs)
+        .replace("__CHECKED__", esc(data.get("fetched", "")))
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "weekly.html").write_text(html, encoding="utf-8")
     print(f"生成 {SITE / 'weekly.html'}（{len(eps)} 期 / {len(shows)} 节目）")

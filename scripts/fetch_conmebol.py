@@ -8,6 +8,7 @@
 - 分页 /2/ /3/ … 由 e-load-more-anchor 的 data-max-page/next-page 指示（实测 10 页）
 - ⚠ 该站 HTML 属性大量不带引号，解析正则需兼容 quoted/unquoted
 """
+
 import html as htmllib
 import json
 import random
@@ -27,12 +28,15 @@ MIN_ART = 100000
 BACKOFFS = [20, 60]
 
 ARTICLE_RE = re.compile(
-    r'<article[^>]*class="[^"]*elementor-post[^"]*"[^>]*>([\s\S]*?)</article>', re.I)
+    r'<article[^>]*class="[^"]*elementor-post[^"]*"[^>]*>([\s\S]*?)</article>', re.I
+)
 TITLE_RE = re.compile(
-    r'elementor-post__title[^>]*>\s*<a[^>]+href=("([^"]*)"|([^\s>]+))[^>]*>([\s\S]*?)</a>', re.I)
-DATE_RE = re.compile(r'elementor-post-date[^>]*>\s*([^<]+?)\s*<', re.I)
-EXCERPT_RE = re.compile(r'elementor-post__excerpt[^>]*>\s*<p[^>]*>([\s\S]*?)</p>', re.I)
-TORNEO_RE = re.compile(r'torneos-([a-z0-9-]+)')
+    r'elementor-post__title[^>]*>\s*<a[^>]+href=("([^"]*)"|([^\s>]+))[^>]*>([\s\S]*?)</a>',
+    re.I,
+)
+DATE_RE = re.compile(r"elementor-post-date[^>]*>\s*([^<]+?)\s*<", re.I)
+EXCERPT_RE = re.compile(r"elementor-post__excerpt[^>]*>\s*<p[^>]*>([\s\S]*?)</p>", re.I)
+TORNEO_RE = re.compile(r"torneos-([a-z0-9-]+)")
 NEXT_RE = re.compile(r'data-next-page=("([^"]*)"|([^\s>]+))')
 MAXPAGE_RE = re.compile(r'data-max-page=("?)(\d+)\1')
 
@@ -68,7 +72,10 @@ def norm_situation(s: str) -> str:
 def fetch_page(url: str, min_body: int = 0) -> str:
     """带缓存的抓取；min_body 缺省用列表页阈值，文章页可调低。"""
     min_body = min_body or MIN_BODY
-    slug = re.sub(r"[^a-z0-9-]", "_", url.split("conmebol.com/")[-1].strip("/"))[:80] or "col1"
+    slug = (
+        re.sub(r"[^a-z0-9-]", "_", url.split("conmebol.com/")[-1].strip("/"))[:80]
+        or "col1"
+    )
     cache_f = CONMEBOL_CACHE / f"{slug}.html"
     CONMEBOL_CACHE.mkdir(parents=True, exist_ok=True)
     if cache_f.exists() and cache_f.stat().st_size > min_body:
@@ -110,12 +117,23 @@ def parse_page(page: str) -> tuple:
         torneos = TORNEO_RE.findall(block)
         comp = ""
         for t in torneos:
-            if t in COMP_CN or "libertadores" in t or "sudamericana" in t or "recopa" in t:
+            if (
+                t in COMP_CN
+                or "libertadores" in t
+                or "sudamericana" in t
+                or "recopa" in t
+            ):
                 comp = t
                 break
-        cases.append({"title": title, "url": url,
-                      "date": clean(dm.group(1)) if dm else "",
-                      "excerpt_es": exc, "comp": comp})
+        cases.append(
+            {
+                "title": title,
+                "url": url,
+                "date": clean(dm.group(1)) if dm else "",
+                "excerpt_es": exc,
+                "comp": comp,
+            }
+        )
     return cases, next_url, max_page
 
 
@@ -126,23 +144,35 @@ def _clean_minute(v: str) -> str:
 def parse_case(c: dict) -> dict:
     """摘要 → 结构化字段：Bolivia vs. Brasil Fecha: .. Ciudad: .. Estadio: .. Situación: .. Minuto: .."""
     exc = c.get("excerpt_es", "")
+
     def grab(pat):
-        m = re.search(pat + r"\s*:\s*(.*?)(?=\s+(?:Fecha|Ciudad|Estadio|Situaci[oó]n|Minuto|CONMEBOL)\s*:|$)", exc, re.I)
+        m = re.search(
+            pat
+            + r"\s*:\s*(.*?)(?=\s+(?:Fecha|Ciudad|Estadio|Situaci[oó]n|Minuto|CONMEBOL)\s*:|$)",
+            exc,
+            re.I,
+        )
         return clean(m.group(1)) if m else ""
+
     match = ""
     mm = re.match(r"^(.*?)\s*Fecha\s*:", exc, re.I)
     if mm:
         match = clean(mm.group(1))
     sit = grab(r"Situaci[oó]n")
     minute = grab(r"Minuto")
-    return {"match": match or c["title"].split(":")[-1].strip(),
-            "fecha": grab(r"Fecha"), "ciudad": grab(r"Ciudad"),
-            "estadio": grab(r"Estadio"), "situacion_es": sit,
-            "situacion_norm": norm_situation(sit), "minuto": _clean_minute(minute),
-            "comp_cn": COMP_CN.get(c.get("comp", ""), "")}
+    return {
+        "match": match or c["title"].split(":")[-1].strip(),
+        "fecha": grab(r"Fecha"),
+        "ciudad": grab(r"Ciudad"),
+        "estadio": grab(r"Estadio"),
+        "situacion_es": sit,
+        "situacion_norm": norm_situation(sit),
+        "minuto": _clean_minute(minute),
+        "comp_cn": COMP_CN.get(c.get("comp", ""), ""),
+    }
 
 
-YT_RE = re.compile(r'(?:youtube\.com/embed/|youtu\.be/)([\w-]{11})')
+YT_RE = re.compile(r"(?:youtube\.com/embed/|youtu\.be/)([\w-]{11})")
 FIELD_STOP = r"(?=\s*(?:Fecha|Ciudad|Estadio|Situaci[oó]n|Minuto)\s*:|$)"
 
 
@@ -158,17 +188,27 @@ def enrich(c: dict) -> dict:
     # 球队词序列：大写开头词 + 西语连词小写词（de/del/la/...），防吞前文句子
     # （re.I 会让 am/pm 这类时间尾巴伪装成球队词，故整体大小写敏感）
     W = r"(?:[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúüÜ'()-]*|de|del|la|el|los|las|y|do|das|di|e)"
-    ms = list(re.finditer(
-        r"((?:" + W + r"\s*){1,5}vs\.?\s(?:" + W + r"\s*){1,4})"
-        r"[Ff]echa\s*:\s*([\d/.-]+)"
-        r"\s*[Cc]iudad\s*:\s*(.*?)\s*[Ee]stadio\s*:\s*(.*?)\s*[Ss]ituaci[oó]n\s*:\s*(.*?)"
-        r"\s*[Mm]inuto\s*:\s*([\d+]+)", text))
+    ms = list(
+        re.finditer(
+            r"((?:" + W + r"\s*){1,5}vs\.?\s(?:" + W + r"\s*){1,4})"
+            r"[Ff]echa\s*:\s*([\d/.-]+)"
+            r"\s*[Cc]iudad\s*:\s*(.*?)\s*[Ee]stadio\s*:\s*(.*?)\s*[Ss]ituaci[oó]n\s*:\s*(.*?)"
+            r"\s*[Mm]inuto\s*:\s*([\d+]+)",
+            text,
+        )
+    )
     if ms:
         m = ms[-1]
-        c.update({"match": clean(m.group(1)) or c.get("match", ""),
-                  "fecha": m.group(2), "ciudad": clean(m.group(3)),
-                  "estadio": clean(m.group(4)), "situacion_es": clean(m.group(5)),
-                  "minuto": _clean_minute(m.group(6))})
+        c.update(
+            {
+                "match": clean(m.group(1)) or c.get("match", ""),
+                "fecha": m.group(2),
+                "ciudad": clean(m.group(3)),
+                "estadio": clean(m.group(4)),
+                "situacion_es": clean(m.group(5)),
+                "minuto": _clean_minute(m.group(6)),
+            }
+        )
     embeds = list(YT_RE.finditer(page))
     if embeds:
         pos = page.rfind("Minuto")
@@ -195,7 +235,9 @@ def main():
                 seen.add(c["url"])
                 cases.append({**c, **parse_case(c)})
                 new += 1
-        print(f"p{page_no}: +{new}（累计 {len(cases)}，max_page={max_page}）", flush=True)
+        print(
+            f"p{page_no}: +{new}（累计 {len(cases)}，max_page={max_page}）", flush=True
+        )
         if new == 0:
             break
         url, page_no = next_url, page_no + 1
@@ -226,10 +268,15 @@ def main():
     comp_map = {}
     for c in cases:
         comp_map[c["situacion_norm"]] = comp_map.get(c["situacion_norm"], 0) + 1
-    data = {"source": COLUMN,
-            "source_name": "CONMEBOL《Situación de Análisis VAR》逐案判例",
-            "fetched": time.strftime("%Y-%m-%d"), "cases": cases}
-    CONMEBOL_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    data = {
+        "source": COLUMN,
+        "source_name": "CONMEBOL《Situación de Análisis VAR》逐案判例",
+        "fetched": time.strftime("%Y-%m-%d"),
+        "cases": cases,
+    }
+    CONMEBOL_JSON.write_text(
+        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
     print(f"parse 完成: {len(cases)} 案 {comp_map} → {CONMEBOL_JSON}", flush=True)
 
 

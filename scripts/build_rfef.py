@@ -11,6 +11,7 @@
 缺失时 <video> onerror 自动降级为官方直链。轻量版（html[data-lite]）隐藏全部视频并
 显示官方手册横幅。
 """
+
 import json
 
 from lib.theme import inject_theme, topbar, icon
@@ -22,22 +23,45 @@ SOURCE_URL = "https://www.card.rfef.es/manual/indice/"
 
 # 认定 norm → 徽章配色（复用 theme 的语义徽章 wrong/correct/pending/info）
 DEC_BADGE = {
-    "penalty": "wrong", "penalty_yellow": "wrong", "penalty_red": "wrong",
-    "penalty_no_card": "wrong", "red_card": "wrong",
-    "no_penalty": "correct", "no_infringement": "correct", "no_card": "correct",
-    "no_sanction": "correct", "offside_off": "correct", "goal_valid": "correct",
-    "yellow_card": "pending", "attacking_foul": "pending", "retake": "pending",
-    "dfk": "info", "ifk": "info", "offside_on": "info", "other": "info",
+    "penalty": "wrong",
+    "penalty_yellow": "wrong",
+    "penalty_red": "wrong",
+    "penalty_no_card": "wrong",
+    "red_card": "wrong",
+    "no_penalty": "correct",
+    "no_infringement": "correct",
+    "no_card": "correct",
+    "no_sanction": "correct",
+    "offside_off": "correct",
+    "goal_valid": "correct",
+    "yellow_card": "pending",
+    "attacking_foul": "pending",
+    "retake": "pending",
+    "dfk": "info",
+    "ifk": "info",
+    "offside_on": "info",
+    "other": "info",
 }
 # 认定中文标签（norm → zh；decision_labels 缺失时回退西语原文）
 DEC_CN = {
-    "penalty": "点球", "penalty_yellow": "点球+黄牌", "penalty_red": "点球+红牌",
-    "penalty_no_card": "点球（不出牌）", "no_penalty": "不判点球",
-    "attacking_foul": "进攻犯规", "dfk": "直接任意球", "ifk": "间接任意球",
-    "red_card": "红牌", "yellow_card": "黄牌", "no_card": "不出牌",
-    "no_sanction": "不予处罚", "no_infringement": "无犯规", "goal_valid": "进球有效",
-    "retake": "重开球门球", "offside_on": "越位犯规·间接任意球",
-    "offside_off": "不越位·比赛继续", "other": "判例",
+    "penalty": "点球",
+    "penalty_yellow": "点球+黄牌",
+    "penalty_red": "点球+红牌",
+    "penalty_no_card": "点球（不出牌）",
+    "no_penalty": "不判点球",
+    "attacking_foul": "进攻犯规",
+    "dfk": "直接任意球",
+    "ifk": "间接任意球",
+    "red_card": "红牌",
+    "yellow_card": "黄牌",
+    "no_card": "不出牌",
+    "no_sanction": "不予处罚",
+    "no_infringement": "无犯规",
+    "goal_valid": "进球有效",
+    "retake": "重开球门球",
+    "offside_on": "越位犯规·间接任意球",
+    "offside_off": "不越位·比赛继续",
+    "other": "判例",
 }
 
 HTML = r"""<!DOCTYPE html>
@@ -231,8 +255,14 @@ __TOPBAR__
 
 
 def esc(s):
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
-        .replace('"', "&quot;").replace("'", "&#39;")
+    return (
+        (s or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
 
 def load_zh():
@@ -277,7 +307,9 @@ def apply_zh(data, zh):
                 if len(znotes) == len(g.get("notes_es") or []):
                     g["notes_cn"] = znotes
                 else:
-                    print(f"⚠ 分组 [{g.get('code')}] notes 条数与西语不一致，该组判读注记回退西语")
+                    print(
+                        f"⚠ 分组 [{g.get('code')}] notes 条数与西语不一致，该组判读注记回退西语"
+                    )
     # 判例与视频说明（按 id 平铺匹配，跨栏目唯一）
     for s in data.get("sections", []):
         for g in s.get("groups", []):
@@ -330,14 +362,16 @@ def build_page(data):
         items = [it for g in s["groups"] for it in g["items"]]
         n_items += len(items)
         n_vids += sum(len(it.get("videos", [])) for it in items)
-        navs += (f'<a class="gnav" href="#{anchor}">{esc(s.get("name_cn") or s["name_es"])}'
-                 f'<b>{len(items)}</b></a>')
+        navs += (
+            f'<a class="gnav" href="#{anchor}">{esc(s.get("name_cn") or s["name_es"])}'
+            f"<b>{len(items)}</b></a>"
+        )
         # —— 栏目头 ——
         name_cn, name_es = _zh_or_es(s.get("name_cn"), s.get("name_es", ""))
-        h2 = f'<h2>{esc(name_cn)}'
+        h2 = f"<h2>{esc(name_cn)}"
         if name_es:
             h2 += f' <small class="es">{esc(name_es)}</small>'
-        h2 += f' <b>{len(items)} 例 · {sum(len(it.get("videos", [])) for it in items)} 视频</b></h2>'
+        h2 += f" <b>{len(items)} 例 · {sum(len(it.get('videos', [])) for it in items)} 视频</b></h2>"
         body = ""
         cn_i, es_i = _zh_or_es(s.get("intro_cn"), s.get("intro_es"))
         if cn_i:
@@ -351,8 +385,10 @@ def build_page(data):
             inner = f"<p>{esc(cn_t)}</p>"
             if es_t:
                 inner += f'<p class="es">{esc(es_t)}</p>'
-            body += (f'<details class="sx"><summary>{icon("chev-d", 13)} {label}</summary>'
-                     f'<div class="sxb">{inner}</div></details>')
+            body += (
+                f'<details class="sx"><summary>{icon("chev-d", 13)} {label}</summary>'
+                f'<div class="sxb">{inner}</div></details>'
+            )
         # —— 分组 ——
         for g in s["groups"]:
             body += '<div class="gblock">'
@@ -376,17 +412,24 @@ def build_page(data):
                     lis = "".join(f"<li>{esc(x)}</li>" for x in zh_items_)
                     h4 = esc(z["h"]) if z else esc(nt["h"])
                     if z:
-                        lis += "".join(f'<li class="es">{esc(x)}</li>' for x in nt["items"])
+                        lis += "".join(
+                            f'<li class="es">{esc(x)}</li>' for x in nt["items"]
+                        )
                         h4 += f'<h4 class="es" style="margin:-2px 0 6px;font-size:12px;font-weight:400">{esc(nt["h"])}</h4>'
                     blocks += f'<div class="gnote"><h4>{h4}</h4><ul>{lis}</ul></div>'
                 body += f'<div class="gnotes">{blocks}</div>'
             for it in g["items"]:
                 n_badge = DEC_BADGE.get(it.get("decision_norm", "other"), "info")
-                label = dec_label(it.get("decision_norm", "other"), it.get("decision_es", ""))
+                label = dec_label(
+                    it.get("decision_norm", "other"), it.get("decision_es", "")
+                )
                 card = f'<article class="hcard"><div class="hhead"><span class="hid">{esc(it["id"])}</span>'
                 card += f'<span class="badge {n_badge}">{esc(label)}'
-                es_dec = f'<span class="es" style="font-weight:400;margin-left:4px">{esc(it["decision_es"])}</span>' \
-                    if it.get("decision_es") and dec_labels else ""
+                es_dec = (
+                    f'<span class="es" style="font-weight:400;margin-left:4px">{esc(it["decision_es"])}</span>'
+                    if it.get("decision_es") and dec_labels
+                    else ""
+                )
                 card += es_dec + "</span></div>"
                 cn_s, es_s = _zh_or_es(it.get("situation_cn"), it.get("situation_es"))
                 card += f'<p class="sit">{esc(cn_s)}</p>'
@@ -404,16 +447,23 @@ def build_page(data):
                     for v in vids:
                         cap_cn, cap_es = _zh_or_es(
                             v.get("caption_cn")
-                            or (it.get("situation_cn") if v.get("caption_same") else ""),
-                            v.get("caption_es"))
+                            or (
+                                it.get("situation_cn") if v.get("caption_same") else ""
+                            ),
+                            v.get("caption_es"),
+                        )
                         if v.get("caption_same"):
                             cap_cn = cap_es = ""  # 与情形文本重复，不逐视频重复渲染
-                        fig = f'<figure class="vitem"><video controls preload="none" ' \
-                              f'src="{esc(v["file"])}" onerror="vfb(this,\'{v["url"]}\')"></video>'
+                        fig = (
+                            f'<figure class="vitem"><video controls preload="none" '
+                            f'src="{esc(v["file"])}" onerror="vfb(this,\'{v["url"]}\')"></video>'
+                        )
                         if cap_cn:
                             fig += f"<figcaption>{esc(cap_cn)}</figcaption>"
                             if cap_es:
-                                fig += f'<figcaption class="es">{esc(cap_es)}</figcaption>'
+                                fig += (
+                                    f'<figcaption class="es">{esc(cap_es)}</figcaption>'
+                                )
                         fig += "</figure>"
                         figs += fig
                     card += f'<div class="vgrid">{figs}</div>'
@@ -425,26 +475,38 @@ def build_page(data):
     if extras:
         navs += '<div class="gh">延伸栏目</div>'
         for x in extras:
-            navs += (f'<a class="gnav" href="{esc(x["url"])}" target="_blank" '
-                     f'rel="noopener noreferrer">{esc(x["name_cn"])} {icon("external", 11)}</a>')
-    tb = topbar(active="rfef.html", stats="stats-2026.html",
-                brand_sub="RFEF 判罚标准", seasons=("2026", "2025", "2024"), lite_btn=True)
-    src_link = (f'<a href="{SOURCE_URL}" target="_blank" rel="noopener noreferrer">'
-                f'card.rfef.es《Criterios Arbitrales》官方手册</a>')
-    html = inject_theme(HTML
-                        .replace("__TOPBAR__", tb)
-                        .replace("__SOURCE_URL__", SOURCE_URL)
-                        .replace("__SOURCE_LINK__", src_link)
-                        .replace("__I_EXTERNAL__", icon("external", 14))
-                        .replace("__I_INFO__", icon("help", 14))
-                        .replace("__I_SEARCH__", icon("search", 13))
-                        .replace("__I_PLAY__", icon("play", 13))
-                        .replace("__I_EXT__", icon("external", 12))
-                        .replace("__NAVS__", navs)
-                        .replace("__SECS__", secs_html))
+            navs += (
+                f'<a class="gnav" href="{esc(x["url"])}" target="_blank" '
+                f'rel="noopener noreferrer">{esc(x["name_cn"])} {icon("external", 11)}</a>'
+            )
+    tb = topbar(
+        active="rfef.html",
+        stats="stats-2026.html",
+        brand_sub="RFEF 判罚标准",
+        seasons=("2026", "2025", "2024"),
+        lite_btn=True,
+    )
+    src_link = (
+        f'<a href="{SOURCE_URL}" target="_blank" rel="noopener noreferrer">'
+        f"card.rfef.es《Criterios Arbitrales》官方手册</a>"
+    )
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__SOURCE_URL__", SOURCE_URL)
+        .replace("__SOURCE_LINK__", src_link)
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__I_INFO__", icon("help", 14))
+        .replace("__I_SEARCH__", icon("search", 13))
+        .replace("__I_PLAY__", icon("play", 13))
+        .replace("__I_EXT__", icon("external", 12))
+        .replace("__NAVS__", navs)
+        .replace("__SECS__", secs_html)
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "rfef.html").write_text(html, encoding="utf-8")
-    print(f"生成 {SITE / 'rfef.html'}（{len(secs)} 栏目 / {n_items} 例 / {n_vids} 视频）")
+    print(
+        f"生成 {SITE / 'rfef.html'}（{len(secs)} 栏目 / {n_items} 例 / {n_vids} 视频）"
+    )
 
 
 def main():

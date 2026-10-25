@@ -4,12 +4,14 @@
 2. 核对每个视频文件大小与服务器Content-Length一致
 3. 报告缺失/损坏文件（可重跑 download_videos_parallel.py 补齐）
 """
+
 import json
 import sys
 
 from lib.safe_http import head_size
 
 from lib.paths import DATA, LOCAL_LOGS, SITE_VIDEOS
+
 SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"
 VID = SITE_VIDEOS / SEASON
 
@@ -38,19 +40,23 @@ def main():
             need.setdefault(f, c["seq"])
     missing, size_mismatch, ok = [], [], 0
     for f in sorted(need):
-        p = VID / f.split("/", 1)[-1]  # video_files 自带 "2025/"、"2024/" 前缀，去掉避免双拼
+        p = (
+            VID / f.split("/", 1)[-1]
+        )  # video_files 自带 "2025/"、"2024/" 前缀，去掉避免双拼
         if not p.exists():
             missing.append(f)
             continue
-        remote = head_size("https://videooss.thecfa.cn/upload/video/" + _remote_path(data, f))
+        remote = head_size(
+            "https://videooss.thecfa.cn/upload/video/" + _remote_path(data, f)
+        )
         local = p.stat().st_size
         if remote and remote != local:
             size_mismatch.append((f, local, remote))
         elif remote is None:
-            print(f"  ? {f}: 无法获取远端大小(本地{local/1e6:.1f}MB)")
+            print(f"  ? {f}: 无法获取远端大小(本地{local / 1e6:.1f}MB)")
             ok += 1
         else:
-            print(f"  √ {f} {local/1e6:.1f}MB")
+            print(f"  √ {f} {local / 1e6:.1f}MB")
             ok += 1
     print(f"\n校验完成: 完整{ok} 缺失{len(missing)} 大小不符{len(size_mismatch)}")
     if missing:
@@ -61,8 +67,13 @@ def main():
         print("-> 删除对应 .mp4 后重跑下载脚本修复")
     LOCAL_LOGS.mkdir(parents=True, exist_ok=True)
     (LOCAL_LOGS / "verify_result.json").write_text(
-        json.dumps({"missing": missing, "mismatch": size_mismatch, "ok": ok},
-                   ensure_ascii=False, indent=1), encoding="utf-8")
+        json.dumps(
+            {"missing": missing, "mismatch": size_mismatch, "ok": ok},
+            ensure_ascii=False,
+            indent=1,
+        ),
+        encoding="utf-8",
+    )
 
 
 def _remote_path(data, fname):
@@ -70,7 +81,9 @@ def _remote_path(data, fname):
     for c in data["cases"]:
         if fname in c["video_files"]:
             i = c["video_files"].index(fname)
-            return c["video_urls"][i].replace("https://videooss.thecfa.cn/upload/video/", "")
+            return c["video_urls"][i].replace(
+                "https://videooss.thecfa.cn/upload/video/", ""
+            )
     raise KeyError(fname)
 
 

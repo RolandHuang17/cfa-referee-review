@@ -1,0 +1,44 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "quiz-answers.json 考题答案库契约",
+  "type": "object",
+  "required": ["version", "rLabels", "cLabels", "answers"],
+  "properties": {
+    "version": {"type": ["string", "integer"]},
+    "generated": {"type": "string"},
+    "note": {"type": "string"},
+    "rLabels": {
+      "type": "object",
+      "required": ["playon", "directfk", "indirectfk", "penalty", "retake",
+                   "goal_valid", "goal_invalid"],
+      "properties": {
+        "playon": {"type": "string"}, "directfk": {"type": "string"},
+        "indirectfk": {"type": "string"}, "penalty": {"type": "string"},
+        "retake": {"type": "string"}, "goal_valid": {"type": "string"},
+        "goal_invalid": {"type": "string"}
+      }
+    },
+    "cLabels": {
+      "type": "object",
+      "required": ["none", "yellow", "red"],
+      "properties": {
+        "none": {"type": "string"}, "yellow": {"type": "string"}, "red": {"type": "string"}
+      }
+    },
+    "answers": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["auto", "reviewed"],
+        "properties": {
+          "r": {"enum": ["playon", "directfk", "indirectfk", "penalty", "retake",
+                         "goal_valid", "goal_invalid"]},
+          "c": {"enum": ["none", "yellow", "red"]},
+          "auto": {"type": "boolean"},
+          "reviewed": {"type": "boolean"},
+          "conf": {"enum": ["high", "medium", "low"]}
+        }
+      }
+    }
+  }
+}

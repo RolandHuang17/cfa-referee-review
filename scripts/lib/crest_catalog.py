@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Shared, auditable team crest catalog used by all page builders."""
+
 import json
 
 from lib.paths import ROOT, TEAMS_JSON
@@ -29,8 +30,11 @@ def payload_aliases():
 
 
 def load_legacy_map():
-    return {name: item["path"] for name, item in load_catalog().items()
-            if item.get("status") == "verified" and item.get("path")}
+    return {
+        name: item["path"]
+        for name, item in load_catalog().items()
+        if item.get("status") == "verified" and item.get("path")
+    }
 
 
 def validate_catalog(catalog):

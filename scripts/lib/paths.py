@@ -15,6 +15,7 @@
 是 URL 而非路径。把这类名字收拢进来等于把要消灭的歧义重新造一遍。
 单脚本私有的输出路径（各自的 OUT_JSON、LOG、VID_DIR 等）同理不收拢。
 """
+
 from pathlib import Path
 
 # scripts/lib/paths.py -> parents[0]=scripts/lib, [1]=scripts, [2]=仓库根
@@ -44,19 +45,27 @@ CREST_OVERRIDES_JSON = DATA / "crest_overrides.json"
 LAWS_JSON = DATA / "laws.json"
 SCALE_JSON = DATA / "scale.json"
 UEFA_JSON = DATA / "uefa.json"
-RAP_JSON = DATA / "rap.json"            # UEFA RAP 各期索引（人工策展+脚本核对）
-RFEF_JSON = DATA / "rfef.json"          # RFEF《Criterios Arbitrales》（fetch_rfef.py 产物）
-RFEF_ZH_JSON = DATA / "rfef-zh.json"    # RFEF 中文译文层（与 RFEF_JSON 并存，勿互相覆写）
-PRO_JSON = DATA / "pro.json"            # 美国 PRO 评议周报索引（fetch_pro.py 产物）
-INTL_JSON = DATA / "intl.json"          # 全球评议资源导航（人工策展）
-CONMEBOL_JSON = DATA / "conmebol.json"  # 南美足联 VAR 逐案判例（fetch_conmebol.py 产物）
-CONMEBOL_ZH_JSON = DATA / "conmebol-zh.json"  # conmebol 中文译制层（与 CONMEBOL_JSON 并存，勿互相覆写）
-WEEKLY_JSON = DATA / "weekly.json"      # 全球周更评议节目判例索引（fetch_weekly.py 产物）
-WEEKLY_ZH_JSON = DATA / "weekly-zh.json"  # weekly 中文译注层（与 WEEKLY_JSON 并存，勿互相覆写）
-IFAB_JSON = DATA / "ifab.json"          # IFAB VAR 协议/统一尺度材料（fetch_ifab.py 产物）
-IFAB_ZH_JSON = DATA / "ifab-zh.json"    # IFAB 中文译文层（与 IFAB_JSON 并存，勿互相覆写）
-HNS_JSON = DATA / "hns.json"            # 克罗地亚 HNS《Sudačka analiza》逐轮判例（fetch_hns.py 产物）
-HNS_ZH_JSON = DATA / "hns-zh.json"      # HNS 中文译制层（与 HNS_JSON 并存，勿互相覆写）
+RAP_JSON = DATA / "rap.json"  # UEFA RAP 各期索引（人工策展+脚本核对）
+RFEF_JSON = DATA / "rfef.json"  # RFEF《Criterios Arbitrales》（fetch_rfef.py 产物）
+RFEF_ZH_JSON = DATA / "rfef-zh.json"  # RFEF 中文译文层（与 RFEF_JSON 并存，勿互相覆写）
+PRO_JSON = DATA / "pro.json"  # 美国 PRO 评议周报索引（fetch_pro.py 产物）
+INTL_JSON = DATA / "intl.json"  # 全球评议资源导航（人工策展）
+CONMEBOL_JSON = (
+    DATA / "conmebol.json"
+)  # 南美足联 VAR 逐案判例（fetch_conmebol.py 产物）
+CONMEBOL_ZH_JSON = (
+    DATA / "conmebol-zh.json"
+)  # conmebol 中文译制层（与 CONMEBOL_JSON 并存，勿互相覆写）
+WEEKLY_JSON = DATA / "weekly.json"  # 全球周更评议节目判例索引（fetch_weekly.py 产物）
+WEEKLY_ZH_JSON = (
+    DATA / "weekly-zh.json"
+)  # weekly 中文译注层（与 WEEKLY_JSON 并存，勿互相覆写）
+IFAB_JSON = DATA / "ifab.json"  # IFAB VAR 协议/统一尺度材料（fetch_ifab.py 产物）
+IFAB_ZH_JSON = DATA / "ifab-zh.json"  # IFAB 中文译文层（与 IFAB_JSON 并存，勿互相覆写）
+HNS_JSON = (
+    DATA / "hns.json"
+)  # 克罗地亚 HNS《Sudačka analiza》逐轮判例（fetch_hns.py 产物）
+HNS_ZH_JSON = DATA / "hns-zh.json"  # HNS 中文译制层（与 HNS_JSON 并存，勿互相覆写）
 ISSUES = DATA / "issues"
 
 # 本机专用：原始材料、抓取缓存、截图、日志。整个 data/local/ 被 git 忽略，

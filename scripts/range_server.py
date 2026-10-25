@@ -4,6 +4,7 @@
 Python内置 http.server 不支持 Range 请求, 导致浏览器视频无法拖动进度条;
 本模块补上单区间 Range 处理 (bytes=a-b / bytes=-N), 足够浏览器视频seek使用。
 """
+
 import io
 import os
 import re
@@ -58,7 +59,9 @@ class RangeHandler(SimpleHTTPRequestHandler):
         self.send_header("Content-Type", self.guess_type(path))
         self.send_header("Content-Range", f"bytes {start}-{end}/{size}")
         self.send_header("Content-Length", str(end - start + 1))
-        self.send_header("Last-Modified", self.date_time_string(os.fstat(f.fileno()).st_mtime))
+        self.send_header(
+            "Last-Modified", self.date_time_string(os.fstat(f.fileno()).st_mtime)
+        )
         self.end_headers()
         if self.command == "HEAD":
             f.close()
@@ -81,7 +84,9 @@ def main():
     try:
         srv = ThreadingHTTPServer(("0.0.0.0", port), RangeHandler)
     except OSError:
-        print(f"[提示] 端口{port}被占用, 可能服务已经在运行。若浏览器能打开页面, 无需处理。")
+        print(
+            f"[提示] 端口{port}被占用, 可能服务已经在运行。若浏览器能打开页面, 无需处理。"
+        )
         sys.exit(1)
     print(f"服务已启动: http://127.0.0.1:{port}/index.html  (支持视频快进)")
     srv.serve_forever()

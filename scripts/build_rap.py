@@ -6,6 +6,7 @@
 RAP 判例内容在 Nextaur 登录墙后或已失效的下载包内，不可抓取——本页只做导航与
 训练方法说明，与 uefa.html（Clear Line 判例库）互为补充。
 """
+
 import json
 
 from lib.theme import inject_theme, topbar, icon
@@ -104,33 +105,49 @@ __TOPBAR__
 
 
 def esc(s):
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
-        .replace('"', "&quot;").replace("'", "&#39;")
+    return (
+        (s or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
 
 def build_page(data):
     about = "".join(f"<p>{esc(p)}</p>" for p in data.get("about_cn", []))
     steps = "".join(
         f'<div class="step"><b><span class="n">{esc(h["step"])}</span>{esc(h["title"])}</b>'
-        f'<p>{esc(h["text"])}</p></div>'
-        for h in data.get("howto_cn", []))
+        f"<p>{esc(h['text'])}</p></div>"
+        for h in data.get("howto_cn", [])
+    )
     editions_html = ""
     for era in data.get("eras", []):
         eds = [e for e in data.get("editions", []) if e.get("era") == era["key"]]
         if not eds:
             continue
-        editions_html += (f'<h3 style="font-family:var(--font-display);font-size:15.5px;'
-                          f'margin:18px 0 10px">{esc(era["name_cn"])}</h3>'
-                          f'<p class="desc" style="margin:-6px 0 12px">{esc(era["desc_cn"])}</p>')
+        editions_html += (
+            f'<h3 style="font-family:var(--font-display);font-size:15.5px;'
+            f'margin:18px 0 10px">{esc(era["name_cn"])}</h3>'
+            f'<p class="desc" style="margin:-6px 0 12px">{esc(era["desc_cn"])}</p>'
+        )
         for e in eds:
             online = e.get("platform") == "nextaur"
-            size = f'<span class="ed-size">{esc(e["size"])}</span>' if e.get("size") else ""
-            status = (f'<span class="ed-status badge {"correct" if online else "info"}">'
-                      f'{esc(e.get("status_cn", ""))}</span>')
+            size = (
+                f'<span class="ed-size">{esc(e["size"])}</span>'
+                if e.get("size")
+                else ""
+            )
+            status = (
+                f'<span class="ed-status badge {"correct" if online else "info"}">'
+                f"{esc(e.get('status_cn', ''))}</span>"
+            )
             links = "".join(
-                f'<a class="btn" href="{esc(l["url"])}" target="_blank" rel="noopener noreferrer">'
-                f'{icon("external", 12)} {esc(l["label"])}</a>'
-                for l in e.get("links", []))
+                f'<a class="btn" href="{esc(link["url"])}" target="_blank" rel="noopener noreferrer">'
+                f"{icon('external', 12)} {esc(link['label'])}</a>"
+                for link in e.get("links", [])
+            )
             editions_html += f"""<div class="edition">
   <div class="ed-head"><h3>{esc(e["title"])}</h3>{size}{status}</div>
   <p class="ed-note">{esc(e.get("note_cn", ""))}</p>
@@ -138,28 +155,38 @@ def build_page(data):
 </div>"""
     tools = "".join(
         f'<a class="tool" href="{esc(t["url"])}" target="_blank" rel="noopener noreferrer">'
-        f'<b>{esc(t["name"])}</b><span>{esc(t.get("note_cn", ""))}</span></a>'
-        for t in data.get("tools", []))
-    tb = topbar(active="rap.html", stats="stats-2026.html", brand_sub="UEFA RAP 训练包",
-                seasons=("2026", "2025", "2024"))
-    src_link = (f'<a href="{esc(data.get("source", ""))}" target="_blank" '
-                f'rel="noopener noreferrer">dutchreferee.com 各期索引</a>')
-    html = inject_theme(HTML
-                        .replace("__TOPBAR__", tb)
-                        .replace("__SOURCE_LINK__", src_link)
-                        .replace("__I_EXTERNAL__", icon("external", 14))
-                        .replace("__I_FILM__", icon("film", 17))
-                        .replace("__I_TOOL__", icon("sliders", 17))
-                        .replace("__I_PLAY__", icon("play", 17))
-                        .replace("__ABOUT__", about)
-                        .replace("__STEPS__", steps)
-                        .replace("__EDITIONS__", editions_html)
-                        .replace("__TOOLS__", tools)
-                        .replace("__CHECKED__", esc(data.get("checked", ""))))
+        f"<b>{esc(t['name'])}</b><span>{esc(t.get('note_cn', ''))}</span></a>"
+        for t in data.get("tools", [])
+    )
+    tb = topbar(
+        active="rap.html",
+        stats="stats-2026.html",
+        brand_sub="UEFA RAP 训练包",
+        seasons=("2026", "2025", "2024"),
+    )
+    src_link = (
+        f'<a href="{esc(data.get("source", ""))}" target="_blank" '
+        f'rel="noopener noreferrer">dutchreferee.com 各期索引</a>'
+    )
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__SOURCE_LINK__", src_link)
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__I_FILM__", icon("film", 17))
+        .replace("__I_TOOL__", icon("sliders", 17))
+        .replace("__I_PLAY__", icon("play", 17))
+        .replace("__ABOUT__", about)
+        .replace("__STEPS__", steps)
+        .replace("__EDITIONS__", editions_html)
+        .replace("__TOOLS__", tools)
+        .replace("__CHECKED__", esc(data.get("checked", "")))
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "rap.html").write_text(html, encoding="utf-8")
     n = len(data.get("editions", []))
-    print(f"生成 {SITE / 'rap.html'}（{n} 期索引 / {len(data.get('tools', []))} 个工具链接）")
+    print(
+        f"生成 {SITE / 'rap.html'}（{n} 期索引 / {len(data.get('tools', []))} 个工具链接）"
+    )
 
 
 def main():

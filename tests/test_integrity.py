@@ -8,6 +8,7 @@
 fail-collecting：每个 check 把问题攒进局部 list 再一次性 assert，所以一次运行
 就能看到全部问题，不必修一个跑一遍。CI 走前一种，退出码非零即拦截部署。
 """
+
 import json
 import re
 import sys
@@ -19,18 +20,19 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from lib.crest_catalog import load_catalog, normalize_team, validate_catalog  # noqa: E402
+from lib.pages import PAGE_FILES  # noqa: E402
 from lib.paths import DATA, SITE  # noqa: E402
 from lib.team_names import ALIASES  # noqa: E402
 
-PAGES = ["index.html", "season-2024.html", "season-2025.html", "season-2026.html",
-         "stats-2024.html", "stats-2025.html", "stats-2026.html", "rules.html",
-         "scale.html", "uefa.html", "rap.html", "rfef.html", "pro.html", "intl.html",
-         "conmebol.html", "weekly.html", "ifab.html", "hns.html", "quiz.html"]
+# 页面清单唯一权威源在 scripts/lib/pages.py（sitemap/搜索/SEO 同源），此处只消费
+PAGES = PAGE_FILES
 SEASONS = ("2024", "2025", "2026")
 # 每季期望值（人工复核后的基准，改动判例分类或解析需同步更新）
-EXPECTED = {"2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
-            "2025": (227, 229, {"wrong": 83, "correct": 138, "pending": 6}),
-            "2026": (225, 224, {"wrong": 95, "correct": 121, "pending": 9})}
+EXPECTED = {
+    "2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
+    "2025": (227, 229, {"wrong": 83, "correct": 138, "pending": 6}),
+    "2026": (225, 224, {"wrong": 95, "correct": 121, "pending": 9}),
+}
 # 考题模式题库基准：每季「有视频且有认定原文」的判例数 + 尺度场景数（改口径需同步）。
 # 注意 2024 第1期为"结论摘要"式文章，无认定原文的判例（如 seq3）本就不入判例池，属设计内
 EXPECTED_QUIZ = {"2024": 141, "2025": 227, "2026": 224}
@@ -55,7 +57,9 @@ def test_pages_exist_and_are_self_contained():
         text = path.read_text(encoding="utf-8")
         if re.search(r"__\w+__|\{\{[^}]+\}\}", text):
             problems.append(f"存在模板占位符: site/{name}")
-        if re.search(r"<script\s+src=|fonts\.googleapis|cdnjs|unpkg|jsdelivr", text, re.I):
+        if re.search(
+            r"<script\s+src=|fonts\.googleapis|cdnjs|unpkg|jsdelivr", text, re.I
+        ):
             problems.append(f"存在外部脚本或CDN引用: site/{name}")
         # 标签配平护栏：未闭合的 <style>/<script> 会把后续文档吞进 raw-text 块，
         # 造成 token 丢失/页面半瘫（stats 页曾因缺 </style> 丢掉全部 :root tokens）
@@ -63,7 +67,9 @@ def test_pages_exist_and_are_self_contained():
             opened = len(re.findall(rf"<{tag}[\s>]", text))
             closed = text.count(f"</{tag}>")
             if opened != closed:
-                problems.append(f"site/{name} <{tag}> 标签不配平: {opened} 开 / {closed} 闭")
+                problems.append(
+                    f"site/{name} <{tag}> 标签不配平: {opened} 开 / {closed} 闭"
+                )
     _finish(problems)
 
 
@@ -72,28 +78,45 @@ def test_season_case_counts():
     for season, (case_count, video_count, verdicts) in EXPECTED.items():
         data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         cases = data["cases"]
-        actual = {key: sum(1 for case in cases if case["referee_verdict"] == key)
-                  for key in verdicts}
+        actual = {
+            key: sum(1 for case in cases if case["referee_verdict"] == key)
+            for key in verdicts
+        }
         videos = sum(len(case["video_files"]) for case in cases)
         if (len(cases), videos, actual) != (case_count, video_count, verdicts):
-            problems.append(f"{season}数据统计不符: cases={len(cases)} videos={videos} "
-                            f"verdicts={actual}，期望 {case_count}/{video_count}/{verdicts}")
+            problems.append(
+                f"{season}数据统计不符: cases={len(cases)} videos={videos} "
+                f"verdicts={actual}，期望 {case_count}/{video_count}/{verdicts}"
+            )
         # 存档完整性：cases 引用的每期都应有官方页面存档
         issues_dir = DATA / "issues" / season
         if issues_dir.is_dir():
-            archived = {int(mm.group(1)) for f in issues_dir.glob("issue_*.html")
-                        for mm in [re.match(r"issue_(\d+)\.html", f.name)] if mm}
+            archived = {
+                int(mm.group(1))
+                for f in issues_dir.glob("issue_*.html")
+                for mm in [re.match(r"issue_(\d+)\.html", f.name)]
+                if mm
+            }
             case_issues = {c["issue"] for c in cases}
             if not case_issues <= archived:
-                problems.append(f"{season} 官方页面存档缺期: {sorted(case_issues - archived)}")
+                problems.append(
+                    f"{season} 官方页面存档缺期: {sorted(case_issues - archived)}"
+                )
     _finish(problems)
 
 
 def test_internal_links_resolve():
     problems = []
     for path in SITE.glob("*.html"):
-        for target in re.findall(r"(?:href|src)=\"([^\"]+)\"", path.read_text(encoding="utf-8")):
-            if target.startswith(("#", "http://", "https://", "data:", "mailto:", "//", "/")) or "${" in target:
+        for target in re.findall(
+            r"(?:href|src)=\"([^\"]+)\"", path.read_text(encoding="utf-8")
+        ):
+            if (
+                target.startswith(
+                    ("#", "http://", "https://", "data:", "mailto:", "//", "/")
+                )
+                or "${" in target
+            ):
                 continue
             if target.startswith("videos/"):
                 continue  # 视频为本地 gitignored 资产，线上按需提供
@@ -120,7 +143,9 @@ def test_team_catalog_complete():
             problems.append(f"队伍未登记: {raw} -> {canonical}")
     slugs = [item.get("slug") for item in catalog.values()]
     if len(slugs) != len(set(slugs)):
-        problems.append(f"队徽 slug 重复: {sorted({s for s in slugs if slugs.count(s) > 1})}")
+        problems.append(
+            f"队徽 slug 重复: {sorted({s for s in slugs if slugs.count(s) > 1})}"
+        )
     _finish(problems)
     print(f"队徽目录校验通过: {len(raw_names)} 个原始名称 -> {len(names)} 个标准队伍")
 
@@ -140,8 +165,11 @@ def test_quiz_bank_pool():
     per_season = {s: 0 for s in SEASONS}
     for season in SEASONS:
         data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
-        per_season[season] = sum(1 for c in data["cases"]
-                                 if c.get("video_files") and (c.get("conclusion") or "").strip())
+        per_season[season] = sum(
+            1
+            for c in data["cases"]
+            if c.get("video_files") and (c.get("conclusion") or "").strip()
+        )
     text = bank_path.read_text(encoding="utf-8")
     m = re.search(r'"meta":\{"case":(\d+),"scale":(\d+),"var":(\d+)\}', text)
     if not m:
@@ -149,7 +177,9 @@ def test_quiz_bank_pool():
     else:
         n_case, n_scale, n_var = int(m.group(1)), int(m.group(2)), int(m.group(3))
         if n_case != sum(per_season.values()):
-            problems.append(f"考题判例池不符: quiz={n_case}，期望 {sum(per_season.values())}（{per_season}）")
+            problems.append(
+                f"考题判例池不符: quiz={n_case}，期望 {sum(per_season.values())}（{per_season}）"
+            )
         scale_total = 0
         if (DATA / "scale.json").exists():
             sd = json.loads((DATA / "scale.json").read_text(encoding="utf-8"))
@@ -160,19 +190,30 @@ def test_quiz_bank_pool():
                     for g in sec.get("groups", []):
                         for it in g.get("items", []):
                             dec = it.get("decision") or []
-                            if dec and not any(x.get("label") == "VAR 机制讲解" for x in dec) \
-                                    and it.get("video"):
+                            if (
+                                dec
+                                and not any(
+                                    x.get("label") == "VAR 机制讲解" for x in dec
+                                )
+                                and it.get("video")
+                            ):
                                 scale_total += 1
         if n_scale != scale_total:
             problems.append(f"考题尺度场景池不符: quiz={n_scale}，期望 {scale_total}")
         if n_var != len(VAR_QUIZ_FAQ_IDS):
-            problems.append(f"考题 VAR 协议题池不符: quiz={n_var}，期望 {len(VAR_QUIZ_FAQ_IDS)}")
+            problems.append(
+                f"考题 VAR 协议题池不符: quiz={n_var}，期望 {len(VAR_QUIZ_FAQ_IDS)}"
+            )
         for season, expected in EXPECTED_QUIZ.items():
             if per_season[season] != expected:
-                problems.append(f"{season}考题判例池 {per_season[season]} != 基准 {expected}")
+                problems.append(
+                    f"{season}考题判例池 {per_season[season]} != 基准 {expected}"
+                )
     _finish(problems)
-    print(f"考题题库校验通过: 判例 {sum(per_season.values())} + 尺度场景 "
-          f"{int(m.group(2)) if m else '?'} + VAR 协议 {int(m.group(3)) if m else '?'} 题")
+    print(
+        f"考题题库校验通过: 判例 {sum(per_season.values())} + 尺度场景 "
+        f"{int(m.group(2)) if m else '?'} + VAR 协议 {int(m.group(3)) if m else '?'} 题"
+    )
 
 
 def test_impact_and_scores_consistency():
@@ -193,8 +234,12 @@ def test_impact_and_scores_consistency():
             if seq not in wrong:
                 problems.append(f"{where} 不是 wrong 判例")
                 continue
-            match_keys.add(f"{rec['league']}|{rec['round']}|{rec['home']}|{rec['away']}")
-            if rec["league"] != next(c["comp"] for c in data["cases"] if c["seq"] == seq):
+            match_keys.add(
+                f"{rec['league']}|{rec['round']}|{rec['home']}|{rec['away']}"
+            )
+            if rec["league"] != next(
+                c["comp"] for c in data["cases"] if c["seq"] == seq
+            ):
                 problems.append(f"{where} league 与 cases 不符")
             for n in (rec["home"], rec["away"]):
                 if n in ALIASES:
@@ -202,13 +247,17 @@ def test_impact_and_scores_consistency():
             for it in rec["items"]:
                 if it["team"] not in (rec["home"], rec["away"]):
                     problems.append(f"{where} items 队名不属于对阵双方: {it['team']}")
-        sc = json.loads((DATA / f"match-scores-{season}.json").read_text(encoding="utf-8"))
+        sc = json.loads(
+            (DATA / f"match-scores-{season}.json").read_text(encoding="utf-8")
+        )
         for key in sc.get("scores", {}):
             for n in key.split("|")[2:]:
                 if n in ALIASES:
                     problems.append(f"match-scores-{season} 队名未归一化: {key}")
             if key not in match_keys:
-                problems.append(f"match-scores-{season} 孤儿比分键（impact 无对应场次）: {key}")
+                problems.append(
+                    f"match-scores-{season} 孤儿比分键（impact 无对应场次）: {key}"
+                )
     _finish(problems)
     print("impact/scores 一致性校验通过")
 
@@ -220,22 +269,37 @@ def test_site_pages_in_sync_with_data():
         data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         page = SITE / f"season-{season}.html"
         if page.exists():
-            m = re.search(r'"meta":\{"n_cases":(\d+),"n_issues":(\d+)\}',
-                          page.read_text(encoding="utf-8"))
+            m = re.search(
+                r'"meta":\{"n_cases":(\d+),"n_issues":(\d+)\}',
+                page.read_text(encoding="utf-8"),
+            )
             if not m:
-                problems.append(f"season-{season}.html 缺少 meta 计数（页面过旧，需重建）")
-            elif (int(m.group(1)), int(m.group(2))) != (len(data["cases"]), len(data["issues"])):
-                problems.append(f"season-{season}.html 内联数据过期: meta={m.groups()}，"
-                                f"实际 cases={len(data['cases'])} issues={len(data['issues'])}，需重建页面")
+                problems.append(
+                    f"season-{season}.html 缺少 meta 计数（页面过旧，需重建）"
+                )
+            elif (int(m.group(1)), int(m.group(2))) != (
+                len(data["cases"]),
+                len(data["issues"]),
+            ):
+                problems.append(
+                    f"season-{season}.html 内联数据过期: meta={m.groups()}，"
+                    f"实际 cases={len(data['cases'])} issues={len(data['issues'])}，需重建页面"
+                )
         imp = json.loads((DATA / f"impact-{season}.json").read_text(encoding="utf-8"))
         spage = SITE / f"stats-{season}.html"
         if spage.exists():
-            m2 = re.search(r'"overview":\{"cases":(\d+)', spage.read_text(encoding="utf-8"))
+            m2 = re.search(
+                r'"overview":\{"cases":(\d+)', spage.read_text(encoding="utf-8")
+            )
             if not m2:
-                problems.append(f"stats-{season}.html 缺少 overview 计数（页面过旧，需重建）")
+                problems.append(
+                    f"stats-{season}.html 缺少 overview 计数（页面过旧，需重建）"
+                )
             elif int(m2.group(1)) != len(imp["impacts"]):
-                problems.append(f"stats-{season}.html 内联数据过期: 影响 {m2.group(1)} != "
-                                f"{len(imp['impacts'])}，需重建页面")
+                problems.append(
+                    f"stats-{season}.html 内联数据过期: 影响 {m2.group(1)} != "
+                    f"{len(imp['impacts'])}，需重建页面"
+                )
     _finish(problems)
     print("site 页面与 data JSON 同步")
 
@@ -263,13 +327,19 @@ def test_weekly_ifab_data_sanity():
         if e.get("date_src") == "exact" and not e.get("date"):
             problems.append(f"weekly.json 期目 {vid} date_src=exact 但无日期")
         if e.get("show") not in shows:
-            problems.append(f"weekly.json 期目 {vid} 的节目 {e.get('show')} 不在 shows 中")
+            problems.append(
+                f"weekly.json 期目 {vid} 的节目 {e.get('show')} 不在 shows 中"
+            )
         if e.get("show") == "uaf":
             ok_url = str(e.get("url", "")).startswith("https://uaf.ua/")
         else:
-            ok_url = str(e.get("url", "")).startswith("https://www.youtube.com/watch?v=")
+            ok_url = str(e.get("url", "")).startswith(
+                "https://www.youtube.com/watch?v="
+            )
         if not ok_url:
-            problems.append(f"weekly.json 期目 {vid} 的 url 非官方页（{e.get('show')}）")
+            problems.append(
+                f"weekly.json 期目 {vid} 的 url 非官方页（{e.get('show')}）"
+            )
     wzh = json.loads((DATA / "weekly-zh.json").read_text(encoding="utf-8"))
     for k in wzh.get("items", {}):
         if k not in ids:
@@ -277,9 +347,13 @@ def test_weekly_ifab_data_sanity():
     for k in wzh.get("shows", {}):
         if k not in shows:
             problems.append(f"weekly-zh.json shows 键 {k} 不在 weekly.json 中")
-    uncovered = [e["id"] for e in eps if e.get("id") and e["id"] not in wzh.get("items", {})]
+    uncovered = [
+        e["id"] for e in eps if e.get("id") and e["id"] not in wzh.get("items", {})
+    ]
     if uncovered:
-        problems.append(f"weekly-zh.json 译注未全覆盖: 缺 {len(uncovered)} 期（如 {uncovered[:3]}）")
+        problems.append(
+            f"weekly-zh.json 译注未全覆盖: 缺 {len(uncovered)} 期（如 {uncovered[:3]}）"
+        )
     ifab = json.loads((DATA / "ifab.json").read_text(encoding="utf-8"))
     secs = ifab.get("sections", [])
     faq = ifab.get("faq", [])
@@ -298,7 +372,9 @@ def test_weekly_ifab_data_sanity():
         zblocks = zsecs[s["id"]].get("blocks", {})
         for b in s["blocks"]:
             if (b.get("h") or "_head") not in zblocks:
-                problems.append(f"ifab-zh.json 缺子节 {s['id']}/{b.get('h') or '_head'}")
+                problems.append(
+                    f"ifab-zh.json 缺子节 {s['id']}/{b.get('h') or '_head'}"
+                )
     for q in faq:
         if q["id"] not in izh.get("faq", {}):
             problems.append(f"ifab-zh.json 缺 FAQ {q['id']}")
@@ -313,8 +389,14 @@ def test_weekly_ifab_data_sanity():
         if not (r.get("title") and r.get("date") and r.get("url")):
             problems.append(f"hns.json 轮次 {r.get('id')} 缺 title/date/url")
         for inc in r.get("incidents", []):
-            if not inc.get("paras") or inc.get("verdict") not in ("correct", "incorrect", "other"):
-                problems.append(f"hns.json {r.get('id')} 判例 {inc.get('no')} paras/verdict 异常")
+            if not inc.get("paras") or inc.get("verdict") not in (
+                "correct",
+                "incorrect",
+                "other",
+            ):
+                problems.append(
+                    f"hns.json {r.get('id')} 判例 {inc.get('no')} paras/verdict 异常"
+                )
     hzh = json.loads((DATA / "hns-zh.json").read_text(encoding="utf-8"))
     for r in hrounds:
         zr = hzh.get("rounds", {}).get(str(r.get("id")))
@@ -324,7 +406,9 @@ def test_weekly_ifab_data_sanity():
         for inc in r.get("incidents", []):
             zi = zr.get("incidents", {}).get(str(inc.get("no")))
             if not zi or len(zi.get("paras", [])) != len(inc.get("paras", [])):
-                problems.append(f"hns-zh.json 译制不齐: {r.get('id')} 判例 {inc.get('no')}")
+                problems.append(
+                    f"hns-zh.json 译制不齐: {r.get('id')} 判例 {inc.get('no')}"
+                )
     for k in hzh.get("rounds", {}):
         if k not in hids:
             problems.append(f"hns-zh.json rounds 键 {k} 不在 hns.json 中")
@@ -339,22 +423,33 @@ def test_issue_url_tables_in_sync():
     会在抓取或解析时静默漏期。顺带断言表中每期都已有官方页面存档。"""
     import fetch_issues
     import parse_issues
+
     problems = []
     for season in sorted(set(fetch_issues.ISSUES) | set(parse_issues.ISSUE_URL)):
         left = fetch_issues.ISSUES.get(season, {})
         right = parse_issues.ISSUE_URL.get(season, {})
         if set(left) != set(right):
-            problems.append(f"{season} 两 URL 表期数不一致: fetch_issues={sorted(left)} "
-                            f"parse_issues={sorted(right)}")
+            problems.append(
+                f"{season} 两 URL 表期数不一致: fetch_issues={sorted(left)} "
+                f"parse_issues={sorted(right)}"
+            )
             continue
         for no in sorted(left):
             if fetch_issues.BASE + left[no][0] != right[no]:
-                problems.append(f"{season} 第{no}期 URL 不一致: {left[no][0]} vs {right[no]}")
-        archived = {int(m.group(1)) for f in (DATA / "issues" / season).glob("issue_*.html")
-                    for m in [re.match(r"issue_(\d+)\.html", f.name)] if m}
+                problems.append(
+                    f"{season} 第{no}期 URL 不一致: {left[no][0]} vs {right[no]}"
+                )
+        archived = {
+            int(m.group(1))
+            for f in (DATA / "issues" / season).glob("issue_*.html")
+            for m in [re.match(r"issue_(\d+)\.html", f.name)]
+            if m
+        }
         missing = sorted(set(left) - archived)
         if missing:
-            problems.append(f"{season} URL 表中的期尚未抓取存档: {missing}（先跑 fetch_issues）")
+            problems.append(
+                f"{season} URL 表中的期尚未抓取存档: {missing}（先跑 fetch_issues）"
+            )
     _finish(problems)
     print("两 URL 表同步且每期均有存档")
 
@@ -383,16 +478,22 @@ def test_uefa_rfef_conmebol_zh_aligned():
         zc = z.get("criteria") or []
         if en_c and not zc:
             problems.append(f"uefa-zh 组 {key} 缺 criteria 译文")
-        elif zc and not (len(zc) == len(en_c) and all(
+        elif zc and not (
+            len(zc) == len(en_c)
+            and all(
                 len(b.get("items") or []) == len(a.get("items") or [])
-                for a, b in zip(en_c, zc))):
+                for a, b in zip(en_c, zc)
+            )
+        ):
             problems.append(f"uefa-zh 组 {key} criteria 块数/条数与英文不一致")
         for it in g.get("items", []):
             if not (zi.get(it.get("id", "")) or {}).get("title"):
                 problems.append(f"uefa-zh 缺判例标题译文: {it.get('id', '')}")
     for k in sorted(set(zg) - used_g):
         problems.append(f"uefa-zh 组 key 不在 uefa.json 中（疑似过期）: {k}")
-    src_ids = {it.get("id") for g in uefa.get("groups", []) for it in g.get("items", [])}
+    src_ids = {
+        it.get("id") for g in uefa.get("groups", []) for it in g.get("items", [])
+    }
     for k in sorted(set(zi) - src_ids):
         problems.append(f"uefa-zh items 键不在 uefa.json 中（疑似过期）: {k}")
     # --- RFEF：栏目按 key、分组 notes 条数、判例按 id（镜像 build_rfef.apply_zh）---
@@ -409,12 +510,16 @@ def test_uefa_rfef_conmebol_zh_aligned():
         used_s.add(key)
         for g in s.get("groups", []):
             zg_ = (z.get("groups") or {}).get(g.get("code", ""))
-            if zg_ and zg_.get("notes") is not None and \
-                    len(zg_["notes"]) != len(g.get("notes_es") or []):
+            if (
+                zg_
+                and zg_.get("notes") is not None
+                and len(zg_["notes"]) != len(g.get("notes_es") or [])
+            ):
                 problems.append(f"rfef-zh 分组 {g.get('code')} notes 条数与西语不一致")
             for it in g.get("items", []):
-                if it.get("situation_es") and \
-                        not (zitems.get(it.get("id", "")) or {}).get("situation"):
+                if it.get("situation_es") and not (
+                    zitems.get(it.get("id", "")) or {}
+                ).get("situation"):
                     problems.append(f"rfef-zh 缺判例情形译文: {it.get('id', '')}")
                 src_items.add(it.get("id", ""))
                 for v in it.get("videos", []):
@@ -435,9 +540,19 @@ def test_uefa_rfef_conmebol_zh_aligned():
         elif c.get("situacion_es"):
             problems.append(f"conmebol-zh 缺情境译文（构建时会回退西语）: {url[:70]}")
     for k in sorted(set(zcases) - applied):
-        problems.append(f"conmebol-zh cases 键未生效（源无此案或译文缺 situation）: {k[:70]}")
+        problems.append(
+            f"conmebol-zh cases 键未生效（源无此案或译文缺 situation）: {k[:70]}"
+        )
     _finish(problems)
     print("uefa/rfef/conmebol 译文层与源数据对齐")
+
+
+def test_data_conform_to_schemas():
+    """数据 JSON 契约（schemas/*.schema.json，校验器 validate_schemas.py）。"""
+    import validate_schemas
+
+    _finish(validate_schemas.validate_all())
+    print("cases/impact/quiz-answers/weekly 符合 schema 契约")
 
 
 def test_bat_file_gbk_encoded():
@@ -467,6 +582,7 @@ CHECKS = [
     test_weekly_ifab_data_sanity,
     test_issue_url_tables_in_sync,
     test_uefa_rfef_conmebol_zh_aligned,
+    test_data_conform_to_schemas,
     test_bat_file_gbk_encoded,
     test_internal_links_resolve,
     test_team_catalog_complete,
@@ -487,7 +603,9 @@ def main():
         for item in FAILURES:
             print(f"  - {item}")
         return 1
-    print(f"\n项目校验通过: {len(PAGES)}个页面、三赛季数据、离线资源路径和外部引用均正常")
+    print(
+        f"\n项目校验通过: {len(PAGES)}个页面、三赛季数据、离线资源路径和外部引用均正常"
+    )
     return 0
 
 

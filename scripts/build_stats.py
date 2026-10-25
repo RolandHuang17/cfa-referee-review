@@ -9,6 +9,7 @@
     未提高但存在点球/红牌机会因素且修正后分差<=1 -> "存在影响可能"; 否则"未改变结果"
   - 比分缺失的场次显示"待补"并优雅降级
 """
+
 import json
 import sys
 from datetime import date
@@ -21,22 +22,31 @@ from lib.paths import DATA, SITE
 
 SEASONS = {
     "2026": {
-        "cases": "cases-2026.json", "impact": "impact-2026.json",
+        "cases": "cases-2026.json",
+        "impact": "impact-2026.json",
         "scores": "match-scores-2026.json",
-        "out": "stats-2026.html", "page": "season-2026.html",
-        "season": "2026", "issueDesc": "2026赛季第1—22期（赛季进行中）",
+        "out": "stats-2026.html",
+        "page": "season-2026.html",
+        "season": "2026",
+        "issueDesc": "2026赛季第1—22期（赛季进行中）",
     },
     "2025": {
-        "cases": "cases-2025.json", "impact": "impact-2025.json",
+        "cases": "cases-2025.json",
+        "impact": "impact-2025.json",
         "scores": "match-scores-2025.json",
-        "out": "stats-2025.html", "page": "season-2025.html",
-        "season": "2025", "issueDesc": "2025赛季第1—32期",
+        "out": "stats-2025.html",
+        "page": "season-2025.html",
+        "season": "2025",
+        "issueDesc": "2025赛季第1—32期",
     },
     "2024": {
-        "cases": "cases-2024.json", "impact": "impact-2024.json",
+        "cases": "cases-2024.json",
+        "impact": "impact-2024.json",
         "scores": "match-scores-2024.json",
-        "out": "stats-2024.html", "page": "season-2024.html",
-        "season": "2024", "issueDesc": "2024赛季第1—27期",
+        "out": "stats-2024.html",
+        "page": "season-2024.html",
+        "season": "2024",
+        "issueDesc": "2024赛季第1—27期",
     },
 }
 
@@ -69,14 +79,30 @@ TYPE_LABEL_BENEFIT = {
     "wrong_offside_self": "对方被误判越位",
     "missed_foul_called": "漏判本队犯规（获益）",
 }
-LEAGUE_SHORT = {"中超联赛": "中超", "中甲联赛": "中甲", "中乙联赛": "中乙",
-                "中国足协杯": "足协杯", "足协杯": "足协杯",
-                "女超联赛": "女超", "女甲联赛": "女甲",
-                "全运会": "全运会", "三大球运动会": "三大球"}
-TYPE_ORDER = ["denied_goal", "opp_goal_should_disallow", "missed_penalty",
-              "wrong_penalty_against", "missed_red_opponent", "wrong_red_self",
-              "missed_yellow_opponent", "wrong_yellow_self",
-              "wrong_foul_called_self", "missed_foul_called", "wrong_offside_self"]
+LEAGUE_SHORT = {
+    "中超联赛": "中超",
+    "中甲联赛": "中甲",
+    "中乙联赛": "中乙",
+    "中国足协杯": "足协杯",
+    "足协杯": "足协杯",
+    "女超联赛": "女超",
+    "女甲联赛": "女甲",
+    "全运会": "全运会",
+    "三大球运动会": "三大球",
+}
+TYPE_ORDER = [
+    "denied_goal",
+    "opp_goal_should_disallow",
+    "missed_penalty",
+    "wrong_penalty_against",
+    "missed_red_opponent",
+    "wrong_red_self",
+    "missed_yellow_opponent",
+    "wrong_yellow_self",
+    "wrong_foul_called_self",
+    "missed_foul_called",
+    "wrong_offside_self",
+]
 
 
 def load(season):
@@ -101,11 +127,19 @@ def build_matches(impact, scores, cmap):
         # 防未来泄漏导致页面查不到队徽、与 season 页队名不一致
         home, away = normalize_name(imp["home"]), normalize_name(imp["away"])
         key = f"{imp['league']}|{imp['round']}|{home}|{away}"
-        m = matches.setdefault(key, {
-            "league": imp["league"], "round": imp["round"], "home": home,
-            "away": away, "match_note": imp.get("match_note", ""),
-            "cases": [], "items": [], "seqs": [],
-        })
+        m = matches.setdefault(
+            key,
+            {
+                "league": imp["league"],
+                "round": imp["round"],
+                "home": home,
+                "away": away,
+                "match_note": imp.get("match_note", ""),
+                "cases": [],
+                "items": [],
+                "seqs": [],
+            },
+        )
         for it in imp["items"]:
             it = dict(it, seq=seq, team=normalize_name(it["team"]))
             m["items"].append(it)
@@ -114,8 +148,17 @@ def build_matches(impact, scores, cmap):
 
     for key, m in matches.items():
         sc = scores.get(key)
-        m["score"] = {"h": sc["h"], "a": sc["a"], "source": sc.get("source", ""),
-                      "date": sc.get("date", ""), "note": sc.get("note", "")} if sc else None
+        m["score"] = (
+            {
+                "h": sc["h"],
+                "a": sc["a"],
+                "source": sc.get("source", ""),
+                "date": sc.get("date", ""),
+                "note": sc.get("note", ""),
+            }
+            if sc
+            else None
+        )
         if not m["score"]:
             for t in {i["team"] for i in m["items"]}:
                 m.setdefault("status", {})[t] = "pending"
@@ -133,29 +176,47 @@ def build_matches(impact, scores, cmap):
         m["corrected_score"] = (h_c, a_c)
         act_res = result_of(m["score"]["h"], m["score"]["a"])
         cor_res = result_of(h_c, a_c)
-        has_opp_factor = any(i["type"] in (
-            "missed_penalty", "wrong_penalty_against", "missed_red_opponent",
-            "wrong_red_self", "missed_yellow_opponent", "wrong_yellow_self",
-            "wrong_foul_called_self", "missed_foul_called", "wrong_offside_self")
-            for i in m["items"])
+        has_opp_factor = any(
+            i["type"]
+            in (
+                "missed_penalty",
+                "wrong_penalty_against",
+                "missed_red_opponent",
+                "wrong_red_self",
+                "missed_yellow_opponent",
+                "wrong_yellow_self",
+                "wrong_foul_called_self",
+                "missed_foul_called",
+                "wrong_offside_self",
+            )
+            for i in m["items"]
+        )
         for t in {i["team"] for i in m["items"]}:
             act_pts = {"win": 3, "draw": 1, "loss": 0}[
-                "win" if (act_res == "win" and t == m["home"]) or
-                         (act_res == "loss" and t == m["away"]) else
-                "loss" if (act_res == "loss" and t == m["home"]) or
-                          (act_res == "win" and t == m["away"]) else "draw"]
+                "win"
+                if (act_res == "win" and t == m["home"])
+                or (act_res == "loss" and t == m["away"])
+                else "loss"
+                if (act_res == "loss" and t == m["home"])
+                or (act_res == "win" and t == m["away"])
+                else "draw"
+            ]
             cor_pts = {"win": 3, "draw": 1, "loss": 0}[
-                "win" if (cor_res == "win" and t == m["home"]) or
-                         (cor_res == "loss" and t == m["away"]) else
-                "loss" if (cor_res == "loss" and t == m["home"]) or
-                          (cor_res == "win" and t == m["away"]) else "draw"]
+                "win"
+                if (cor_res == "win" and t == m["home"])
+                or (cor_res == "loss" and t == m["away"])
+                else "loss"
+                if (cor_res == "loss" and t == m["home"])
+                or (cor_res == "win" and t == m["away"])
+                else "draw"
+            ]
             own = [i for i in m["items"] if i["team"] == t]
             if cor_pts > act_pts:
                 st = "changed"
             elif cor_pts == act_pts and act_pts == 3:
-                st = "no_change_win"       # 本队仍获胜
+                st = "no_change_win"  # 本队仍获胜
             elif cor_pts == act_pts and has_opp_factor and abs(h_c - a_c) <= 1:
-                st = "possible"            # 存在影响可能（机会因素+分差小）
+                st = "possible"  # 存在影响可能（机会因素+分差小）
             else:
                 st = "no_change"
             m.setdefault("status", {})[t] = st
@@ -171,12 +232,25 @@ def team_stats(matches, view):
             victim = it["team"]
             benefit = m["away"] if victim == m["home"] else m["home"]
             team = victim if view == "victim" else benefit
-            t = teams.setdefault(team, {
-                "leagues": set(), "cases": 0, "matches": set(), "types": {},
-                "result": {"changed": 0, "possible": 0, "no_change": 0,
-                           "no_change_win": 0, "pending": 0},
-                "detail": [], "swing": 0, "match_status": {},
-            })
+            t = teams.setdefault(
+                team,
+                {
+                    "leagues": set(),
+                    "cases": 0,
+                    "matches": set(),
+                    "types": {},
+                    "result": {
+                        "changed": 0,
+                        "possible": 0,
+                        "no_change": 0,
+                        "no_change_win": 0,
+                        "pending": 0,
+                    },
+                    "detail": [],
+                    "swing": 0,
+                    "match_status": {},
+                },
+            )
             t["leagues"].add(LEAGUE_SHORT[m["league"]])
             t["cases"] += 1
             t["matches"].add(key)
@@ -185,15 +259,24 @@ def team_stats(matches, view):
                 t["swing"] += 1
             st = m["status"].get(victim, "pending")
             t["match_status"][key] = st  # 按场次去重计数
-            t["detail"].append({
-                "seq": it["seq"], "league": LEAGUE_SHORT[m["league"]],
-                "round": m["round"], "home": m["home"], "away": m["away"],
-                "opp": benefit if view == "victim" else victim,
-                "score": m["score"], "corrected": m.get("corrected_score"),
-                "corrected_for": m.get("corrected_for", {}).get(victim),
-                "status": st, "type": it["type"], "note": it["note"],
-                "issue": None, "match_note": m.get("match_note", ""),
-            })
+            t["detail"].append(
+                {
+                    "seq": it["seq"],
+                    "league": LEAGUE_SHORT[m["league"]],
+                    "round": m["round"],
+                    "home": m["home"],
+                    "away": m["away"],
+                    "opp": benefit if view == "victim" else victim,
+                    "score": m["score"],
+                    "corrected": m.get("corrected_score"),
+                    "corrected_for": m.get("corrected_for", {}).get(victim),
+                    "status": st,
+                    "type": it["type"],
+                    "note": it["note"],
+                    "issue": None,
+                    "match_note": m.get("match_note", ""),
+                }
+            )
     for t in teams.values():
         t["leagues"] = sorted(t["leagues"])
         t["n_matches"] = len(t["matches"])
@@ -201,9 +284,13 @@ def team_stats(matches, view):
         for st in t["match_status"].values():
             t["result"][st] += 1
         del t["match_status"]
-        t["detail"].sort(key=lambda d: (d["league"],
-                                        d["round"] if isinstance(d["round"], int) else 9999,
-                                        d["seq"]))
+        t["detail"].sort(
+            key=lambda d: (
+                d["league"],
+                d["round"] if isinstance(d["round"], int) else 9999,
+                d["seq"],
+            )
+        )
     return teams
 
 
@@ -216,7 +303,9 @@ def build_data(season):
     teams = {item["name"]: item for item in catalog.values()}
 
     # 补充期数信息用于链接展示
-    cases = json.loads((DATA / SEASONS[season]["cases"]).read_text(encoding="utf-8"))["cases"]
+    cases = json.loads((DATA / SEASONS[season]["cases"]).read_text(encoding="utf-8"))[
+        "cases"
+    ]
     cmap2 = {c["seq"]: c for c in cases}
     for view_teams in (victims, benefits):
         for t in view_teams.values():
@@ -230,18 +319,39 @@ def build_data(season):
         "cases": sum(len(m["seqs"]) for m in matches.values()),
         "matches": len(matches),
         "items": n_items,
-        "swing": sum(1 for m in matches.values() for i in m["items"]
-                     if i["type"] in GOAL_DELTA),
-        "red": sum(1 for m in matches.values() for i in m["items"]
-                   if i["type"] in ("missed_red_opponent", "wrong_red_self")),
-        "yellow": sum(1 for m in matches.values() for i in m["items"]
-                      if i["type"] in ("missed_yellow_opponent", "wrong_yellow_self")),
-        "penalty": sum(1 for m in matches.values() for i in m["items"]
-                       if i["type"] in ("missed_penalty", "wrong_penalty_against")),
-        "changed": sum(1 for m in matches.values()
-                       for t, s in m["status"].items() if s == "changed"),
-        "possible": sum(1 for m in matches.values()
-                        for t, s in m["status"].items() if s == "possible"),
+        "swing": sum(
+            1 for m in matches.values() for i in m["items"] if i["type"] in GOAL_DELTA
+        ),
+        "red": sum(
+            1
+            for m in matches.values()
+            for i in m["items"]
+            if i["type"] in ("missed_red_opponent", "wrong_red_self")
+        ),
+        "yellow": sum(
+            1
+            for m in matches.values()
+            for i in m["items"]
+            if i["type"] in ("missed_yellow_opponent", "wrong_yellow_self")
+        ),
+        "penalty": sum(
+            1
+            for m in matches.values()
+            for i in m["items"]
+            if i["type"] in ("missed_penalty", "wrong_penalty_against")
+        ),
+        "changed": sum(
+            1
+            for m in matches.values()
+            for t, s in m["status"].items()
+            if s == "changed"
+        ),
+        "possible": sum(
+            1
+            for m in matches.values()
+            for t, s in m["status"].items()
+            if s == "possible"
+        ),
         "teams": len(victims),
     }
     type_counts = {}
@@ -261,9 +371,11 @@ def build_data(season):
         "typeLabelsBenefit": TYPE_LABEL_BENEFIT,
         "victims": victims,
         "benefits": benefits,
-        "crests": {}, "teams": teams,
-        "scoreSource": json.loads((DATA / SEASONS[season]["scores"])
-                                  .read_text(encoding="utf-8"))["note"],
+        "crests": {},
+        "teams": teams,
+        "scoreSource": json.loads(
+            (DATA / SEASONS[season]["scores"]).read_text(encoding="utf-8")
+        )["note"],
     }
 
 
@@ -565,25 +677,39 @@ document.getElementById("teamList").addEventListener("keydown", e=>{
 def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
-    tb = topbar(active=cfg["out"], stats=cfg["out"], brand_sub=f"{season}赛季 · 得失盘点",
-                seasons=tuple(sorted(SEASONS)))
-    html = inject_theme(HTML.replace("__DATA__",
-                        # "</" 转义为合法 JSON 的 "<\/"，防正文提前闭合 </script>
-                        json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
-                        .replace("__ICONS__", js_icons())
-                        .replace("__TOPBAR__", tb))
-    html = (html.replace("__SEASON__", season)
-                .replace("__PAGE__", cfg["page"])
-                .replace("__ISSUEDESC__", cfg["issueDesc"])
-                .replace("__BUILT__", date.today().isoformat()))
+    tb = topbar(
+        active=cfg["out"],
+        stats=cfg["out"],
+        brand_sub=f"{season}赛季 · 得失盘点",
+        seasons=tuple(sorted(SEASONS)),
+    )
+    html = inject_theme(
+        HTML.replace(
+            "__DATA__",
+            # "</" 转义为合法 JSON 的 "<\/"，防正文提前闭合 </script>
+            json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace(
+                "</", "<\\/"
+            ),
+        )
+        .replace("__ICONS__", js_icons())
+        .replace("__TOPBAR__", tb)
+    )
+    html = (
+        html.replace("__SEASON__", season)
+        .replace("__PAGE__", cfg["page"])
+        .replace("__ISSUEDESC__", cfg["issueDesc"])
+        .replace("__BUILT__", date.today().isoformat())
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]
     out.write_text(html, encoding="utf-8")
     ov = data["overview"]
-    print(f"[{season}] 生成 {out} ({len(html.encode('utf-8'))/1024:.0f} KB)")
-    print(f"  总览: {ov['cases']}例 / {ov['matches']}场 / {ov['teams']}队 / "
-          f"确定得失球{ov['swing']} / 点球{ov['penalty']} / 红{ov['red']}黄{ov['yellow']} / "
-          f"或改变{ov['changed']} / 可能{ov['possible']}")
+    print(f"[{season}] 生成 {out} ({len(html.encode('utf-8')) / 1024:.0f} KB)")
+    print(
+        f"  总览: {ov['cases']}例 / {ov['matches']}场 / {ov['teams']}队 / "
+        f"确定得失球{ov['swing']} / 点球{ov['penalty']} / 红{ov['red']}黄{ov['yellow']} / "
+        f"或改变{ov['changed']} / 可能{ov['possible']}"
+    )
     print("  类型分布:", data["typeCounts"])
 
 

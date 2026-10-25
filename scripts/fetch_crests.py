@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """检查人工队徽目录，不再自动猜测 Wikipedia 图片。"""
+
 import json
 
 from lib.crest_catalog import validate_catalog
@@ -22,7 +23,8 @@ def main():
                 compat[item["name"]] = item["path"]
             fallback += 1
     CRESTS_JSON.write_text(
-        json.dumps(compat, ensure_ascii=False, indent=1), encoding="utf-8")
+        json.dumps(compat, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
     print(f"队徽目录检查完成: verified={verified}, fallback={fallback}")
 
 

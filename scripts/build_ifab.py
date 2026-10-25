@@ -6,6 +6,7 @@
 cfa.ifab-en）；译文按 section id / block 英文标题 / FAQ id 平铺匹配（rfef-zh 同构），
 未命中回退英文并打 ⚠。纯文本官方材料 + 官方外链，无内嵌第三方资源。
 """
+
 import json
 
 from lib.theme import inject_theme, topbar, icon
@@ -135,8 +136,14 @@ __TOPBAR__
 
 
 def esc(s):
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
-        .replace('"', "&quot;").replace("'", "&#39;")
+    return (
+        (s or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
 
 def pair(zh, en, tag="span"):
@@ -156,7 +163,7 @@ def render_doc_body(blocks, zsec, where):
     body = ""
     for b in blocks:
         bh_en = b.get("h", "")
-        key = bh_en or "_head"   # 译制层：节首无子节内容存于 '_head'（裸列表）
+        key = bh_en or "_head"  # 译制层：节首无子节内容存于 '_head'（裸列表）
         zb = zblocks_all.get(key)
         zh_bh, zitems = None, []
         if zb is not None:
@@ -166,9 +173,11 @@ def render_doc_body(blocks, zsec, where):
                 zh_bh = zb.get("h", bh_en)
                 zitems = zb.get("items", [])
         else:
-            warn_unmatched(f"ifab-zh 缺少{'子节' if bh_en else '节首'} {where}/{key}，回退英文")
+            warn_unmatched(
+                f"ifab-zh 缺少{'子节' if bh_en else '节首'} {where}/{key}，回退英文"
+            )
         if bh_en:
-            body += f'<h3>{pair(esc(zh_bh or bh_en), esc(bh_en), "span")}</h3>'
+            body += f"<h3>{pair(esc(zh_bh or bh_en), esc(bh_en), 'span')}</h3>"
         en_items = b.get("items", [])
         if zitems and len(zitems) == len(en_items):
             ul_open = False
@@ -180,11 +189,15 @@ def render_doc_body(blocks, zsec, where):
                     body += "</ul>"
                     ul_open = False
                 if zi["k"] == "li":
-                    body += (f'<li><span class="zhv">{esc(zi["t"])}</span>'
-                             f'<span class="en">{esc(ei["t"])}</span></li>')
+                    body += (
+                        f'<li><span class="zhv">{esc(zi["t"])}</span>'
+                        f'<span class="en">{esc(ei["t"])}</span></li>'
+                    )
                 else:
-                    body += (f'<p><span class="zhv">{esc(zi["t"])}</span>'
-                             f'<span class="en">{esc(ei["t"])}</span></p>')
+                    body += (
+                        f'<p><span class="zhv">{esc(zi["t"])}</span>'
+                        f'<span class="en">{esc(ei["t"])}</span></p>'
+                    )
             if ul_open:
                 body += "</ul>"
         else:
@@ -207,7 +220,10 @@ def build_page(data, zh):
     for s in sections:
         zsec = zh_sections.get(s["id"], {})
         zh_h = zsec.get("h", "")
-        title = pair(f'{esc(s.get("num", ""))}. {esc(zh_h or s["h"])}', f'{s.get("num", "")}. {s["h"]}')
+        title = pair(
+            f"{esc(s.get('num', ''))}. {esc(zh_h or s['h'])}",
+            f"{s.get('num', '')}. {s['h']}",
+        )
         if not zh_h:
             warn_unmatched(f"ifab-zh 缺少大节 {s['id']}（{s['h']}），回退英文")
         toc += f'<a href="#{s["id"]}">{esc(zh_h or s["h"])}</a>'
@@ -234,9 +250,11 @@ def build_page(data, zh):
                 qh = f'<span class="en">{esc(q["q"])}</span>'
                 ah = f'<div class="en">{esc(q["a"])}</div>'
             body += f'<details class="xfaq"><summary>{qh}</summary><div class="a">{ah}</div></details>'
-        secs += (f'<section class="sec" id="{ex["id"]}">'
-                 f'<h2>{pair(esc(zh_h or ex["h"]), esc(ex["h"]), "span")}</h2>'
-                 f'<div class="panel">{body}</div></section>')
+        secs += (
+            f'<section class="sec" id="{ex["id"]}">'
+            f"<h2>{pair(esc(zh_h or ex['h']), esc(ex['h']), 'span')}</h2>"
+            f'<div class="panel">{body}</div></section>'
+        )
     toc += '<a href="#faq">官方 FAQ 判例</a><a href="#links">配套材料与站内关联</a>'
 
     faq_html = ""
@@ -257,31 +275,44 @@ def build_page(data, zh):
             warn_unmatched(f"ifab-zh.faq 多余键 {k}（ifab.json 无此 id）")
 
     links_html = ""
-    for l in links:
-        if l.get("internal"):
-            links_html += (f'<a href="{esc(l["url"])}"><b>{icon("book", 13)} {esc(l["label"])}</b>'
-                           f'站内页面</a>')
+    for link in links:
+        if link.get("internal"):
+            links_html += (
+                f'<a href="{esc(link["url"])}"><b>{icon("book", 13)} {esc(link["label"])}</b>'
+                f"站内页面</a>"
+            )
         else:
-            links_html += (f'<a href="{esc(l["url"])}" target="_blank" rel="noopener noreferrer">'
-                           f'<b>{icon("external", 13)} {esc(l["label"])}</b>theifab.com 官方页</a>')
+            links_html += (
+                f'<a href="{esc(link["url"])}" target="_blank" rel="noopener noreferrer">'
+                f"<b>{icon('external', 13)} {esc(link['label'])}</b>theifab.com 官方页</a>"
+            )
 
-    html = inject_theme(HTML
-                         .replace("__TOPBAR__", topbar(active="ifab.html", stats="stats-2026.html",
-                                                       brand_sub="IFAB 统一尺度"))
-                         .replace("__I_EXTERNAL__", icon("external", 14))
-                         .replace("__I_LANG__", icon("globe", 14))
-                         .replace("__SOURCE_LINK__",
-                                  f'<a href="{esc(data.get("source", ""))}" target="_blank" '
-                                  f'rel="noopener noreferrer">theifab.com 官方协议页</a>')
-                         .replace("__TOC__", toc)
-                         .replace("__SECTIONS__", secs)
-                         .replace("__FAQ__", faq_html)
-                         .replace("__LINKS__", links_html)
-                         .replace("__CHECKED__", esc(data.get("fetched", "")))
-                         .replace("__TRANSLATED__", esc((zh or {}).get("translated", ""))))
+    html = inject_theme(
+        HTML.replace(
+            "__TOPBAR__",
+            topbar(
+                active="ifab.html", stats="stats-2026.html", brand_sub="IFAB 统一尺度"
+            ),
+        )
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__I_LANG__", icon("globe", 14))
+        .replace(
+            "__SOURCE_LINK__",
+            f'<a href="{esc(data.get("source", ""))}" target="_blank" '
+            f'rel="noopener noreferrer">theifab.com 官方协议页</a>',
+        )
+        .replace("__TOC__", toc)
+        .replace("__SECTIONS__", secs)
+        .replace("__FAQ__", faq_html)
+        .replace("__LINKS__", links_html)
+        .replace("__CHECKED__", esc(data.get("fetched", "")))
+        .replace("__TRANSLATED__", esc((zh or {}).get("translated", "")))
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "ifab.html").write_text(html, encoding="utf-8")
-    print(f"生成 {SITE / 'ifab.html'}（{len(sections)} 节 / FAQ {len(faq)} 条 / 链接 {len(links)}）")
+    print(
+        f"生成 {SITE / 'ifab.html'}（{len(sections)} 节 / FAQ {len(faq)} 条 / 链接 {len(links)}）"
+    )
 
 
 def main():

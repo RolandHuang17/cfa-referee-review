@@ -2,6 +2,7 @@
 """并发(5线程)下载判例视频到 videos/{season}/，断点续传+重试
 用法: python download_videos_parallel.py 2024|2025
 """
+
 import json
 import sys
 import threading
@@ -50,14 +51,17 @@ def main():
                 _, size, rate = fut.result()
                 total_size += size
                 done += 1
-                log(f"[{done}/{len(jobs)}] {fname} {size/1e6:.1f}MB ({rate:.1f}MB/s)")
+                log(f"[{done}/{len(jobs)}] {fname} {size / 1e6:.1f}MB ({rate:.1f}MB/s)")
             except Exception as e:  # noqa: BLE001
                 fails.append(fname)
                 log(f"FAIL {fname}: {e}")
             time.sleep(0.1)
-    log(f"[{season}] 完成。成功{done} 失败{len(fails)} 总计{total_size/1e9:.2f}GB 失败清单:{fails}")
+    log(
+        f"[{season}] 完成。成功{done} 失败{len(fails)} 总计{total_size / 1e9:.2f}GB 失败清单:{fails}"
+    )
     (LOCAL_LOGS / f"download-fail-{season}.json").write_text(
-        json.dumps(fails, ensure_ascii=False), encoding="utf-8")
+        json.dumps(fails, ensure_ascii=False), encoding="utf-8"
+    )
 
 
 if __name__ == "__main__":

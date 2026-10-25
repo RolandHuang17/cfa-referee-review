@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """安全HTTP模块：域名白名单 + HTTPS + DNS解析公网校验 + IP钉扎(防DNS rebinding) + 受限手动重定向"""
+
 import http.client
 import ipaddress
 import json
@@ -29,8 +30,10 @@ ALLOWED_HOSTS = {
 DOH_RESOLVERS = ["https://223.5.5.5/resolve", "https://8.8.8.8/resolve"]
 for _d in DOH_RESOLVERS:
     assert ipaddress.ip_address(urlsplit(_d).hostname).is_global, _d
-UA = ("Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
-      "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+UA = (
+    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+    "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+)
 
 
 class SecurityError(Exception):
@@ -51,8 +54,11 @@ def resolve_host(host: str, timeout=10):
             if p.hostname not in {urlsplit(d).hostname for d in DOH_RESOLVERS}:
                 raise SecurityError(f"DoH解析器不在白名单: {doh}")
             conn = http.client.HTTPSConnection(p.netloc, timeout=timeout)
-            conn.request("GET", f"{p.path}?name={host}&type=A",
-                         headers={"Accept": "application/dns-json", "User-Agent": UA})
+            conn.request(
+                "GET",
+                f"{p.path}?name={host}&type=A",
+                headers={"Accept": "application/dns-json", "User-Agent": UA},
+            )
             resp = conn.getresponse()
             data = json.loads(resp.read())
             conn.close()
@@ -104,6 +110,7 @@ def _connect(p, timeout: float):
 def safe_urlencode(text: str) -> str:
     """UTF-8 百分号编码（用于查询参数值）"""
     from urllib.parse import quote
+
     return quote(text, safe="")
 
 
@@ -139,7 +146,9 @@ def fetch_text(url: str, headers=None, timeout=30, retries=3):
     last = None
     for i in range(retries):
         try:
-            status, hdrs, resp, conn = safe_request(url, headers=headers, timeout=timeout)
+            status, hdrs, resp, conn = safe_request(
+                url, headers=headers, timeout=timeout
+            )
             data = resp.read()
             resp.close()
             conn.close()
@@ -147,8 +156,13 @@ def fetch_text(url: str, headers=None, timeout=30, retries=3):
             ctype = hdrs.get("content-type", "")
             if "charset=" in ctype:
                 # 报头可能带尾部分号或引号（charset=utf-8; / charset="utf-8"），剥掉防 LookupError
-                charset = (ctype.split("charset=")[-1].split(";")[0]
-                           .strip().strip('"').strip("'"))
+                charset = (
+                    ctype.split("charset=")[-1]
+                    .split(";")[0]
+                    .strip()
+                    .strip('"')
+                    .strip("'")
+                )
             return status, data.decode(charset, errors="replace")
         except Exception as e:  # noqa: BLE001
             last = e
@@ -171,10 +185,10 @@ def head_size(url: str, timeout=30):
     return None
 
 
-def download(url: str, dest: Path, headers=None, timeout=60,
-             retries=5, progress=False):
+def download(url: str, dest: Path, headers=None, timeout=60, retries=5, progress=False):
     """断点续传下载。返回 (status, final_size)。已完整则跳过。"""
     import os
+
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
@@ -189,12 +203,14 @@ def download(url: str, dest: Path, headers=None, timeout=60,
                 h["Range"] = f"bytes={have}-"
             status, hdrs, resp, conn = safe_request(url, headers=h, timeout=timeout)
             if status == 416:  # 已下载完整但未改名
-                resp.close(); conn.close()
+                resp.close()
+                conn.close()
                 size = tmp.stat().st_size  # 先取大小再改名，replace 后 tmp 不存在
                 os.replace(tmp, dest)
                 return 200, size
             if status not in (200, 206):
-                resp.close(); conn.close()
+                resp.close()
+                conn.close()
                 raise RuntimeError(f"HTTP {status}")
             if status == 200 and have:  # 服务器不支持Range，重下
                 have = 0
@@ -203,7 +219,11 @@ def download(url: str, dest: Path, headers=None, timeout=60,
             cr = hdrs.get("content-range")
             cl = hdrs.get("content-length")
             if cr and "/" in cr:
-                total = int(cr.rsplit("/", 1)[-1]) if cr.rsplit("/", 1)[-1].isdigit() else None
+                total = (
+                    int(cr.rsplit("/", 1)[-1])
+                    if cr.rsplit("/", 1)[-1].isdigit()
+                    else None
+                )
             elif cl:
                 total = int(cl) + (have if status == 206 else 0)
             mode = "ab" if status == 206 and have else "wb"
@@ -216,7 +236,11 @@ def download(url: str, dest: Path, headers=None, timeout=60,
                     f.write(chunk)
                     done += len(chunk)
                     if progress and total:
-                        print(f"\r    {done/1e6:.1f}/{total/1e6:.1f}MB", end="", flush=True)
+                        print(
+                            f"\r    {done / 1e6:.1f}/{total / 1e6:.1f}MB",
+                            end="",
+                            flush=True,
+                        )
             resp.close()
             conn.close()
             if total and done != total:

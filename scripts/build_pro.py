@@ -8,10 +8,19 @@ USSF（ussoccer.com）视频页为 JS 渲染且新内容在 Learning Center（�
 无公开抓取形态 → 本页仅作导航指南（视频页/Learning Center/裁判项目入口）。
 页头/chips/搜索/年份分组骨架来自 lib/pagelib.py。
 """
+
 from lib.theme import inject_theme, topbar, icon
 
-from lib.pagelib import (SEARCH_CSS, esc, filter_js, group_by_year, head_css,
-                         load_json_with_zh, search_blob, searchbar)
+from lib.pagelib import (
+    SEARCH_CSS,
+    esc,
+    filter_js,
+    group_by_year,
+    head_css,
+    load_json_with_zh,
+    search_blob,
+    searchbar,
+)
 from lib.paths import PRO_JSON, SITE
 
 SERIES_LABEL = {
@@ -98,56 +107,83 @@ __FILTER_JS__
 
 def build_page(data):
     arts = data.get("articles", [])
-    n = {k: sum(1 for a in arts if a.get("kind") == k or a.get("league") == k)
-         for k in ("ivr", "vaf", "angle", "MLS", "NWSL")}
+    n = {
+        k: sum(1 for a in arts if a.get("kind") == k or a.get("league") == k)
+        for k in ("ivr", "vaf", "angle", "MLS", "NWSL")
+    }
     secs = ""
     for y, yarts in group_by_year(arts, fallback="其他"):
         rows = ""
         for a in yarts:
-            label, badge = SERIES_LABEL.get(a.get("kind", "other"), SERIES_LABEL["other"])
+            label, badge = SERIES_LABEL.get(
+                a.get("kind", "other"), SERIES_LABEL["other"]
+            )
             kinds = " ".join(filter(None, [a.get("kind"), a.get("league")]))
             tags = f'<span class="badge {badge}">{esc(label)}</span>'
             if a.get("league"):
                 tags += f'<span class="badge info">{esc(a["league"])}{(" #" + a["round"]) if a.get("round") else ""}</span>'
             vids = "".join(
                 f'<a class="go" href="{esc(v)}" target="_blank" rel="noopener noreferrer">{icon("play", 11)} 官方视频</a>'
-                for v in (a.get("videos") or [])[:1])
-            blob = search_blob(a["title"], a.get("date"), label, a.get("league"),
-                               f"#{a['round']}" if a.get("round") else "")
+                for v in (a.get("videos") or [])[:1]
+            )
+            blob = search_blob(
+                a["title"],
+                a.get("date"),
+                label,
+                a.get("league"),
+                f"#{a['round']}" if a.get("round") else "",
+            )
             rows += f"""<div class="acard" data-kinds="{esc(kinds)}" data-search="{blob}">
   <div class="t"><b>{esc(a["title"])}</b><small>{esc(a.get("date", ""))}</small></div>
   {tags}
   {vids}
-  <a class="go" href="{esc(a['url'])}" target="_blank" rel="noopener noreferrer">{icon('external', 11)} 官方页</a>
+  <a class="go" href="{esc(a["url"])}" target="_blank" rel="noopener noreferrer">{icon("external", 11)} 官方页</a>
 </div>"""
-        secs += (f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>{len(yarts)} 篇</small></h3>'
-                 f'<div id="ybody-{esc(y)}">{rows}</div>')
-    tb = topbar(active="pro.html", stats="stats-2026.html", brand_sub="美国 PRO & USSF",
-                seasons=("2026", "2025", "2024"))
-    src_link = (f'<a href="{esc(data.get("source", ""))}" target="_blank" '
-                f'rel="noopener noreferrer">proreferees.com 官方分类页</a>')
+        secs += (
+            f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>{len(yarts)} 篇</small></h3>'
+            f'<div id="ybody-{esc(y)}">{rows}</div>'
+        )
+    tb = topbar(
+        active="pro.html",
+        stats="stats-2026.html",
+        brand_sub="美国 PRO & USSF",
+        seasons=("2026", "2025", "2024"),
+    )
+    src_link = (
+        f'<a href="{esc(data.get("source", ""))}" target="_blank" '
+        f'rel="noopener noreferrer">proreferees.com 官方分类页</a>'
+    )
     u = data.get("ussf", {})
-    html = inject_theme(HTML
-                        .replace("__TOPBAR__", tb)
-                        .replace("__SOURCE_LINK__", src_link)
-                        .replace("__I_EXTERNAL__", icon("external", 14))
-                        .replace("__I_SHIELD__", icon("shield", 17))
-                        .replace("__SEARCHBAR__", searchbar("搜索文章：标题 / 系列 / 联赛…"))
-                        .replace("__HEAD_CSS__", head_css(max_width=1000))
-                        .replace("__SEARCH_CSS__", SEARCH_CSS)
-                        .replace("__FILTER_JS__", filter_js(".acard", filter_attr="data-kinds",
-                                                            match="substr", search=True, group="ybody"))
-                        .replace("__N_ALL__", str(len(arts)))
-                        .replace("__N_IVR__", str(n["ivr"]))
-                        .replace("__N_VAF__", str(n["vaf"]))
-                        .replace("__N_ANGLE__", str(n["angle"]))
-                        .replace("__N_MLS__", str(n["MLS"]))
-                        .replace("__N_NWSL__", str(n["NWSL"]))
-                        .replace("__U_VIDEOS__", esc(u.get("videos", "")))
-                        .replace("__U_LEARNING__", esc(u.get("learning", "")))
-                        .replace("__U_REFEREEING__", esc(u.get("refereeing", "")))
-                        .replace("__CHECKED__", esc(data.get("fetched", "")))
-                        .replace("__SECTIONS__", secs))
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__SOURCE_LINK__", src_link)
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__I_SHIELD__", icon("shield", 17))
+        .replace("__SEARCHBAR__", searchbar("搜索文章：标题 / 系列 / 联赛…"))
+        .replace("__HEAD_CSS__", head_css(max_width=1000))
+        .replace("__SEARCH_CSS__", SEARCH_CSS)
+        .replace(
+            "__FILTER_JS__",
+            filter_js(
+                ".acard",
+                filter_attr="data-kinds",
+                match="substr",
+                search=True,
+                group="ybody",
+            ),
+        )
+        .replace("__N_ALL__", str(len(arts)))
+        .replace("__N_IVR__", str(n["ivr"]))
+        .replace("__N_VAF__", str(n["vaf"]))
+        .replace("__N_ANGLE__", str(n["angle"]))
+        .replace("__N_MLS__", str(n["MLS"]))
+        .replace("__N_NWSL__", str(n["NWSL"]))
+        .replace("__U_VIDEOS__", esc(u.get("videos", "")))
+        .replace("__U_LEARNING__", esc(u.get("learning", "")))
+        .replace("__U_REFEREEING__", esc(u.get("refereeing", "")))
+        .replace("__CHECKED__", esc(data.get("fetched", "")))
+        .replace("__SECTIONS__", secs)
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "pro.html").write_text(html, encoding="utf-8")
     print(f"生成 {SITE / 'pro.html'}（{len(arts)} 篇索引）")

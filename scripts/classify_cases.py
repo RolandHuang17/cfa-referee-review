@@ -181,7 +181,12 @@ CLS_2025 = {
     # 期20
     138: ("handball", ["进球有效", "意外手球"], "correct", "correct"),
     139: ("goal_decision", ["出界判定", "延迟举旗提示"], "correct", "correct"),
-    140: ("penalty_area", ["点球", "地点判定", "VAR介入正确", "电视手势遗漏"], "correct", "correct"),
+    140: (
+        "penalty_area",
+        ["点球", "地点判定", "VAR介入正确", "电视手势遗漏"],
+        "correct",
+        "correct",
+    ),
     141: ("goal_decision", ["进球有效", "守门员"], "wrong", "none"),
     142: ("sfp_vc", ["红牌", "暴力行为", "黄牌"], "wrong", "none"),
     143: ("goal_decision", ["出界判定", "证据不足", "延迟举旗提示"], "pending", "none"),
@@ -243,10 +248,20 @@ CLS_2025 = {
     193: ("penalty_area", ["证据不足"], "correct", "none"),
     # 期27
     194: ("penalty_area", ["地点判定"], "correct", "correct"),
-    195: ("sfp_vc", ["红牌", "暴力行为", "比赛停止时", "手球不犯规"], "wrong", "correct"),
+    195: (
+        "sfp_vc",
+        ["红牌", "暴力行为", "比赛停止时", "手球不犯规"],
+        "wrong",
+        "correct",
+    ),
     # 期28
     196: ("sfp_vc", ["红牌", "暴力行为", "挥拳"], "wrong", "none"),
-    197: ("sfp_vc", ["红牌", "严重犯规", "抬脚过高", "VAR未介入错误"], "wrong", "wrong"),
+    197: (
+        "sfp_vc",
+        ["红牌", "严重犯规", "抬脚过高", "VAR未介入错误"],
+        "wrong",
+        "wrong",
+    ),
     198: ("goal_decision", ["球门线", "证据不足"], "pending", "none"),
     199: ("sfp_vc", ["红牌", "黄牌", "暴力行为不成立"], "wrong", "none"),
     200: ("sfp_vc", ["红牌", "暴力行为"], "correct", "none"),
@@ -264,7 +279,12 @@ CLS_2025 = {
     210: ("penalty_area", ["点球", "跳向对方"], "wrong", "none"),
     211: ("sfp_vc", ["红牌", "球队官员", "暴力行为"], "correct", "none"),
     # 期31
-    212: ("penalty_area", ["红牌不成立", "DOGSO不成立", "附应判犯规并黄牌"], "correct", "correct"),
+    212: (
+        "penalty_area",
+        ["红牌不成立", "DOGSO不成立", "附应判犯规并黄牌"],
+        "correct",
+        "correct",
+    ),
     213: ("offside", ["阻碍视线", "进球无效"], "correct", "correct"),
     214: ("penalty_area", ["点球", "黄牌", "VAR介入正确"], "correct", "correct"),
     215: ("sfp_vc", ["证据不足", "附应黄牌警告", "漏判黄牌"], "wrong", "none"),
@@ -278,7 +298,12 @@ CLS_2025 = {
     222: ("goal_decision", ["有利条款", "手球", "VAR不介入正确"], "wrong", "correct"),
     223: ("handball", ["点球", "手向球移动", "VAR未介入错误"], "wrong", "wrong"),
     224: ("goal_decision", ["球门线", "证据不足"], "pending", "none"),
-    225: ("sfp_vc", ["红牌", "黄牌", "暴力行为不成立", "VAR介入错误"], "wrong", "wrong"),
+    225: (
+        "sfp_vc",
+        ["红牌", "黄牌", "暴力行为不成立", "VAR介入错误"],
+        "wrong",
+        "wrong",
+    ),
     226: ("offside", ["进球无效", "干扰对方队员"], "wrong", "none"),
     227: ("penalty_area", [], "correct", "none"),
 }
@@ -305,9 +330,16 @@ def fix_comp_2024(c):
     if c.get("comp"):
         return c["comp"]
     mi = c.get("match_info", "")
-    for k, v in (("中超", "中超联赛"), ("中甲", "中甲联赛"), ("中乙", "中乙联赛"),
-                 ("女超", "女超联赛"), ("女甲", "女甲联赛"), ("足协杯", "中国足协杯"),
-                 ("三大球", "三大球运动会"), ("运动会", "全运会")):
+    for k, v in (
+        ("中超", "中超联赛"),
+        ("中甲", "中甲联赛"),
+        ("中乙", "中乙联赛"),
+        ("女超", "女超联赛"),
+        ("女甲", "女甲联赛"),
+        ("足协杯", "中国足协杯"),
+        ("三大球", "三大球运动会"),
+        ("运动会", "全运会"),
+    ):
         if k in mi:
             return v
     return ""
@@ -333,11 +365,31 @@ def main():
             # 阵容信息只在导语里，parse 提取不到——按原文补全：
             # 判例一=中超第2轮 浙江 vs 上海海港（第10分钟点球被取消）；判例二/三=中甲第1轮 佛山南狮 vs 云南玉昆
             if c["issue"] == 1:
-                c.update({
-                    1: {"comp": "中超联赛", "round": "第2轮", "home": "浙江", "away": "上海海港", "minute": "10"},
-                    2: {"comp": "中甲联赛", "round": "第1轮", "home": "佛山南狮", "away": "云南玉昆", "minute": ""},
-                    3: {"comp": "中甲联赛", "round": "第1轮", "home": "佛山南狮", "away": "云南玉昆", "minute": ""},
-                }[c["seq"]])
+                c.update(
+                    {
+                        1: {
+                            "comp": "中超联赛",
+                            "round": "第2轮",
+                            "home": "浙江",
+                            "away": "上海海港",
+                            "minute": "10",
+                        },
+                        2: {
+                            "comp": "中甲联赛",
+                            "round": "第1轮",
+                            "home": "佛山南狮",
+                            "away": "云南玉昆",
+                            "minute": "",
+                        },
+                        3: {
+                            "comp": "中甲联赛",
+                            "round": "第1轮",
+                            "home": "佛山南狮",
+                            "away": "云南玉昆",
+                            "minute": "",
+                        },
+                    }[c["seq"]]
+                )
         if season == "2026" and c["seq"] == 195:
             # 第17期判例九沿判例八事件（未重复给出对阵行），补全赛事与球队
             c["comp"] = "中超联赛"
@@ -355,9 +407,15 @@ def main():
     if season == "2025":
         # 第27期判例2拆分校正（fix_issue27_merge 已拆分结构；CLS 按原合并形态标注）
         c195 = next(c for c in cases if c["seq"] == 195)
-        c195.update(referee_verdict="correct", referee_verdict_name="支持原判",
-                    var_verdict="none", var_verdict_name="未涉及",
-                    category="offside", category_name="越位", tags=["证据不足"])
+        c195.update(
+            referee_verdict="correct",
+            referee_verdict_name="支持原判",
+            var_verdict="none",
+            var_verdict_name="未涉及",
+            category="offside",
+            category_name="越位",
+            tags=["证据不足"],
+        )
 
     # 每期核对
     print(f"{'期':>3} {'判例':>4} {'标题认定':>6} {'复核错误':>6}  差异说明")

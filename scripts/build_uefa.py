@@ -10,6 +10,7 @@
 X-Frame-Options: DENY（2026-10 探测）→ 卡片为纯文字 + 「在 UEFA 官网观看」外链；
 EMBED 开关保留（若 UEFA 未来放开嵌入，一行切换为卡片内 iframe）。
 """
+
 import json
 
 from lib.theme import inject_theme, topbar, icon
@@ -143,8 +144,14 @@ __TOPBAR__
 
 
 def esc(s):
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
-        .replace('"', "&quot;").replace("'", "&#39;")
+    return (
+        (s or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
 
 def load_zh():
@@ -182,8 +189,9 @@ def apply_zh(data, zh):
         zc = zg.get("criteria") or []
         if zc:
             if len(zc) == len(en_c) and all(
-                    len(b.get("items") or []) == len(a.get("items") or [])
-                    for a, b in zip(en_c, zc)):
+                len(b.get("items") or []) == len(a.get("items") or [])
+                for a, b in zip(en_c, zc)
+            ):
                 g["criteria_cn"] = zc
             else:
                 print(f"⚠ 组 [{key}] criteria 块数/条数与英文不一致，该组准则回退英文")
@@ -210,8 +218,10 @@ def build_page(data):
     navs, secs = "", ""
     for gi, g in enumerate(groups):
         anchor = f"u-{gi}"
-        navs += (f'<a class="gnav" href="#{anchor}">{esc(g["name_cn"])}'
-                 f'<b>{len(g["items"])}</b></a>')
+        navs += (
+            f'<a class="gnav" href="#{anchor}">{esc(g["name_cn"])}'
+            f"<b>{len(g['items'])}</b></a>"
+        )
         cn_name, en_name = g.get("name_cn") or "", g.get("name_en") or ""
         icn, ien = g.get("intro_cn") or "", g.get("intro") or ""
         if icn:
@@ -226,7 +236,10 @@ def build_page(data):
             blocks = ""
             for bi, c in enumerate(g["criteria"]):
                 z = ccn[bi] if bi < len(ccn) else None
-                en_h, en_lis = esc(c["h"]), "".join(f"<li>{esc(x)}</li>" for x in c["items"])
+                en_h, en_lis = (
+                    esc(c["h"]),
+                    "".join(f"<li>{esc(x)}</li>" for x in c["items"]),
+                )
                 h4 = f"<h4>{esc(z['h']) if z else en_h}</h4>"
                 ul = f"<ul>{''.join(f'<li>{esc(x)}</li>' for x in z['items']) if z else en_lis}</ul>"
                 if z:
@@ -237,33 +250,51 @@ def build_page(data):
         cards = ""
         for i, it in enumerate(g["items"], 1):
             tcn, ten = it.get("title_cn") or "", it.get("title") or ""
-            title_en = f'<p class="htitle-en en">{esc(ten)}</p>' if (tcn and ten) else ""
+            title_en = (
+                f'<p class="htitle-en en">{esc(ten)}</p>' if (tcn and ten) else ""
+            )
             frame = ""
             if EMBED:
-                frame = (f'<div class="uefa-frame"><iframe src="{esc(it["url"])}" loading="lazy" '
-                         f'allowfullscreen title="{esc(ten)}"></iframe></div>')
-            caption = f'<p class="hcap">{esc(it["caption"])}</p>' if it.get("caption") else ""
-            date = f'<span class="hdate">{esc(it.get("date", ""))}</span>' if it.get("date") else ""
+                frame = (
+                    f'<div class="uefa-frame"><iframe src="{esc(it["url"])}" loading="lazy" '
+                    f'allowfullscreen title="{esc(ten)}"></iframe></div>'
+                )
+            caption = (
+                f'<p class="hcap">{esc(it["caption"])}</p>' if it.get("caption") else ""
+            )
+            date = (
+                f'<span class="hdate">{esc(it.get("date", ""))}</span>'
+                if it.get("date")
+                else ""
+            )
             cards += f"""<article class="hcard" id="{anchor}c{i}">
   <div class="hhead"><span class="hid">#{i}</span><h3>{esc(tcn or ten)}</h3></div>
   {title_en}{frame}{caption}
-  <a class="watch" href="{esc(it['url'])}" target="_blank" rel="noopener noreferrer">{icon('play', 13)} 在 UEFA 官网观看 {icon('external', 13)}</a>{date}
+  <a class="watch" href="{esc(it["url"])}" target="_blank" rel="noopener noreferrer">{icon("play", 13)} 在 UEFA 官网观看 {icon("external", 13)}</a>{date}
 </article>"""
         if cn_name:
             en_part = f'<small class="en">{esc(en_name)}</small>' if en_name else ""
-            h2 = f'<h2>{esc(cn_name)} {en_part} <b>{len(g["items"])}例</b></h2>'
+            h2 = f"<h2>{esc(cn_name)} {en_part} <b>{len(g['items'])}例</b></h2>"
         else:
-            h2 = f'<h2>{esc(en_name)} <b>{len(g["items"])}例</b></h2>'
-        secs += f'<section class="gsec" id="{anchor}">{h2}{intro}{crit}{cards}</section>'
-    tb = topbar(active="uefa.html", stats="stats-2026.html", brand_sub="UEFA Clear Line",
-                seasons=("2024", "2025", "2026"), lite_btn=True)
+            h2 = f"<h2>{esc(en_name)} <b>{len(g['items'])}例</b></h2>"
+        secs += (
+            f'<section class="gsec" id="{anchor}">{h2}{intro}{crit}{cards}</section>'
+        )
+    tb = topbar(
+        active="uefa.html",
+        stats="stats-2026.html",
+        brand_sub="UEFA Clear Line",
+        seasons=("2024", "2025", "2026"),
+        lite_btn=True,
+    )
     src_link = f'<a href="{SOURCE_URL}" target="_blank" rel="noopener noreferrer">前往 UEFA Clear Line 官方发布页</a>'
-    html = inject_theme(HTML
-                        .replace("__TOPBAR__", tb)
-                        .replace("__SOURCE_LINK__", src_link)
-                        .replace("__I_EXTERNAL__", icon("external", 14))
-                        .replace("__NAVS__", navs)
-                        .replace("__SECS__", secs))
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__SOURCE_LINK__", src_link)
+        .replace("__I_EXTERNAL__", icon("external", 14))
+        .replace("__NAVS__", navs)
+        .replace("__SECS__", secs)
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "uefa.html").write_text(html, encoding="utf-8")
     n = sum(len(g["items"]) for g in groups)

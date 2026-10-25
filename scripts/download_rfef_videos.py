@@ -6,6 +6,7 @@
 - download: 4 线程下载（safe_http.download 断点续传，重跑续传）
 - verify: 逐个比对本地文件大小 vs 服务器 HEAD
 """
+
 import json
 import sys
 import time
@@ -45,9 +46,12 @@ def main():
             else:
                 miss.append(v["url"])
             if (i + 1) % 30 == 0:
-                print(f"  …{i+1}/{len(vids)}，累计 {total/1e6:.0f}MB", flush=True)
-        print(f"survey 完成: 可下载 {ok}/{len(vids)}，合计 {total/1e6:.0f}MB "
-              f"({total/1e9:.2f}GB)", flush=True)
+                print(f"  …{i + 1}/{len(vids)}，累计 {total / 1e6:.0f}MB", flush=True)
+        print(
+            f"survey 完成: 可下载 {ok}/{len(vids)}，合计 {total / 1e6:.0f}MB "
+            f"({total / 1e9:.2f}GB)",
+            flush=True,
+        )
         if miss:
             print(f"HEAD 失败 {len(miss)} 个（下载时再试）:", flush=True)
             for u in miss[:10]:
@@ -68,13 +72,16 @@ def main():
                 try:
                     v, st, size = f.result()
                     done += 1
-                    print(f"[{done}/{len(vids)}] {size/1e6:6.1f}MB  "
-                          f"{v['file'].rsplit('/', 1)[-1]}", flush=True)
+                    print(
+                        f"[{done}/{len(vids)}] {size / 1e6:6.1f}MB  "
+                        f"{v['file'].rsplit('/', 1)[-1]}",
+                        flush=True,
+                    )
                 except Exception as e:  # noqa: BLE001
                     fails.append(str(e))
                     print(f"  ✗ {e}", flush=True)
                 time.sleep(0.3)  # 礼貌节流
-        print(f"download 完成: {len(vids)-len(fails)}/{len(vids)}", flush=True)
+        print(f"download 完成: {len(vids) - len(fails)}/{len(vids)}", flush=True)
         if fails:
             print("失败清单（重跑本脚本续传）:", flush=True)
             for f in fails:

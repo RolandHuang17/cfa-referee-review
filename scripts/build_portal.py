@@ -2,13 +2,27 @@
 """生成门户首页 index.html：三入口（2024/2025评议/竞赛规则）+ 得失盘点快捷入口
 纯静态单文件离线可用；数据计数从 data/*.json 读取；视觉走 data-cfa-theme 设计系统
 """
+
 import json
 from datetime import date
 
 from lib.theme import inject_theme, icon, topbar
 
-from lib.paths import (DATA, CONMEBOL_JSON, IFAB_JSON, INTL_JSON, LAWS_JSON, PRO_JSON, RAP_JSON,
-                       RFEF_JSON, SCALE_JSON, SITE, UEFA_JSON, WEEKLY_JSON, HNS_JSON)
+from lib.paths import (
+    DATA,
+    CONMEBOL_JSON,
+    IFAB_JSON,
+    INTL_JSON,
+    LAWS_JSON,
+    PRO_JSON,
+    RAP_JSON,
+    RFEF_JSON,
+    SCALE_JSON,
+    SITE,
+    UEFA_JSON,
+    WEEKLY_JSON,
+    HNS_JSON,
+)
 
 
 def load_stats():
@@ -22,14 +36,17 @@ def load_stats():
             "correct": sum(1 for c in cases if c["referee_verdict"] == "correct"),
             "videos": sum(len(c["video_files"]) for c in cases),
         }
+
     laws = json.loads(LAWS_JSON.read_text(encoding="utf-8"))
     secs = laws["sections"] if isinstance(laws, dict) else laws
     return {
         "2026": season_stats("2026"),
         "2025": season_stats("2025"),
         "2024": season_stats("2024"),
-        "rules": {"sections": len(secs),
-                  "laws": sum(1 for s in secs if isinstance(s, dict) and s.get("law"))},
+        "rules": {
+            "sections": len(secs),
+            "laws": sum(1 for s in secs if isinstance(s, dict) and s.get("law")),
+        },
     }
 
 
@@ -138,10 +155,16 @@ def load_ifab_stats():
         d = json.loads(IFAB_JSON.read_text(encoding="utf-8"))
         secs = len(d.get("sections", []))
         faq = len(d.get("faq", []))
-        items = sum(len(b.get("items", [])) for s in d.get("sections", [])
-                    for b in s.get("blocks", []))
-        items += sum(len(b.get("items", [])) for ex in d.get("extras", [])
-                     for b in ex.get("blocks", []))
+        items = sum(
+            len(b.get("items", []))
+            for s in d.get("sections", [])
+            for b in s.get("blocks", [])
+        )
+        items += sum(
+            len(b.get("items", []))
+            for ex in d.get("extras", [])
+            for b in ex.get("blocks", [])
+        )
     return {"secs": secs, "faq": faq, "items": items}
 
 
@@ -519,77 +542,98 @@ def main():
     ifab = load_ifab_stats()
     hns = load_hns_stats()
     from build_quiz import build_bank  # 与 quiz 页同一题库口径
+
     bank, _, _, _ = build_bank()
     q_case = sum(1 for b in bank if b["t"] == "case")
     q_scale = sum(1 for b in bank if b["t"] == "scale")
     q_var = sum(1 for b in bank if b["t"] == "var")
-    tb = topbar(active="index.html", stats="stats-2026.html", brand_sub="评议 · 规则 · 尺度统一",
-                seasons=("2024", "2025", "2026"))
-    subs = {"__I_FILM__": icon("film", 20), "__I_BOOK__": icon("book", 20),
-            "__I_CHART__": icon("chart", 17), "__I_RIGHT__": icon("right", 13),
-            "__I_NOTE__": icon("note", 15), "__I_STAR__": icon("star", 13),
-            "__I_SEARCH__": icon("search", 13), "__I_DOWN__": icon("download", 13),
-            "__I_PLAY__": icon("play", 12), "__I_SHIELD__": icon("shield", 13),
-            "__I_QUIZ__": icon("quiz", 20), "__I_EXT_S__": icon("external", 15),
-            "__I_TARGET__": icon("target", 20), "__I_GLOBE__": icon("globe", 20),
-            "__I_FLAG__": icon("flag", 20), "__I_COMPASS__": icon("compass", 20),
-            "__I_PLAY2__": icon("play", 20), "__I_TV__": icon("tv", 20),
-            "__I_FILE__": icon("file-text", 20), "__I_CHECK__": icon("check", 20)}
-    html = inject_theme(HTML
-            .replace("__TOPBAR__", tb)
-            .replace("__N26__", str(s["2026"]["n"]))
-            .replace("__W26__", str(s["2026"]["wrong"]))
-            .replace("__V26__", str(s["2026"]["videos"]))
-            .replace("__N26_ISSUES__", str(s["2026"]["issues"]))
-            .replace("__VTOTAL__", str(s["2026"]["videos"] + s["2025"]["videos"] + s["2024"]["videos"]))
-            .replace("__N25__", str(s["2025"]["n"]))
-            .replace("__W25__", str(s["2025"]["wrong"]))
-            .replace("__V25__", str(s["2025"]["videos"]))
-            .replace("__N25_ISSUES__", str(s["2025"]["issues"]))
-            .replace("__N24__", str(s["2024"]["n"]))
-            .replace("__W24__", str(s["2024"]["wrong"]))
-            .replace("__V24__", str(s["2024"]["videos"]))
-            .replace("__N24_ISSUES__", str(s["2024"]["issues"]))
-            .replace("__NRL__", str(s["rules"]["sections"]))
-            .replace("__NLAW__", str(s["rules"]["laws"]))
-            .replace("__S_SCENES__", str(sc["scenes"]))
-            .replace("__S_GROUPS__", str(sc["groups"]))
-            .replace("__S_VIDEOS__", str(sc["videos"]))
-            .replace("__U_CASES__", str(u["cases"]))
-            .replace("__U_GROUPS__", str(u["groups"]))
-            .replace("__RA_EDS__", str(ra["editions"]))
-            .replace("__RA_ONLINE__", str(ra["online"]))
-            .replace("__RF_SECS__", str(rf["secs"]))
-            .replace("__RF_ITEMS__", str(rf["items"]))
-            .replace("__RF_VIDS__", str(rf["vids"]))
-            .replace("__P_ARTS__", str(pro["arts"]))
-            .replace("__P_MLS__", str(pro["mls"]))
-            .replace("__P_NWSL__", str(pro["nwsl"]))
-            .replace("__I_RES__", str(intl["res"]))
-            .replace("__I_ORGS__", str(intl["orgs"]))
-            .replace("__I_LANG__", "7")
-            .replace("__C_CASES__", str(cm["cases"]))
-            .replace("__C_COMPS__", str(cm["comps"]))
-            .replace("__W_SHOWS__", str(wk["shows"]))
-            .replace("__W_EPS__", str(wk["eps"]))
-            .replace("__W_LANGS__", str(wk["langs"]))
-            .replace("__IF_SECS__", str(ifab["secs"]))
-            .replace("__IF_ITEMS__", str(ifab["items"]))
-            .replace("__IF_FAQ__", str(ifab["faq"]))
-            .replace("__H_ROUNDS__", str(hns["rounds"]))
-            .replace("__H_INCS__", str(hns["incs"]))
-            .replace("__H_VIDS__", str(hns["vids"]))
-            .replace("__Q_TOTAL__", str(q_case + q_scale + q_var))
-            .replace("__Q_CASES__", str(q_case))
-            .replace("__Q_SCALE__", str(q_scale))
-            .replace("__Q_VAR__", str(q_var))
-            .replace("__BUILT__", date.today().isoformat()))
+    tb = topbar(
+        active="index.html",
+        stats="stats-2026.html",
+        brand_sub="评议 · 规则 · 尺度统一",
+        seasons=("2024", "2025", "2026"),
+    )
+    subs = {
+        "__I_FILM__": icon("film", 20),
+        "__I_BOOK__": icon("book", 20),
+        "__I_CHART__": icon("chart", 17),
+        "__I_RIGHT__": icon("right", 13),
+        "__I_NOTE__": icon("note", 15),
+        "__I_STAR__": icon("star", 13),
+        "__I_SEARCH__": icon("search", 13),
+        "__I_DOWN__": icon("download", 13),
+        "__I_PLAY__": icon("play", 12),
+        "__I_SHIELD__": icon("shield", 13),
+        "__I_QUIZ__": icon("quiz", 20),
+        "__I_EXT_S__": icon("external", 15),
+        "__I_TARGET__": icon("target", 20),
+        "__I_GLOBE__": icon("globe", 20),
+        "__I_FLAG__": icon("flag", 20),
+        "__I_COMPASS__": icon("compass", 20),
+        "__I_PLAY2__": icon("play", 20),
+        "__I_TV__": icon("tv", 20),
+        "__I_FILE__": icon("file-text", 20),
+        "__I_CHECK__": icon("check", 20),
+    }
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__N26__", str(s["2026"]["n"]))
+        .replace("__W26__", str(s["2026"]["wrong"]))
+        .replace("__V26__", str(s["2026"]["videos"]))
+        .replace("__N26_ISSUES__", str(s["2026"]["issues"]))
+        .replace(
+            "__VTOTAL__",
+            str(s["2026"]["videos"] + s["2025"]["videos"] + s["2024"]["videos"]),
+        )
+        .replace("__N25__", str(s["2025"]["n"]))
+        .replace("__W25__", str(s["2025"]["wrong"]))
+        .replace("__V25__", str(s["2025"]["videos"]))
+        .replace("__N25_ISSUES__", str(s["2025"]["issues"]))
+        .replace("__N24__", str(s["2024"]["n"]))
+        .replace("__W24__", str(s["2024"]["wrong"]))
+        .replace("__V24__", str(s["2024"]["videos"]))
+        .replace("__N24_ISSUES__", str(s["2024"]["issues"]))
+        .replace("__NRL__", str(s["rules"]["sections"]))
+        .replace("__NLAW__", str(s["rules"]["laws"]))
+        .replace("__S_SCENES__", str(sc["scenes"]))
+        .replace("__S_GROUPS__", str(sc["groups"]))
+        .replace("__S_VIDEOS__", str(sc["videos"]))
+        .replace("__U_CASES__", str(u["cases"]))
+        .replace("__U_GROUPS__", str(u["groups"]))
+        .replace("__RA_EDS__", str(ra["editions"]))
+        .replace("__RA_ONLINE__", str(ra["online"]))
+        .replace("__RF_SECS__", str(rf["secs"]))
+        .replace("__RF_ITEMS__", str(rf["items"]))
+        .replace("__RF_VIDS__", str(rf["vids"]))
+        .replace("__P_ARTS__", str(pro["arts"]))
+        .replace("__P_MLS__", str(pro["mls"]))
+        .replace("__P_NWSL__", str(pro["nwsl"]))
+        .replace("__I_RES__", str(intl["res"]))
+        .replace("__I_ORGS__", str(intl["orgs"]))
+        .replace("__I_LANG__", "7")
+        .replace("__C_CASES__", str(cm["cases"]))
+        .replace("__C_COMPS__", str(cm["comps"]))
+        .replace("__W_SHOWS__", str(wk["shows"]))
+        .replace("__W_EPS__", str(wk["eps"]))
+        .replace("__W_LANGS__", str(wk["langs"]))
+        .replace("__IF_SECS__", str(ifab["secs"]))
+        .replace("__IF_ITEMS__", str(ifab["items"]))
+        .replace("__IF_FAQ__", str(ifab["faq"]))
+        .replace("__H_ROUNDS__", str(hns["rounds"]))
+        .replace("__H_INCS__", str(hns["incs"]))
+        .replace("__H_VIDS__", str(hns["vids"]))
+        .replace("__Q_TOTAL__", str(q_case + q_scale + q_var))
+        .replace("__Q_CASES__", str(q_case))
+        .replace("__Q_SCALE__", str(q_scale))
+        .replace("__Q_VAR__", str(q_var))
+        .replace("__BUILT__", date.today().isoformat())
+    )
     for k, v in subs.items():
         html = html.replace(k, v)
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "index.html"
     out.write_text(html, encoding="utf-8")
-    print(f"生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB)")
+    print(f"生成 {out}  ({len(html.encode('utf-8')) / 1024:.0f} KB)")
 
 
 if __name__ == "__main__":

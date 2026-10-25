@@ -14,6 +14,7 @@
 视频：本地相对路径 → onerror 换官方直链（CDN 拒 Referer，必须 no-referrer）→ 提示条；
 轻量版（cfa.lite）不出视频窗口，改官方链接。
 """
+
 import json
 from datetime import date
 
@@ -23,77 +24,153 @@ from lib.theme import icon, inject_theme, js_icons, topbar
 
 WRONG_KEY = "cfa.quiz.wrong"
 # 与 build_scale.DECISION_ORDER 保持一致的展示顺序
-DECISION_ORDER = ["不犯规", "间接任意球", "直接任意球", "罚球点球", "不出牌", "黄牌", "红牌",
-                  "不越位犯规", "干扰比赛", "越位犯规", "干扰对方队员", "越位位置获得利益"]
-R_OPTIONS = [("playon", "不犯规（比赛继续）"), ("directfk", "直接任意球"), ("indirectfk", "间接任意球"),
-             ("penalty", "罚球点球"), ("retake", "重罚球点球"), ("goal_valid", "进球有效"),
-             ("goal_invalid", "进球无效")]
+DECISION_ORDER = [
+    "不犯规",
+    "间接任意球",
+    "直接任意球",
+    "罚球点球",
+    "不出牌",
+    "黄牌",
+    "红牌",
+    "不越位犯规",
+    "干扰比赛",
+    "越位犯规",
+    "干扰对方队员",
+    "越位位置获得利益",
+]
+R_OPTIONS = [
+    ("playon", "不犯规（比赛继续）"),
+    ("directfk", "直接任意球"),
+    ("indirectfk", "间接任意球"),
+    ("penalty", "罚球点球"),
+    ("retake", "重罚球点球"),
+    ("goal_valid", "进球有效"),
+    ("goal_invalid", "进球无效"),
+]
 C_OPTIONS = [("none", "不出牌"), ("yellow", "黄牌"), ("red", "红牌")]
-V_OPTIONS = [("correct", "支持原判"), ("wrong", "判罚错误"), ("pending", "证据不足不予认定")]
-COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
-              "女超": "女超联赛", "女甲": "女甲联赛", "运动会": "全运会"}
+V_OPTIONS = [
+    ("correct", "支持原判"),
+    ("wrong", "判罚错误"),
+    ("pending", "证据不足不予认定"),
+]
+COMP_ALIAS = {
+    "中超": "中超联赛",
+    "中甲": "中甲联赛",
+    "中乙": "中乙联赛",
+    "女超": "女超联赛",
+    "女甲": "女甲联赛",
+    "运动会": "全运会",
+}
 # VAR 协议题干扰项映射（人工指定：每题 4 选项、ans=正确项下标；正确项全部为官方答案）
 VAR_OPTS = {
-    "q1": {"ans": 0, "opts": [
-        "可以——该黄牌（非第二张黄牌）可回看确认犯规球员身份，黄牌取消并改判 B 队直接任意球",
-        "不可以——黄牌判罚一律不可回看，维持原判",
-        "可以，但 VAR 只能提示裁判员注意，原判不可更改",
-        "可以——直接取消黄牌并判给 A 队点球"]},
-    "q2": {"ans": 1, "opts": [
-        "不可以——由第二张黄牌引发的红牌不可回看",
-        "可以——明显错误的第二张黄牌可由 VAR 协助：红牌取消，假摔球员被警告，进攻方获间接任意球",
-        "可以——直接改判进攻方点球",
-        "可以——红牌维持，另补判进攻方间接任意球"]},
-    "q3": {"ans": 0, "opts": [
-        "不可以——VAR 只能纠正「明显错误的第二张黄牌」，不能补漏判第二张黄牌",
-        "可以——这属于严重漏判事件，VAR 应建议回看",
-        "可以——VAR 直接出示第二张黄牌并罚令出场",
-        "不可以——除非裁判员已经出示了红牌"]},
-    "q4": {"ans": 2, "opts": [
-        "维持点球——回看后非清晰错误不得更改",
-        "取消点球，改判防守方球门球",
-        "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
-        "取消点球，坠球恢复比赛"]},
-    "q5": {"ans": 1, "opts": [
-        "可以——任何改变比赛进程的判罚都可回看",
-        "不可以——仅错罚对象，或与暴力行为、吐口水、咬人、极其攻击性/侮辱性言行相关的罚令出场事件例外",
-        "可以——但只能更改纪律处分，不能更改重新开始方式",
-        "不可以——比赛重新开始后一律不可回看"]},
-    "q6": {"ans": 3, "opts": [
-        "必须维持红牌——回看是为红牌发起的，不能降级",
-        "由 VAR 决定最终出示红牌还是黄牌",
-        "取消处罚但不补牌，比赛照常恢复",
-        "以回看所见为准——若裁判员认为该犯规只值警告而非罚令出场，就必须出示黄牌"]},
-    "q7": {"ans": 0, "opts": [
-        "适用「仅 VAR 回看」——VAR 告知回放内容，裁判员做出电视信号手势后取消点球、改判防守方任意球",
-        "必须进行场上回看（OFR）",
-        "维持点球——罚球区内外的判断属于裁判员主观裁量",
-        "取消点球，坠球恢复比赛"]},
-    "q8": {"ans": 3, "opts": [
-        "VAR 直接判罚点球并通知裁判员",
-        "比赛继续——VAR 无权提示这类情形",
-        "立即停止比赛并以坠球恢复",
-        "裁判员在球下次进入中立区域/局面时停止比赛、做出电视信号手势，经场上回看（OFR）后再作最终决定"]},
-    "q9": {"ans": 0, "opts": [
-        "不可以——VAR 只能在裁判员已作出第一决定（包括允许比赛继续）之后使用",
-        "可以——这属于「延迟吹罚」的正常执法形态",
-        "可以——但仅限进球类判定",
-        "不可以——VAR 只能应由队长申请使用"]},
-    "q10": {"ans": 1, "opts": [
-        "不允许——点球执行阶段的犯规不可回看",
-        "允许——罚球点球时守门员和/或主罚队员犯规，裁判员可以获得 VAR 协助",
-        "允许——但仅限主罚队员的犯规",
-        "允许——且该进球必须判定有效"]},
-    "q11": {"ans": 2, "opts": [
-        "维持点球，并向防守队员出示黄牌",
-        "取消点球，坠球恢复比赛",
-        "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
-        "取消点球，改判防守方球门球"]},
-    "q12": {"ans": 1, "opts": [
-        "黄牌维持——已出示的牌不可通过回看取消",
-        "取消黄牌并改判点球；犯规的防守队员视情况被警告或罚令出场",
-        "取消黄牌并改判点球，但不得再处罚防守队员",
-        "维持比赛原样，赛后报告处理"]},
+    "q1": {
+        "ans": 0,
+        "opts": [
+            "可以——该黄牌（非第二张黄牌）可回看确认犯规球员身份，黄牌取消并改判 B 队直接任意球",
+            "不可以——黄牌判罚一律不可回看，维持原判",
+            "可以，但 VAR 只能提示裁判员注意，原判不可更改",
+            "可以——直接取消黄牌并判给 A 队点球",
+        ],
+    },
+    "q2": {
+        "ans": 1,
+        "opts": [
+            "不可以——由第二张黄牌引发的红牌不可回看",
+            "可以——明显错误的第二张黄牌可由 VAR 协助：红牌取消，假摔球员被警告，进攻方获间接任意球",
+            "可以——直接改判进攻方点球",
+            "可以——红牌维持，另补判进攻方间接任意球",
+        ],
+    },
+    "q3": {
+        "ans": 0,
+        "opts": [
+            "不可以——VAR 只能纠正「明显错误的第二张黄牌」，不能补漏判第二张黄牌",
+            "可以——这属于严重漏判事件，VAR 应建议回看",
+            "可以——VAR 直接出示第二张黄牌并罚令出场",
+            "不可以——除非裁判员已经出示了红牌",
+        ],
+    },
+    "q4": {
+        "ans": 2,
+        "opts": [
+            "维持点球——回看后非清晰错误不得更改",
+            "取消点球，改判防守方球门球",
+            "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
+            "取消点球，坠球恢复比赛",
+        ],
+    },
+    "q5": {
+        "ans": 1,
+        "opts": [
+            "可以——任何改变比赛进程的判罚都可回看",
+            "不可以——仅错罚对象，或与暴力行为、吐口水、咬人、极其攻击性/侮辱性言行相关的罚令出场事件例外",
+            "可以——但只能更改纪律处分，不能更改重新开始方式",
+            "不可以——比赛重新开始后一律不可回看",
+        ],
+    },
+    "q6": {
+        "ans": 3,
+        "opts": [
+            "必须维持红牌——回看是为红牌发起的，不能降级",
+            "由 VAR 决定最终出示红牌还是黄牌",
+            "取消处罚但不补牌，比赛照常恢复",
+            "以回看所见为准——若裁判员认为该犯规只值警告而非罚令出场，就必须出示黄牌",
+        ],
+    },
+    "q7": {
+        "ans": 0,
+        "opts": [
+            "适用「仅 VAR 回看」——VAR 告知回放内容，裁判员做出电视信号手势后取消点球、改判防守方任意球",
+            "必须进行场上回看（OFR）",
+            "维持点球——罚球区内外的判断属于裁判员主观裁量",
+            "取消点球，坠球恢复比赛",
+        ],
+    },
+    "q8": {
+        "ans": 3,
+        "opts": [
+            "VAR 直接判罚点球并通知裁判员",
+            "比赛继续——VAR 无权提示这类情形",
+            "立即停止比赛并以坠球恢复",
+            "裁判员在球下次进入中立区域/局面时停止比赛、做出电视信号手势，经场上回看（OFR）后再作最终决定",
+        ],
+    },
+    "q9": {
+        "ans": 0,
+        "opts": [
+            "不可以——VAR 只能在裁判员已作出第一决定（包括允许比赛继续）之后使用",
+            "可以——这属于「延迟吹罚」的正常执法形态",
+            "可以——但仅限进球类判定",
+            "不可以——VAR 只能应由队长申请使用",
+        ],
+    },
+    "q10": {
+        "ans": 1,
+        "opts": [
+            "不允许——点球执行阶段的犯规不可回看",
+            "允许——罚球点球时守门员和/或主罚队员犯规，裁判员可以获得 VAR 协助",
+            "允许——但仅限主罚队员的犯规",
+            "允许——且该进球必须判定有效",
+        ],
+    },
+    "q11": {
+        "ans": 2,
+        "opts": [
+            "维持点球，并向防守队员出示黄牌",
+            "取消点球，坠球恢复比赛",
+            "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
+            "取消点球，改判防守方球门球",
+        ],
+    },
+    "q12": {
+        "ans": 1,
+        "opts": [
+            "黄牌维持——已出示的牌不可通过回看取消",
+            "取消黄牌并改判点球；犯规的防守队员视情况被警告或罚令出场",
+            "取消黄牌并改判点球，但不得再处罚防守队员",
+            "维持比赛原样，赛后报告处理",
+        ],
+    },
 }
 
 
@@ -101,9 +178,15 @@ def _comp(c):
     comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
     if comp:
         return comp
-    for k, v in (("中超", "中超联赛"), ("中甲", "中甲联赛"), ("中乙", "中乙联赛"),
-                 ("女超", "女超联赛"), ("女甲", "女甲联赛"), ("足协杯", "中国足协杯"),
-                 ("运动会", "全运会")):
+    for k, v in (
+        ("中超", "中超联赛"),
+        ("中甲", "中甲联赛"),
+        ("中乙", "中乙联赛"),
+        ("女超", "女超联赛"),
+        ("女甲", "女甲联赛"),
+        ("足协杯", "中国足协杯"),
+        ("运动会", "全运会"),
+    ):
         if k in c.get("match_info", ""):
             return v
     return ""
@@ -112,7 +195,9 @@ def _comp(c):
 def build_bank():
     answers = {}
     if (DATA / "quiz-answers.json").exists():
-        answers = json.loads((DATA / "quiz-answers.json").read_text(encoding="utf-8")).get("answers", {})
+        answers = json.loads(
+            (DATA / "quiz-answers.json").read_text(encoding="utf-8")
+        ).get("answers", {})
     catalog = load_catalog()
     teams = {item["name"]: item for item in catalog.values()}
     bank = []
@@ -122,14 +207,25 @@ def build_bank():
             if not (c.get("video_files") and (c.get("conclusion") or "").strip()):
                 continue
             item = {
-                "k": f"{season}-{c['seq']}", "t": "case", "s": season,
-                "issue": c["issue"], "no": c["no"], "seq": c["seq"],
-                "comp": _comp(c), "round": c.get("round", ""),
-                "home": normalize_team(c.get("home", "")), "away": normalize_team(c.get("away", "")),
-                "minute": c.get("minute", ""), "desc": c["desc"], "appeal": c.get("appeal", ""),
-                "concl": c["conclusion"], "v": c["referee_verdict"],
-                "videos": c["video_files"], "vurls": c["video_urls"],
-                "cat": c["category"], "catname": c.get("category_name", ""),
+                "k": f"{season}-{c['seq']}",
+                "t": "case",
+                "s": season,
+                "issue": c["issue"],
+                "no": c["no"],
+                "seq": c["seq"],
+                "comp": _comp(c),
+                "round": c.get("round", ""),
+                "home": normalize_team(c.get("home", "")),
+                "away": normalize_team(c.get("away", "")),
+                "minute": c.get("minute", ""),
+                "desc": c["desc"],
+                "appeal": c.get("appeal", ""),
+                "concl": c["conclusion"],
+                "v": c["referee_verdict"],
+                "videos": c["video_files"],
+                "vurls": c["video_urls"],
+                "cat": c["category"],
+                "catname": c.get("category_name", ""),
             }
             ans = answers.get(item["k"])
             if ans and ans.get("reviewed"):
@@ -151,20 +247,36 @@ def build_bank():
                 for g in sec["groups"]:
                     for it in g["items"]:
                         dec = it.get("decision") or []
-                        if not dec or any(x.get("label") == "VAR 机制讲解" for x in dec):
+                        if not dec or any(
+                            x.get("label") == "VAR 机制讲解" for x in dec
+                        ):
                             continue
                         if not it.get("video"):
                             continue
-                        bank.append({
-                            "k": f"sc-{year}-{it['id']}", "t": "scale", "s": year,
-                            "id": it["id"], "series": it["series"],
-                            "title": it["title"], "group": g["name"],
-                            "note": it.get("note", ""), "reason": it.get("reason", ""),
-                            "varrule": it.get("varrule", ""),
-                            "video": it["video"], "poster": it.get("poster", ""),
-                            "dec": sorted(dec, key=lambda x: DECISION_ORDER.index(x["label"])
-                                          if x["label"] in DECISION_ORDER else 99),
-                        })
+                        bank.append(
+                            {
+                                "k": f"sc-{year}-{it['id']}",
+                                "t": "scale",
+                                "s": year,
+                                "id": it["id"],
+                                "series": it["series"],
+                                "title": it["title"],
+                                "group": g["name"],
+                                "note": it.get("note", ""),
+                                "reason": it.get("reason", ""),
+                                "varrule": it.get("varrule", ""),
+                                "video": it["video"],
+                                "poster": it.get("poster", ""),
+                                "dec": sorted(
+                                    dec,
+                                    key=lambda x: (
+                                        DECISION_ORDER.index(x["label"])
+                                        if x["label"] in DECISION_ORDER
+                                        else 99
+                                    ),
+                                ),
+                            }
+                        )
                         n_scale += 1
     # 第三题型：VAR 协议题（IFAB 协议 FAQ：场景 → 官方决定，四选一）
     n_var = 0
@@ -178,13 +290,21 @@ def build_bank():
             cfg = VAR_OPTS.get(q["id"])
             if not cfg or not zq:
                 continue
-            bank.append({
-                "k": f"var-{q['id']}", "t": "var", "s": "ifab",
-                "qid": q["id"], "q": zq["q"], "q_en": q["q"],
-                "a": zq["a"], "a_en": q["a"],
-                "opts": cfg["opts"], "ans": cfg["ans"],
-                "link": f"ifab.html#faq-{q['id']}",
-            })
+            bank.append(
+                {
+                    "k": f"var-{q['id']}",
+                    "t": "var",
+                    "s": "ifab",
+                    "qid": q["id"],
+                    "q": zq["q"],
+                    "q_en": q["q"],
+                    "a": zq["a"],
+                    "a_en": q["a"],
+                    "opts": cfg["opts"],
+                    "ans": cfg["ans"],
+                    "link": f"ifab.html#faq-{q['id']}",
+                }
+            )
             n_var += 1
     return bank, teams, n_scale, n_var
 
@@ -192,10 +312,13 @@ def build_bank():
 def build_data():
     bank, teams, n_scale, n_var = build_bank()
     n_case = sum(1 for b in bank if b["t"] == "case")
-    return {"cfg": {"wrongKey": WRONG_KEY, "built": date.today().isoformat()},
-            "bank": bank, "teams": teams,
-            "opts": {"r": R_OPTIONS, "c": C_OPTIONS, "v": V_OPTIONS},
-            "meta": {"case": n_case, "scale": n_scale, "var": n_var}}
+    return {
+        "cfg": {"wrongKey": WRONG_KEY, "built": date.today().isoformat()},
+        "bank": bank,
+        "teams": teams,
+        "opts": {"r": R_OPTIONS, "c": C_OPTIONS, "v": V_OPTIONS},
+        "meta": {"case": n_case, "scale": n_scale, "var": n_var},
+    }
 
 
 HTML = r"""<!DOCTYPE html>
@@ -992,22 +1115,33 @@ renderSeasonChips(); renderWbStats(); updatePoolTip();
 def main():
     data = build_data()
     # "</" 转义为合法 JSON 的 "<\/"，防正文里出现 </script> 提前闭合注入点
-    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    tb = topbar(active="quiz.html", stats="stats-2026.html", brand_sub="考题模式",
-                seasons=("2024", "2025", "2026"), help_btn=False, lite_btn=True)
-    html = inject_theme(HTML
-                        .replace("__DATA__", data_js)
-                        .replace("__ICONS__", js_icons())
-                        .replace("__TOPBAR__", tb)
-                        .replace("__I_UP__", icon("up", 14))
-                        .replace("__N_CASE__", str(data["meta"]["case"]))
-                        .replace("__N_SCALE__", str(data["meta"]["scale"]))
-                        .replace("__N_VAR__", str(data["meta"]["var"])))
+    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace(
+        "</", "<\\/"
+    )
+    tb = topbar(
+        active="quiz.html",
+        stats="stats-2026.html",
+        brand_sub="考题模式",
+        seasons=("2024", "2025", "2026"),
+        help_btn=False,
+        lite_btn=True,
+    )
+    html = inject_theme(
+        HTML.replace("__DATA__", data_js)
+        .replace("__ICONS__", js_icons())
+        .replace("__TOPBAR__", tb)
+        .replace("__I_UP__", icon("up", 14))
+        .replace("__N_CASE__", str(data["meta"]["case"]))
+        .replace("__N_SCALE__", str(data["meta"]["scale"]))
+        .replace("__N_VAR__", str(data["meta"]["var"]))
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "quiz.html"
     out.write_text(html, encoding="utf-8")
-    print(f"生成 {out}（判例 {data['meta']['case']} 题 + 尺度场景 {data['meta']['scale']} 题 "
-          f"+ VAR 协议 {data['meta']['var']} 题, {len(html.encode('utf-8'))/1024:.0f} KB）")
+    print(
+        f"生成 {out}（判例 {data['meta']['case']} 题 + 尺度场景 {data['meta']['scale']} 题 "
+        f"+ VAR 协议 {data['meta']['var']} 题, {len(html.encode('utf-8')) / 1024:.0f} KB）"
+    )
 
 
 if __name__ == "__main__":

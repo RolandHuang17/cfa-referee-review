@@ -11,6 +11,7 @@ RAP 的实际判例内容在 Nextaur 登录墙后（免费注册）或已失效�
 - fetch: 抓取索引页缓存 data/local/dutchref-cache/ 并打印期数清单（默认）
 - merge: fetch 后把发现的、rap.json 中尚不存在的期数以 status="unreviewed" 并入
 """
+
 import html as htmllib
 import json
 import re
@@ -27,7 +28,9 @@ BACKOFFS = [30, 90]
 
 LINK_RE = re.compile(r'<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)</a>', re.I)
 # 期数模式：RAP 2026-1 / RAP 2025:2 / RAP Euro 2024 / RAP Women's Euro 2017 …
-EDITION_RE = re.compile(r"(?i)RAP\s+((?:women'?s\s+)?(?:euro\s+)?20\d\d(?:\s*[:\-–]\s*\d)?)")
+EDITION_RE = re.compile(
+    r"(?i)RAP\s+((?:women'?s\s+)?(?:euro\s+)?20\d\d(?:\s*[:\-–]\s*\d)?)"
+)
 URL_HOSTS = re.compile(r"(?i)bit\.ly|nextaur\.com|wetransfer|dutchreferee\.com")
 
 
@@ -49,7 +52,7 @@ def fetch_page() -> str:
             st, txt = fetch_text(INDEX, timeout=45, retries=2)
             if st == 200 and len(txt) > MIN_BODY:
                 cache_f.write_text(txt, encoding="utf-8")
-                print(f"  已缓存 {len(txt)//1024}KB", flush=True)
+                print(f"  已缓存 {len(txt) // 1024}KB", flush=True)
                 return txt
             print(f"  HTTP {st}, {len(txt)}B", flush=True)
         except Exception as e:  # noqa: BLE001
@@ -64,10 +67,17 @@ def discover(page: str) -> list:
         url, txt = m.group(1), clean(m.group(2))
         if not URL_HOSTS.search(url):
             continue
-        em = EDITION_RE.search(txt) or EDITION_RE.search(clean(page[max(0, m.start()-300):m.start()]))
+        em = EDITION_RE.search(txt) or EDITION_RE.search(
+            clean(page[max(0, m.start() - 300) : m.start()])
+        )
         if not em:
             continue
-        key = re.sub(r"\s+", " ", em.group(1)).upper().replace("–", "-").replace(": ", "-")
+        key = (
+            re.sub(r"\s+", " ", em.group(1))
+            .upper()
+            .replace("–", "-")
+            .replace(": ", "-")
+        )
         key = re.sub(r"\s*-\s*", "-", key)
         if url not in seen:
             seen.add(url)
@@ -90,15 +100,22 @@ def main():
         added = 0
         for f in found:
             if f["edition"] not in have:
-                data["editions"].append({
-                    "id": f["edition"], "title": f"RAP {f['edition']}",
-                    "platform": "nextaur" if "nextaur" in f["url"] else "download",
-                    "status": "unreviewed", "url": f["url"], "note": "脚本发现待人工核对"})
+                data["editions"].append(
+                    {
+                        "id": f["edition"],
+                        "title": f"RAP {f['edition']}",
+                        "platform": "nextaur" if "nextaur" in f["url"] else "download",
+                        "status": "unreviewed",
+                        "url": f["url"],
+                        "note": "脚本发现待人工核对",
+                    }
+                )
                 added += 1
         if added:
             data["checked"] = time.strftime("%Y-%m-%d")
-            RAP_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1),
-                                encoding="utf-8")
+            RAP_JSON.write_text(
+                json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+            )
         print(f"merge 完成: 新增 {added} 期（status=unreviewed，待人工核对补注）")
 
 

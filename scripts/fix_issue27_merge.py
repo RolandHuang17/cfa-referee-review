@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
 """一次性修正：拆分第27期判例2（误合并了26期两个判例的补充认定），
 把补充认定文本与补充视频归还给 #183(期26判例2手球) 和 #188(期26判例7头撞)"""
+
 import json
+from collections import Counter
 
 from lib.paths import DATA
 
@@ -22,10 +24,16 @@ part195 = conc[:i3].strip()
 part183 = conc[i3:i4].strip()
 part188 = conc[i4:].strip()
 c195["conclusion"] = part195
-c183["conclusion"] = (c183["conclusion"].rstrip()
-                      + "\n【第27期补充认定】" + part183.replace(SPLIT3, "", 1).strip())
-c188["conclusion"] = (c188["conclusion"].rstrip()
-                      + "\n【第27期补充认定】" + part188.replace(SPLIT4, "", 1).strip())
+c183["conclusion"] = (
+    c183["conclusion"].rstrip()
+    + "\n【第27期补充认定】"
+    + part183.replace(SPLIT3, "", 1).strip()
+)
+c188["conclusion"] = (
+    c188["conclusion"].rstrip()
+    + "\n【第27期补充认定】"
+    + part188.replace(SPLIT4, "", 1).strip()
+)
 
 # 2) #195 申诉只保留广西恒宸部分
 ap = c195["appeal"]
@@ -43,10 +51,14 @@ v183, v188 = u195[1], u195[2]
 c195["video_urls"] = [u195[0]]
 f195 = c195["video_files"]
 assert len(f195) == 3, f"#195视频文件数异常: {f195}"
+
+
 # 现行 schema 的 video_files 带赛季前缀（如 "2025/i27c02-1.mp4"），从既有值推导而不是硬编码，
 # 否则重跑会把无前缀路径混进 JSON 且下面的整串比较断言恒真、静默损坏
 def pf(fname):
     return f"{f195[0].rsplit('/', 1)[0]}/{fname}" if "/" in f195[0] else fname
+
+
 c195["video_files"] = [f195[0]]
 assert not any(f.endswith("i26c02-2.mp4") for f in c183["video_files"])
 assert not any(f.endswith("i26c07-2.mp4") for f in c188["video_files"])
@@ -61,7 +73,6 @@ data["cases"] = [cases[c["seq"]] for c in data["cases"]]
 path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
 # 校验输出
-from collections import Counter
 print("裁判判定:", Counter(c["referee_verdict"] for c in data["cases"]))
 print("VAR判定:", Counter(c["var_verdict"] for c in data["cases"]))
 for n in (9, 26, 27):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """共享视觉系统:设计 tokens/组件 CSS + 统一顶栏 + 明暗主题切换,注入全部生成页。
 页面专属布局写在各 builder 的 <style>;颜色/顶栏/按钮等一律走本模块。"""
+
 from lib.paths import THEME_CSS
 
 THEME = THEME_CSS.read_text(encoding="utf-8")
@@ -47,24 +48,62 @@ _FILLED = {"star-f"}
 
 def icon(name, size=15):
     filled = name in _FILLED
-    fill = ' fill="currentColor" stroke="none"' if filled else ' fill="none" stroke="currentColor"'
-    return (f'<svg class="ic{" f" if filled else ""}" width="{size}" height="{size}" '
-            f'viewBox="0 0 24 24"{fill} stroke-width="2" '
-            f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{_E[name]}</svg>')
+    fill = (
+        ' fill="currentColor" stroke="none"'
+        if filled
+        else ' fill="none" stroke="currentColor"'
+    )
+    return (
+        f'<svg class="ic{" f" if filled else ""}" width="{size}" height="{size}" '
+        f'viewBox="0 0 24 24"{fill} stroke-width="2" '
+        f'stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">{_E[name]}</svg>'
+    )
 
 
 def js_icons():
     """给页面 JS 渲染函数用的图标常量 (const IC = {...})。"""
     import json
-    return json.dumps({k: icon(k, 13) for k in ("star", "star-f", "note", "up", "down", "search",
-                                                "help", "x", "left", "right", "play", "upload",
-                                                "download", "chev-d", "menu", "external",
-                                                "eye-off", "quiz", "check")},
-                      ensure_ascii=False, separators=(",", ":"))
+
+    return json.dumps(
+        {
+            k: icon(k, 13)
+            for k in (
+                "star",
+                "star-f",
+                "note",
+                "up",
+                "down",
+                "search",
+                "help",
+                "x",
+                "left",
+                "right",
+                "play",
+                "upload",
+                "download",
+                "chev-d",
+                "menu",
+                "external",
+                "eye-off",
+                "quiz",
+                "check",
+            )
+        },
+        ensure_ascii=False,
+        separators=(",", ":"),
+    )
 
 
-def topbar(active="", right="", stats="stats-2026.html", brand_sub="", seasons=("2026", "2025", "2024"),
-           sb_btn=False, help_btn=False, lite_btn=False):
+def topbar(
+    active="",
+    right="",
+    stats="stats-2026.html",
+    brand_sub="",
+    seasons=("2026", "2025", "2024"),
+    sb_btn=False,
+    help_btn=False,
+    lite_btn=False,
+):
     """统一顶栏：导航分「赛季 / 工具 / 国际评议」三组下拉（点击展开，Esc/外点关闭），
     ≤1080px 收进汉堡按钮 + 全量导航抽屉。active=当前页 href;right=页面临有控件(搜索框等)HTML;
     sb_btn=侧栏开关(#btnSb, season 页用);help_btn=说明按钮(#btnHelp, season 页用);
@@ -73,92 +112,145 @@ def topbar(active="", right="", stats="stats-2026.html", brand_sub="", seasons=(
     season_items.append((stats, "得失盘点", "chart"))
     groups = [
         ("赛季", season_items),
-        ("工具", [("index.html", "首页", "home"), ("rules.html", "竞赛规则", "book"),
-                  ("scale.html", "统一尺度", "sliders"), ("quiz.html", "考题模式", "quiz")]),
-        ("国际评议", [("uefa.html", "UEFA 判例库", "play"), ("rap.html", "UEFA RAP", "target"),
-                      ("rfef.html", "西班牙 RFEF", "globe"), ("pro.html", "美国 PRO", "flag"),
-                      ("conmebol.html", "南美 CONMEBOL", "play"), ("weekly.html", "全球周更节目", "tv"),
-                      ("ifab.html", "IFAB 协议中译", "file-text"), ("hns.html", "克罗地亚 HNS", "check"),
-                      ("intl.html", "全球资源导航", "compass")]),
+        (
+            "工具",
+            [
+                ("index.html", "首页", "home"),
+                ("rules.html", "竞赛规则", "book"),
+                ("scale.html", "统一尺度", "sliders"),
+                ("quiz.html", "考题模式", "quiz"),
+            ],
+        ),
+        (
+            "国际评议",
+            [
+                ("uefa.html", "UEFA 判例库", "play"),
+                ("rap.html", "UEFA RAP", "target"),
+                ("rfef.html", "西班牙 RFEF", "globe"),
+                ("pro.html", "美国 PRO", "flag"),
+                ("conmebol.html", "南美 CONMEBOL", "play"),
+                ("weekly.html", "全球周更节目", "tv"),
+                ("ifab.html", "IFAB 协议中译", "file-text"),
+                ("hns.html", "克罗地亚 HNS", "check"),
+                ("intl.html", "全球资源导航", "compass"),
+            ],
+        ),
     ]
     nav = ""
     for gname, items in groups:
         gcur = any(href == active for href, _, _ in items)
         links = "".join(
             f'<a class="tbtn{" cur" if href == active else ""}" role="menuitem" href="{href}">'
-            f'{icon(ic)}<span>{label}</span></a>' for href, label, ic in items)
-        nav += (f'<div class="navgrp{" cur" if gcur else ""}">'
-                f'<button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false">'
-                f'<span>{gname}</span>{icon("chev-d", 12)}</button>'
-                f'<div class="navpop" role="menu">{links}</div></div>')
+            f"{icon(ic)}<span>{label}</span></a>"
+            for href, label, ic in items
+        )
+        nav += (
+            f'<div class="navgrp{" cur" if gcur else ""}">'
+            f'<button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false">'
+            f"<span>{gname}</span>{icon('chev-d', 12)}</button>"
+            f'<div class="navpop" role="menu">{links}</div></div>'
+        )
     drawer = '<div class="navdrawer" id="navDrawer" aria-label="全站导航">'
     for gname, items in groups:
-        drawer += (f'<div class="navd-h">{gname}</div>' + "".join(
+        drawer += f'<div class="navd-h">{gname}</div>' + "".join(
             f'<a class="navd-i{" cur" if href == active else ""}" href="{href}">'
-            f'{icon(ic, 15)}<span>{label}</span></a>' for href, label, ic in items))
+            f"{icon(ic, 15)}<span>{label}</span></a>"
+            for href, label, ic in items
+        )
     drawer += "</div>"
-    sb = (f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
-          f'{icon("menu")}</button>') if sb_btn else ""
-    navb = ('<button class="tbtn" id="btnNav" title="站点导航" aria-label="打开站点导航">'
-            + icon("compass") + '</button>')
-    lite_b = ('<button class="tbtn" id="btnLite" title="切换轻量版：纯文字+官方链接（无视频窗口），适合在线浏览" '
-              'aria-pressed="false">' + icon("book") + '<span>轻量版</span></button>') if lite_btn else ""
-    help_b = (f'<button class="tbtn" id="btnHelp" title="使用说明与统计口径">'
-              f'{icon("help")}<span>说明</span></button>') if help_btn else ""
-    theme_btn = ('<button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题">'
-                 '<span class="when-dark">' + icon("sun") + '</span>'
-                 '<span class="when-light">' + icon("moon") + '</span></button>')
+    sb = (
+        (
+            f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
+            f"{icon('menu')}</button>"
+        )
+        if sb_btn
+        else ""
+    )
+    navb = (
+        '<button class="tbtn" id="btnNav" title="站点导航" aria-label="打开站点导航">'
+        + icon("compass")
+        + "</button>"
+    )
+    lite_b = (
+        (
+            '<button class="tbtn" id="btnLite" title="切换轻量版：纯文字+官方链接（无视频窗口），适合在线浏览" '
+            'aria-pressed="false">' + icon("book") + "<span>轻量版</span></button>"
+        )
+        if lite_btn
+        else ""
+    )
+    help_b = (
+        (
+            f'<button class="tbtn" id="btnHelp" title="使用说明与统计口径">'
+            f"{icon('help')}<span>说明</span></button>"
+        )
+        if help_btn
+        else ""
+    )
+    theme_btn = (
+        '<button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题">'
+        '<span class="when-dark">' + icon("sun") + "</span>"
+        '<span class="when-light">' + icon("moon") + "</span></button>"
+    )
     sub = f'<span class="brand-sub">{brand_sub}</span>' if brand_sub else ""
-    return (f'<header class="topbar">{sb}{navb}'
-            f'<a class="brand" href="index.html">{icon("shield", 19)}<b>裁判学习平台</b>{sub}</a>'
-            f'<nav class="nav" aria-label="站点导航">{nav}</nav>'
-            f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>'
-            + drawer)
+    return (
+        f'<header class="topbar">{sb}{navb}'
+        f'<a class="brand" href="index.html">{icon("shield", 19)}<b>裁判学习平台</b>{sub}</a>'
+        f'<nav class="nav" aria-label="站点导航">{nav}</nav>'
+        f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>'
+        + drawer
+    )
 
 
 # 首帧前设置主题与轻量版/隐藏答案标记,避免明暗闪跳/布局闪跳
-_EARLY_JS = ("<script>try{var t=localStorage.getItem('cfa.theme');"
-             "if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';"
-             "document.documentElement.dataset.theme=t;"
-             "if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';"
-             "if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'"
-             "}catch(e){}</script>")
+_EARLY_JS = (
+    "<script>try{var t=localStorage.getItem('cfa.theme');"
+    "if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';"
+    "document.documentElement.dataset.theme=t;"
+    "if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';"
+    "if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'"
+    "}catch(e){}</script>"
+)
 # 主题/轻量版切换按钮的全局点击处理(所有页面通用;#btnLite 切换后派发 cfa:lite 事件供页面重渲染)
-_TOGGLE_JS = ("<script>document.addEventListener('click',function(e){"
-              "var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;"
-              "var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';"
-              "r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});"
-              "document.addEventListener('click',function(e){"
-              "var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;"
-              "var r=document.documentElement,on=r.dataset.lite!=='1';"
-              "if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');"
-              "b.setAttribute('aria-pressed',on?'true':'false');"
-              "try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}"
-              "try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});"
-              "(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',"
-              "document.documentElement.dataset.lite==='1'?'true':'false');})();"
-              # 顶栏分组下拉：点击切换、外点关闭；汉堡抽屉 #btnNav；Esc 全关
-              "document.addEventListener('click',function(e){"
-              "var t=e.target.closest&&e.target.closest('.grp-btn');"
-              "document.querySelectorAll('.navgrp').forEach(function(g){"
-              "var open=!!t&&g===t.parentElement&&!g.classList.contains('open');"
-              "g.classList.toggle('open',open);"
-              "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});"
-              "var nb=e.target.closest&&e.target.closest('#btnNav');"
-              "if(nb){document.body.classList.toggle('nav-open');return;}"
-              "if(document.body.classList.contains('nav-open')"
-              "&&!(e.target.closest&&e.target.closest('.navdrawer')))"
-              "document.body.classList.remove('nav-open');"
-              "if(e.target.closest&&e.target.closest('.navdrawer a'))"
-              "document.body.classList.remove('nav-open');});"
-              "document.addEventListener('keydown',function(e){"
-              "if(e.key!=='Escape')return;"
-              "document.querySelectorAll('.navgrp.open').forEach(function(g){"
-              "g.classList.remove('open');"
-              "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});"
-              "document.body.classList.remove('nav-open');});</script>")
+_TOGGLE_JS = (
+    "<script>document.addEventListener('click',function(e){"
+    "var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;"
+    "var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';"
+    "r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});"
+    "document.addEventListener('click',function(e){"
+    "var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;"
+    "var r=document.documentElement,on=r.dataset.lite!=='1';"
+    "if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');"
+    "b.setAttribute('aria-pressed',on?'true':'false');"
+    "try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}"
+    "try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});"
+    "(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',"
+    "document.documentElement.dataset.lite==='1'?'true':'false');})();"
+    # 顶栏分组下拉：点击切换、外点关闭；汉堡抽屉 #btnNav；Esc 全关
+    "document.addEventListener('click',function(e){"
+    "var t=e.target.closest&&e.target.closest('.grp-btn');"
+    "document.querySelectorAll('.navgrp').forEach(function(g){"
+    "var open=!!t&&g===t.parentElement&&!g.classList.contains('open');"
+    "g.classList.toggle('open',open);"
+    "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});"
+    "var nb=e.target.closest&&e.target.closest('#btnNav');"
+    "if(nb){document.body.classList.toggle('nav-open');return;}"
+    "if(document.body.classList.contains('nav-open')"
+    "&&!(e.target.closest&&e.target.closest('.navdrawer')))"
+    "document.body.classList.remove('nav-open');"
+    "if(e.target.closest&&e.target.closest('.navdrawer a'))"
+    "document.body.classList.remove('nav-open');});"
+    "document.addEventListener('keydown',function(e){"
+    "if(e.key!=='Escape')return;"
+    "document.querySelectorAll('.navgrp.open').forEach(function(g){"
+    "g.classList.remove('open');"
+    "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});"
+    "document.body.classList.remove('nav-open');});</script>"
+)
 
 
 def inject_theme(html):
-    html = html.replace("</head>", f"<style data-cfa-theme>\n{THEME}\n</style>{_EARLY_JS}</head>", 1)
+    html = html.replace(
+        "</head>", f"<style data-cfa-theme>\n{THEME}\n</style>{_EARLY_JS}</head>", 1
+    )
     return html.replace("</body>", f"{_TOGGLE_JS}</body>", 1)

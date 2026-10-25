@@ -4,13 +4,25 @@
 输出: data/cases-{season}.json
 视频文件命名: videos/{season}/i{期数}c{判例}-{序号}.mp4
 """
+
 import json
 import re
 
 from lib.paths import DATA, ISSUES
 
-CN_NUM = {"一": 1, "两": 2, "二": 2, "三": 3, "四": 4, "五": 5, "六": 6, "七": 7,
-          "八": 8, "九": 9, "十": 10}
+CN_NUM = {
+    "一": 1,
+    "两": 2,
+    "二": 2,
+    "三": 3,
+    "四": 4,
+    "五": 5,
+    "六": 6,
+    "七": 7,
+    "八": 8,
+    "九": 9,
+    "十": 10,
+}
 ISSUE_URL = {
     "2026": {
         1: "https://www.thecfa.cn/cppy/20260318/37435.html",
@@ -101,10 +113,25 @@ ISSUE_URL = {
     },
 }
 
-COMP_KEYWORDS = ["中超联赛", "中甲联赛", "中乙联赛", "中国足协杯", "足协杯",
-                 "全国运动会", "全运会", "女超联赛", "女甲联赛", "女乙联赛",
-                 "中冠联赛", "U21联赛", "U19联赛", "U17联赛", "锦标赛",
-                 "青少年联赛", "超级杯"]
+COMP_KEYWORDS = [
+    "中超联赛",
+    "中甲联赛",
+    "中乙联赛",
+    "中国足协杯",
+    "足协杯",
+    "全国运动会",
+    "全运会",
+    "女超联赛",
+    "女甲联赛",
+    "女乙联赛",
+    "中冠联赛",
+    "U21联赛",
+    "U19联赛",
+    "U17联赛",
+    "锦标赛",
+    "青少年联赛",
+    "超级杯",
+]
 
 
 def cn2int(s: str) -> int:
@@ -132,14 +159,16 @@ def extract_content(html: str) -> str:
     if a < 0:
         return ""
     b = html.find('<div class="news_sidebar"', a)
-    return html[a + len('<div class="news_right_list">'):b] if b > a else ""
+    return html[a + len('<div class="news_right_list">') : b] if b > a else ""
 
 
 def split_paragraphs(content_html: str):
     paras = []
     for m in re.finditer(r"<p[^>]*>(.*?)</p>", content_html, re.S):
         inner = m.group(1)
-        vids = re.findall(r'(?:<video|<source)[^>]+src="(https?://videooss\.thecfa\.cn[^"]+)"', inner)
+        vids = re.findall(
+            r'(?:<video|<source)[^>]+src="(https?://videooss\.thecfa\.cn[^"]+)"', inner
+        )
         vids = list(dict.fromkeys(vids))
         text = clean(inner)
         paras.append((text, vids))
@@ -159,8 +188,16 @@ def parse_case_head(text: str):
     if m:
         home, away = m.group(1), m.group(2)
         # 剥离黏在队名前的赛事前缀（2024早期文章"中超第5轮山东泰山VS河南"无逗号）
-        home = re.sub(r"^(?:中超|中甲|中乙|女超|女甲)(?:联赛)?第[0-9一二三四五六七八九十百]+轮", "", home)
-        away = re.sub(r"^(?:中超|中甲|中乙|女超|女甲)(?:联赛)?第[0-9一二三四五六七八九十百]+轮", "", away)
+        home = re.sub(
+            r"^(?:中超|中甲|中乙|女超|女甲)(?:联赛)?第[0-9一二三四五六七八九十百]+轮",
+            "",
+            home,
+        )
+        away = re.sub(
+            r"^(?:中超|中甲|中乙|女超|女甲)(?:联赛)?第[0-9一二三四五六七八九十百]+轮",
+            "",
+            away,
+        )
     else:
         seg = head.split("，")[-1].strip()
         if seg.count("-") == 1:
@@ -192,8 +229,12 @@ def classify(conc: str):
     if re.search(r"不予认定|无法判断|无法认定", conc):
         return "pending", var, var == "unknown"
     body = strip_var_parts(conc)
-    wrong = re.search(r"决定错误|判罚错误|错判|漏判|误判|认定.{0,6}为犯规|应为|属于犯规", body)
-    correct = re.search(r"支持|正确|并无不当|不构成犯规|不属犯规|并无犯规|并无明显犯规", body)
+    wrong = re.search(
+        r"决定错误|判罚错误|错判|漏判|误判|认定.{0,6}为犯规|应为|属于犯规", body
+    )
+    correct = re.search(
+        r"支持|正确|并无不当|不构成犯规|不属犯规|并无犯规|并无明显犯规", body
+    )
     if wrong and not correct:
         return "wrong", var, False
     if correct and not wrong:
@@ -203,6 +244,88 @@ def classify(conc: str):
     return "unclear", var, True
 
 
+def parse_issue(html: str, n: int, url: str, seq: int):
+    """解析单期官方评议页 HTML（纯函数，golden 测试直接消费 data/issues/ 归档）。
+
+    seq 传入该期首判例之前的赛季判例计数；返回 (期摘要, 本期判例列表, 更新后的 seq)。
+    视频去重与本地命名是赛季级状态，留在 parse_season。
+    """
+    title_m = re.search(r"<title>(.*?)</title>", html, re.S)
+    title = clean(title_m.group(1)).split("-中国足球协会")[0] if title_m else ""
+    expect = 0
+    tm = re.search(r"认定([一二三四五六七八九十百两\d]+)例(?:裁判)?[错漏判]+", title)
+    if tm:
+        expect = cn2int(tm.group(1)) if not tm.group(1).isdigit() else int(tm.group(1))
+    content = extract_content(html)
+    paras = split_paragraphs(content)
+    summary, cur, prev_text, issue_cases = [], None, "", []
+    for text, vids in paras:
+        cm = re.match(r"^判例([一二三四五六七八九十百]+)[：:]", text)
+        if cm:
+            cur = {
+                "issue": n,
+                "no": cn2int(cm.group(1)),
+                "desc": text,
+                "appeal": "",
+                "conclusion": "",
+                "videos": [],
+            }
+            seq += 1
+            cur["seq"] = seq
+            issue_cases.append(cur)
+            continue
+        if cur is None:
+            # 兜底：个别文章首个判例没有"判例N:"前缀（如2026第20期判例一），
+            # 以"俱乐部申诉意见认为"行识别，前一非空段落即对阵描述
+            if "申诉意见认为" in text:
+                cur = {
+                    "issue": n,
+                    "no": 1,
+                    "desc": prev_text or text,
+                    "appeal": text,
+                    "conclusion": "",
+                    "videos": [],
+                }
+                seq += 1
+                cur["seq"] = seq
+                issue_cases.append(cur)
+                continue
+            if text and "扫码" not in text and "分享至" not in text:
+                summary.append(text)
+                prev_text = text
+            continue
+        if "申诉意见认为" in text or "申诉意见如下" in text:
+            cur["appeal"] += ("\n" if cur["appeal"] else "") + text
+            continue
+        if not text and vids:
+            cur["videos"] += vids
+            continue
+        if re.search(r"评议组|对于此判例", text) or cur["conclusion"]:
+            cur["conclusion"] += ("\n" if cur["conclusion"] else "") + text
+    for c in issue_cases:
+        c["conclusion"] = re.sub(
+            r"中国足协将继续秉持.*$", "", c["conclusion"], flags=re.S
+        ).strip()
+        head, comp, rnd, home, away, minute = parse_case_head(c["desc"])
+        c.update(
+            match_info=head, comp=comp, round=rnd, home=home, away=away, minute=minute
+        )
+        c["referee_verdict"], c["var_verdict"], c["need_manual"] = classify(
+            c["desc"] + "\n" + c["appeal"] + "\n" + c["conclusion"]
+        )
+    issue = {
+        "no": n,
+        "title": title,
+        "url": url,
+        "date": re.search(r"/(\d{8})/", url).group(1),
+        "summary": "\n".join(summary).strip(),
+        "expected_wrong": expect,
+        "parsed_wrong": sum(1 for c in issue_cases if c["referee_verdict"] == "wrong"),
+        "video_count": sum(len(c["videos"]) for c in issue_cases),
+    }
+    return issue, issue_cases, seq
+
+
 def parse_season(season: str):
     raw = ISSUES / season
     urls = ISSUE_URL[season]
@@ -210,77 +333,36 @@ def parse_season(season: str):
     for n in sorted(urls):
         f = raw / f"issue_{n:02d}.html"
         html = f.read_text(encoding="utf-8")
-        title_m = re.search(r"<title>(.*?)</title>", html, re.S)
-        title = clean(title_m.group(1)).split("-中国足球协会")[0] if title_m else ""
-        expect = 0
-        tm = re.search(r"认定([一二三四五六七八九十百两\d]+)例(?:裁判)?[错漏判]+", title)
-        if tm:
-            expect = cn2int(tm.group(1)) if not tm.group(1).isdigit() else int(tm.group(1))
-        content = extract_content(html)
-        paras = split_paragraphs(content)
-        summary, cur, prev_text = [], None, ""
-        for text, vids in paras:
-            cm = re.match(r"^判例([一二三四五六七八九十百]+)[：:]", text)
-            if cm:
-                cur = {"issue": n, "no": cn2int(cm.group(1)), "desc": text,
-                       "appeal": "", "conclusion": "", "videos": []}
-                seq += 1
-                cur["seq"] = seq
-                cases.append(cur)
-                continue
-            if cur is None:
-                # 兜底：个别文章首个判例没有"判例N:"前缀（如2026第20期判例一），
-                # 以"俱乐部申诉意见认为"行识别，前一非空段落即对阵描述
-                if "申诉意见认为" in text:
-                    cur = {"issue": n, "no": 1, "desc": prev_text or text,
-                           "appeal": text, "conclusion": "", "videos": []}
-                    seq += 1
-                    cur["seq"] = seq
-                    cases.append(cur)
-                    continue
-                if text and "扫码" not in text and "分享至" not in text:
-                    summary.append(text)
-                    prev_text = text
-                continue
-            if "申诉意见认为" in text or "申诉意见如下" in text:
-                cur["appeal"] += (("\n" if cur["appeal"] else "") + text)
-                continue
-            if not text and vids:
-                cur["videos"] += vids
-                continue
-            if re.search(r"评议组|对于此判例", text) or cur["conclusion"]:
-                cur["conclusion"] += (("\n" if cur["conclusion"] else "") + text)
-        for c in cases:
-            if c["issue"] != n:
-                continue
-            c["conclusion"] = re.sub(r"中国足协将继续秉持.*$", "", c["conclusion"], flags=re.S).strip()
-            head, comp, rnd, home, away, minute = parse_case_head(c["desc"])
-            c.update(match_info=head, comp=comp, round=rnd, home=home, away=away, minute=minute)
-            c["referee_verdict"], c["var_verdict"], c["need_manual"] = classify(
-                c["desc"] + "\n" + c["appeal"] + "\n" + c["conclusion"])
-        issues.append({
-            "no": n, "title": title, "url": urls[n],
-            "date": re.search(r"/(\d{8})/", urls[n]).group(1),
-            "summary": "\n".join(summary).strip(),
-            "expected_wrong": expect,
-            "parsed_wrong": sum(1 for c in cases if c["issue"] == n and c["referee_verdict"] == "wrong"),
-            "video_count": sum(len(c["videos"]) for c in cases if c["issue"] == n),
-        })
-    # 视频URL去重（官方HTML重复2次）+ https归一 + 本地命名
+        issue, issue_cases, seq = parse_issue(html, n, urls[n], seq)
+        issues.append(issue)
+        cases.extend(issue_cases)
+    # 视频URL去重（官方HTML重复2次）+ https归一 + 本地命名。
+    # 去重必须在归一化之后按归一化 URL 做：issue 内同一段视频常以 http/https
+    # 各嵌一次，段落内 dict.fromkeys 挡不住跨协议重复（2025 第22期实测：
+    # 不去重会把 2 段视频数成 4，撑破 EXPECTED 的 229 基准）
     seen = {}
     for c in cases:
-        c["video_urls"] = [u.replace("http://", "https://") for u in c["videos"]]
+        c["video_urls"] = list(
+            dict.fromkeys(u.replace("http://", "https://") for u in c["videos"])
+        )
         c["video_files"] = []
         for k, u in enumerate(c["video_urls"], 1):
             if u not in seen:
                 seen[u] = f"{season}/i{c['issue']:02d}c{c['no']:02d}-{k}.mp4"
             c["video_files"].append(seen[u])
         del c["videos"]
+    # video_count 以去重后的 video_urls 为准（parse_issue 里按原始 videos
+    # 计的只是中间值，跨协议重复会虚增）
+    for i in issues:
+        i["video_count"] = sum(
+            len(c["video_urls"]) for c in cases if c["issue"] == i["no"]
+        )
     return {"season": season, "issues": issues, "cases": cases}
 
 
 def main():
     import sys
+
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
     data = parse_season(season)
     out = DATA / f"cases-{season}.json"
@@ -292,7 +374,9 @@ def main():
         nc = sum(1 for c in cases if c["issue"] == it["no"])
         nv = sum(len(c["video_urls"]) for c in cases if c["issue"] == it["no"])
         ok = "OK" if it["expected_wrong"] == it["parsed_wrong"] else "<<<不一致"
-        print(f"{it['no']:>3} {nc:>4} {nv:>4} {it['expected_wrong']:>8} {it['parsed_wrong']:>8}  {ok}")
+        print(
+            f"{it['no']:>3} {nc:>4} {nv:>4} {it['expected_wrong']:>8} {it['parsed_wrong']:>8}  {ok}"
+        )
     manual = [c["seq"] for c in cases if c.get("need_manual")]
     novid = [c["seq"] for c in cases if not c["video_urls"]]
     print(f"需人工复核: {len(manual)} | 无视频判例: {novid or '无'}")

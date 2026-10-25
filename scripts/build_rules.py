@@ -4,6 +4,7 @@
       -> 段落重构状态机(断行合并、一句一段、列表缩进、段距判断) -> OpenCC繁转简 -> 术语对照 -> HTML
 依赖(仅构建时): pip install pymupdf opencc-python-reimplemented
 """
+
 import json
 import re
 
@@ -89,15 +90,43 @@ SPLIT_GLOSSARY = {
 }
 # 章节标题（简体规范译名）
 LAW_TITLES = {
-    1: "比赛场地", 2: "球", 3: "队员", 4: "队员装备", 5: "裁判员",
-    6: "其他比赛官员", 7: "比赛时间", 8: "比赛开始与重新开始比赛",
-    9: "比赛进行与比赛停止", 10: "决定比赛胜负的方法", 11: "越位",
-    12: "犯规与不正当行为", 13: "任意球", 14: "罚球点球", 15: "掷界外球",
-    16: "球门球", 17: "角球",
+    1: "比赛场地",
+    2: "球",
+    3: "队员",
+    4: "队员装备",
+    5: "裁判员",
+    6: "其他比赛官员",
+    7: "比赛时间",
+    8: "比赛开始与重新开始比赛",
+    9: "比赛进行与比赛停止",
+    10: "决定比赛胜负的方法",
+    11: "越位",
+    12: "犯规与不正当行为",
+    13: "任意球",
+    14: "罚球点球",
+    15: "掷界外球",
+    16: "球门球",
+    17: "角球",
 }
-CN_NUM = {1: "一", 2: "二", 3: "三", 4: "四", 5: "五", 6: "六", 7: "七",
-          8: "八", 9: "九", 10: "十", 11: "十一", 12: "十二", 13: "十三",
-          14: "十四", 15: "十五", 16: "十六", 17: "十七"}
+CN_NUM = {
+    1: "一",
+    2: "二",
+    3: "三",
+    4: "四",
+    5: "五",
+    6: "六",
+    7: "七",
+    8: "八",
+    9: "九",
+    10: "十",
+    11: "十一",
+    12: "十二",
+    13: "十三",
+    14: "十四",
+    15: "十五",
+    16: "十六",
+    17: "十七",
+}
 
 FRONT = [
     ("intro", "引言", 11, 16),
@@ -114,10 +143,33 @@ BACK = [
 
 # 图形/信号页（人工核定）：球场测量图、球门尺寸、有利信号、红黄牌信号、助理裁判员信号、
 # 进球判定、点球区违例、角球反弹、裁判位置图、词汇图等 —— 渲染为图片而非文本
-DIAGRAM_PAGES = {46, 51, 79, 80, 88, 89, 90, 91, 104, 115, 142, 146, 201, 207, 211, 214, 215}
+DIAGRAM_PAGES = {
+    46,
+    51,
+    79,
+    80,
+    88,
+    89,
+    90,
+    91,
+    104,
+    115,
+    142,
+    146,
+    201,
+    207,
+    211,
+    214,
+    215,
+}
 # 图文混排页：{页码: (图形区顶, 图形区底)} 页高比例——区内文字(图形标签)随图裁掉，
 # 区外文字照常提取，图像插到区内首行原本出现的位置
-PARTIAL_DIAGRAMS = {29: (0.345, 0.755), 48: (0.59, 0.87), 78: (0.45, 1.0), 81: (0.05, 0.50)}
+PARTIAL_DIAGRAMS = {
+    29: (0.345, 0.755),
+    48: (0.59, 0.87),
+    78: (0.45, 1.0),
+    81: (0.05, 0.50),
+}
 
 
 def convert(text: str) -> str:
@@ -170,19 +222,25 @@ def classify(line):
     if line["bold"] and line["x0"] < 60 and re.match(r"^\d{1,2}[.、]", t):
         return "h3"
     # 无编号粗体小节头（如"安全守则""获益"）：短、独立行、不以句读收尾
-    if line["bold"] and line["x0"] < 60 and len(t) <= 24 and not re.search(r"[。？！：，]$", t):
+    if (
+        line["bold"]
+        and line["x0"] < 60
+        and len(t) <= 24
+        and not re.search(r"[。？！：，]$", t)
+    ):
         return "h3"
     return "plain"
 
 
 class Flow:
     """段落重构状态机：断行合并、一句一段、列表缩进(x0几何判定)、段距判断"""
+
     CONNECTORS = "及或与和，、：；"
 
     def __init__(self):
         self.out, self.p = [], []
         self.in_ul = False
-        self.li = None            # 开放列表项的内容片段（后续行并入）
+        self.li = None  # 开放列表项的内容片段（后续行并入）
         self.li_cls = ""
         self.li_plain = ""
         self.last_bullet_x0 = None
@@ -208,9 +266,12 @@ class Flow:
             self.p = []
 
     def add_img(self, pno):
-        self.close_ul(); self.flush_p()
-        self.out.append(f'<figure class="pg"><img src="assets/rules/p{pno}.png" '
-                        f'alt="图示" loading="lazy"></figure>')
+        self.close_ul()
+        self.flush_p()
+        self.out.append(
+            f'<figure class="pg"><img src="assets/rules/p{pno}.png" '
+            f'alt="图示" loading="lazy"></figure>'
+        )
         self.prev_y = None
         self.new_page = True
 
@@ -218,10 +279,15 @@ class Flow:
         return self.li_plain.rstrip()
 
     def add_line(self, cls, html, plain, x0, y0, level=1):
-        gap_break = (not self.new_page and self.prev_y is not None
-                     and y0 is not None and y0 - self.prev_y > 19)
+        gap_break = (
+            not self.new_page
+            and self.prev_y is not None
+            and y0 is not None
+            and y0 - self.prev_y > 19
+        )
         if cls == "h3":
-            self.close_ul(); self.flush_p()
+            self.close_ul()
+            self.flush_p()
             if html == "经修订文字":  # 变更章节的标签,渲染为专用小标签而非标题
                 self.out.append('<p class="rev">经修订文字</p>')
             else:
@@ -233,17 +299,18 @@ class Flow:
                 else:
                     self.out.append(f"<h3>{html}</h3>")
         elif cls == "fn":
-            self.close_ul(); self.flush_p()
+            self.close_ul()
+            self.flush_p()
             self.out.append(f'<p class="fn">{html}</p>')
         elif cls == "bullet":
-            if self.p:            # 仅冲刷未决段落；close_ul 会连带关闭开放列表，
-                self.flush_p()    # 连续 bullet 间绝不能走这里
+            if self.p:  # 仅冲刷未决段落；close_ul 会连带关闭开放列表，
+                self.flush_p()  # 连续 bullet 间绝不能走这里
             if not self.in_ul:
                 self.out.append("<ul>")
                 self.in_ul = True
             else:
                 self.close_li()
-            self.li = [html]      # 内容缓冲：close_li 时统一发射
+            self.li = [html]  # 内容缓冲：close_li 时统一发射
             self.li_plain = html
             self.li_cls = ' class="l2"' if level >= 2 else ""
             self.last_bullet_x0 = x0
@@ -251,21 +318,27 @@ class Flow:
             if self.in_ul and self.li is not None:
                 buf = self._li_text()
                 if plain.strip() in ("及", "或", "与", "和"):
-                    self.li.append(html)             # 连接词独行：属于当前列表项
-                elif x0 is not None and self.last_bullet_x0 and x0 >= self.last_bullet_x0 + 4:
-                    self.li.append(html)             # 缩进≥项目文字：列表项续行
+                    self.li.append(html)  # 连接词独行：属于当前列表项
+                elif (
+                    x0 is not None
+                    and self.last_bullet_x0
+                    and x0 >= self.last_bullet_x0 + 4
+                ):
+                    self.li.append(html)  # 缩进≥项目文字：列表项续行
                 elif buf[-1:] in "。？！":
-                    self.close_ul(); self.flush_p()
+                    self.close_ul()
+                    self.flush_p()
                     self.p.append(html)
                     if plain[-1:] in "。？！：":
                         self.flush_p()
                 elif gap_break:
-                    self.close_ul(); self.flush_p()  # 段距=列表结束
+                    self.close_ul()
+                    self.flush_p()  # 段距=列表结束
                     self.p.append(html)
                     if plain[-1:] in "。？！：":
                         self.flush_p()
                 else:
-                    self.li.append(html)             # 不完整句子：续行
+                    self.li.append(html)  # 不完整句子：续行
             else:
                 if self.p and self.p[-1].rstrip()[-1:] in "。？！：":
                     self.flush_p()
@@ -276,7 +349,8 @@ class Flow:
         self.new_page = False
 
     def finish(self):
-        self.close_ul(); self.flush_p()
+        self.close_ul()
+        self.flush_p()
 
     def html(self):
         self.finish()
@@ -299,14 +373,22 @@ def build_section_html(doc, page_nums, diagrams, partials):
         # 同一视觉行被 PDF 拆成两个文本块的断头编号（如"3."+"权力和职责"）先行合并
         merged = []
         for ln in lines:
-            if (merged and re.fullmatch(r"\d{1,2}[.、]", merged[-1]["text"])
-                    and abs(ln["y0"] - merged[-1]["y0"]) < 2 and ln["bold"]):
-                merged[-1] = dict(merged[-1], text=merged[-1]["text"] + " " + ln["text"])
+            if (
+                merged
+                and re.fullmatch(r"\d{1,2}[.、]", merged[-1]["text"])
+                and abs(ln["y0"] - merged[-1]["y0"]) < 2
+                and ln["bold"]
+            ):
+                merged[-1] = dict(
+                    merged[-1], text=merged[-1]["text"] + " " + ln["text"]
+                )
             else:
                 merged.append(ln)
         lines = merged
         # 页内bullet按x0分级（每+10pt约一层）
-        bullet_x = sorted({round(l["x0"], 1) for l in lines if classify(l) == "bullet"})
+        bullet_x = sorted(
+            {round(ln["x0"], 1) for ln in lines if classify(ln) == "bullet"}
+        )
         for line in lines:
             # 图文混排页：进入图形区的首行位置插整块裁剪图，区内行(图形标签)跳过
             if region and not fig_done and region[0] <= line["y0"] / ph < region[1]:
@@ -317,19 +399,30 @@ def build_section_html(doc, page_nums, diagrams, partials):
                 continue
             line["page"] = pno
             cls = classify(line)
-            flow.new_page = (prev_page is not None and pno != prev_page)
+            flow.new_page = prev_page is not None and pno != prev_page
             if cls == "h3":
-                flow.add_line("h3", convert(line["text"]), "", line["x0"], line["y0"], 1)
+                flow.add_line(
+                    "h3", convert(line["text"]), "", line["x0"], line["y0"], 1
+                )
             elif cls == "fn":
-                flow.add_line("fn", convert(line["text"]), "", line["x0"], line["y0"], 1)
+                flow.add_line(
+                    "fn", convert(line["text"]), "", line["x0"], line["y0"], 1
+                )
             elif cls == "bullet":
                 t = convert(re.sub(r"^[•·▪]\s*", "", line["text"]))
-                lvl = next((k for k, x in enumerate(bullet_x, 1)
-                            if abs(line["x0"] - x) < 3), 1)
+                lvl = next(
+                    (k for k, x in enumerate(bullet_x, 1) if abs(line["x0"] - x) < 3), 1
+                )
                 flow.add_line("bullet", t, "", line["x0"], line["y0"], lvl)
             else:
-                flow.add_line("plain", convert(line["text"]), line["text"],
-                              line["x0"], line["y0"], 1)
+                flow.add_line(
+                    "plain",
+                    convert(line["text"]),
+                    line["text"],
+                    line["x0"],
+                    line["y0"],
+                    1,
+                )
             prev_page = pno
         if region and not fig_done:  # 兜底：区内无文本行时图挂页尾
             flow.add_img(pno)
@@ -339,17 +432,21 @@ def build_section_html(doc, page_nums, diagrams, partials):
 
 # 第1章 3/4 两节的两栏测量清单在线性提取中必然交错压行，按官方 PDF 原文以结构化列表重建
 MEASURE_FIXES = (
-    (r"<h3>3\.\s*场地幅度</h3>.*?(?=<h3>4\.)",
-     "<h3>3. 场地幅度</h3>"
-     "<p>比赛场地的界线必须较球门线长。</p>"
-     "<ul><li>长度（边线）：最短 90 米（100 码），最长 120 米（130 码）</li>"
-     "<li>宽度（球门线）：最短 45 米（50 码），最长 90 米（100 码）</li></ul>"
-     "<p>竞赛组织可自行在上述场地幅度内决定球门线及边线之长度。</p>"),
-    (r"<h3>4\.\s*国际比赛场地幅度</h3>.*?(?=<h3>|\Z)",
-     "<h3>4. 国际比赛场地幅度</h3>"
-     "<ul><li>长度（边线）：最短 100 米（110 码），最长 110 米（120 码）</li>"
-     "<li>宽度（球门线）：最短 64 米（70 码），最长 75 米（80 码）</li></ul>"
-     "<p>竞赛组织可自行在上述场地幅度内决定球门线及边线之长度。</p>"),
+    (
+        r"<h3>3\.\s*场地幅度</h3>.*?(?=<h3>4\.)",
+        "<h3>3. 场地幅度</h3>"
+        "<p>比赛场地的界线必须较球门线长。</p>"
+        "<ul><li>长度（边线）：最短 90 米（100 码），最长 120 米（130 码）</li>"
+        "<li>宽度（球门线）：最短 45 米（50 码），最长 90 米（100 码）</li></ul>"
+        "<p>竞赛组织可自行在上述场地幅度内决定球门线及边线之长度。</p>",
+    ),
+    (
+        r"<h3>4\.\s*国际比赛场地幅度</h3>.*?(?=<h3>|\Z)",
+        "<h3>4. 国际比赛场地幅度</h3>"
+        "<ul><li>长度（边线）：最短 100 米（110 码），最长 110 米（120 码）</li>"
+        "<li>宽度（球门线）：最短 64 米（70 码），最长 75 米（80 码）</li></ul>"
+        "<p>竞赛组织可自行在上述场地幅度内决定球门线及边线之长度。</p>",
+    ),
 )
 
 
@@ -852,22 +949,35 @@ syncReadUI();
 
 def build_html_page(sections):
     data = {"season": "2026/27", "sections": sections}
-    right = (f'<div class="search-wrap">{icon("search")}'
-             f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'
-             f'<button class="tbtn" id="fsMinus" title="缩小字号">A－</button>'
-             f'<button class="tbtn" id="fsPlus" title="放大字号">A＋</button>')
-    tb = topbar(active="rules.html", right=right, stats="stats-2026.html",
-                brand_sub="2026/27 · 简体中文", sb_btn=True,
-                seasons=("2024", "2025", "2026"))
-    html = inject_theme(RULES_TEMPLATE.replace("__DATA__",
-        # "</" 转义为合法 JSON 的 "<\/"，防正文提前闭合 </script>
-        json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/"))
+    right = (
+        f'<div class="search-wrap">{icon("search")}'
+        f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'
+        f'<button class="tbtn" id="fsMinus" title="缩小字号">A－</button>'
+        f'<button class="tbtn" id="fsPlus" title="放大字号">A＋</button>'
+    )
+    tb = topbar(
+        active="rules.html",
+        right=right,
+        stats="stats-2026.html",
+        brand_sub="2026/27 · 简体中文",
+        sb_btn=True,
+        seasons=("2024", "2025", "2026"),
+    )
+    html = inject_theme(
+        RULES_TEMPLATE.replace(
+            "__DATA__",
+            # "</" 转义为合法 JSON 的 "<\/"，防正文提前闭合 </script>
+            json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace(
+                "</", "<\\/"
+            ),
+        )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)
-        .replace("__I_BOOK__", icon("book", 30)))
+        .replace("__I_BOOK__", icon("book", 30))
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     RULES_HTML.write_text(html, encoding="utf-8")
-    print(f"生成 {RULES_HTML}  ({len(html.encode('utf-8'))/1024:.0f} KB)")
+    print(f"生成 {RULES_HTML}  ({len(html.encode('utf-8')) / 1024:.0f} KB)")
 
 
 def main():
@@ -890,7 +1000,9 @@ def main():
         if not png.exists():
             page = doc[pno - 1]
             r = page.rect
-            clip = pymupdf.Rect(r.width * 0.03, r.height * t, r.width * 0.97, r.height * b)
+            clip = pymupdf.Rect(
+                r.width * 0.03, r.height * t, r.width * 0.97, r.height * b
+            )
             pix = page.get_pixmap(matrix=pymupdf.Matrix(1.6, 1.6), clip=clip)
             pix.save(str(png))
     print(f"图表页: {sorted(diagrams)} + 区域裁剪 {sorted(PARTIAL_DIAGRAMS)}")
@@ -898,19 +1010,37 @@ def main():
     sections = []
     for sid, title, a, b in FRONT:
         nums = list(range(a, b + 1))
-        sections.append({"id": sid, "title": title, "pages": f"{a}-{b}",
-                         "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS)})
+        sections.append(
+            {
+                "id": sid,
+                "title": title,
+                "pages": f"{a}-{b}",
+                "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS),
+            }
+        )
     order = sorted(starts.items())
     for idx, (n, start) in enumerate(order):
         end = (order[idx + 1][1] - 1) if idx + 1 < len(order) else BACK[0][2] - 1
         nums = list(range(start, end + 1))  # 图表页包含在内（以图片形式呈现）
-        sections.append({"id": f"law-{n}", "title": f"第{CN_NUM[n]}章 {LAW_TITLES[n]}",
-                         "law": n, "pages": f"{start}-{end}",
-                         "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS)})
+        sections.append(
+            {
+                "id": f"law-{n}",
+                "title": f"第{CN_NUM[n]}章 {LAW_TITLES[n]}",
+                "law": n,
+                "pages": f"{start}-{end}",
+                "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS),
+            }
+        )
     for sid, title, a, b in BACK:
         nums = list(range(a, b + 1))
-        sections.append({"id": sid, "title": title, "pages": f"{a}-{b}",
-                         "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS)})
+        sections.append(
+            {
+                "id": sid,
+                "title": title,
+                "pages": f"{a}-{b}",
+                "html": build_section_html(doc, nums, diagrams, PARTIAL_DIAGRAMS),
+            }
+        )
 
     for s in sections:  # 跨行断词的术语二次修正
         for k in sorted(SPLIT_GLOSSARY, key=len, reverse=True):
@@ -920,10 +1050,14 @@ def main():
                 s["html"], n = re.subn(pat, repl, s["html"], flags=re.S)
                 assert n == 1, f"测量表替换未命中: {pat}"
 
-    LAWS_JSON.write_text(json.dumps({"season": "2026/27", "sections": sections},
-                              ensure_ascii=False, indent=1), encoding="utf-8")
+    LAWS_JSON.write_text(
+        json.dumps(
+            {"season": "2026/27", "sections": sections}, ensure_ascii=False, indent=1
+        ),
+        encoding="utf-8",
+    )
     total = sum(len(s["html"]) for s in sections)
-    print(f"共 {len(sections)} 节, 正文 {total/1000:.0f}K 字符 -> {LAWS_JSON}")
+    print(f"共 {len(sections)} 节, 正文 {total / 1000:.0f}K 字符 -> {LAWS_JSON}")
     build_html_page(sections)
 
 

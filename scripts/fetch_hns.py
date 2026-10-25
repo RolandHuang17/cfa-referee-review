@@ -13,6 +13,7 @@ SEED_IDS 种子表（人工发现的历史轮文章 ID 固化于此，增量合�
 - 认定句：ispravnom=正确 / neispravnom=错误（负向断言防误配）
 - 正文止于版权段（"Autorska prava"）
 """
+
 import html as htmllib
 import json
 import re
@@ -67,7 +68,10 @@ def parse_listing(html: str) -> list:
     seg = html[i:] if i != -1 else html
     out = {}
     for m in re.finditer(
-            r'href="(?:https://hns\.family)?/vijesti/(\d+)/([^"]+)/"\s+title="([^"]+)"(.{0,900}?)</a>', seg, re.S):
+        r'href="(?:https://hns\.family)?/vijesti/(\d+)/([^"]+)/"\s+title="([^"]+)"(.{0,900}?)</a>',
+        seg,
+        re.S,
+    ):
         pid, slug, title, tail = m.group(1), m.group(2), clean(m.group(3)), m.group(4)
         if pid in out:
             continue
@@ -117,8 +121,10 @@ def parse_article(pid: str, html: str) -> dict | None:
     if end != -1:
         body = body[:end]
     # 逐判例切分
-    marks = [(m.start(), m.end(), m.group(1)) for m in
-             re.finditer(r"<p[^>]*>\s*<strong>\s*Situacija br\.\s*(\d+)", body)]
+    marks = [
+        (m.start(), m.end(), m.group(1))
+        for m in re.finditer(r"<p[^>]*>\s*<strong>\s*Situacija br\.\s*(\d+)", body)
+    ]
     incidents = []
     for i, (s, hdr_end, no) in enumerate(marks):
         chunk_end = marks[i + 1][0] if i + 1 < len(marks) else len(body)
@@ -128,7 +134,11 @@ def parse_article(pid: str, html: str) -> dict | None:
         match = minute = referee = typ = ""
         pm = re.match(r"(.*?)\s*\(([^)]*)\)\s*[:：;]\s*(.+)$", head)
         if pm:
-            match, inner, typ = pm.group(1).strip(), pm.group(2).strip(), pm.group(3).strip()
+            match, inner, typ = (
+                pm.group(1).strip(),
+                pm.group(2).strip(),
+                pm.group(3).strip(),
+            )
             rm2 = re.search(r"sudac\s+([^,)]+)", inner)
             referee = rm2.group(1).strip() if rm2 else ""
             mm = re.search(r"(\d+)\.\s*minuta", inner)
@@ -136,27 +146,46 @@ def parse_article(pid: str, html: str) -> dict | None:
         else:
             match, typ = head, ""
         videos = re.findall(r"youtube\.com/embed/([-\w]{11})", chunk)
-        paras = [p for p in split_paras(chunk) if not p["t"].startswith("Situacija br.")]
+        paras = [
+            p for p in split_paras(chunk) if not p["t"].startswith("Situacija br.")
+        ]
         verdict = "other"
         vtext = " ".join(p["t"] for p in paras)
         # 判定归一：委员会句式（顺序敏感）——错误在先（否定词干扰用负向断言防误配）
         if re.search(r"neispravnom|neispravna|neispravno", vtext, re.I):
             verdict = "incorrect"
         elif re.search(r"trebao intervenirati", vtext, re.I):
-            verdict = "incorrect"   # VAR 本应介入而未介入
+            verdict = "incorrect"  # VAR 本应介入而未介入
         elif re.search(r"predstavlja .{0,40}pogrešk", vtext, re.I):
-            verdict = "incorrect"   # 构成清晰明显错误
-        elif re.search(r"podržava|ispravno primijenjeno|(?<!ne)ispravno|(?<!ne)ispravnom|(?<!ne)ispravna",
-                       vtext, re.I):
+            verdict = "incorrect"  # 构成清晰明显错误
+        elif re.search(
+            r"podržava|ispravno primijenjeno|(?<!ne)ispravno|(?<!ne)ispravnom|(?<!ne)ispravna",
+            vtext,
+            re.I,
+        ):
             verdict = "correct"
         elif re.search(r"ne pokazuje .{0,40}pogrešk", vtext, re.I):
-            verdict = "correct"     # 录像未显示清晰明显错误
-        incidents.append({"no": int(no), "match": match, "referee": referee, "minute": minute,
-                          "type": typ, "videos": videos, "paras": paras, "verdict": verdict})
-    return {"id": pid, "title": title, "date": date,
-            "round": int(rm.group(1)) if rm else 0,
-            "url": f"https://hns.family/vijesti/{pid}/",
-            "incidents": incidents}
+            verdict = "correct"  # 录像未显示清晰明显错误
+        incidents.append(
+            {
+                "no": int(no),
+                "match": match,
+                "referee": referee,
+                "minute": minute,
+                "type": typ,
+                "videos": videos,
+                "paras": paras,
+                "verdict": verdict,
+            }
+        )
+    return {
+        "id": pid,
+        "title": title,
+        "date": date,
+        "round": int(rm.group(1)) if rm else 0,
+        "url": f"https://hns.family/vijesti/{pid}/",
+        "incidents": incidents,
+    }
 
 
 def parse_all():
@@ -198,22 +227,32 @@ def parse_all():
                 if not r.get(k) and v:
                     r[k] = v
         rounds.append(r)
-        print(f"  {pid} 「{r['title'][:46]}」 {r['date']} 判例 {len(r['incidents'])} 个 "
-              f"视频 {sum(len(i['videos']) for i in r['incidents'])} 段", flush=True)
+        print(
+            f"  {pid} 「{r['title'][:46]}」 {r['date']} 判例 {len(r['incidents'])} 个 "
+            f"视频 {sum(len(i['videos']) for i in r['incidents'])} 段",
+            flush=True,
+        )
         time.sleep(2.0)
     rounds.sort(key=lambda x: x.get("date") or "0000", reverse=True)
-    data = {"source": LIST_URL,
-            "source_name": "克罗地亚足协 HNS《Sudačka analiza》逐轮判例分析（Sudačka komisija / Layec）",
-            "fetched": time.strftime("%Y-%m-%d"),
-            "rounds": rounds}
-    HNS_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    data = {
+        "source": LIST_URL,
+        "source_name": "克罗地亚足协 HNS《Sudačka analiza》逐轮判例分析（Sudačka komisija / Layec）",
+        "fetched": time.strftime("%Y-%m-%d"),
+        "rounds": rounds,
+    }
+    HNS_JSON.write_text(
+        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
     n_inc = sum(len(r["incidents"]) for r in rounds)
     n_vid = sum(len(i["videos"]) for r in rounds for i in r["incidents"])
     verd = {}
     for r in rounds:
         for i in r["incidents"]:
             verd[i["verdict"]] = verd.get(i["verdict"], 0) + 1
-    print(f"parse 完成: {len(rounds)} 轮 / {n_inc} 判例 / {n_vid} 视频 / 认定分布 {verd} → {HNS_JSON}", flush=True)
+    print(
+        f"parse 完成: {len(rounds)} 轮 / {n_inc} 判例 / {n_vid} 视频 / 认定分布 {verd} → {HNS_JSON}",
+        flush=True,
+    )
 
 
 def main():

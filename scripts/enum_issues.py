@@ -3,6 +3,7 @@
 用途：新赛季接入时发现新期URL（如2027赛季），结果人工核对后写入
 fetch_issues.py 的 ISSUES 表与 parse_issues.py 的 ISSUE_URL 表（两处同步）。
 """
+
 import re
 import sys
 
@@ -25,7 +26,9 @@ def fetch(url):
 def main():
     seen = {}
     for page in range(1, 8):
-        url = BASE + "/cppy/index.html" if page == 1 else f"{BASE}/cppy/index_{page}.html"
+        url = (
+            BASE + "/cppy/index.html" if page == 1 else f"{BASE}/cppy/index_{page}.html"
+        )
         try:
             html = fetch(url)
         except Exception as exc:

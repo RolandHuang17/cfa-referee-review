@@ -4,6 +4,7 @@
 内存: 详情区唯一<video>, 选中即载入, 切换即替换
 用法: python build_page.py [2025] [2024]   # 不带参数=两个赛季都构建
 """
+
 import json
 import sys
 from datetime import date
@@ -47,8 +48,14 @@ SEASONS = {
     },
 }
 # comp 安全网归一（parse_issues 已修复，此处兜底）
-COMP_ALIAS = {"中超": "中超联赛", "中甲": "中甲联赛", "中乙": "中乙联赛",
-              "女超": "女超联赛", "女甲": "女甲联赛", "运动会": "全运会"}
+COMP_ALIAS = {
+    "中超": "中超联赛",
+    "中甲": "中甲联赛",
+    "中乙": "中乙联赛",
+    "女超": "女超联赛",
+    "女甲": "女甲联赛",
+    "运动会": "全运会",
+}
 
 CATEGORY_ORDER = [
     ("handball", "手球犯规", "✋"),
@@ -112,39 +119,74 @@ def build_data(season):
         comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
         if not comp:
             mi = c.get("match_info", "")
-            for k, v in (("中超", "中超联赛"), ("中甲", "中甲联赛"), ("中乙", "中乙联赛"),
-                         ("女超", "女超联赛"), ("女甲", "女甲联赛"), ("足协杯", "中国足协杯"),
-                         ("运动会", "全运会")):
+            for k, v in (
+                ("中超", "中超联赛"),
+                ("中甲", "中甲联赛"),
+                ("中乙", "中乙联赛"),
+                ("女超", "女超联赛"),
+                ("女甲", "女甲联赛"),
+                ("足协杯", "中国足协杯"),
+                ("运动会", "全运会"),
+            ):
                 if k in mi:
                     comp = v
                     break
-        cases.append({
-            "seq": c["seq"], "issue": c["issue"], "no": c["no"],
-            "comp": comp, "round": c.get("round", ""),
-            "home": normalize_team(c.get("home", "")),
-            "away": normalize_team(c.get("away", "")),
-            "minute": c.get("minute", ""), "match_info": c["match_info"],
-            "desc": c["desc"], "appeal": c.get("appeal", ""),
-            "conclusion": c["conclusion"],
-            "videos": c["video_files"], "video_urls": c["video_urls"],
-            "category": c["category"], "tags": c.get("tags", []),
-            "v": c["referee_verdict"], "var": c["var_verdict"],
-        })
+        cases.append(
+            {
+                "seq": c["seq"],
+                "issue": c["issue"],
+                "no": c["no"],
+                "comp": comp,
+                "round": c.get("round", ""),
+                "home": normalize_team(c.get("home", "")),
+                "away": normalize_team(c.get("away", "")),
+                "minute": c.get("minute", ""),
+                "match_info": c["match_info"],
+                "desc": c["desc"],
+                "appeal": c.get("appeal", ""),
+                "conclusion": c["conclusion"],
+                "videos": c["video_files"],
+                "video_urls": c["video_urls"],
+                "category": c["category"],
+                "tags": c.get("tags", []),
+                "v": c["referee_verdict"],
+                "var": c["var_verdict"],
+            }
+        )
     catalog = load_catalog()
     teams = {item["name"]: item for item in catalog.values()}
-    issues = {i["no"]: {"title": i["title"], "date": i["date"], "url": i["url"],
-                        "expected": i["expected_wrong"], "summary": i.get("summary", "")}
-              for i in data["issues"]}
+    issues = {
+        i["no"]: {
+            "title": i["title"],
+            "date": i["date"],
+            "url": i["url"],
+            "expected": i["expected_wrong"],
+            "summary": i.get("summary", ""),
+        }
+        for i in data["issues"]
+    }
     cfg = SEASONS[season]
-    return {"cfg": {"season": season, "favKey": cfg["favKey"], "noteKey": cfg["noteKey"],
-                    "issueCount": cfg["issueCount"], "issueDesc": cfg["issueDesc"],
-                    "stats": cfg["stats"]},
-            "meta": {"n_cases": len(cases), "n_issues": len(issues)},
-            "cases": cases, "issues": issues, "crests": {}, "teams": teams,
-            "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
-            "notes": CATEGORY_NOTES, "issueNotes": ISSUE_NOTES.get(season, {}),
-            "verdictNames": VERDICT_NAME, "varNames": VAR_NAME,
-            "built": date.today().isoformat()}
+    return {
+        "cfg": {
+            "season": season,
+            "favKey": cfg["favKey"],
+            "noteKey": cfg["noteKey"],
+            "issueCount": cfg["issueCount"],
+            "issueDesc": cfg["issueDesc"],
+            "stats": cfg["stats"],
+        },
+        "meta": {"n_cases": len(cases), "n_issues": len(issues)},
+        "cases": cases,
+        "issues": issues,
+        "crests": {},
+        "teams": teams,
+        "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
+        "notes": CATEGORY_NOTES,
+        "issueNotes": ISSUE_NOTES.get(season, {}),
+        "verdictNames": VERDICT_NAME,
+        "varNames": VAR_NAME,
+        "built": date.today().isoformat(),
+    }
 
 
 HTML = r"""<!DOCTYPE html>
@@ -1218,33 +1260,54 @@ def build_season(season):
     cfg = SEASONS[season]
     data = build_data(season)
     # "</" 转义为合法 JSON 的 "<\/"，防正文里出现 </script> 提前闭合注入点
-    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace("</", "<\\/")
-    search_html = (f'<div class="search-wrap">{icon("search")}'
-                   f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>')
-    hideans_btn = (f'<button class="tbtn" id="btnHideAns" title="隐藏答案模式：先看视频自己判断，再揭示官方认定" '
-                   f'aria-pressed="false">{icon("eye-off")}<span>隐藏答案</span></button>')
-    tb = topbar(active=cfg["out"], right=hideans_btn + search_html, stats=cfg["stats"],
-                brand_sub=f"{season}赛季 · {len(data['cases'])}判例", seasons=tuple(sorted(SEASONS)),
-                sb_btn=True, help_btn=True, lite_btn=True)
-    sub = {"__I_UP__": icon("up"), "__I_DOWN__": icon("down"), "__I_LEFT__": icon("left", 14),
-           "__I_CHART__": icon("chart", 14), "__I_FILM_B__": icon("film", 30),
-           "__I_EYEOFF_B__": icon("eye-off", 20)}
-    html = inject_theme(HTML
-            .replace("__DATA__", data_js)
-            .replace("__ICONS__", js_icons())
-            .replace("__TOPBAR__", tb)
-            .replace("__TITLE__", cfg["title"])
-            .replace("__I_FILM_B__", sub["__I_FILM_B__"])
-            .replace("__I_EYEOFF_B__", sub["__I_EYEOFF_B__"])
-            .replace("__I_CHART__", sub["__I_CHART__"])
-            .replace("__I_LEFT__", sub["__I_LEFT__"])
-            .replace("__I_DOWN__", sub["__I_DOWN__"])
-            .replace("__I_UP__", sub["__I_UP__"]))
+    data_js = json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace(
+        "</", "<\\/"
+    )
+    search_html = (
+        f'<div class="search-wrap">{icon("search")}'
+        f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>'
+    )
+    hideans_btn = (
+        f'<button class="tbtn" id="btnHideAns" title="隐藏答案模式：先看视频自己判断，再揭示官方认定" '
+        f'aria-pressed="false">{icon("eye-off")}<span>隐藏答案</span></button>'
+    )
+    tb = topbar(
+        active=cfg["out"],
+        right=hideans_btn + search_html,
+        stats=cfg["stats"],
+        brand_sub=f"{season}赛季 · {len(data['cases'])}判例",
+        seasons=tuple(sorted(SEASONS)),
+        sb_btn=True,
+        help_btn=True,
+        lite_btn=True,
+    )
+    sub = {
+        "__I_UP__": icon("up"),
+        "__I_DOWN__": icon("down"),
+        "__I_LEFT__": icon("left", 14),
+        "__I_CHART__": icon("chart", 14),
+        "__I_FILM_B__": icon("film", 30),
+        "__I_EYEOFF_B__": icon("eye-off", 20),
+    }
+    html = inject_theme(
+        HTML.replace("__DATA__", data_js)
+        .replace("__ICONS__", js_icons())
+        .replace("__TOPBAR__", tb)
+        .replace("__TITLE__", cfg["title"])
+        .replace("__I_FILM_B__", sub["__I_FILM_B__"])
+        .replace("__I_EYEOFF_B__", sub["__I_EYEOFF_B__"])
+        .replace("__I_CHART__", sub["__I_CHART__"])
+        .replace("__I_LEFT__", sub["__I_LEFT__"])
+        .replace("__I_DOWN__", sub["__I_DOWN__"])
+        .replace("__I_UP__", sub["__I_UP__"])
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]
     out.write_text(html, encoding="utf-8")
-    print(f"[{season}] 生成 {out}  ({len(html.encode('utf-8'))/1024:.0f} KB, "
-          f"{len(data['cases'])}判例)")
+    print(
+        f"[{season}] 生成 {out}  ({len(html.encode('utf-8')) / 1024:.0f} KB, "
+        f"{len(data['cases'])}判例)"
+    )
 
 
 def main():

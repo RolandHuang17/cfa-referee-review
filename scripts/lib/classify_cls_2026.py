@@ -9,7 +9,12 @@
 
 CLS_2026 = {
     # 期01（标题2例）
-    1: ("handball", ["点球", "漏判", "手臂不自然扩大", "VAR未介入错误"], "wrong", "wrong"),
+    1: (
+        "handball",
+        ["点球", "漏判", "手臂不自然扩大", "VAR未介入错误"],
+        "wrong",
+        "wrong",
+    ),
     2: ("penalty_area", ["点球", "绊摔", "假摔不成立"], "wrong", "none"),
     # 期02（标题4例）
     3: ("penalty_area", ["点球", "犯规地点", "VAR未介入错误"], "wrong", "wrong"),
@@ -91,7 +96,12 @@ CLS_2026 = {
     74: ("sfp_vc", ["红牌", "严重犯规", "踩踏"], "correct", "correct"),
     75: ("penalty_area", ["主动倒地", "误判", "VAR回看错误"], "wrong", "correct"),
     76: ("sfp_vc", ["黄牌", "非体育行为", "红牌不成立", "越位误判"], "wrong", "none"),
-    77: ("handball", ["自然位置", "近距离变线", "进球有效", "VAR介入错误"], "wrong", "wrong"),
+    77: (
+        "handball",
+        ["自然位置", "近距离变线", "进球有效", "VAR介入错误"],
+        "wrong",
+        "wrong",
+    ),
     78: ("penalty_area", ["守门员", "冲撞", "点球"], "correct", "correct"),
     79: ("handball", ["手球", "手臂不自然扩大", "进球无效"], "wrong", "none"),
     80: ("freekick_foul", ["拉扯", "SPA", "黄牌"], "wrong", "none"),
@@ -229,7 +239,12 @@ CLS_2026 = {
     201: ("offside", ["越位位置", "干扰对方不成立"], "correct", "correct"),
     202: ("sfp_vc", ["轻微接触", "暴力行为不成立"], "correct", "correct"),
     203: ("sfp_vc", ["草率犯规", "红牌不成立"], "correct", "correct"),
-    204: ("offside", ["越位位置", "干扰对方", "VAR介入正确", "规则说明"], "correct", "correct"),
+    204: (
+        "offside",
+        ["越位位置", "干扰对方", "VAR介入正确", "规则说明"],
+        "correct",
+        "correct",
+    ),
     205: ("offside", ["越位位置获利", "进球有效"], "wrong", "none"),
     206: ("penalty_area", ["证据不足", "轻微接触"], "correct", "none"),
     # 期19（标题3例；含深圳新鹏城换人程序说明）

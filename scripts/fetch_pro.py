@@ -11,6 +11,7 @@ PRO 为普通 WordPress 博客（无 tarpit），周更：MLS/NWSL 每轮一篇 
 （Inside Video Review，西语同名系列 VAR a Fondo）+ 文字判例（The Definitive Angle）。
 v1 只抓列表页元数据（标题/日期/系列/联赛/轮次/链接），文章内嵌视频一律跳官方页。
 """
+
 import html as htmllib
 import json
 import random
@@ -28,7 +29,7 @@ CATEGORIES = [
     ("the-definitive-angle", "The Definitive Angle（文字判例）", "angle"),
 ]
 DELAY = (1.5, 3.0)
-MAX_PAGES = 30          # 每个分类最多翻页数（防御）
+MAX_PAGES = 30  # 每个分类最多翻页数（防御）
 MIN_BODY = 20000
 BACKOFFS = [20, 60]
 
@@ -40,7 +41,10 @@ def clean(text: str) -> str:
 
 
 def fetch_page(url: str) -> str:
-    slug = re.sub(r"[^a-z0-9-]", "_", url.split("proreferees.com/")[-1].strip("/")) or "home"
+    slug = (
+        re.sub(r"[^a-z0-9-]", "_", url.split("proreferees.com/")[-1].strip("/"))
+        or "home"
+    )
     cache_f = PRO_CACHE / f"{slug}.html"
     PRO_CACHE.mkdir(parents=True, exist_ok=True)
     if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
@@ -65,15 +69,19 @@ def parse_listing(page: str) -> list:
     out, seen = [], set()
     # 文章标题链接（WP 主题各异，兼容 h1/h2/h3 内锚 + entry-title 类）
     for m in re.finditer(
-            r'<h([1-3])[^>]*class="[^"]*(?:entry-title|post-title)[^"]*"[^>]*>\s*<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)</a>',
-            page):
+        r'<h([1-3])[^>]*class="[^"]*(?:entry-title|post-title)[^"]*"[^>]*>\s*<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)</a>',
+        page,
+    ):
         url, title = m.group(2), clean(m.group(3))
         if url in seen or "/category/" in url or "/page/" in url:
             continue
         seen.add(url)
         out.append({"title": title, "url": url})
     if not out:  # 兜底：正文区所有指向文章的锚（日期路径式 URL）
-        for m in re.finditer(r'<a[^>]+href="(https://proreferees\.com/20\d\d/\d\d/\d\d/[^"]+)"[^>]*>([\s\S]*?)</a>', page):
+        for m in re.finditer(
+            r'<a[^>]+href="(https://proreferees\.com/20\d\d/\d\d/\d\d/[^"]+)"[^>]*>([\s\S]*?)</a>',
+            page,
+        ):
             url, title = m.group(1), clean(m.group(2))
             if url in seen or not title or len(title) < 8:
                 continue
@@ -82,7 +90,9 @@ def parse_listing(page: str) -> list:
     return out
 
 
-SERIES_RE = re.compile(r"(?i)^\s*(Inside Video Review|VAR a Fondo|The Definitive Angle)\s*[:：]?\s*(.*)$")
+SERIES_RE = re.compile(
+    r"(?i)^\s*(Inside Video Review|VAR a Fondo|The Definitive Angle)\s*[:：]?\s*(.*)$"
+)
 LEAGUE_RE = re.compile(r"\b(MLS|NWSL|USL)\b")
 YT_EMBED_RE = re.compile(r"youtube(?:-nocookie)?\.com/embed/([-\w]{11})", re.I)
 
@@ -99,8 +109,11 @@ def article_videos(url: str) -> list:
 def classify(title: str) -> dict:
     sm = SERIES_RE.search(title)
     series = (sm.group(1) if sm else "").lower()
-    kind = {"inside video review": "ivr", "var a fondo": "vaf",
-            "the definitive angle": "angle"}.get(series, "other")
+    kind = {
+        "inside video review": "ivr",
+        "var a fondo": "vaf",
+        "the definitive angle": "angle",
+    }.get(series, "other")
     rest = sm.group(2) if sm else title
     lm = LEAGUE_RE.search(rest)
     league = lm.group(1) if lm else ""
@@ -108,15 +121,23 @@ def classify(title: str) -> dict:
     rm = re.search(r"#\s*(\d+)\s*(?:\+\s*#?\s*(\d+))?", rest)
     if rm:
         roundno = rm.group(1) + ("+" + rm.group(2) if rm.group(2) else "")
-    return {"kind": kind, "league": league, "round": roundno,
-            "lang": "es" if kind == "vaf" else "en"}
+    return {
+        "kind": kind,
+        "league": league,
+        "round": roundno,
+        "lang": "es" if kind == "vaf" else "en",
+    }
 
 
 def parse_all():
     articles = []
     for slug, name_cn, kind in CATEGORIES:
         for pageno in range(1, MAX_PAGES + 1):
-            url = f"{BASE}/category/{slug}/" if pageno == 1 else f"{BASE}/category/{slug}/page/{pageno}/"
+            url = (
+                f"{BASE}/category/{slug}/"
+                if pageno == 1
+                else f"{BASE}/category/{slug}/page/{pageno}/"
+            )
             page = fetch_page(url)
             if not page:
                 break
@@ -126,8 +147,9 @@ def parse_all():
                 dm = re.search(r"/(20\d\d)/(\d\d)/(\d\d)/", it["url"])
                 date = f"{dm.group(1)}-{dm.group(2)}-{dm.group(3)}" if dm else ""
                 meta = classify(it["title"])
-                articles.append({**it, "date": date, "series": kind,
-                                 "series_name": name_cn, **meta})
+                articles.append(
+                    {**it, "date": date, "series": kind, "series_name": name_cn, **meta}
+                )
                 new += 1
             print(f"{slug} p{pageno}: +{new}", flush=True)
             if new == 0:  # 本页无新文章（列表模式变化）即止
@@ -149,18 +171,25 @@ def parse_all():
         a["videos"] = vids
         if vids:
             n_vid += 1
-        print(f"  videos {a['url'].rstrip('/').split('/')[-1][:44]}: {len(vids)}", flush=True)
+        print(
+            f"  videos {a['url'].rstrip('/').split('/')[-1][:44]}: {len(vids)}",
+            flush=True,
+        )
         time.sleep(random.uniform(*DELAY))
-    data = {"source": BASE + "/category/inside-video-review/",
-            "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
-            "fetched": time.strftime("%Y-%m-%d"),
-            "ussf": {
-                "videos": "https://www.ussoccer.com/refereeing/videos",
-                "learning": "https://learning.ussoccer.com/referee",
-                "refereeing": "https://www.ussoccer.com/refereeing",
-            },
-            "articles": uniq}
-    PRO_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    data = {
+        "source": BASE + "/category/inside-video-review/",
+        "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
+        "fetched": time.strftime("%Y-%m-%d"),
+        "ussf": {
+            "videos": "https://www.ussoccer.com/refereeing/videos",
+            "learning": "https://learning.ussoccer.com/referee",
+            "refereeing": "https://www.ussoccer.com/refereeing",
+        },
+        "articles": uniq,
+    }
+    PRO_JSON.write_text(
+        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
     by_series = {}
     for a in uniq:
         by_series[a["series"]] = by_series.get(a["series"], 0) + 1

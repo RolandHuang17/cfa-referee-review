@@ -5,6 +5,7 @@
 新闻文章、播放列表，覆盖 6+ 语言），公开层面无可抓取的统一判例数据，故本页为
 导航 + 方法说明（rap.html 同款指南模式），不抓取条目、不做外链视频内嵌。
 """
+
 import json
 
 from lib.theme import inject_theme, topbar, icon
@@ -12,8 +13,13 @@ from lib.theme import inject_theme, topbar, icon
 from lib.paths import INTL_JSON, SITE
 
 LANG_BADGE = {
-    "英语": "info", "西语 / 葡语": "pending", "克罗地亚语": "pending",
-    "乌克兰语": "pending", "土耳其语": "pending", "日语": "pending", "俄语": "pending",
+    "英语": "info",
+    "西语 / 葡语": "pending",
+    "克罗地亚语": "pending",
+    "乌克兰语": "pending",
+    "土耳其语": "pending",
+    "日语": "pending",
+    "俄语": "pending",
 }
 
 HTML = r"""<!DOCTYPE html>
@@ -79,8 +85,14 @@ __TOPBAR__
 
 
 def esc(s):
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
-        .replace('"', "&quot;").replace("'", "&#39;")
+    return (
+        (s or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
 
 def build_page(data):
@@ -92,12 +104,18 @@ def build_page(data):
             lang_badge = LANG_BADGE.get(r.get("lang", ""), "info")
             meta = "".join(
                 f'<span class="chip">{icon("film", 11) if k == "form" else icon("note", 11)} {esc(v)}</span>'
-                for k, v in (("lang", r.get("lang", "")), ("update", r.get("update", "")),
-                             ("form", r.get("form", ""))) if v)
+                for k, v in (
+                    ("lang", r.get("lang", "")),
+                    ("update", r.get("update", "")),
+                    ("form", r.get("form", "")),
+                )
+                if v
+            )
             links = "".join(
-                f'<a class="btn" href="{esc(l["url"])}" target="_blank" rel="noopener noreferrer">'
-                f'{icon("external", 11)} {esc(l["label"])}</a>'
-                for l in r.get("links", []))
+                f'<a class="btn" href="{esc(link["url"])}" target="_blank" rel="noopener noreferrer">'
+                f"{icon('external', 11)} {esc(link['label'])}</a>"
+                for link in r.get("links", [])
+            )
             cards += f"""<div class="res">
   <div class="res-head"><span class="res-org">{esc(r["org"])}</span>
     <h3>{esc(r["name"])}</h3>
@@ -106,22 +124,30 @@ def build_page(data):
   <p class="res-note">{esc(r.get("note_cn", ""))}</p>
   <div class="res-links">{links}</div>
 </div>"""
-        groups_html += (f'<section class="sect"><h2>{icon("flag", 17)} {esc(g["name_cn"])}</h2>'
-                        f'<p class="desc">{esc(g.get("desc_cn", ""))}</p>{cards}</section>')
+        groups_html += (
+            f'<section class="sect"><h2>{icon("flag", 17)} {esc(g["name_cn"])}</h2>'
+            f'<p class="desc">{esc(g.get("desc_cn", ""))}</p>{cards}</section>'
+        )
     related = "".join(
-        f'<a class="btn" href="{esc(l["url"])}">{icon("right", 11)} {esc(l["label"])}</a>'
-        for l in data.get("related", []))
-    tb = topbar(active="intl.html", stats="stats-2026.html", brand_sub="国际评议导航",
-                seasons=("2026", "2025", "2024"))
-    html = inject_theme(HTML
-                        .replace("__TOPBAR__", tb)
-                        .replace("__I_GLOBE__", icon("globe", 14))
-                        .replace("__I_FLAG__", icon("flag", 17))
-                        .replace("__I_PLAY__", icon("play", 17))
-                        .replace("__ABOUT__", about)
-                        .replace("__GROUPS__", groups_html)
-                        .replace("__RELATED__", related)
-                        .replace("__CHECKED__", esc(data.get("checked", ""))))
+        f'<a class="btn" href="{esc(link["url"])}">{icon("right", 11)} {esc(link["label"])}</a>'
+        for link in data.get("related", [])
+    )
+    tb = topbar(
+        active="intl.html",
+        stats="stats-2026.html",
+        brand_sub="国际评议导航",
+        seasons=("2026", "2025", "2024"),
+    )
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__I_GLOBE__", icon("globe", 14))
+        .replace("__I_FLAG__", icon("flag", 17))
+        .replace("__I_PLAY__", icon("play", 17))
+        .replace("__ABOUT__", about)
+        .replace("__GROUPS__", groups_html)
+        .replace("__RELATED__", related)
+        .replace("__CHECKED__", esc(data.get("checked", "")))
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "intl.html").write_text(html, encoding="utf-8")
     n = sum(len(g.get("resources", [])) for g in data.get("groups", []))

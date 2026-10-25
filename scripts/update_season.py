@@ -17,6 +17,7 @@
 在三个常量表之间做 == 选择（choices 白名单 + 二次校验），不进入任何执行参数。
 子进程统一走 build_all.run()（列表参数、shell=False、check=True）。
 """
+
 import argparse
 
 from build_all import run
@@ -43,7 +44,11 @@ _STEPS_2024 = [
 _STEPS_2025 = [
     ("fetch_issues.py", ["2025"], "抓取官方页面存档"),
     ("parse_issues.py", ["2025"], "解析 → cases JSON"),
-    ("fix_issue27_merge.py", [], "拆分第27期内嵌的第26期补充认定（必须在 classify 前）"),
+    (
+        "fix_issue27_merge.py",
+        [],
+        "拆分第27期内嵌的第26期补充认定（必须在 classify 前）",
+    ),
     ("classify_cases.py", ["2025"], "教学分类与结论复核"),
     ("make_impact.py", [], "错漏判影响标注"),
 ] + _TAIL
@@ -59,9 +64,13 @@ TABLE = {"2024": _STEPS_2024, "2025": _STEPS_2025, "2026": _STEPS_2026}
 def main():
     ap = argparse.ArgumentParser(description="赛季增量更新一键编排")
     ap.add_argument("season", choices=["2024", "2025", "2026"], help="赛季")
-    ap.add_argument("--skip-fetch", action="store_true", help="跳过 fetch_issues（页面已抓过）")
+    ap.add_argument(
+        "--skip-fetch", action="store_true", help="跳过 fetch_issues（页面已抓过）"
+    )
     ap.add_argument("--dry-run", action="store_true", help="只打印命令序列，不执行")
-    ap.add_argument("--discover", action="store_true", help="先跑 enum_issues 探测新期 URL")
+    ap.add_argument(
+        "--discover", action="store_true", help="先跑 enum_issues 探测新期 URL"
+    )
     args = ap.parse_args()
     if args.season == "2024":
         steps = list(_STEPS_2024)

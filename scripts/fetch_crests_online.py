@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """补充人工目录中缺失的队徽，候选图必须来自明确的 Wikimedia 页面。"""
+
 import json
 import re
 import sys
@@ -10,22 +11,32 @@ if hasattr(sys.stdout, "reconfigure"):
 
 from lib import safe_http as S
 from lib.paths import CRESTS_DIR, TEAMS_JSON
-S.ALLOWED_HOSTS |= {"zh.wikipedia.org", "upload.wikimedia.org", "commons.wikimedia.org", "thumb.wikimedia.org"}
+
+S.ALLOWED_HOSTS |= {
+    "zh.wikipedia.org",
+    "upload.wikimedia.org",
+    "commons.wikimedia.org",
+    "thumb.wikimedia.org",
+}
 PREFER = re.compile(r"logo|crest|队徽|徽标|shield|football.?club|\.fc\b|\.f\.c", re.I)
-NOISE = re.compile(r"flag|kit|stadium|map|icon|commons|wikimedia|nike|adidas|ball|sponsor", re.I)
+NOISE = re.compile(
+    r"flag|kit|stadium|map|icon|commons|wikimedia|nike|adidas|ball|sponsor", re.I
+)
 
 
 def api(params):
     query = "&".join(f"{k}={S.safe_urlencode(v)}" for k, v in params.items())
     last = None
     for attempt in range(5):  # 429 限流退避：2/6/18/54s，末次固定 48s
-        status, text = S.fetch_text(f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=1)
+        status, text = S.fetch_text(
+            f"https://zh.wikipedia.org/w/api.php?{query}", timeout=8, retries=1
+        )
         if status == 200 and text.startswith("{"):
-            time.sleep(.6)
+            time.sleep(0.6)
             return json.loads(text)
         last = f"Wikipedia API {status}"
         if status in (429, 503):
-            time.sleep(2 * 3 ** attempt if attempt < 4 else 48)
+            time.sleep(2 * 3**attempt if attempt < 4 else 48)
             continue
         raise RuntimeError(last)
     raise RuntimeError(last)
@@ -43,8 +54,15 @@ def score_image(title, team):
 def own_article_images(team):
     """仅取本队词条(精确标题)的图片，保证队徽来源即本俱乐部。女足等词条无"足球俱乐部"后缀，两种标题都试。"""
     for article in (team + "足球俱乐部", team):
-        data = api({"action": "query", "format": "json", "prop": "images", "imlimit": "200",
-                    "titles": article})
+        data = api(
+            {
+                "action": "query",
+                "format": "json",
+                "prop": "images",
+                "imlimit": "200",
+                "titles": article,
+            }
+        )
         for pid, page in data.get("query", {}).get("pages", {}).items():
             if pid == "-1":
                 continue
@@ -62,9 +80,21 @@ def candidate(team):
         if score:
             return (score, title, article)
     # 本队词条无队徽时才回退搜索池，且图片标题必须含队名，杜绝跨俱乐部误配
-    data = api({"action": "query", "format": "json", "prop": "images", "imlimit": "200",
-                "generator": "search", "gsrlimit": "5", "gsrsearch": team + " 足球俱乐部"})
-    pages = sorted(data.get("query", {}).get("pages", {}).values(), key=lambda x: x.get("index", 999))
+    data = api(
+        {
+            "action": "query",
+            "format": "json",
+            "prop": "images",
+            "imlimit": "200",
+            "generator": "search",
+            "gsrlimit": "5",
+            "gsrsearch": team + " 足球俱乐部",
+        }
+    )
+    pages = sorted(
+        data.get("query", {}).get("pages", {}).values(),
+        key=lambda x: x.get("index", 999),
+    )
     choices = []
     for page in pages:
         for image in page.get("images", []):
@@ -80,8 +110,16 @@ def candidate(team):
 
 
 def image_url(title):
-    data = api({"action": "query", "format": "json", "titles": title,
-                "prop": "imageinfo", "iiprop": "url", "iiurlwidth": "240"})
+    data = api(
+        {
+            "action": "query",
+            "format": "json",
+            "titles": title,
+            "prop": "imageinfo",
+            "iiprop": "url",
+            "iiurlwidth": "240",
+        }
+    )
     for page in data.get("query", {}).get("pages", {}).values():
         info = page.get("imageinfo", [{}])[0]
         return info.get("thumburl") or info.get("url")
@@ -96,11 +134,18 @@ def main():
             continue
         existing = CRESTS_DIR / f"{item['slug']}.png"
         if existing.exists() and existing.stat().st_size > 1500:
-            item.update({"path": f"assets/crests/{existing.name}", "status": "verified",
-                         "source_url": f"https://zh.wikipedia.org/wiki/{S.safe_urlencode(item['name'])}",
-                         "source_type": "wikipedia-image"})
+            item.update(
+                {
+                    "path": f"assets/crests/{existing.name}",
+                    "status": "verified",
+                    "source_url": f"https://zh.wikipedia.org/wiki/{S.safe_urlencode(item['name'])}",
+                    "source_type": "wikipedia-image",
+                }
+            )
             print(f"OK {item['name']} <- existing downloaded image")
-            TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+            TEAMS_JSON.write_text(
+                json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+            )
             continue
         try:
             picked = candidate(item["name"])
@@ -116,16 +161,25 @@ def main():
             if size < 1500:
                 dest.unlink(missing_ok=True)
                 continue
-            item.update({"path": f"assets/crests/{filename}", "status": "verified",
-                         "source_url": f"https://zh.wikipedia.org/wiki/{S.safe_urlencode(picked[2])}",
-                         "source_type": "wikipedia-image"})
+            item.update(
+                {
+                    "path": f"assets/crests/{filename}",
+                    "status": "verified",
+                    "source_url": f"https://zh.wikipedia.org/wiki/{S.safe_urlencode(picked[2])}",
+                    "source_type": "wikipedia-image",
+                }
+            )
             updated += 1
             print(f"OK {item['name']} <- {picked[1]}")
         except Exception as exc:  # 网络波动只跳过当前队伍
             print(f"SKIP {item['name']}: {exc}")
-        TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
-        time.sleep(.1)
-    TEAMS_JSON.write_text(json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8")
+        TEAMS_JSON.write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+        time.sleep(0.1)
+    TEAMS_JSON.write_text(
+        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+    )
     print(f"在线补充完成: 新增 {updated} 个队徽")
 
 

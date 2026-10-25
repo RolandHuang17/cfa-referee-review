@@ -10,6 +10,7 @@
 视频复制到 site/videos/scale/{year}/, 海报到 assets/scale/{year}-*.png。
 原包路径见 PACKAGES; 不在仓库内(第三方库会被安全钩子拦截), 缺失时复用已提取的 data/scale.json。
 """
+
 import json
 import re
 import shutil
@@ -19,11 +20,21 @@ from urllib.parse import unquote
 
 from lib.theme import inject_theme, topbar, icon
 
-from lib.paths import ROOT, SCALE_JSON, SCALE_PACK_2024, SCALE_POSTERS, SITE, SITE_VIDEOS
+from lib.paths import (
+    ROOT,
+    SCALE_JSON,
+    SCALE_PACK_2024,
+    SCALE_POSTERS,
+    SITE,
+    SITE_VIDEOS,
+)
 
 SCALE_VIDEOS = SITE_VIDEOS / "scale"
+
+
 def PKG_IMG(year):
     return SCALE_POSTERS  # 海报平铺: assets/scale/{year}-{cat}-{series}-{id}.png
+
 
 PACKAGES = {
     "2026": ROOT.parent / "统一尺度宣讲原始包-2026",
@@ -36,9 +47,17 @@ SCALE_SOURCE_URLS = {
     "2025": "https://www.thecfa.cn/cpwjxz/20250224/35659.html",
     "2024": "https://www.thecfa.cn/cpwjxz/20240229/33785.html",
 }
-EN2CN = {"No Foul": "不犯规", "No Card": "不出牌", "Indirect Free Kick": "间接任意球",
-         "Direct Free Kick": "直接任意球", "Penalty Kick": "罚球点球", "Yellow Card": "黄牌",
-         "Red Card": "红牌", "Goal": "进球", "Penalty": "罚球点球"}
+EN2CN = {
+    "No Foul": "不犯规",
+    "No Card": "不出牌",
+    "Indirect Free Kick": "间接任意球",
+    "Direct Free Kick": "直接任意球",
+    "Penalty Kick": "罚球点球",
+    "Yellow Card": "黄牌",
+    "Red Card": "红牌",
+    "Goal": "进球",
+    "Penalty": "罚球点球",
+}
 
 
 # ---------- 2024（第三代 EXE+XML 包）提取 ----------
@@ -68,8 +87,10 @@ def _read_flex(path: Path) -> str:
 
 def _parse_textos(path: Path) -> dict:
     """textos/{n}_textos.txt 为 &key=value& 格式(GBK), 取分类标题等。"""
-    return {m.group(1): m.group(2).strip()
-            for m in re.finditer(r"&(\w+)=(.*?)&", _read_flex(path), re.S)}
+    return {
+        m.group(1): m.group(2).strip()
+        for m in re.finditer(r"&(\w+)=(.*?)&", _read_flex(path), re.S)
+    }
 
 
 def _parse_xml24(text: str):
@@ -82,12 +103,20 @@ def _parse_xml24(text: str):
 def _matrix24(restart: str, level: str, offside: bool) -> list:
     """合成与现有 schema 一致的判罚决定矩阵(chip 展示顺序沿用 DECISION_ORDER)。"""
     if offside:
-        labels = ["不越位犯规", "干扰比赛", "越位犯规", "干扰对方队员", "越位位置获得利益"]
+        labels = [
+            "不越位犯规",
+            "干扰比赛",
+            "越位犯规",
+            "干扰对方队员",
+            "越位位置获得利益",
+        ]
         active = {"越位犯规"} if restart.lower() == "y" else set()
         if level in D24_OFFSIDE:
             active.add(D24_OFFSIDE[level])
     else:
-        labels = DECISION_ORDER[:7]  # 不犯规/间接任意球/直接任意球/罚球点球/不出牌/黄牌/红牌
+        labels = DECISION_ORDER[
+            :7
+        ]  # 不犯规/间接任意球/直接任意球/罚球点球/不出牌/黄牌/红牌
         active = set()
         if restart in D24_DECISION:
             active.add(D24_DECISION[restart])
@@ -107,14 +136,18 @@ def _varrule24(var: str, rule: str) -> str:
 
 
 def extract_season_2024(year: str, pkg: Path):
-    hits = sorted(pkg.glob("medias/chinese/xml")) + sorted(pkg.glob("*/medias/chinese/xml"))
+    hits = sorted(pkg.glob("medias/chinese/xml")) + sorted(
+        pkg.glob("*/medias/chinese/xml")
+    )
     if not hits:
         raise SystemExit(f"2024 包内未找到 medias/chinese/xml: {pkg}")
     xml_dir = hits[0]
     textos_dir = xml_dir.parent / "textos"
     flv_dir = xml_dir.parent.parent / "flv"
     groups, order = {}, {}
-    for xf in sorted(xml_dir.glob("*.xml"), key=lambda p: int(p.stem) if p.stem.isdigit() else 999):
+    for xf in sorted(
+        xml_dir.glob("*.xml"), key=lambda p: int(p.stem) if p.stem.isdigit() else 999
+    ):
         if xf.stat().st_size > D24_MAX_XML:
             print(f"跳过 {xf.name}: 体积超限")
             continue
@@ -131,7 +164,9 @@ def extract_season_2024(year: str, pkg: Path):
         if not cat:
             cat = f"分类{xf.stem}"
         for q in qs:
-            th = (q.get("th") or "").strip()  # th 是 pregunta 的属性(th/A1.jpg), 非子元素
+            th = (
+                q.get("th") or ""
+            ).strip()  # th 是 pregunta 的属性(th/A1.jpg), 非子元素
             if not th:
                 continue
             hl_id = Path(th).stem
@@ -148,26 +183,41 @@ def extract_season_2024(year: str, pkg: Path):
             if cat == "视频助理裁判" and not decision and not level:
                 matrix = [{"label": "VAR 机制讲解", "active": True}]
             else:
-                matrix = _matrix24(decision, level, offside=(decision.lower() == "y" or cat == "越位"))
+                matrix = _matrix24(
+                    decision, level, offside=(decision.lower() == "y" or cat == "越位")
+                )
             (SCALE_VIDEOS / year).mkdir(parents=True, exist_ok=True)
             shutil.copy2(src, SCALE_VIDEOS / year / f"highlights-{hl_id}.mp4")
             if cat not in groups:
                 groups[cat] = {"name": cat, "items": []}
                 order[cat] = len(order)
-            item = {"id": hl_id, "series": "highlights", "title": cat,
-                    "note": clean(q.findtext("explanation") or ""),
-                    "decision": matrix, "reason": "",
-                    "video": f"videos/scale/{year}/highlights-{hl_id}.mp4",
-                    "poster": ""}
+            item = {
+                "id": hl_id,
+                "series": "highlights",
+                "title": cat,
+                "note": clean(q.findtext("explanation") or ""),
+                "decision": matrix,
+                "reason": "",
+                "video": f"videos/scale/{year}/highlights-{hl_id}.mp4",
+                "poster": "",
+            }
             vr = _varrule24(q.findtext("VAR"), q.findtext("rule"))
             if vr:
                 item["varrule"] = vr
             groups[cat]["items"].append(item)
-    return {"sections": [{"key": "fouls-misconduct", "name": "犯规与不正当行为",
-                          "groups": [groups[k] for k in sorted(order, key=order.get)]}]}
+    return {
+        "sections": [
+            {
+                "key": "fouls-misconduct",
+                "name": "犯规与不正当行为",
+                "groups": [groups[k] for k in sorted(order, key=order.get)],
+            }
+        ]
+    }
 
 
 # 分组排序（同组按场景名聚合）
+
 
 def decode_page(path: Path) -> str:
     raw = path.read_text(encoding="utf-8", errors="replace")
@@ -222,21 +272,26 @@ def parse_highlight(path: Path, year: str, cat: str, series: str):
     hl_id = path.stem
     m = re.search(r"<h1[^>]*>\s*([^<]*?)\s*</h1>", body)
     title = re.sub(r"\s+", " ", m.group(1)).strip() if m else hl_id
-    title = re.sub(r"^[A-Z]*\d+\s*-\s*", "", title)  # 去"A1 - "/"1 - "编号前缀（文件号与标题号可能错位）
+    title = re.sub(
+        r"^[A-Z]*\d+\s*-\s*", "", title
+    )  # 去"A1 - "/"1 - "编号前缀（文件号与标题号可能错位）
     if title == hl_id or not title:  # VAR 等无名页
         title = f"场景 {hl_id}"
     reason = ""
-    rm = re.search(r'<h2>\s*Reason\s*</h2>([\s\S]*?)</div>', body)
+    rm = re.search(r"<h2>\s*Reason\s*</h2>([\s\S]*?)</div>", body)
     if rm:
         reason = clean(rm.group(1))
     fname = f"{series}-{hl_id}"
-    return {"id": hl_id, "series": series, "title": title,
-            "note": parse_note(body),
-            "decision": parse_matrix(body, "判罚决定") or parse_matrix(body, "Decision"),
-            "reason": reason,
-            "video": f"videos/scale/{year}/{fname}.mp4",
-            "poster": f"assets/scale/{year}-{cat}-{fname}.png"}, \
-           (PKG_VID(year) / f"{fname}.mp4", PKG_IMG(year) / f"{year}-{cat}-{fname}.png")
+    return {
+        "id": hl_id,
+        "series": series,
+        "title": title,
+        "note": parse_note(body),
+        "decision": parse_matrix(body, "判罚决定") or parse_matrix(body, "Decision"),
+        "reason": reason,
+        "video": f"videos/scale/{year}/{fname}.mp4",
+        "poster": f"assets/scale/{year}-{cat}-{fname}.png",
+    }, (PKG_VID(year) / f"{fname}.mp4", PKG_IMG(year) / f"{year}-{cat}-{fname}.png")
 
 
 def PKG_VID(year):
@@ -251,8 +306,10 @@ def extract_season(year: str, pkg: Path):
         order = []
         for series_dir in sorted(p for p in cat_dir.iterdir() if p.is_dir()):
             series = series_dir.name
-            for p in sorted(series_dir.glob("*.html"),
-                            key=lambda x: int(x.stem) if x.stem.isdigit() else 999):
+            for p in sorted(
+                series_dir.glob("*.html"),
+                key=lambda x: int(x.stem) if x.stem.isdigit() else 999,
+            ):
                 item, files = parse_highlight(p, year, cat_dir.name, series)
                 # 分组键：VAR 无名页归入"视频助理裁判"组
                 gkey = item["title"]
@@ -271,9 +328,15 @@ def extract_season(year: str, pkg: Path):
                     groups[gkey] = {"name": gkey, "items": []}
                     order.append(gkey)
                 groups[gkey]["items"].append(item)
-        cats.append({"key": cat_dir.name,
-                     "name": "犯规与不正当行为" if cat_dir.name == "fouls-misconduct" else cat_dir.name,
-                     "groups": [groups[k] for k in order]})
+        cats.append(
+            {
+                "key": cat_dir.name,
+                "name": "犯规与不正当行为"
+                if cat_dir.name == "fouls-misconduct"
+                else cat_dir.name,
+                "groups": [groups[k] for k in order],
+            }
+        )
     return {"sections": cats}
 
 
@@ -300,15 +363,45 @@ def legacy_migrate():
 
 
 # 分组排序（同组按场景名聚合）
-GROUP_ORDER = ["争抢", "战术犯规", "手球", "手球犯规", "罚球区事件", "罚球区内手球犯规",
-               "球点球时的侵入", "越位", "越位犯规", "比赛管理", "视频助理裁判", "25/26规则变更"]
-DECISION_ORDER = ["不犯规", "间接任意球", "直接任意球", "罚球点球", "不出牌", "黄牌", "红牌",
-                  "不越位犯规", "干扰比赛", "越位犯规", "干扰对方队员", "越位位置获得利益"]
+GROUP_ORDER = [
+    "争抢",
+    "战术犯规",
+    "手球",
+    "手球犯规",
+    "罚球区事件",
+    "罚球区内手球犯规",
+    "球点球时的侵入",
+    "越位",
+    "越位犯规",
+    "比赛管理",
+    "视频助理裁判",
+    "25/26规则变更",
+]
+DECISION_ORDER = [
+    "不犯规",
+    "间接任意球",
+    "直接任意球",
+    "罚球点球",
+    "不出牌",
+    "黄牌",
+    "红牌",
+    "不越位犯规",
+    "干扰比赛",
+    "越位犯规",
+    "干扰对方队员",
+    "越位位置获得利益",
+]
 
 
 def sort_groups(groups):
     def key(g):
-        return (GROUP_ORDER.index(g["name"]) if g["name"] in GROUP_ORDER else len(GROUP_ORDER), g["name"])
+        return (
+            GROUP_ORDER.index(g["name"])
+            if g["name"] in GROUP_ORDER
+            else len(GROUP_ORDER),
+            g["name"],
+        )
+
     return sorted(groups, key=key)
 
 
@@ -441,48 +534,73 @@ def build_page(data):
     tabs = "".join(
         f'<button class="season-tab{" on" if i == 0 else ""}" role="tab" data-season="{s}"'
         f' aria-selected="{str(i == 0).lower()}">{s} 赛季</button>'
-        for i, s in enumerate(seasons))
+        for i, s in enumerate(seasons)
+    )
     navs, secs = "", ""
     for i, s in enumerate(seasons):
         nav, sec = "", ""
         for si, secdata in enumerate(data[s]["sections"]):
             for gi, g in enumerate(secdata["groups"]):
                 anchor = f"s{s}-{si}-{gi}"
-                nav += (f'<a class="gnav" href="#{anchor}">{g["name"]}'
-                        f'<b>{len(g["items"])}</b></a>')
+                nav += (
+                    f'<a class="gnav" href="#{anchor}">{g["name"]}'
+                    f"<b>{len(g['items'])}</b></a>"
+                )
                 cards = ""
                 for h in g["items"]:
                     chips = "".join(
                         f'<span class="dchip{" on" if d["active"] else ""}">{d["label"]}</span>'
-                        for d in sorted(h["decision"],
-                                        key=lambda x: DECISION_ORDER.index(x["label"])
-                                        if x["label"] in DECISION_ORDER else 99))
-                    cards += f"""<article class="hcard" id="h{s}-{h['series']}-{h['id']}">
-  <div class="hhead"><span class="hid">{h['id']}</span><h3>{h['title']}</h3></div>
-  <div class="hvideo"><video controls preload="none"{f' poster="{h["poster"]}"' if h['poster'] else ''}><source src="{h['video']}" type="video/mp4"></video></div>
-  <p class="hnote">{h['note']}</p>
+                        for d in sorted(
+                            h["decision"],
+                            key=lambda x: (
+                                DECISION_ORDER.index(x["label"])
+                                if x["label"] in DECISION_ORDER
+                                else 99
+                            ),
+                        )
+                    )
+                    cards += f"""<article class="hcard" id="h{s}-{h["series"]}-{h["id"]}">
+  <div class="hhead"><span class="hid">{h["id"]}</span><h3>{h["title"]}</h3></div>
+  <div class="hvideo"><video controls preload="none"{f' poster="{h["poster"]}"' if h["poster"] else ""}><source src="{h["video"]}" type="video/mp4"></video></div>
+  <p class="hnote">{h["note"]}</p>
   <div class="drow"><span class="dlbl">判罚决定</span>{chips}</div>
-  {f'<p class="hreason">Reason: {h["reason"]}</p>' if h['reason'] else ''}
-  {f'<p class="hreason">⚖ VAR 介入：{h["varrule"]}</p>' if h.get('varrule') else ''}
+  {f'<p class="hreason">Reason: {h["reason"]}</p>' if h["reason"] else ""}
+  {f'<p class="hreason">⚖ VAR 介入：{h["varrule"]}</p>' if h.get("varrule") else ""}
 </article>"""
-                sec += (f'<section class="gsec" id="{anchor}">'
-                        f'<h2>{g["name"]} <b>{len(g["items"])}例</b></h2>{cards}</section>')
+                sec += (
+                    f'<section class="gsec" id="{anchor}">'
+                    f"<h2>{g['name']} <b>{len(g['items'])}例</b></h2>{cards}</section>"
+                )
         navs += f'<div class="gnavcol sblock{" on" if i == 0 else ""}" data-season="{s}">{nav}</div>'
         secs += f'<div class="sblock{" on" if i == 0 else ""}" data-season="{s}" id="content{i}">{sec}</div>'
-    tb = topbar(active="scale.html", stats="stats-2026.html", brand_sub="统一判罚尺度",
-                seasons=("2024", "2025", "2026"), lite_btn=True)
+    tb = topbar(
+        active="scale.html",
+        stats="stats-2026.html",
+        brand_sub="统一判罚尺度",
+        seasons=("2024", "2025", "2026"),
+        lite_btn=True,
+    )
     banner = "".join(
         f'<span class="lb-item{" on" if i == 0 else ""}" data-season="{s}">{icon("external", 14)} '
-        f'官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。前往官方发布页观看：'
+        f"官方《统一判罚尺度》材料以 zip 压缩包发布，轻量版不内嵌视频。前往官方发布页观看："
         f'<a href="{SCALE_SOURCE_URLS[s]}" target="_blank" rel="noopener">中国足协官网 · {s}赛季判罚统一尺度材料发布页</a></span>'
-        for i, s in enumerate(seasons))
-    html = inject_theme(HTML.replace("__TOPBAR__", tb)
-                        .replace("__LITE_BANNER__", banner)
-                        .replace("__TABS__", tabs).replace("__NAVS__", navs)
-                        .replace("__SECS__", secs))
+        for i, s in enumerate(seasons)
+    )
+    html = inject_theme(
+        HTML.replace("__TOPBAR__", tb)
+        .replace("__LITE_BANNER__", banner)
+        .replace("__TABS__", tabs)
+        .replace("__NAVS__", navs)
+        .replace("__SECS__", secs)
+    )
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "scale.html").write_text(html, encoding="utf-8")
-    n = sum(len(g["items"]) for s in seasons for sec in data[s]["sections"] for g in sec["groups"])
+    n = sum(
+        len(g["items"])
+        for s in seasons
+        for sec in data[s]["sections"]
+        for g in sec["groups"]
+    )
     print(f"生成 {SITE / 'scale.html'}（{'/'.join(seasons)} 共 {n} 例）")
 
 
@@ -494,13 +612,19 @@ def main():
         data = {k: v for k, v in d.items() if isinstance(v, dict) and "sections" in v}
     for year, pkg in PACKAGES.items():
         if pkg.exists():
-            data[year] = extract_season_2024(year, pkg) if year == "2024" else extract_season(year, pkg)
+            data[year] = (
+                extract_season_2024(year, pkg)
+                if year == "2024"
+                else extract_season(year, pkg)
+            )
         elif year not in data:
             print(f"跳过 {year}: 原包缺失且无已提取数据")
     for year in data:  # 组排序
         for sec in data[year]["sections"]:
             sec["groups"] = sort_groups(sec["groups"])
-    SCALE_JSON.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
+    SCALE_JSON.write_text(
+        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+    )
     build_page(data)
 
 

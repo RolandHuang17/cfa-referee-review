@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 """Build the complete static site into site/."""
+
 import shutil
 import subprocess
 import sys
@@ -17,7 +18,9 @@ def main():
     if IFAB_PDF.exists():
         run("build_rules.py")
     elif not (SITE / "rules.html").exists():
-        raise SystemExit("缺少规则 PDF，且 site/rules.html 不存在；请先运行 fetch_laws.py")
+        raise SystemExit(
+            "缺少规则 PDF，且 site/rules.html 不存在；请先运行 fetch_laws.py"
+        )
     else:
         print("未找到规则 PDF，保留仓库中的 site/rules.html")
     run("fetch_crests.py")

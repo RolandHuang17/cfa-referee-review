@@ -8,14 +8,21 @@
 - 卡片通过 data-* 属性参与筛选：chips 值对比卡片的 filter 属性（等值/子串），
   搜索对比卡片的 data-search（小写子串）；年份组标题随组内可见性折叠。
 """
+
 import json
 
 from lib.theme import icon
 
 
 def esc(s):
-    return (s or "").replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;") \
-        .replace('"', "&quot;").replace("'", "&#39;")
+    return (
+        (s or "")
+        .replace("&", "&amp;")
+        .replace("<", "&lt;")
+        .replace(">", "&gt;")
+        .replace('"', "&quot;")
+        .replace("'", "&#39;")
+    )
 
 
 def search_blob(*parts):
@@ -27,10 +34,13 @@ def head_css(max_width=1040, compact_years=False):
     """页头/来源横幅/chips/年份标题/页脚的共享 CSS（卡片样式留在各页）。
 
     compact_years=True 用 weekly 的紧凑年份标题（16px），否则用 18px。"""
-    year_h = (".year-h{font-family:var(--font-display);font-size:16px;"
-              "margin:18px 0 10px;letter-spacing:.4px}" if compact_years else
-              ".year-h{font-family:var(--font-display);font-size:18px;"
-              "margin:26px 0 12px;letter-spacing:.4px}")
+    year_h = (
+        ".year-h{font-family:var(--font-display);font-size:16px;"
+        "margin:18px 0 10px;letter-spacing:.4px}"
+        if compact_years
+        else ".year-h{font-family:var(--font-display);font-size:18px;"
+        "margin:26px 0 12px;letter-spacing:.4px}"
+    )
     return f""".page-head{{border-bottom:1px solid var(--line);background:var(--bg2)}}
 .page-head .wrap{{max-width:{max_width}px;margin:0 auto;padding:22px 16px 18px}}
 .page-head h1{{margin:0 0 5px;font-family:var(--font-display);font-size:23px;letter-spacing:.4px}}
@@ -58,12 +68,20 @@ SEARCH_CSS = """.searchbar{margin-top:14px;position:relative;max-width:460px}
 
 def searchbar(placeholder):
     """页头搜索框（weekly 同款）；配套 SEARCH_CSS 与 filter_js(search=True)。"""
-    return (f'<div class="searchbar">{icon("search", 15)}<input id="q" type="search" '
-            f'placeholder="{esc(placeholder)}" aria-label="搜索"></div>')
+    return (
+        f'<div class="searchbar">{icon("search", 15)}<input id="q" type="search" '
+        f'placeholder="{esc(placeholder)}" aria-label="搜索"></div>'
+    )
 
 
-def filter_js(card_sel, filter_attr="data-kinds", match="substr", search=False,
-              sections=None, group="ybody"):
+def filter_js(
+    card_sel,
+    filter_attr="data-kinds",
+    match="substr",
+    search=False,
+    sections=None,
+    group="ybody",
+):
     """生成 chips(+可选搜索) 过滤脚本。
 
     - card_sel: 卡片选择器（如 ".ccard"）；卡片以 style.display 显隐
@@ -83,16 +101,18 @@ def filter_js(card_sel, filter_attr="data-kinds", match="substr", search=False,
         match_expr = '(c.getAttribute("' + filter_attr + '")||"").indexOf(cur)>=0'
     if search:
         search_expr = '&&(!q||(c.getAttribute("data-search")||"").indexOf(q)>=0)'
-        wire = ('  var si=document.getElementById("q");\n'
-                '  if(si)["input","search"].forEach(function(ev){\n'
-                '    si.addEventListener(ev,function(){q=(si.value||"").trim().toLowerCase();apply();});\n'
-                '  });\n'
-                '  // "/" 聚焦搜索（与 season/rules 页统一；输入控件内不拦截）\n'
-                '  document.addEventListener("keydown",function(e){\n'
-                '    var t=(e.target.tagName||"").toLowerCase();\n'
-                '    if(t==="input"||t==="textarea"||t==="select")return;\n'
-                '    if(e.key==="/"){e.preventDefault();var el=document.getElementById("q");if(el)el.focus();}\n'
-                '  });\n')
+        wire = (
+            '  var si=document.getElementById("q");\n'
+            '  if(si)["input","search"].forEach(function(ev){\n'
+            '    si.addEventListener(ev,function(){q=(si.value||"").trim().toLowerCase();apply();});\n'
+            "  });\n"
+            '  // "/" 聚焦搜索（与 season/rules 页统一；输入控件内不拦截）\n'
+            '  document.addEventListener("keydown",function(e){\n'
+            '    var t=(e.target.tagName||"").toLowerCase();\n'
+            '    if(t==="input"||t==="textarea"||t==="select")return;\n'
+            '    if(e.key==="/"){e.preventDefault();var el=document.getElementById("q");if(el)el.focus();}\n'
+            "  });\n"
+        )
         var_decl = 'var cur="all", q=""'
     else:
         search_expr = ""
@@ -103,72 +123,80 @@ def filter_js(card_sel, filter_attr="data-kinds", match="substr", search=False,
     else:
         grp_lookup = 'document.getElementById("ybody-"+y.getAttribute("data-year"))'
     if sections:
-        loop = "".join([
-            '    var secs=document.querySelectorAll("' + sections + '");\n',
-            '    secs.forEach(function(sec){\n',
-            '      var hitShow=cur==="all"||sec.getAttribute("data-show")===cur;\n',
-            '      var anyS=false;\n',
-            '      sec.querySelectorAll("' + card + '").forEach(function(c){\n',
-            '        var hit=hitShow' + search_expr + ';\n',
-            '        c.style.display=hit?"":"none";\n',
-            '        if(hit)anyS=true;\n',
-            '      });\n',
-            '      sec.querySelectorAll(".year-h").forEach(function(y){\n',
-            '        var body=y.nextElementSibling,anyY=false;\n',
-            '        if(body)body.querySelectorAll("' + card + '")'
-            '.forEach(function(c){if(c.style.display!=="none")anyY=true;});\n',
-            '        y.style.display=anyY?"":"none";\n',
-            '        if(body)body.style.display=anyY?"":"none";\n',
-            '      });\n',
-            '      sec.style.display=anyS?"":"none";\n',
-            '      if(anyS)any=true;\n',
-            '    });',
-        ])
+        loop = "".join(
+            [
+                '    var secs=document.querySelectorAll("' + sections + '");\n',
+                "    secs.forEach(function(sec){\n",
+                '      var hitShow=cur==="all"||sec.getAttribute("data-show")===cur;\n',
+                "      var anyS=false;\n",
+                '      sec.querySelectorAll("' + card + '").forEach(function(c){\n',
+                "        var hit=hitShow" + search_expr + ";\n",
+                '        c.style.display=hit?"":"none";\n',
+                "        if(hit)anyS=true;\n",
+                "      });\n",
+                '      sec.querySelectorAll(".year-h").forEach(function(y){\n',
+                "        var body=y.nextElementSibling,anyY=false;\n",
+                '        if(body)body.querySelectorAll("' + card + '")'
+                '.forEach(function(c){if(c.style.display!=="none")anyY=true;});\n',
+                '        y.style.display=anyY?"":"none";\n',
+                '        if(body)body.style.display=anyY?"":"none";\n',
+                "      });\n",
+                '      sec.style.display=anyS?"":"none";\n',
+                "      if(anyS)any=true;\n",
+                "    });",
+            ]
+        )
     else:
-        loop = "".join([
-            '    var cards=document.querySelectorAll("' + card + '");\n',
-            '    var years=document.querySelectorAll(".year-h[data-year]");\n',
-            '    cards.forEach(function(c){\n',
-            '      var hit=(cur==="all"||' + match_expr + ')' + search_expr + ';\n',
-            '      c.style.display=hit?"":"none";\n',
-            '      if(hit)any=true;\n',
-            '    });\n',
-            '    years.forEach(function(y){\n',
-            '      var grp=' + grp_lookup + ',anyY=false;\n',
-            '      if(grp)grp.querySelectorAll("' + card + '")'
-            '.forEach(function(c){if(c.style.display!=="none")anyY=true;});\n',
-            '      y.style.display=anyY?"":"none";\n',
-            '      if(grp)grp.style.display=anyY?"":"none";\n',
-            '    });',
-        ])
-    return "".join([
-        '(function(){\n',
-        '  ' + var_decl + ';\n',
-        '  var chips=document.querySelectorAll("[data-chips] .chip");\n',
-        '  var emptyTip=document.getElementById("emptyTip");\n',
-        '  function apply(){\n',
-        '    var any=false;\n',
-        loop + '\n',
-        '    if(emptyTip)emptyTip.style.display=any?"none":"block";\n',
-        '  }\n',
-        '  chips.forEach(function(c){\n',
-        '    c.addEventListener("click",function(){\n',
-        '      chips.forEach(function(x){x.classList.remove("on");});\n',
-        '      c.classList.add("on");\n',
-        '      cur=c.getAttribute("data-f")||"all";\n',
-        '      apply();\n',
-        '    });\n',
-        '  });\n',
-        wire + '})();\n',
-    ])
+        loop = "".join(
+            [
+                '    var cards=document.querySelectorAll("' + card + '");\n',
+                '    var years=document.querySelectorAll(".year-h[data-year]");\n',
+                "    cards.forEach(function(c){\n",
+                '      var hit=(cur==="all"||' + match_expr + ")" + search_expr + ";\n",
+                '      c.style.display=hit?"":"none";\n',
+                "      if(hit)any=true;\n",
+                "    });\n",
+                "    years.forEach(function(y){\n",
+                "      var grp=" + grp_lookup + ",anyY=false;\n",
+                '      if(grp)grp.querySelectorAll("' + card + '")'
+                '.forEach(function(c){if(c.style.display!=="none")anyY=true;});\n',
+                '      y.style.display=anyY?"":"none";\n',
+                '      if(grp)grp.style.display=anyY?"":"none";\n',
+                "    });",
+            ]
+        )
+    return "".join(
+        [
+            "(function(){\n",
+            "  " + var_decl + ";\n",
+            '  var chips=document.querySelectorAll("[data-chips] .chip");\n',
+            '  var emptyTip=document.getElementById("emptyTip");\n',
+            "  function apply(){\n",
+            "    var any=false;\n",
+            loop + "\n",
+            '    if(emptyTip)emptyTip.style.display=any?"none":"block";\n',
+            "  }\n",
+            "  chips.forEach(function(c){\n",
+            '    c.addEventListener("click",function(){\n',
+            '      chips.forEach(function(x){x.classList.remove("on");});\n',
+            '      c.classList.add("on");\n',
+            '      cur=c.getAttribute("data-f")||"all";\n',
+            "      apply();\n",
+            "    });\n",
+            "  });\n",
+            wire + "})();\n",
+        ]
+    )
 
 
 def group_by_year(items, date_of=None, fallback="待定"):
     """按年份分组：date_of 取日期字符串（默认 e["date"]），前 4 位为年份；
     年份降序，无日期者以 fallback 标签垫底。返回 [(年份, [条目]), ...]。"""
     if date_of is None:
+
         def date_of(e):
             return e.get("date") or ""
+
     groups = {}
     for e in items:
         y = (date_of(e) or "")[:4]

@@ -1,0 +1,39 @@
+{
+  "note": "教学分类 ↔ 竞赛规则章节 ↔ 统一尺度场景组 的互链策表（人工维护）。law_of_category 的值必须是 laws.json 的章节 id（rules.html#<id> 深链）；scale_groups_of_category 的每项是 [年份, 组名]，组名必须能在该年 scale.json 的 groups 里找到（构建时解析为 scale.html#s<年>-<节序>-<组序> 锚点）。引用失配由 test_integrity 拦截。分类无对应尺度组时留空数组（只链规则章节）。",
+  "category_names": {
+    "handball": "手球犯规",
+    "offside": "越位",
+    "penalty_area": "罚球区内判罚（点球）",
+    "freekick_foul": "罚球区外一般犯规",
+    "spa_tactical": "战术犯规与SPA",
+    "dogso": "破坏明显进球得分机会（DOGSO）",
+    "sfp_vc": "严重犯规与暴力行为",
+    "simulation": "假摔与欺骗行为",
+    "goal_decision": "进球判定与有利条款",
+    "other_program": "程序与其他"
+  },
+  "law_of_category": {
+    "handball": ["law-12"],
+    "offside": ["law-11"],
+    "penalty_area": ["law-12", "law-14"],
+    "freekick_foul": ["law-12", "law-13"],
+    "spa_tactical": ["law-12"],
+    "dogso": ["law-12"],
+    "sfp_vc": ["law-12"],
+    "simulation": ["law-12"],
+    "goal_decision": ["law-10", "law-9"],
+    "other_program": ["law-5", "var"]
+  },
+  "scale_groups_of_category": {
+    "handball": [["2026", "手球"], ["2025", "手球犯规"], ["2025", "罚球区内手球犯规"], ["2024", "手球"]],
+    "offside": [["2026", "越位"], ["2025", "越位犯规"], ["2024", "越位"]],
+    "penalty_area": [["2026", "罚球区事件"], ["2025", "罚球区事件"], ["2025", "球点球时的侵入"], ["2024", "罚球区事件"]],
+    "freekick_foul": [["2026", "争抢"], ["2025", "争抢"], ["2024", "争抢"]],
+    "spa_tactical": [["2026", "战术犯规"], ["2025", "战术犯规"], ["2024", "战术犯规"]],
+    "dogso": [],
+    "sfp_vc": [],
+    "simulation": [],
+    "goal_decision": [],
+    "other_program": [["2026", "比赛管理"], ["2026", "视频助理裁判"], ["2025", "比赛管理"], ["2025", "视频助理裁判"], ["2024", "比赛管理"], ["2024", "视频助理裁判"]]
+  }
+}

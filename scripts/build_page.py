@@ -12,6 +12,7 @@ from datetime import date
 from lib.crest_catalog import load_catalog, normalize_team
 from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
+from lib.xlinks import resolve as resolve_xlinks
 
 from lib.paths import DATA, SITE
 
@@ -110,6 +111,8 @@ ISSUE_NOTES = {
 }
 
 VERDICT_NAME = {"wrong": "错漏判", "correct": "支持原判", "pending": "不予认定"}
+# 教学分类 ↔ 规则章节 ↔ 尺度场景 互链（data/xlinks.json 策表解析产物，三季共用）
+XLINKS, _ = resolve_xlinks()
 VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
@@ -183,6 +186,7 @@ def build_data(season):
         "teams": teams,
         "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
         "notes": CATEGORY_NOTES,
+        "xlinks": XLINKS,
         "issueNotes": ISSUE_NOTES.get(season, {}),
         "verdictNames": VERDICT_NAME,
         "varNames": VAR_NAME,
@@ -332,6 +336,14 @@ body.sb-off .sidebar{display:none}
 .ftag b{cursor:pointer;font-weight:400;margin-left:3px}
 .favtags input{padding:4px 9px;border:1px solid var(--line);border-radius:var(--r-sm);
   font-size:12.5px;width:110px;background:var(--card2);color:var(--ink)}
+.fxmlinks{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:12px;padding-top:11px;
+  border-top:1px dashed var(--line);max-width:960px}
+.fml-k{font-size:12px;color:var(--muted);letter-spacing:1px;flex:none}
+.fml-k + .fml-k{margin-left:10px}
+.fml-link{display:inline-flex;align-items:center;gap:4px;padding:3px 11px;border:1px solid var(--line);
+  border-radius:999px;font-size:12.5px;color:var(--ink2);text-decoration:none;background:var(--card2)}
+.fml-link:hover{border-color:var(--brand);color:var(--brand);background:var(--info-bg)}
+.fml-link .ic{color:var(--brand)}
 .notewrap{margin-top:14px;max-width:960px}
 .notewrap textarea{width:100%;min-height:76px;padding:10px 12px;border:1px solid var(--line);
   border-radius:var(--r-md);font-size:14px;font-family:inherit;resize:vertical;background:var(--card2);color:var(--ink)}
@@ -490,6 +502,7 @@ __TOPBAR__
         <textarea id="noteBox" placeholder="写下你的学习笔记…（自动保存；复盘时可用「⏱ 插入时间标记」记录视频时刻，预览中的 [时间] 可点击跳转）"></textarea>
         <div class="note-view" id="noteView" style="display:none"></div>
       </div>
+      <div class="fmlinks" id="dXlinks" style="display:none"></div>
       <div class="tags" id="dTags"></div>
       <div class="d-foot" id="dFoot"></div>
       <div class="d-nav">
@@ -914,6 +927,22 @@ function select(seq, scrollRow=true){
     DATA.notes[c.category] || "";
   document.getElementById("dTags").innerHTML =
     (c.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("");
+  // 关联规则 / 关联尺度场景（data/xlinks.json 策表）
+  {
+    const xl = DATA.xlinks[c.category];
+    const box = document.getElementById("dXlinks");
+    if (xl && (xl.laws.length || xl.scale.length)){
+      const parts = [];
+      if (xl.laws.length)
+        parts.push(`<span class="fml-k">关联规则</span>` + xl.laws.map(l=>
+          `<a class="fml-link" href="${esc(l.url)}">${IC.book}${esc(l.title)}</a>`).join(""));
+      if (xl.scale.length)
+        parts.push(`<span class="fml-k">尺度场景</span>` + xl.scale.map(s=>
+          `<a class="fml-link" href="${esc(s.url)}">${IC.play}${esc(s.label)}</a>`).join(""));
+      box.innerHTML = parts.join("");
+      box.style.display = "";
+    } else box.style.display = "none";
+  }
   // 相关判例推荐：同分类、共享标签多者优先，最多 6 条
   {
     const rel = DATA.cases
@@ -1274,6 +1303,14 @@ const hasPen = t => (t||[]).includes("点球");
 
 // ---------- 初始化 ----------
 syncEmptyState();
+{ // 支持 #cat-<分类id> 深链（来自 rules 页「相关判例」反链 / 全站搜索页）
+  const cm = location.hash.match(/^#cat-([\w-]+)$/);
+  if (cm && CATS.some(k=>k.id===cm[1])){
+    state.cat = cm[1];
+    document.querySelectorAll(".cat-item").forEach(x=>
+      x.classList.toggle("on", x.dataset.cat===cm[1]));
+  }
+}
 applyFilter();
 { // 支持 #case-N 锚点（来自 stats.html 的跳转或刷新恢复）
   const target = initialHashSeq ? bySeq[+initialHashSeq] : null;

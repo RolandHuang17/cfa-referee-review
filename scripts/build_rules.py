@@ -546,6 +546,16 @@ mark.hl.hr{background:#ffc2b8;color:#7a1d10}
 .hltip{font-size:12.5px;color:var(--muted);background:var(--card2);border:1px dashed var(--line);
   border-radius:var(--r-sm);padding:6px 12px;margin:0 0 14px}
 .hltip b{color:var(--ink2)}
+.secrel{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:22px;padding-top:14px;
+  border-top:1px dashed var(--line)}
+.sr-k{font-size:12px;color:var(--muted);letter-spacing:1px;margin-right:2px}
+.sr-cat{display:inline-flex;align-items:center;gap:5px;padding:3px 4px 3px 11px;border:1px solid var(--line);
+  border-radius:999px;font-size:12.5px;color:var(--ink2);background:var(--card2)}
+.sr-s{display:inline-flex;align-items:center;padding:3px 8px;border:1px solid var(--line);border-left:none;
+  border-radius:0 999px 999px 0;font-size:12px;color:var(--brand);text-decoration:none;background:var(--card2)}
+.sr-cat + .sr-s{border-left:1px solid var(--line);border-radius:0 999px 999px 0;margin-left:-5px}
+.sr-s:last-of-type{margin-right:6px}
+.sr-s:hover{background:var(--info-bg);border-color:var(--brand)}
 .dnav{display:flex;gap:10px;margin-top:20px}
 .dnav button{flex:1;padding:10px;border-radius:var(--r-md);border:1px solid var(--line);background:var(--card2);
   cursor:pointer;font-size:14px;color:var(--ink2);font-family:inherit;display:flex;align-items:center;justify-content:center;gap:6px}
@@ -602,6 +612,7 @@ __TOPBAR__
           </div>
         </details>
         <div id="secHtml"></div>
+        <div class="secrel" id="secRel" style="display:none"></div>
       </div>
       <div class="dnav">
         <button id="prevBtn">上一节</button>
@@ -669,6 +680,19 @@ function select(id, scroll=true){
   document.getElementById("secTitle").textContent = s.title;
   document.getElementById("secPages").textContent = "官方PDF页码: " + s.pages;
   document.getElementById("secHtml").innerHTML = s.html;
+  // 相关判例分类反链（law 章节的教学分类互链，三季 season 页 #cat-<id> 深链）
+  {
+    const rel = (DATA.xrel && DATA.xrel[id]) || [];
+    const box = document.getElementById("secRel");
+    if (rel.length){
+      box.innerHTML = `<span class="sr-k">相关判例分类</span>` + rel.map(r=>
+        `<span class="sr-cat">${esc(r.name)}</span>` +
+        ["2026","2025","2024"].map(y=>
+          `<a class="sr-s" href="season-${y}.html#cat-${r.id}" title="${y} 赛季·${esc(r.name)}判例">${y.slice(2)}</a>`).join("")
+      ).join("");
+      box.style.display = "";
+    } else box.style.display = "none";
+  }
   document.getElementById("main").scrollTop = 0;
   document.querySelectorAll(".toc-item").forEach(x=>x.classList.toggle("on", x.dataset.id===id));
   history.replaceState(null, "", "#"+id);
@@ -949,7 +973,16 @@ syncReadUI();
 
 
 def build_html_page(sections):
+    from lib.xlinks import load_table, resolve
+
     data = {"season": "2026/27", "sections": sections}
+    # 章节反链：law id → 相关判例分类（rules ↔ season 三方互链的 rules 侧）
+    _, sec2cats = resolve()
+    cat_names = load_table()["category_names"]
+    data["xrel"] = {
+        lid: [{"id": c, "name": cat_names[c]} for c in cats]
+        for lid, cats in sec2cats.items()
+    }
     right = (
         f'<div class="search-wrap">{icon("search")}'
         f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'

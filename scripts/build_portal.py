@@ -458,6 +458,16 @@ __TOPBAR__
       </div>
       <div class="go">开始答题 __I_RIGHT__</div>
     </a>
+    <a class="ecard c-quiz" style="--i:15" href="search.html">
+      <div class="icon">__I_SEARCH_P__</div>
+      <h2>全站搜索</h2>
+      <p class="desc">一次搜遍三赛季判例、竞赛规则全文、统一尺度场景与国际评议资料——输入「手球」「越位」「DOGSO」等关键词直达对应判例与规则章节。</p>
+      <div class="nums">
+        <div><b>612</b><span>判例全文</span></div>
+        <div><b>104</b><span>尺度场景</span></div>
+      </div>
+      <div class="go">开始搜索 __I_RIGHT__</div>
+    </a>
   </section>
 
   <section class="steps">
@@ -566,6 +576,7 @@ def main():
         "__I_PLAY__": icon("play", 12),
         "__I_SHIELD__": icon("shield", 13),
         "__I_QUIZ__": icon("quiz", 20),
+        "__I_SEARCH_P__": icon("search", 20),
         "__I_EXT_S__": icon("external", 15),
         "__I_TARGET__": icon("target", 20),
         "__I_GLOBE__": icon("globe", 20),

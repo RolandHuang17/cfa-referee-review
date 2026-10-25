@@ -571,6 +571,32 @@ def _safe_xml(path):
     return ET.fromstring(raw)
 
 
+def test_xlinks_references_resolve():
+    """互链策表（data/xlinks.json）：law id/尺度组名引用可解析 + 分类键与三季数据一致。"""
+    from lib.xlinks import load_table, resolve
+
+    problems = []
+    table = load_table()
+    cats = set()
+    for season in SEASONS:
+        data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+        cats.update(c["category"] for c in data["cases"])
+    if set(table["law_of_category"]) != cats:
+        problems.append(
+            f"xlinks 分类键与教学分类不一致: {sorted(set(table['law_of_category']) ^ cats)}"
+        )
+    try:
+        by_cat, _ = resolve()
+    except KeyError as exc:
+        problems.append(f"xlinks 引用失配: {exc}")
+    else:
+        empty = [c for c, v in by_cat.items() if not v["laws"]]
+        if empty:
+            problems.append(f"xlinks 分类缺规则章节链接: {empty}")
+    _finish(problems)
+    print("互链策表（规则/尺度/分类）引用全部可解析")
+
+
 def test_seo_discovery_layer():
     """发现层护栏：每页 meta/canonical/favicon/feed 链接 + sitemap/robots/feed 文件健全。"""
     problems = []
@@ -655,6 +681,7 @@ CHECKS = [
     test_issue_url_tables_in_sync,
     test_uefa_rfef_conmebol_zh_aligned,
     test_data_conform_to_schemas,
+    test_xlinks_references_resolve,
     test_seo_discovery_layer,
     test_bat_file_gbk_encoded,
     test_internal_links_resolve,

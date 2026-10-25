@@ -46,6 +46,7 @@ LAWS_JSON = DATA / "laws.json"
 SCALE_JSON = DATA / "scale.json"
 UEFA_JSON = DATA / "uefa.json"
 RAP_JSON = DATA / "rap.json"  # UEFA RAP 各期索引（人工策展+脚本核对）
+UEFA_ZH_JSON = DATA / "uefa-zh.json"  # UEFA 中文译文层（与 UEFA_JSON 并存，勿互相覆写）
 RFEF_JSON = DATA / "rfef.json"  # RFEF《Criterios Arbitrales》（fetch_rfef.py 产物）
 RFEF_ZH_JSON = DATA / "rfef-zh.json"  # RFEF 中文译文层（与 RFEF_JSON 并存，勿互相覆写）
 PRO_JSON = DATA / "pro.json"  # 美国 PRO 评议周报索引（fetch_pro.py 产物）

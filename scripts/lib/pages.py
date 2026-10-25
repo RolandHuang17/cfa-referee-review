@@ -163,6 +163,13 @@ PAGES = [
         "changefreq": "weekly",
     },
     {
+        "file": "search.html",
+        "title": "全站搜索",
+        "desc": "一次搜遍三赛季 612 个判例、竞赛规则全文、104 例统一尺度场景与全部国际评议资料。",
+        "priority": "0.8",
+        "changefreq": "weekly",
+    },
+    {
         "file": "404.html",
         "title": "页面不存在",
         "desc": "页面不存在——回到裁判学习一站式平台首页。",

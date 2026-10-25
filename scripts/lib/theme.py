@@ -74,6 +74,7 @@ def js_icons():
                 "up",
                 "down",
                 "search",
+                "book",
                 "help",
                 "x",
                 "left",
@@ -116,6 +117,7 @@ def topbar(
             "工具",
             [
                 ("index.html", "首页", "home"),
+                ("search.html", "全站搜索", "search"),
                 ("rules.html", "竞赛规则", "book"),
                 ("scale.html", "统一尺度", "sliders"),
                 ("quiz.html", "考题模式", "quiz"),

@@ -242,13 +242,19 @@ def test_quiz_bank_pool():
             for s in json.loads((DATA / "laws.json").read_text(encoding="utf-8"))[
                 "sections"
             ]:
-                laws_text[s["id"]] = re.sub(r"\s+", "", re.sub(r"<[^>]+>", "", s["html"]))
-            for q in tq:
-                src = re.sub(r"\s+", "", q.get("src", "")).replace("（", "(").replace(
-                    "）", ")"
+                laws_text[s["id"]] = re.sub(
+                    r"\s+", "", re.sub(r"<[^>]+>", "", s["html"])
                 )
-                body = laws_text.get(q.get("law"), "").replace("（", "(").replace(
-                    "）", ")"
+            for q in tq:
+                src = (
+                    re.sub(r"\s+", "", q.get("src", ""))
+                    .replace("（", "(")
+                    .replace("）", ")")
+                )
+                body = (
+                    laws_text.get(q.get("law"), "")
+                    .replace("（", "(")
+                    .replace("）", ")")
                 )
                 frags = [f for f in re.split(r"……+", src) if f]
                 missing = [f for f in frags if f not in body]

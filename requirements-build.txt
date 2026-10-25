@@ -10,7 +10,7 @@
 #
 # 本文件是构建依赖的唯一权威源：CI 直接安装它，pyproject.toml 的 build extra 也
 # 通过 [tool.setuptools.dynamic] 读它，因此两条安装路径的版本永远不会漂移。
-pymupdf>=1.24
+pymupdf>=1.28.2
 opencc-python-reimplemented>=0.1.7
 # 测试运行器：CI 的 Verify 步骤跑 python -m pytest（test_integrity 裸跑不需要它，
 # 但 pytest 收集 tests/ 全量——本地也可只装上面两个依赖后裸跑 test_integrity）

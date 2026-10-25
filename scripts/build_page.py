@@ -27,6 +27,8 @@ SEASONS = {
         "issueDesc": "2026赛季第1—22期（赛季进行中，持续更新）",
         "favKey": "cfa2026.fav",
         "noteKey": "cfa2026.notes",
+        "seenKey": "cfa2026.seen",
+        "lastKey": "cfa2026.last",
     },
     "2025": {
         "out": "season-2025.html",
@@ -37,6 +39,8 @@ SEASONS = {
         "issueDesc": "2025赛季第1—32期（第1—23期原发布于赛事新闻栏目）",
         "favKey": "cfa2025.fav",
         "noteKey": "cfa2025.notes",
+        "seenKey": "cfa2025.seen",
+        "lastKey": "cfa2025.last",
     },
     "2024": {
         "out": "season-2024.html",
@@ -47,6 +51,8 @@ SEASONS = {
         "issueDesc": "2024赛季第1—27期",
         "favKey": "cfa2024.fav",
         "noteKey": "cfa2024.notes",
+        "seenKey": "cfa2024.seen",
+        "lastKey": "cfa2024.last",
     },
 }
 # comp 安全网归一（parse_issues 已修复，此处兜底）
@@ -175,6 +181,8 @@ def build_data(season):
             "season": season,
             "favKey": cfg["favKey"],
             "noteKey": cfg["noteKey"],
+            "seenKey": cfg["seenKey"],
+            "lastKey": cfg["lastKey"],
             "issueCount": cfg["issueCount"],
             "issueDesc": cfg["issueDesc"],
             "stats": cfg["stats"],
@@ -275,6 +283,13 @@ body.sb-off .sidebar{display:none}
 .prow .rv.bad{background:var(--red-bg);color:var(--red)}
 .prow .pmark{flex:none;display:inline-flex;color:var(--amber);gap:2px}
 .prow .pmark .ic{vertical-align:0}
+.prow .pmark .ic-seen{color:var(--green);display:inline-flex}
+.prow .pmark .ic-seen .ic{width:11px;height:11px}
+.resume{display:flex;align-items:center;gap:6px;margin:2px 0;padding:5px 12px;border:1px solid var(--brand);
+  border-radius:999px;background:var(--info-bg);color:var(--brand);font-size:12.5px;
+  font-weight:600;cursor:pointer;text-align:left;animation:fadeUp .4s var(--ease)}
+.resume:hover{background:var(--card)}
+.resume .ic{flex:none}
 .plist-empty{padding:48px 16px;text-align:center;color:var(--muted)}
 
 /* ---- 详情区 ---- */
@@ -474,7 +489,8 @@ __TOPBAR__
   <section class="plist" aria-label="判例列表">
     <div class="plist-head">
       <div class="iss" id="issueTitle"></div>
-      <div class="cnt">显示 <b id="shownCount">0</b> 例 · 点击行查看详情 · <span class="kbd">↑</span><span class="kbd">↓</span> 切换 · <span class="kbd">/</span> 搜索</div>
+      <button class="resume" id="resumeBtn" style="display:none"></button>
+      <div class="cnt">显示 <b id="shownCount">0</b> 例 · 已学 <b id="seenCount">0</b>/<span id="totalCount">0</span> · 点击行查看详情 · <span class="kbd">↑</span><span class="kbd">↓</span> 切换 · <span class="kbd">/</span> 搜索</div>
     </div>
     <div class="plist-rows" id="plistRows"></div>
   </section>
@@ -558,6 +574,7 @@ let HIDE = document.documentElement.dataset.hideans === "1";
 // ---------- 收藏与笔记（localStorage 持久化，键按赛季隔离） ----------
 const CFG = DATA.cfg;
 const FAV_KEY = CFG.favKey, NOTE_KEY = CFG.noteKey;
+const SEEN_KEY = CFG.seenKey, LAST_KEY = CFG.lastKey;
 const TAG_PRESETS = ["精选", "有疑问", "尺度标杆", "易错点", "课堂讨论"];
 let fav = {}, notes = {};
 try { fav = JSON.parse(localStorage.getItem(FAV_KEY) || "{}") || {}; } catch(_) { fav = {}; }
@@ -568,6 +585,37 @@ function persistFav() {
 }
 function isFav(seq) { return !!fav[seq]; }
 function hasNote(seq) { return !!(notes[seq] && notes[seq].text && notes[seq].text.trim()); }
+// ---------- 学习足迹：看过即记（cfa{季}.seen），供覆盖率/继续学习/首页统计 ----------
+let seen = {};
+try { seen = JSON.parse(localStorage.getItem(SEEN_KEY) || "{}") || {}; } catch(_) { seen = {}; }
+function isSeen(seq) { return !!seen[seq]; }
+function markSeen(seq) {
+  if (seen[seq]) { updateSeenUI(seq); return; }
+  seen[seq] = Date.now();
+  try { localStorage.setItem(SEEN_KEY, JSON.stringify(seen)); } catch(_) {}
+  updateSeenUI(seq);
+}
+function updateSeenUI(seq) {
+  const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
+  if (row && !row.querySelector(".ic-seen"))
+    row.insertAdjacentHTML("beforeend", `<span class="ic-seen">${IC.check}</span>`);
+  const n = Object.keys(seen).length;
+  const el = document.getElementById("seenCount");
+  if (el) el.textContent = n;
+  renderCats();
+}
+// 连续学习天数（跨页共享 cfa.streak：访问 season 页即记一天；quiz 出卷也记）
+function streakTouch() {
+  const d = new Date();
+  const today = d.toISOString().slice(0, 10);
+  const yesterday = new Date(d.getTime() - 86400000).toISOString().slice(0, 10);
+  let st = { last: "", days: 0 };
+  try { st = JSON.parse(localStorage.getItem("cfa.streak") || '{"last":"","days":0}') || st; } catch(_) {}
+  if (st.last === today) return;
+  st.days = st.last === yesterday ? (st.days || 0) + 1 : 1;
+  st.last = today;
+  try { localStorage.setItem("cfa.streak", JSON.stringify(st)); } catch(_) {}
+}
 function crest(team, h, mark) {
   const item = DATA.teams && DATA.teams[team];
   if (!item) return `<span class="team-badge" title="${esc(team)}：未登记">?</span>`;
@@ -597,11 +645,17 @@ const verCount = {all:DATA.cases.length, wrong:0, correct:0, pending:0};
 for (const c of DATA.cases) verCount[c.v]++;
 
 document.getElementById("btnStats").onclick = ()=>openModal("modalStats");
-document.getElementById("catList").innerHTML =
-  `<button class="cat-item on" data-cat=""><span class="nm">全部分类</span><b>${DATA.cases.length}</b></button>` +
+const catSeen = {};
+for (const s of Object.keys(seen)) { const c = bySeq[s]; if (c) catSeen[c.category] = (catSeen[c.category]||0)+1; }
+function renderCats(){
+  const cur = state.cat || "";
+  document.getElementById("catList").innerHTML =
+  `<button class="cat-item ${cur===""?"on":""}" data-cat=""><span class="nm">全部分类</span>` +
+  `<b>${Object.keys(seen).length}/${DATA.cases.length}</b></button>` +
   CATS.filter(k=>catCount[k.id]).map(k=>
-    `<button class="cat-item" data-cat="${k.id}"><span class="nm">${k.name}</span>` +
-    `<b>${catCount[k.id]}</b><small>错${catWrong[k.id]||0}</small></button>`).join("");
+    `<button class="cat-item ${cur===k.id?"on":""}" data-cat="${k.id}"><span class="nm">${k.name}</span>` +
+    `<b>${catSeen[k.id]||0}/${catCount[k.id]}</b><small>错${catWrong[k.id]||0}</small></button>`).join("");
+}
 document.getElementById("verList").innerHTML =
   `<button class="ver-item on" data-v=""><span class="dot" style="background:var(--muted)"></span><span class="nm">全部</span><b>${verCount.all}</b></button>` +
   `<button class="ver-item" data-v="wrong"><span class="dot wrong"></span>错漏判<b>${verCount.wrong}</b></button>` +
@@ -701,7 +755,7 @@ function renderList(){
         <span class="dot ${c.v}"></span>
         <span class="ptxt"><b>${crest(c.home,16,true)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16,true)}${esc(c.away)}</b>
         <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · <span class="rvn">${VN[c.v]}</span></i></span>
-        <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}</span>
+        <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}${seen[c.seq]?`<span class="ic-seen">${IC.check}</span>`:""}</span>
         ${varChip}</div>`;
     }).join("")).join("");
   const rowsEl = document.getElementById("plistRows");
@@ -967,6 +1021,9 @@ function select(seq, scrollRow=true){
   if (row && scrollRow) row.scrollIntoView({block:"nearest"});
   if (row) row.classList.add("sel");
   history.replaceState(null, "", "#case-"+seq);
+  // 学习足迹：看过即记 + 记录「上次学习」供继续入口
+  markSeen(seq);
+  try { localStorage.setItem(LAST_KEY, JSON.stringify({seq, ts: Date.now()})); } catch(_) {}
   // 详情内容淡入重触发（opacity-only，滚动容器上不用 transform 以免影响内部定位）
   const dsec = document.getElementById("detail");
   dsec.classList.remove("d-enter"); void dsec.offsetWidth; dsec.classList.add("d-enter");
@@ -1303,6 +1360,23 @@ const hasPen = t => (t||[]).includes("点球");
 
 // ---------- 初始化 ----------
 syncEmptyState();
+streakTouch();
+document.getElementById("totalCount").textContent = DATA.cases.length;
+document.getElementById("seenCount").textContent = Object.keys(seen).length;
+{ // 继续上次学习（无锚点深链时显示；从 localStorage 上次选中恢复）
+  try {
+    const last = JSON.parse(localStorage.getItem(LAST_KEY) || "null");
+    if (last && bySeq[last.seq] && !initialHashSeq && !location.hash){
+      const c = bySeq[last.seq];
+      const days = last.ts ? Math.floor((Date.now()-last.ts)/86400000) : 0;
+      const when = days===0 ? "今天" : days===1 ? "昨天" : `${days} 天前`;
+      const btn = document.getElementById("resumeBtn");
+      btn.innerHTML = `${IC.play} 继续上次学习 · ${esc(c.home||("第"+c.issue+"期"))}${c.away?(" vs "+esc(c.away)):""}（${when}）`;
+      btn.style.display = "";
+      btn.onclick = ()=>{ select(last.seq); btn.style.display = "none"; };
+    }
+  } catch(_) {}
+}
 { // 支持 #cat-<分类id> 深链（来自 rules 页「相关判例」反链 / 全站搜索页）
   const cm = location.hash.match(/^#cat-([\w-]+)$/);
   if (cm && CATS.some(k=>k.id===cm[1])){

@@ -51,6 +51,31 @@ def load_stats():
     }
 
 
+def build_today_pool():
+    """今日判例池：有视频且有认定原文的判例（与 quiz 判例池同口径），
+    每条只留链接与展示所需的最小字段，页面端按日期确定性轮换。"""
+    pool = []
+    for season in ("2026", "2025", "2024"):
+        d = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+        for c in d["cases"]:
+            if not (c.get("video_files") and (c.get("conclusion") or "").strip()):
+                continue
+            pool.append(
+                [
+                    season,
+                    c["seq"],
+                    c.get("comp", ""),
+                    c.get("round", ""),
+                    c.get("home", ""),
+                    c.get("away", ""),
+                    c["issue"],
+                    c["no"],
+                    c.get("category_name", ""),
+                ]
+            )
+    return pool
+
+
 def load_scale_stats():
     """统一尺度页数字从 data/scale.json 计算（场景/分组/视频=例数）。"""
     p = SCALE_JSON
@@ -216,6 +241,30 @@ HTML = r"""<!DOCTYPE html>
 .mp-switch button.on span{color:var(--on-brand);opacity:.82}
 .mp-desc{margin:0;font-size:12.5px;color:var(--muted);max-width:720px;text-align:center;line-height:1.7}
 
+/* 今日判例条（按日期确定性轮换，链接直达判例卡） */
+.today{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:-10px 0 26px;padding:12px 18px;
+  border:1px solid var(--brand);border-radius:var(--r-lg);background:var(--card);text-decoration:none;
+  animation:fadeUp .5s var(--ease) backwards;animation-delay:.06s}
+.today:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
+.today b{flex:none;padding:3px 11px;border-radius:999px;background:var(--brand-strong);
+  color:var(--on-brand);font-size:12.5px;letter-spacing:1px}
+.today .tc-m{color:var(--ink);font-size:14px;font-weight:600}
+.today .tc-go{margin-left:auto;color:var(--brand);font-size:13px;font-weight:600}
+
+/* 我的学习（本地汇总：足迹/连续天数/到期复习/收藏，无数据整卡隐藏） */
+.mystudy{margin:0 0 26px;padding:16px 20px;border:1px dashed var(--line);border-radius:var(--r-lg);
+  background:var(--card2)}
+.ms-h{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--ink2);
+  margin-bottom:10px;letter-spacing:.5px}
+.ms-h .ic{color:var(--brand)}
+.ms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
+.ms-grid a,.ms-cell{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px;
+  border-radius:var(--r-md);text-decoration:none}
+.ms-grid a{background:var(--card);border:1px solid var(--line);transition:.15s}
+.ms-grid a:hover{border-color:var(--brand);transform:translateY(-2px)}
+.ms-grid b{font-family:var(--font-display);font-size:24px;color:var(--brand);font-variant-numeric:tabular-nums}
+.ms-grid span{font-size:12px;color:var(--muted)}
+
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
 .ecard{position:relative;display:flex;flex-direction:column;text-decoration:none;
   background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
@@ -283,6 +332,8 @@ __TOPBAR__
     <p>按新裁判统一尺度教学重组的官方评议判例全集，配判罚视频、影响统计与最新版竞赛规则，全部内容可离线使用。</p>
     <div class="sub">数据来源：中国足球协会官网「裁判评议」栏目 · IFAB《足球竞赛规则》2026-27</div>  </section>
 
+  <a class="today" id="todayCase" href="#" style="display:none"></a>
+
   <section class="mode-pick">
     <div class="mp-label">浏览模式</div>
     <div class="mp-switch" role="group" aria-label="浏览模式切换">
@@ -290,6 +341,16 @@ __TOPBAR__
       <button type="button" id="modeLite" aria-pressed="false">轻量版<span>纯文字+官方链接 · 适合在线浏览</span></button>
     </div>
     <p class="mp-desc" id="modeDesc"></p>
+  </section>
+
+  <section class="mystudy" id="myStudy" style="display:none">
+    <div class="ms-h">__I_TARGET__ 我的学习</div>
+    <div class="ms-grid">
+      <a href="season-2026.html" id="msFoot"><b>0</b><span>已看判例</span></a>
+      <div class="ms-cell"><b id="msStreak">1</b><span>连续学习天数</span></div>
+      <a href="quiz.html" id="msDue"><b>0</b><span>到期复习</span></a>
+      <div class="ms-cell"><b id="msFav">0</b><span>收藏判例</span></div>
+    </div>
   </section>
 
   <section class="grid">
@@ -535,6 +596,43 @@ __TOPBAR__
   sync();
 })();
 </script>
+<script>
+// ---------- 今日判例（按日期确定性轮换）与「我的学习」汇总（localStorage 跨页读取） ----------
+(function(){
+  var POOL = __TODAY_POOL__;
+  var d = new Date();
+  var day = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
+  var it = POOL[day % POOL.length];
+  if (it){
+    var el = document.getElementById("todayCase");
+    var vs = it[5] ? (it[4] + " vs " + it[5]) : ("第" + it[6] + "期");
+    el.href = "season-" + it[0] + ".html#case-" + it[1];
+    el.innerHTML = "<b>今日判例</b><span class=\"tc-m\">" + it[2].replace("联赛","") + (it[3]||"") +
+      " · " + vs + " · " + it[8] + "</span><span class=\"tc-go\">去看视频做判断 →</span>";
+    el.style.display = "";
+  }
+  // 我的学习（任一有数据才显示）
+  function n(key){ try { return Object.keys(JSON.parse(localStorage.getItem(key) || "{}") || {}).length; } catch(_) { return 0; } }
+  var foot = n("cfa2026.seen") + n("cfa2025.seen") + n("cfa2024.seen");
+  var fav = n("cfa2026.fav") + n("cfa2025.fav") + n("cfa2024.fav");
+  var due = 0;
+  try {
+    var w = JSON.parse(localStorage.getItem("cfa.quiz.wrong") || "{}") || {};
+    var now = Date.now();
+    for (var k in w) if (!w[k].done && (w[k].due || 0) <= now) due++;
+  } catch(_) {}
+  var streak = 0;
+  try { streak = (JSON.parse(localStorage.getItem("cfa.streak") || "{}") || {}).days || 0; } catch(_) {}
+  if (foot || due || fav){
+    var box = document.getElementById("myStudy");
+    box.style.display = "";
+    document.querySelector("#msFoot b").textContent = foot;
+    document.getElementById("msStreak").textContent = Math.max(1, streak);
+    document.querySelector("#msDue b").textContent = due;
+    document.getElementById("msFav").textContent = fav;
+  }
+})();
+</script>
 </body>
 </html>
 """
@@ -558,6 +656,7 @@ def main():
     q_case = sum(1 for b in bank if b["t"] == "case")
     q_scale = sum(1 for b in bank if b["t"] == "scale")
     q_var = sum(1 for b in bank if b["t"] == "var")
+    today_pool = build_today_pool()
     tb = topbar(
         active="index.html",
         stats="stats-2026.html",
@@ -589,6 +688,12 @@ def main():
     }
     html = inject_theme(
         HTML.replace("__TOPBAR__", tb)
+        .replace(
+            "__TODAY_POOL__",
+            json.dumps(today_pool, ensure_ascii=False, separators=(",", ":")).replace(
+                "</", "<\\/"
+            ),
+        )
         .replace("__N26__", str(s["2026"]["n"]))
         .replace("__W26__", str(s["2026"]["wrong"]))
         .replace("__V26__", str(s["2026"]["videos"]))

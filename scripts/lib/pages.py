@@ -163,6 +163,13 @@ PAGES = [
         "changefreq": "weekly",
     },
     {
+        "file": "cheatsheet.html",
+        "title": "考点速查卡",
+        "desc": "考前一夜的八张速查卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步与重新开始方式；手机翻卡 + 可打印讲义。",
+        "priority": "0.8",
+        "changefreq": "monthly",
+    },
+    {
         "file": "search.html",
         "title": "全站搜索",
         "desc": "一次搜遍三赛季 612 个判例、竞赛规则全文、104 例统一尺度场景与全部国际评议资料。",

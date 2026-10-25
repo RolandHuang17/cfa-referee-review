@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>考点速查卡 · 裁判学习平台</title>
+<style>
+.cs-head{border-bottom:1px solid var(--line);background:var(--bg2)}
+.cs-head .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 16px}
+.cs-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:24px;letter-spacing:.4px}
+.cs-head .sub{color:var(--muted);font-size:13px;line-height:1.8}
+.cs-grid{max-width:1040px;margin:0 auto;padding:20px 16px 70px;display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.card3d{perspective:1200px;min-height:300px}
+.flip{position:relative;width:100%;height:100%;min-height:300px;cursor:pointer;
+  transition:transform .5s var(--ease);transform-style:preserve-3d}
+.card3d.flipped .flip{transform:rotateY(180deg)}
+.cface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:18px 20px;
+  display:flex;flex-direction:column;overflow:auto}
+.cface.back{transform:rotateY(180deg);border-color:var(--brand);background:var(--card2)}
+.cf-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
+.cf-ic{font-size:26px;flex:none}
+.cf-top h2{margin:0;font-family:var(--font-display);font-size:18.5px;flex:1}
+.cf-tag{font-size:12px;color:var(--brand);font-weight:600;margin:2px 0 10px}
+.cf-hint{margin-top:auto;padding-top:10px;font-size:11.5px;color:var(--faint);
+  border-top:1px dashed var(--line)}
+.cf-f li{margin:8px 0;font-size:13.8px;line-height:1.75;color:var(--ink)}
+.cf-f{padding-left:18px;margin:6px 0 4px}
+.cb-sec{margin-bottom:12px}
+.cb-sec h3{margin:0 0 5px;font-size:13px;color:var(--brand);letter-spacing:.5px}
+.cb-sec ul{margin:0;padding-left:16px}
+.cb-sec li{margin:4px 0;font-size:12.8px;line-height:1.7;color:var(--ink2)}
+@media print{
+  .cs-grid{display:block}
+  .card3d{min-height:0;page-break-inside:avoid;margin-bottom:14px;perspective:none}
+  .flip{transform:none !important;transition:none;min-height:0;display:flex;flex-direction:column}
+  .cface{position:static;backface-visibility:visible;transform:none !important;min-height:0;
+    border-radius:0;border:1px solid #999;background:#fff;overflow:visible}
+  .cface.back{border-top:none;margin-top:-1px}
+  .cf-hint{display:none}
+  body{background:#fff;color:#000}
+}
+</style>
+<meta name="description" content="考前一夜的八张速查卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步与重新开始方式；手机翻卡 + 可打印讲义。">
+<link rel="canonical" href="https://rolandhuang17.github.io/cfa-referee-review/cheatsheet.html">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="裁判学习一站式平台">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="考点速查卡">
+<meta property="og:description" content="考前一夜的八张速查卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步与重新开始方式；手机翻卡 + 可打印讲义。">
+<meta property="og:url" content="https://rolandhuang17.github.io/cfa-referee-review/cheatsheet.html">
+<meta name="twitter:card" content="summary">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20viewBox%3D%220%200%2024%2024%22%3E%3Cpath%20fill%3D%22%23b3573a%22%20stroke%3D%22%238a3f27%22%20stroke-width%3D%221%22%20d%3D%22M12%202l8%203.5V12c0%205-3.4%208.6-8%2010-4.6-1.4-8-5-8-10V5.5z%22%2F%3E%3Cpath%20fill%3D%22none%22%20stroke%3D%22%23f7f2e7%22%20stroke-width%3D%221.8%22%20stroke-linecap%3D%22round%22%20d%3D%22M9%2012l2%202%204-4%22%2F%3E%3C%2Fsvg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="alternate" type="application/atom+xml" title="裁判学习一站式平台·评议更新订阅" href="feed.xml">
+<style data-cfa-theme>
+/* ============================================================
+   裁判学习平台 · 全站设计系统 (唯一权威样式层)
+   风格: 暖纸色编辑排版 (Anthropic 式) —— 米白纸底/墨色文字/
+   衬线大标题/陶土色点缀/发丝线边框/平面卡片
+   - 深色为暖炭色, [data-theme="light"] 切换浅色纸面
+   - 本文件由 scripts/lib/theme.py 以 style 标签内联注入全部生成页 head
+   - 各 builder 的页面 style 块只允许写页面专属布局, 禁止重定义
+     :root 颜色 token / 顶栏 / 按钮 / 徽章等共享组件
+   ============================================================ */
+
+/* ---------- 设计 tokens ---------- */
+:root{
+  /* 主题色: 陶土(clay)为品牌色, 红/绿/黄为判定语义色 */
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:rgba(178,58,46,.09); --red-line:rgba(178,58,46,.32);
+  --green:#3e7b49; --green-bg:rgba(62,123,73,.1); --green-line:rgba(62,123,73,.32);
+  --amber:#946d1b; --amber-bg:rgba(148,109,27,.11); --amber-line:rgba(148,109,27,.34);
+  --info:#a3502b; --info-bg:rgba(163,80,43,.09); --info-line:rgba(163,80,43,.3);
+
+  /* 表面与文字 (暖炭深色) —— faint/muted 均经最差表面对比度核验 ≥4.5:1 (WCAG AA) */
+  --bg:#191813; --bg2:#201e18; --card:#242219; --card2:#2b2820;
+  --ink:#ece8dd; --ink2:#cfc9ba; --muted:#9c9585; --faint:#968f7e;
+  --line:#3a362c; --line2:#2e2b22;
+  --shadow:0 14px 40px rgba(10,9,6,.5);
+  --shadow-sm:0 2px 10px rgba(10,9,6,.35);
+
+  /* 顶栏 (与页面同底色 + 发丝线, 编辑风导航) */
+  --top-bg:#191813; --top-ink:#ece8dd; --top-muted:#9c9585;
+  --top-line:#3a362c; --top-chip:rgba(236,232,221,.07); --top-chip-on:rgba(224,139,98,.16);
+  --top-input-bg:#242219; --top-input-line:#3a362c;
+
+  /* 几何与字体 */
+  --r-sm:6px; --r-md:10px; --r-lg:13px;
+  --top-h:56px;
+  --font:"Segoe UI",system-ui,-apple-system,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Noto Sans SC",sans-serif;
+  --font-display:Georgia,"Times New Roman","Noto Serif SC","Source Han Serif SC","STZhongsong","STSong","SimSun",serif;
+
+  /* 动效 (克制编辑风: 半秒内、位移≤8px、只动 transform/opacity) */
+  --ease:cubic-bezier(.22,.61,.36,1); --ease-spring:cubic-bezier(.34,1.4,.64,1);
+  --t-fast:150ms; --t-med:260ms;
+}
+[data-theme="light"]{
+  --brand:#a3502b; --brand-strong:#8f401f; --on-brand:#fdf6ef;
+  --red:#b23a2e; --red-bg:#f7e8e2; --red-line:#e6c3b6;
+  --green:#3e7b49; --green-bg:#e8f0e4; --green-line:#c3d6be;
+  --amber:#946d1b; --amber-bg:#f5edda; --amber-line:#e2d3a4;
+  --info:#a3502b; --info-bg:#f4e7dd; --info-line:#e3c8b2;
+
+  --bg:#f3f1ea; --bg2:#eceade; --card:#fbfaf5; --card2:#f1eee3;
+  --ink:#211e1a; --ink2:#46423a; --muted:#6e695b; --faint:#656054;
+  --line:#ddd8ca; --line2:#e9e5d9;
+  --shadow:0 14px 40px rgba(48,42,30,.12);
+  --shadow-sm:0 1px 4px rgba(48,42,30,.06);
+
+  --top-bg:#f3f1ea; --top-ink:#211e1a; --top-muted:#6e695b;
+  --top-line:#ddd8ca; --top-chip:rgba(33,30,26,.05); --top-chip-on:rgba(163,80,43,.12);
+  --top-input-bg:#fbfaf5; --top-input-line:#cfc9b8;
+}
+
+/* ---------- 基础 ---------- */
+*{box-sizing:border-box}
+html{background:var(--bg);color-scheme:dark}
+[data-theme="light"]{color-scheme:light}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
+  font-size:14.5px;line-height:1.65;
+  -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
+button,a,input,select,textarea{font:inherit;color:inherit}
+a{color:var(--brand)}
+::selection{background:rgba(163,80,43,.25)}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
+:focus:not(:focus-visible){outline:none}
+.skip-link{position:absolute;left:-999px;top:0;z-index:200;background:var(--brand);
+  color:var(--on-brand);padding:8px 14px;border-radius:0 0 8px 0}
+.skip-link:focus{left:0}
+h1,h2{font-variant-numeric:tabular-nums}
+
+/* 滚动条 */
+*{scrollbar-width:thin;scrollbar-color:var(--line) transparent}
+*::-webkit-scrollbar{width:9px;height:9px}
+*::-webkit-scrollbar-thumb{background:var(--line);border-radius:8px;border:2px solid transparent;background-clip:content-box}
+*::-webkit-scrollbar-track{background:transparent}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important;scroll-behavior:auto!important}}
+
+/* ---------- 图标 ---------- */
+.ic{vertical-align:-2.5px;flex:none}
+.ic.f{fill:currentColor;stroke:none}
+
+/* ---------- 顶栏(全站统一) ---------- */
+.topbar{height:var(--top-h);display:flex;align-items:center;gap:14px;padding:0 16px;
+  background:var(--top-bg);color:var(--top-ink);border-bottom:1px solid var(--top-line);
+  position:sticky;top:0;z-index:60}
+.topbar .brand{display:flex;align-items:center;gap:9px;text-decoration:none;
+  color:var(--top-ink);white-space:nowrap;min-width:0}
+.topbar .brand .ic{color:var(--brand)}
+.topbar .brand b{font-family:var(--font-display);font-size:16.5px;letter-spacing:.4px;font-weight:700}
+.topbar .brand .brand-sub{font-size:11.5px;color:var(--top-muted);padding:1px 9px;
+  border:1px solid var(--top-line);border-radius:999px;white-space:nowrap}
+.topbar .nav{display:flex;align-items:center;gap:4px;min-width:0}
+/* 分组下拉（赛季/工具/国际评议）：点击展开，Esc/外点关闭；≤1080 收进汉堡抽屉 */
+.topbar .navgrp{position:relative;display:flex}
+.topbar .grp-btn .ic{transition:transform var(--t-fast) var(--ease);margin-left:2px}
+.topbar .navgrp.open .grp-btn .ic{transform:rotate(180deg)}
+.topbar .navgrp.cur .grp-btn{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+.topbar .navpop{position:absolute;top:calc(100% + 8px);left:0;min-width:196px;display:none;
+  flex-direction:column;gap:1px;padding:6px;background:var(--card);border:1px solid var(--line);
+  border-radius:var(--r-md);box-shadow:var(--shadow);z-index:95}
+.topbar .navgrp.open .navpop{display:flex;animation:popIn .16s var(--ease)}
+.topbar .navpop .tbtn{justify-content:flex-start;white-space:nowrap}
+.topbar .navpop .tbtn.cur{box-shadow:none;background:var(--top-chip-on);color:var(--brand);font-weight:600}
+/* 汉堡按钮与全量导航抽屉（≤1080 显示） */
+#btnNav{display:none}
+.navdrawer{position:fixed;left:0;right:0;top:var(--top-h);bottom:0;background:var(--bg2);
+  z-index:85;overflow-y:auto;padding:14px 14px 34px;display:none;box-shadow:var(--shadow)}
+body.nav-open .navdrawer{display:block;animation:fadeIn .16s var(--ease)}
+.navdrawer .navd-h{font-size:11px;font-weight:700;letter-spacing:2px;color:var(--muted);margin:18px 4px 6px}
+.navdrawer .navd-h:first-child{margin-top:2px}
+.navdrawer .navd-i{display:flex;align-items:center;gap:11px;padding:10px 12px;border-radius:var(--r-sm);
+  text-decoration:none;color:var(--ink2);font-size:14.5px}
+.navdrawer .navd-i .ic{color:var(--brand);flex:none}
+.navdrawer .navd-i:hover{background:var(--card2);color:var(--ink)}
+.navdrawer .navd-i.cur{background:var(--info-bg);color:var(--brand);font-weight:600}
+.topbar .top-right{margin-left:auto;display:flex;align-items:center;gap:8px;min-width:0}
+.topbar .tbtn{display:inline-flex;align-items:center;gap:6px;padding:6px 8px;
+  border:1px solid transparent;border-radius:var(--r-sm);background:none;
+  color:var(--top-muted);font-size:13.5px;text-decoration:none;cursor:pointer;
+  white-space:nowrap;transition:.15s}
+.topbar .tbtn:hover{background:var(--top-chip);color:var(--top-ink)}
+.topbar .tbtn.cur{color:var(--top-ink);font-weight:600;box-shadow:inset 0 -2px 0 var(--brand)}
+/* 顶栏分三组下拉（15 页）：中等宽度收紧内边距与搜索框即可放下，不再需要藏图标续命 */
+@media (max-width:1180px){
+  .topbar{gap:8px}
+  .topbar .tbtn{padding:6px 7px;font-size:12.5px}
+  .topbar input[type=search]{min-width:96px}
+  .topbar .brand .brand-sub{display:none}
+}
+.topbar input[type=search]{height:34px;min-width:130px;padding:0 12px 0 34px;
+  border:1px solid var(--top-input-line);border-radius:var(--r-sm);
+  background:var(--top-input-bg);color:var(--ink);font-size:13.5px}
+.topbar .search-wrap{position:relative;display:flex;align-items:center;flex:1;max-width:480px;min-width:120px}
+.topbar .search-wrap .ic{position:absolute;left:10px;color:var(--top-muted);pointer-events:none}
+
+/* 主题切换按钮: 图标随主题互换 */
+#btnTheme .when-light{display:none}
+[data-theme="light"] #btnTheme .when-dark{display:none}
+[data-theme="light"] #btnTheme .when-light{display:inline-flex}
+
+/* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+  box-shadow:inset 0 0 0 1px var(--brand)}
+
+/* ---------- 通用组件 ---------- */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;
+  padding:7px 14px;border:1px solid var(--line);border-radius:var(--r-sm);
+  background:var(--card);color:var(--ink2);font-size:13.5px;cursor:pointer;
+  white-space:nowrap;transition:.15s;text-decoration:none}
+.btn:hover{border-color:var(--ink);color:var(--ink)}
+.btn.primary{background:var(--ink);border-color:var(--ink);color:var(--bg);font-weight:600}
+.btn.primary:hover{opacity:.88;color:var(--bg)}
+.btn.iconbtn{padding:7px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  box-shadow:none}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:4px 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink2);font-size:12.5px;cursor:pointer;white-space:nowrap;transition:.15s}
+.chip:hover{border-color:var(--brand);color:var(--brand)}
+.chip.on{background:var(--info-bg);border-color:var(--brand);color:var(--brand);font-weight:600}
+.chip b{font-weight:600;font-size:11.5px;color:var(--muted)}
+.chip.on b{color:var(--brand)}
+
+/* 判定徽章 */
+.badge{display:inline-flex;align-items:center;gap:5px;padding:2.5px 11px;
+  border-radius:999px;font-size:12.5px;font-weight:600;white-space:nowrap}
+.badge.wrong{background:var(--red-bg);color:var(--red);border:1px solid var(--red-line)}
+.badge.correct{background:var(--green-bg);color:var(--green);border:1px solid var(--green-line)}
+.badge.pending{background:var(--amber-bg);color:var(--amber);border:1px solid var(--amber-line)}
+.badge.info{background:var(--info-bg);color:var(--info);border:1px solid var(--info-line);font-weight:500}
+.badge.wrong,.badge.correct,.badge.pending,.badge.info{letter-spacing:.3px}
+
+/* 队徽 (跨页共用, JS 注入) */
+.crest{width:auto;border-radius:3px;vertical-align:-3px;margin-right:4px;background:#fff}
+.team-dot{display:inline-block;border-radius:3px;vertical-align:-3px;margin-right:4px;flex:none}
+.team-badge{display:inline-flex;align-items:center;justify-content:center;
+  border-radius:4px;margin-right:4px;vertical-align:-4px;font-size:8px;font-weight:700;
+  line-height:1;color:var(--badge-fg,#0b4c8c);background:var(--badge-bg,#e9f2fb)}
+.dot{width:9px;height:9px;border-radius:50%;flex:none}
+.dot.wrong{background:var(--red)}.dot.correct{background:var(--green)}.dot.pending{background:var(--amber)}
+.kbd{display:inline-block;font-size:11px;color:var(--muted);border:1px solid var(--line);
+  border-bottom-width:2px;border-radius:4px;padding:0 5px;margin:0 2px;line-height:1.5}
+
+/* ---------- 动效原语 (全站共享; 入场动画一律 backwards 填充, 结束后不锁定 hover transform) ---------- */
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+@keyframes popIn{from{opacity:0;transform:scale(.96) translateY(4px)}to{opacity:1;transform:none}}
+@keyframes shake{10%,90%{transform:translateX(-2px)}20%,80%{transform:translateX(3px)}30%,50%,70%{transform:translateX(-4px)}40%,60%{transform:translateX(4px)}}
+@keyframes pulseOk{0%{box-shadow:0 0 0 0 rgba(62,123,73,.35)}70%{box-shadow:0 0 0 9px rgba(62,123,73,0)}100%{box-shadow:0 0 0 0 rgba(62,123,73,0)}}
+@keyframes optPop{from{transform:scale(.94)}to{transform:scale(1)}}
+.btn:active,.chip:active{transform:scale(.97)}
+
+/* ---------- 弹层 ---------- */
+.modal-mask{position:fixed;inset:0;background:rgba(20,17,12,.55);backdrop-filter:blur(3px);
+  z-index:90;display:none;align-items:flex-start;justify-content:center;overflow-y:auto;padding:44px 16px}
+.modal-mask.open{display:flex;animation:fadeIn var(--t-med) var(--ease)}
+.modal{background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
+  max-width:980px;width:100%;padding:22px 26px;box-shadow:var(--shadow)}
+.modal-mask.open .modal{animation:popIn var(--t-med) var(--ease)}
+.modal h3{margin:0 0 14px;font-size:17px;font-family:var(--font-display)}
+.modal .close{float:right;border:1px solid var(--line);background:var(--card2);color:var(--muted);
+  border-radius:var(--r-sm);padding:4px 10px;cursor:pointer;font-size:12.5px}
+.modal .close:hover{color:var(--ink);border-color:var(--muted)}
+
+/* ---------- 通用响应式辅助 ---------- */
+@media (max-width:1080px){
+  .topbar .nav{display:none}   /* 三组下拉收进汉堡抽屉 */
+  #btnNav{display:inline-flex}
+}
+@media (max-width:760px){
+  .topbar{gap:6px;padding:0 10px;overflow-x:auto}  /* 窄屏控件多，顶栏可横滑兜底，防挤压破版 */
+  .topbar .brand{overflow:hidden;max-width:32vw}
+  .topbar .brand b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .topbar .brand .brand-sub{display:none}
+  /* 只隐右侧控件的文字标签；分组按钮（赛季/工具/国际评议）文字保留 */
+  .topbar .top-right .tbtn span{display:none}
+  .topbar .tbtn{padding:6px 8px}
+  .topbar .search-wrap{min-width:64px;flex:0 1 auto}
+  .topbar input[type=search]{min-width:64px}
+}
+
+/* ---------- 视频快捷键浮动提示（season/quiz 共用） ---------- */
+.vkey-tip{position:absolute;right:10px;top:10px;background:rgba(20,17,12,.75);color:#fff;
+  border-radius:8px;padding:4px 11px;font-size:12.5px;opacity:0;pointer-events:none;
+  transition:opacity .18s;z-index:2}
+.vkey-tip.on{opacity:1}
+
+/* ---------- 打印：正文可直接出讲义（隐藏导航/列表/视频，黑字白底） ---------- */
+@media print{
+  .topbar,.sidebar,.plist,.search-wrap,.vkey-tip,.top-btn,.navdrawer,.skip-link,
+  .btn,.chip,.vsw-row,.src-actions,.vfail-tip,.ans-gate,.d-nav,.favbtn,.favtags,
+  .notewrap,.modal-mask,.qvideo,video,.qbtns,.kbd-hint,.rprog-wrap{display:none!important}
+  :root,[data-theme="light"],html[data-theme="dark"]{
+    --bg:#fff;--bg2:#fff;--card:#fff;--card2:#fff;--ink:#000;--ink2:#222;
+    --muted:#444;--faint:#555;--line:#bbb;--line2:#ccc;--shadow:none;--shadow-sm:none}
+  html{background:#fff}
+  body{background:#fff;color:#000;font-size:12pt}
+  .workspace,.layout{display:block!important}
+  .detail,.detail-empty,#main,#content{display:block!important;overflow:visible!important;
+    height:auto!important;max-width:100%!important;padding:0!important}
+  .d-card,.ccard,.ecard,.teamcard,.panel{box-shadow:none!important;border:none!important;
+    max-width:100%!important;break-inside:avoid}
+  .detail-empty{display:none!important}
+  a{color:#000;text-decoration:none}
+  .dot{border:1px solid #999}
+}
+
+</style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'}catch(e){}</script></head>
+<body>
+<header class="topbar"><button class="tbtn" id="btnNav" title="站点导航" aria-label="打开站点导航"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg></button><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">考点速查</span></a><nav class="nav" aria-label="站点导航"><div class="navgrp"><button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false"><span>赛季</span><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="navpop" role="menu"><a class="tbtn" role="menuitem" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026赛季评议</span></a><a class="tbtn" role="menuitem" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025赛季评议</span></a><a class="tbtn" role="menuitem" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024赛季评议</span></a><a class="tbtn" role="menuitem" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a></div></div><div class="navgrp cur"><button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false"><span>工具</span><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="navpop" role="menu"><a class="tbtn" role="menuitem" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" role="menuitem" href="search.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>全站搜索</span></a><a class="tbtn" role="menuitem" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" role="menuitem" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn cur" role="menuitem" href="cheatsheet.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>考点速查卡</span></a><a class="tbtn" role="menuitem" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题模式</span></a></div></div><div class="navgrp"><button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false"><span>国际评议</span><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="navpop" role="menu"><a class="tbtn" role="menuitem" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA 判例库</span></a><a class="tbtn" role="menuitem" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>UEFA RAP</span></a><a class="tbtn" role="menuitem" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>西班牙 RFEF</span></a><a class="tbtn" role="menuitem" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国 PRO</span></a><a class="tbtn" role="menuitem" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美 CONMEBOL</span></a><a class="tbtn" role="menuitem" href="weekly.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg><span>全球周更节目</span></a><a class="tbtn" role="menuitem" href="ifab.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>IFAB 协议中译</span></a><a class="tbtn" role="menuitem" href="hns.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>克罗地亚 HNS</span></a><a class="tbtn" role="menuitem" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>全球资源导航</span></a></div></div></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header><div class="navdrawer" id="navDrawer" aria-label="全站导航"><div class="navd-h">赛季</div><a class="navd-i" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026赛季评议</span></a><a class="navd-i" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025赛季评议</span></a><a class="navd-i" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024赛季评议</span></a><a class="navd-i" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><div class="navd-h">工具</div><a class="navd-i" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="navd-i" href="search.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>全站搜索</span></a><a class="navd-i" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="navd-i" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="navd-i cur" href="cheatsheet.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>考点速查卡</span></a><a class="navd-i" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题模式</span></a><div class="navd-h">国际评议</div><a class="navd-i" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA 判例库</span></a><a class="navd-i" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>UEFA RAP</span></a><a class="navd-i" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>西班牙 RFEF</span></a><a class="navd-i" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国 PRO</span></a><a class="navd-i" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美 CONMEBOL</span></a><a class="navd-i" href="weekly.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg><span>全球周更节目</span></a><a class="navd-i" href="ifab.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>IFAB 协议中译</span></a><a class="navd-i" href="hns.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>克罗地亚 HNS</span></a><a class="navd-i" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>全球资源导航</span></a></div>
+<div class="cs-head"><div class="wrap">
+  <h1>考点速查卡</h1>
+  <div class="sub">考前一夜的八张卡：手球考量链 / 犯规三档 / DOGSO·SPA / VAR 介入 / 红黄牌速查 / 点球程序 / 越位三步 / 重新开始方式。<b>点击卡片翻面看细则</b>；打印即得单页讲义（全部展开）。条文依据《足球竞赛规则 2026/27》简体中文版（<a href="rules.html">规则全文</a>），评议口径提示提炼自三赛季评议。</div>
+</div></div>
+<div class="cs-grid" id="csGrid"></div>
+<script>
+const CARDS = [{"id":"handball","icon":"✋","title":"手球判罚考量","tagline":"腋窝为界 · 两个犯规条件 · 两种进球无效","front":["肩臂分界线 = 腋窝","犯规条件①：蓄意用手/臂触球（手移向球）","犯规条件②：身体不自然扩大时触球","意外触球后立即射门得分 → 进球无效","守门员禁区外手球限制同其他球员"],"back":[{"h":"判犯规","items":["并非每次球碰手都犯规；两个条件满足其一即犯规","手/臂位置非身体动作结果或不能证实是身体动作所致 → 视为身体不自然扩大"]},{"h":"与进球相关（即使意外）","items":["球直接从手/臂送入对方球门 → 无效","手/臂触球后立即射门入对方球门 → 无效"]},{"h":"守门员特例（己方罚球区内）","items":["队友蓄意脚踢回传 / 界外球直接掷回，用手接 → 间接任意球","放球后未经他人触球再用手触球 → 间接任意球","用手持球超过八秒才放出 → 判对方角球（最后五秒举手示意倒计时）"]},{"h":"评议口径提示","items":["判罚考量链：触球点是否腋窝以下 → 手臂是否不自然扩大/扬起 → 距离与反应时间 → 是否直接导致进球/进球机会","紧贴身体、被动被球击中通常不判；张开扬臂扩大防守面积通常判罚"]}]},{"id":"force","icon":"⚖","title":"犯规程度三档","tagline":"不小心无处分 · 鲁莽黄牌 · 过分力量红牌","front":["不小心 → 无须纪律处分","鲁莽（不顾及对方危害）→ 黄牌","使用过分力量（伤害危及对方）→ 红牌","不危及对方安全的剪刀脚/倒挂 → 允许"],"back":[{"h":"三档定义（第12章原文）","items":["不小心：没有事前专注或事先考虑下与对方争夺球","鲁莽：争夺球时没有顾及对方球员的危害或后果","使用过分力量：动作力量超出需要及/或伤害和危及对方球员"]},{"h":"直接任意球犯规（身体接触类）","items":["冲撞 / 跳向 / 踢或意图踢 / 推 / 击打或意图击打（含用头顶撞）/ 拦截或冲击 / 绊倒或意图绊倒","另有：手球、拉扯、有身体接触的阻碍、咬或吐唾沫、持物触球"]},{"h":"间接任意球（无接触/程序类）","items":["危险动作 / 无接触的阻碍 / 言语不满 / 阻挠守门员放球 / 诡计回传门将 / 守门员禁区内的二次触球与回传"]}]},{"id":"dogso","icon":"🚫","title":"DOGSO 与 SPA","tagline":"破坏机会的纪律处分四情形","front":["DOGSO（破坏明显进球机会）→ 红牌","例外：点球 + 意图争夺球的犯规 → 黄牌","例外：点球 + 非蓄意手球 → 黄牌","SPA（干扰/阻止明显进攻机会）→ 黄牌"],"back":[{"h":"须黄牌的欠缺体育精神情形（与机会相关）","items":["破坏对方进球/明显进球机会，且被判点球、属非蓄意手球","意图争夺球犯规破坏明显进球机会且被判点球","手球或犯规干扰/阻止明显进攻机会（点球+争夺球例外）","蓄意用手触球取得进球（无论是否成功）"]},{"h":"有利原则红线","items":["严重犯规、凶暴行为、第二次黄牌：除非当时有明显进球机会，否则不应运用有利","DOGSO 运用有利后非犯规方进球 → 不再执行纪律处分；未进球 → 黄牌（欠缺体育精神）","SPA 运用有利 → 不需要补黄牌"]}]},{"id":"var","icon":"📺","title":"VAR 可介入情形","tagline":"四大类 · 覆检不设时限 · 重开后原则不可覆检","front":["覆检原则：准确度比速度重要，不设时间限制","覆检中裁判员必须保持「可见」","比赛重新开始后不可覆检","例外：认错球员身份 / 暴力行为类红牌"],"back":[{"h":"可介入的判罚类别","items":["进球（及进球前的进攻过程犯规/越位/手球）","罚球点球 / 罚球点球未判","直接红牌（严重犯规、暴力行为、吐唾沫等）","错误认定球员身份（警告/罚错人）"]},{"h":"覆检后纪律处分","items":["原决定被改变后，此前已作出的纪律处分不可取消","例外：因干扰/阻止明显进攻机会或破坏明显进球机会而出示的黄牌/红牌"]},{"h":"场地要求","items":["必须有一个视像控制室（VOR）及最少一个裁判员覆检区域（RRA）"]}]},{"id":"cards","icon":"🟨","title":"红黄牌速查","tagline":"应警告的常见情形（第12章）","front":["拖延重新开始比赛","用言语或行动表示不满","未得裁判员准许擅自进入/再次进入/离开场地","定位球时未退离规定距离","屡次触犯规则（无特定次数）","欠缺体育精神（含假摔/伪装行为）"],"back":[{"h":"欠缺体育精神的典型","items":["试图欺骗裁判员：假装受伤或假装被侵犯（假摔）","比赛中未经准许与守门员互换位置","蓄意用手触球取得进球（无论成败）","诡计回传门将（头/胸/膝）逃避规则","得到准许离场途中触球 / 场内划未认可记号"]},{"h":"红牌罚令出场（球员）","items":["严重犯规 / 暴力行为（凶暴行为）","咬人或向任何人吐唾沫","破坏明显进球机会（DOGSO，点球例外见速查卡③）","使用冒犯性、侮辱性或辱骂性言语/举动","同一场比赛第二次被黄牌警告"]},{"h":"两项分别需警告的犯规（即使时间接近）","items":["应出示两个黄牌（随后红牌罚令出场），不能合并为一张"]}]},{"id":"penalty","icon":"⚽","title":"罚球点球程序","tagline":"放定 · 九一五 · 点后区外 · 信号后必完成","front":["球：放定于罚球点，一部分触及罚球点中央","其他球员：距点 ≥9.15 米、在点之后、罚球区外、场内","裁判员发出讯号后，该次点球必须完成","判罚条件：比赛进行中，己方罚球区内应判直接任意球的犯规"],"back":[{"h":"程序要点","items":["门柱、横梁和球门网必须保持静止状态","主射者与守方守门员之外的所有球员须在合规位置后方可执行","防守方拉扯进攻球员从区外持续到区内 → 判点球（而非区外任意球）"]},{"h":"点球决胜相关","items":["半场/加时结束时，比赛时间因执行点球延长至完成","点球向前移动中球破损且未触及任何球员/门柱/横梁 → 重射"]}]},{"id":"offside","icon":"🚩","title":"越位判定三步","tagline":"位置 → 干扰 → 例外","front":["第一步·位置：头/身/脚比对方第二名最后球员及球更接近对方门线","手臂与手不计入（腋窝为肩臂分界）","与倒数第二名球员平行 → 不越位；半场内接球点须在对方场区","第二步·干扰：接球/干扰对方/取得利益才构成犯规"],"back":[{"h":"构成越位犯规的三类参与","items":["干扰比赛：接应或接触队友踢出/触及的传球","干扰对方：遮挡视线、与其争球、近距离试图参与并明显影响、明确动作明显影响其处理球能力","取得利益：球从门柱/横梁/官员/对方反弹或被对方蓄意救球弹回"]},{"h":"不判越位的例外","items":["接获对方球员蓄意处理球（传/控/解围，含蓄意手球）——蓄意救球除外","开球门球、界外球、角球直接接球不判（对应重新开始方式）","身处越位位置本身不是犯规"]},{"h":"判罚","items":["越位犯规 → 对方在犯规发生地点获间接任意球"]}]},{"id":"restart","icon":"🔄","title":"重新开始方式速查","tagline":"能不能直接得分 · 距离数字一页记","front":["中圈开球：可直射对方门（入己门→对方角球）","球门球：可直射对方门（入己门→对方角球）","界外球：不可直接得分（入对方门→球门球；入己门→角球）","坠球：罚球区内给守方门将；他人须离 4 米；球触地即开始"],"back":[{"h":"距离与时间数字","items":["中圈开球：对方离球 9.15 米；全体在本方半场","界外球：对方距掷球点 ≥2 米；拖延 5 秒未掷 → 判给对方","球门球：对方留罚球区外直至开始；5 秒未开出 → 对方角球","守门员持球 8 秒未放出 → 对方角球","任意球：对方退 9.15 米；攻方距守方 3+ 人墙 <1 米 → 攻方间接任意球"]},{"h":"坠球规则","items":["球在罚球区内 → 给守方门将；在区外 → 给将获/保有控球权一方","在暂停时球所在位置执行；球击中官员/外物 → 在干扰位置执行","球触及地面比赛即开始"]},{"h":"球出界即停（第9章）","items":["整个球在地面或空中完全越过球门线或边线，或比赛被裁判员暂停","球触官员后留在场内致明显进攻/进球/控球权改变 → 坠球"]}]}];
+document.getElementById("csGrid").innerHTML = CARDS.map((c, i) => `
+  <div class="card3d" style="--i:${i}">
+    <div class="flip">
+      <div class="cface front">
+        <div class="cf-top"><span class="cf-ic">${c.icon}</span><h2>${c.title}</h2></div>
+        <div class="cf-tag">${c.tagline}</div>
+        <ul class="cf-f">${c.front.map(p => `<li>${p}</li>`).join("")}</ul>
+        <div class="cf-hint">点击翻面看细则与出处 →</div>
+      </div>
+      <div class="cface back">
+        ${c.back.map(s => `<div class="cb-sec"><h3>${s.h}</h3><ul>${s.items.map(t => `<li>${t}</li>`).join("")}</ul></div>`).join("")}
+        <div class="cf-hint">← 点击翻回速记面</div>
+      </div>
+    </div>
+  </div>`).join("");
+document.getElementById("csGrid").addEventListener("click", e => {
+  const card = e.target.closest(".card3d");
+  if (card) card.classList.toggle("flipped");
+});
+</script>
+<script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.grp-btn');document.querySelectorAll('.navgrp').forEach(function(g){var open=!!t&&g===t.parentElement&&!g.classList.contains('open');g.classList.toggle('open',open);var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});var nb=e.target.closest&&e.target.closest('#btnNav');if(nb){document.body.classList.toggle('nav-open');return;}if(document.body.classList.contains('nav-open')&&!(e.target.closest&&e.target.closest('.navdrawer')))document.body.classList.remove('nav-open');if(e.target.closest&&e.target.closest('.navdrawer a'))document.body.classList.remove('nav-open');});document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;document.querySelectorAll('.navgrp.open').forEach(function(g){g.classList.remove('open');var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});document.body.classList.remove('nav-open');});</script><script>if(/^https?:$/.test(location.protocol)&&'serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js')}catch(e){}}</script></body>
+</html>

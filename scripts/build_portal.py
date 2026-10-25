@@ -529,6 +529,16 @@ __TOPBAR__
       </div>
       <div class="go">开始搜索 __I_RIGHT__</div>
     </a>
+    <a class="ecard c-rules" style="--i:16" href="cheatsheet.html">
+      <div class="icon">__I_FILE__</div>
+      <h2>考点速查卡</h2>
+      <p class="desc">考前一夜的八张卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步、重新开始方式——手机翻卡，打印即讲义。</p>
+      <div class="nums">
+        <div><b>8</b><span>速查卡</span></div>
+        <div><b>A4</b><span>打印讲义</span></div>
+      </div>
+      <div class="go">翻开速查卡 __I_RIGHT__</div>
+    </a>
   </section>
 
   <section class="steps">

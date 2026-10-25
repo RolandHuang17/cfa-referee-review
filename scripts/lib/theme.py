@@ -120,6 +120,7 @@ def topbar(
                 ("search.html", "全站搜索", "search"),
                 ("rules.html", "竞赛规则", "book"),
                 ("scale.html", "统一尺度", "sliders"),
+                ("cheatsheet.html", "考点速查卡", "file-text"),
                 ("quiz.html", "考题模式", "quiz"),
             ],
         ),

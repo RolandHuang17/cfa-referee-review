@@ -102,6 +102,20 @@ def build_docs():
                     )
                 ),
             )
+    # 考点速查卡（卡面 + 翻面全文可搜）
+    cheatsheet = _read(DATA / "cheatsheet.json")
+    for card in cheatsheet.get("cards", []):
+        parts = list(card.get("front", []))
+        for sec in card.get("back", []):
+            parts.append(sec.get("h", ""))
+            parts.extend(sec.get("items", []))
+        add(
+            "law",
+            "考点速查",
+            f"速查卡 · {card['title']}",
+            "cheatsheet.html",
+            " ".join(parts),
+        )
     # 竞赛规则
     for s in _load_laws():
         add(

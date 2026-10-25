@@ -86,6 +86,12 @@ def filter_js(card_sel, filter_attr="data-kinds", match="substr", search=False,
         wire = ('  var si=document.getElementById("q");\n'
                 '  if(si)["input","search"].forEach(function(ev){\n'
                 '    si.addEventListener(ev,function(){q=(si.value||"").trim().toLowerCase();apply();});\n'
+                '  });\n'
+                '  // "/" 聚焦搜索（与 season/rules 页统一；输入控件内不拦截）\n'
+                '  document.addEventListener("keydown",function(e){\n'
+                '    var t=(e.target.tagName||"").toLowerCase();\n'
+                '    if(t==="input"||t==="textarea"||t==="select")return;\n'
+                '    if(e.key==="/"){e.preventDefault();var el=document.getElementById("q");if(el)el.focus();}\n'
                 '  });\n')
         var_decl = 'var cur="all", q=""'
     else:

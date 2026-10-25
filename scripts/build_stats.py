@@ -495,7 +495,7 @@ function renderTeam(name, t, idx){
     ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
     : `<span class="team-dot" style="width:22px;height:22px;background:${(team&&team.bg)||'#e9f2fb'};border:1px solid ${(team&&team.fg)||'#0b4c8c'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
   return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'};--i:${Math.min(idx||0,12)}">
-    <div class="thead" onclick="this.parentElement.classList.toggle('open')">
+    <div class="thead" role="button" tabindex="0" aria-label="展开或收起该队明细">
       <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
       <span class="tot">错漏判 ${t.cases} 例 · ${t.n_matches} 场</span>
@@ -545,6 +545,17 @@ document.querySelectorAll(".lg-chip").forEach(b=>{
 });
 
 render();
+
+// 球队卡展开/收起（委托 + 键盘可达：Enter/空格 与点击等效）
+document.getElementById("teamList").addEventListener("click", e=>{
+  const t = e.target.closest(".thead");
+  if (t) t.parentElement.classList.toggle("open");
+});
+document.getElementById("teamList").addEventListener("keydown", e=>{
+  if (e.key !== "Enter" && e.key !== " ") return;
+  const t = e.target.closest(".thead");
+  if (t){ e.preventDefault(); t.parentElement.classList.toggle("open"); }
+});
 </script>
 </body>
 </html>

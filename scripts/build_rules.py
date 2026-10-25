@@ -390,13 +390,22 @@ RULES_TEMPLATE = r"""<!DOCTYPE html>
 :root{--fs:16px;--mark:rgba(255,214,90,.55)}
 body{font-size:var(--fs);line-height:1.9}
 .layout{display:grid;grid-template-columns:292px minmax(0,1fr);height:calc(100vh - var(--top-h));min-height:0}
-.sidebar{overflow-y:auto;background:var(--bg2);border-right:1px solid var(--line);padding:10px 8px 20px}
+.sidebar{overflow-y:auto;background:var(--bg2);border-right:1px solid var(--line);padding:0 8px 20px}
+.rprog-wrap{display:flex;align-items:center;gap:8px;padding:10px 4px 9px;margin:0 -4px 6px;
+  border-bottom:1px solid var(--line2);position:sticky;top:0;background:var(--bg2);z-index:3}
+.rprog{flex:1;height:4px;border-radius:99px;background:var(--line2);overflow:hidden}
+.rprog i{display:block;height:100%;width:0;background:var(--brand);border-radius:99px;transition:width .3s var(--ease)}
+.rtxt{font-size:11px;color:var(--muted);white-space:nowrap}
 .toc-group{font-size:11px;font-weight:700;color:var(--muted);letter-spacing:2px;margin:14px 8px 5px}
-.toc-item{display:block;width:100%;text-align:left;padding:6.5px 10px;border:none;background:none;
+.toc-item{display:flex;align-items:baseline;gap:2px;width:100%;text-align:left;padding:6.5px 10px;border:none;background:none;
   border-radius:var(--r-sm);cursor:pointer;font-size:13.5px;color:var(--ink2);font-family:inherit;transition:.12s}
 .toc-item:hover{background:var(--card2);color:var(--ink)}
 .toc-item.on{background:var(--info-bg);color:var(--brand);font-weight:600}
 .toc-item .lawno{display:inline-block;min-width:52px;color:var(--brand);font-weight:600;font-size:12px}
+.toc-item .tt{flex:1;min-width:0}
+.toc-item .rdone{display:none;color:var(--green);font-size:11px;flex:none}
+.toc-item.read .rdone{display:inline}
+.toc-item.read .tt{color:var(--muted)}
 .toc-item.on .lawno{color:var(--brand)}
 main{overflow-y:auto;padding:22px 28px 60px;min-height:0}
 .content{max-width:900px;background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
@@ -472,7 +481,10 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px;line-
 <a class="skip-link" href="#secHtml">跳到正文</a>
 __TOPBAR__
 <div class="layout">
-  <nav class="sidebar" id="toc" aria-label="章节目录"></nav>
+  <nav class="sidebar" aria-label="章节目录">
+    <div class="rprog-wrap"><div class="rprog"><i id="readFill"></i></div><span class="rtxt" id="readTxt"></span></div>
+    <div id="toc"></div>
+  </nav>
   <main id="main">
     <div class="content" id="content">
       <div class="empty" id="emptyBox">__I_BOOK__<span>从左侧目录选择章节开始学习</span></div>
@@ -528,9 +540,28 @@ const groups = [["前言与总纲", s=>!s.id.startsWith("law-") && !["var","chan
   ["附录与指引", s=>["var","changes","revision","guide"].includes(s.id)]];
 document.getElementById("toc").innerHTML = groups.map(([g, pred])=>{
   const items = DATA.sections.filter(pred).map(s=>
-    `<button class="toc-item" data-id="${s.id}"><span class="lawno">${s.law?("第"+s.law+"章"):"•"}</span> ${esc(s.title.replace(/^第.+章\s*/,""))}</button>`).join("");
+    `<button class="toc-item" data-id="${s.id}"><span class="lawno">${s.law?("第"+s.law+"章"):"•"}</span><span class="tt">${esc(s.title.replace(/^第.+章\s*/,""))}</span><span class="rdone">✓</span></button>`).join("");
   return `<div class="toc-group">${g}</div>`+items;
 }).join("");
+
+// ---------- 阅读进度（localStorage: cfa2026rules.read） ----------
+const READ_KEY = "cfa2026rules.read";
+let readSet = {};
+try { readSet = JSON.parse(localStorage.getItem(READ_KEY) || "{}") || {}; } catch(_) { readSet = {}; }
+function syncReadUI(){
+  const total = DATA.sections.length;
+  const n = DATA.sections.filter(s=>readSet[s.id]).length;
+  document.getElementById("readFill").style.width = (total ? Math.round(n/total*100) : 0) + "%";
+  document.getElementById("readTxt").textContent = `已读 ${n}/${total}`;
+  document.querySelectorAll("#toc .toc-item").forEach(b=>
+    b.classList.toggle("read", !!readSet[b.dataset.id]));
+}
+function markRead(id){
+  if (readSet[id]) return;
+  readSet[id] = Date.now();
+  try { localStorage.setItem(READ_KEY, JSON.stringify(readSet)); } catch(_){}
+  syncReadUI();
+}
 
 function select(id, scroll=true){
   const s = byId[id]; if(!s) return;
@@ -543,6 +574,7 @@ function select(id, scroll=true){
   document.getElementById("main").scrollTop = 0;
   document.querySelectorAll(".toc-item").forEach(x=>x.classList.toggle("on", x.dataset.id===id));
   history.replaceState(null, "", "#"+id);
+  markRead(id);
   clearMarks();
   applyHl();
   loadNote();
@@ -562,10 +594,18 @@ document.getElementById("btnSb").onclick = ()=>document.body.classList.toggle("t
 document.getElementById("prevBtn").onclick = ()=>step(-1);
 document.getElementById("nextBtn").onclick = ()=>step(1);
 
-// ---------- 字号 ----------
+// ---------- 字号（localStorage: cfa.rules.fs 持久化） ----------
+const FS_KEY = "cfa.rules.fs";
 let fs = 16;
-document.getElementById("fsPlus").onclick = ()=>{ fs=Math.min(22,fs+1); document.documentElement.style.setProperty("--fs",fs+"px"); };
-document.getElementById("fsMinus").onclick = ()=>{ fs=Math.max(13,fs-1); document.documentElement.style.setProperty("--fs",fs+"px"); };
+try { const v = parseInt(localStorage.getItem(FS_KEY), 10); if (v >= 13 && v <= 22) fs = v; } catch(_) {}
+function setFs(v){
+  fs = Math.min(22, Math.max(13, v));
+  document.documentElement.style.setProperty("--fs", fs+"px");
+  try { localStorage.setItem(FS_KEY, String(fs)); } catch(_){}
+}
+document.getElementById("fsPlus").onclick = ()=>setFs(fs+1);
+document.getElementById("fsMinus").onclick = ()=>setFs(fs-1);
+if (fs !== 16) document.documentElement.style.setProperty("--fs", fs+"px");
 
 // ---------- 搜索 ----------
 const sb = document.getElementById("searchBox");
@@ -803,6 +843,7 @@ document.getElementById("importFileN").addEventListener("change", e=>{
 { const m = location.hash.match(/^#([\w-]+)$/);
   if(m && byId[m[1]]) select(m[1]);
   else select(DATA.sections[0].id, false); }
+syncReadUI();
 </script>
 </body>
 </html>

@@ -65,25 +65,42 @@ def js_icons():
 
 def topbar(active="", right="", stats="stats-2026.html", brand_sub="", seasons=("2026", "2025", "2024"),
            sb_btn=False, help_btn=False, lite_btn=False):
-    """统一顶栏。active=当前页 href;right=页面临有控件(搜索框等)HTML;
+    """统一顶栏：导航分「赛季 / 工具 / 国际评议」三组下拉（点击展开，Esc/外点关闭），
+    ≤1080px 收进汉堡按钮 + 全量导航抽屉。active=当前页 href;right=页面临有控件(搜索框等)HTML;
     sb_btn=侧栏开关(#btnSb, season 页用);help_btn=说明按钮(#btnHelp, season 页用);
     lite_btn=轻量版开关(#btnLite, season/scale 页用;门户用自带的分段控件)。"""
-    items = [("index.html", "首页", "home")]
-    for s in seasons:
-        items.append((f"season-{s}.html", f"{s}评议", "film"))
-    items += [(stats, "得失盘点", "chart"), ("rules.html", "竞赛规则", "book"),
-              ("scale.html", "统一尺度", "sliders"), ("uefa.html", "UEFA", "play"),
-              ("rap.html", "RAP", "target"), ("rfef.html", "RFEF", "globe"),
-              ("pro.html", "美国评议", "flag"), ("intl.html", "国际评议", "compass"),
-              ("conmebol.html", "南美评议", "play"), ("weekly.html", "周更评议", "tv"),
-              ("hns.html", "克罗地亚", "check"), ("ifab.html", "IFAB", "file-text"),
-              ("quiz.html", "考题", "quiz")]
+    season_items = [(f"season-{s}.html", f"{s}赛季评议", "film") for s in seasons]
+    season_items.append((stats, "得失盘点", "chart"))
+    groups = [
+        ("赛季", season_items),
+        ("工具", [("index.html", "首页", "home"), ("rules.html", "竞赛规则", "book"),
+                  ("scale.html", "统一尺度", "sliders"), ("quiz.html", "考题模式", "quiz")]),
+        ("国际评议", [("uefa.html", "UEFA 判例库", "play"), ("rap.html", "UEFA RAP", "target"),
+                      ("rfef.html", "西班牙 RFEF", "globe"), ("pro.html", "美国 PRO", "flag"),
+                      ("conmebol.html", "南美 CONMEBOL", "play"), ("weekly.html", "全球周更节目", "tv"),
+                      ("ifab.html", "IFAB 协议中译", "file-text"), ("hns.html", "克罗地亚 HNS", "check"),
+                      ("intl.html", "全球资源导航", "compass")]),
+    ]
     nav = ""
-    for href, label, ic in items:
-        cur = ' class="tbtn cur" aria-current="page"' if href == active else ' class="tbtn"'
-        nav += f'<a{cur} href="{href}">{icon(ic)}<span>{label}</span></a>'
+    for gname, items in groups:
+        gcur = any(href == active for href, _, _ in items)
+        links = "".join(
+            f'<a class="tbtn{" cur" if href == active else ""}" role="menuitem" href="{href}">'
+            f'{icon(ic)}<span>{label}</span></a>' for href, label, ic in items)
+        nav += (f'<div class="navgrp{" cur" if gcur else ""}">'
+                f'<button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false">'
+                f'<span>{gname}</span>{icon("chev-d", 12)}</button>'
+                f'<div class="navpop" role="menu">{links}</div></div>')
+    drawer = '<div class="navdrawer" id="navDrawer" aria-label="全站导航">'
+    for gname, items in groups:
+        drawer += (f'<div class="navd-h">{gname}</div>' + "".join(
+            f'<a class="navd-i{" cur" if href == active else ""}" href="{href}">'
+            f'{icon(ic, 15)}<span>{label}</span></a>' for href, label, ic in items))
+    drawer += "</div>"
     sb = (f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
           f'{icon("menu")}</button>') if sb_btn else ""
+    navb = ('<button class="tbtn" id="btnNav" title="站点导航" aria-label="打开站点导航">'
+            + icon("compass") + '</button>')
     lite_b = ('<button class="tbtn" id="btnLite" title="切换轻量版：纯文字+官方链接（无视频窗口），适合在线浏览" '
               'aria-pressed="false">' + icon("book") + '<span>轻量版</span></button>') if lite_btn else ""
     help_b = (f'<button class="tbtn" id="btnHelp" title="使用说明与统计口径">'
@@ -92,10 +109,11 @@ def topbar(active="", right="", stats="stats-2026.html", brand_sub="", seasons=(
                  '<span class="when-dark">' + icon("sun") + '</span>'
                  '<span class="when-light">' + icon("moon") + '</span></button>')
     sub = f'<span class="brand-sub">{brand_sub}</span>' if brand_sub else ""
-    return (f'<header class="topbar">{sb}'
+    return (f'<header class="topbar">{sb}{navb}'
             f'<a class="brand" href="index.html">{icon("shield", 19)}<b>裁判学习平台</b>{sub}</a>'
             f'<nav class="nav" aria-label="站点导航">{nav}</nav>'
-            f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>')
+            f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>'
+            + drawer)
 
 
 # 首帧前设置主题与轻量版/隐藏答案标记,避免明暗闪跳/布局闪跳
@@ -118,7 +136,27 @@ _TOGGLE_JS = ("<script>document.addEventListener('click',function(e){"
               "try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}"
               "try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});"
               "(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',"
-              "document.documentElement.dataset.lite==='1'?'true':'false');})();</script>")
+              "document.documentElement.dataset.lite==='1'?'true':'false');})();"
+              # 顶栏分组下拉：点击切换、外点关闭；汉堡抽屉 #btnNav；Esc 全关
+              "document.addEventListener('click',function(e){"
+              "var t=e.target.closest&&e.target.closest('.grp-btn');"
+              "document.querySelectorAll('.navgrp').forEach(function(g){"
+              "var open=!!t&&g===t.parentElement&&!g.classList.contains('open');"
+              "g.classList.toggle('open',open);"
+              "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});"
+              "var nb=e.target.closest&&e.target.closest('#btnNav');"
+              "if(nb){document.body.classList.toggle('nav-open');return;}"
+              "if(document.body.classList.contains('nav-open')"
+              "&&!(e.target.closest&&e.target.closest('.navdrawer')))"
+              "document.body.classList.remove('nav-open');"
+              "if(e.target.closest&&e.target.closest('.navdrawer a'))"
+              "document.body.classList.remove('nav-open');});"
+              "document.addEventListener('keydown',function(e){"
+              "if(e.key!=='Escape')return;"
+              "document.querySelectorAll('.navgrp.open').forEach(function(g){"
+              "g.classList.remove('open');"
+              "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});"
+              "document.body.classList.remove('nav-open');});</script>")
 
 
 def inject_theme(html):

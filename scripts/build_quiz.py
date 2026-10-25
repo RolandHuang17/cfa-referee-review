@@ -226,6 +226,15 @@ body{overflow:hidden}
 .qhead .match{font-size:16.5px;font-weight:600;font-family:var(--font-display);margin:0}
 .qmeta{font-size:12.5px;color:var(--muted)}
 .qvideo video{width:100%;max-width:820px;aspect-ratio:16/9;background:#000;border-radius:var(--r-md);display:block}
+.qvideo{position:relative;display:flex;justify-content:center}
+.qvideo .vkey-tip{right:calc(50% - 400px)}
+@media (max-width:880px){.qvideo .vkey-tip{right:10px}}
+/* 数字角标（键盘选答提示）与快捷键说明 */
+.opt .okn{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
+  margin-right:6px;border:1px solid var(--line2);border-radius:4px;font-size:10.5px;
+  color:var(--muted);flex:none;font-weight:400}
+.opt.on .okn{border-color:var(--brand);color:var(--brand)}
+.kbd-hint{font-size:12px;color:var(--faint);text-align:center;margin:10px 0 8px}
 .qtext{font-size:14.5px;line-height:1.9;margin:12px 0 0}
 .qtext .lbl{color:var(--muted)}
 details.qappeal{margin-top:8px;font-size:13.5px;color:var(--ink2)}
@@ -358,6 +367,7 @@ __TOPBAR__
     <div id="qForm"></div>
     <div class="fb" id="qFb"></div>
     <div class="qbtns">
+      <p class="kbd-hint"><span class="kbd">1</span>–<span class="kbd">9</span> 选答 · <span class="kbd">Enter</span> 提交/下一题 · <span class="kbd">Shift</span>+<span class="kbd">Enter</span> 上一题 · 视频：<span class="kbd">←</span><span class="kbd">→</span> 5秒 <span class="kbd">,</span><span class="kbd">.</span> 逐帧 <span class="kbd">R</span> 循环 <span class="kbd">[</span><span class="kbd">]</span> 倍速</p>
       <button class="btn" id="btnPrev">上一题</button>
       <button class="btn" id="btnSkip">跳过</button>
       <button class="btn primary" id="btnSubmit">提交答案</button>
@@ -536,7 +546,7 @@ function renderQuestion(){
   } else if (!LITE){
     const src = q.t==="case" ? "videos/"+q.videos[0] : q.video;
     const poster = q.poster ? ` poster="${esc(q.poster)}"` : "";
-    vidHtml = `<div class="qvideo"><video id="qvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"${poster}></video></div>
+    vidHtml = `<div class="qvideo"><div class="vkey-tip" id="qkeyTip"></div><video id="qvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"${poster}></video></div>
       <p class="qmeta" id="vidTip" style="display:none;margin-top:6px"></p>`;
   } else {
     const links = q.t==="case"
@@ -564,25 +574,26 @@ function renderQuestion(){
     }
     else if (q.t==="case") v.src = "videos/"+q.videos[0];
     else v.src = q.video;
+    applyRate();
   }
   // 表单（已作答且练习已提交时还原为锁定态）
   const saved = round.answers[round.i];
   if (q.t === "case"){
     const axes = [`<div class="axis"><div class="ah">① 评议组复核结论 <small>必答 · 1分</small></div><div class="optrow">` +
-      V_OPTS.map(([v,n])=>`<button class="chip opt ${saved&&saved.v===v?"on":""}" data-axis="v" data-v="${v}">${n}</button>`).join("") + `</div></div>`];
+      V_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.v===v?"on":""}" data-axis="v" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`];
     if (q.ans && q.ans.r)
       axes.push(`<div class="axis"><div class="ah">② 正确的判罚决定 <small>1分</small></div><div class="optrow">` +
-        R_OPTS.map(([v,n])=>`<button class="chip opt ${saved&&saved.r===v?"on":""}" data-axis="r" data-v="${v}">${n}</button>`).join("") + `</div></div>`);
+        R_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.r===v?"on":""}" data-axis="r" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
     if (q.ans && q.ans.c)
       axes.push(`<div class="axis"><div class="ah">③ 纪律处分 <small>1分</small></div><div class="optrow">` +
-        C_OPTS.map(([v,n])=>`<button class="chip opt ${saved&&saved.c===v?"on":""}" data-axis="c" data-v="${v}">${n}</button>`).join("") + `</div></div>`);
+        C_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.c===v?"on":""}" data-axis="c" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
     document.getElementById("qForm").innerHTML = axes.join("");
   } else if (q.t === "var"){
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">官方决定 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q.opts.map((o,i)=>`<button class="chip opt ${saved&&+saved===i?"on":""}" data-axis="o" data-v="${i}">${esc(o)}</button>`).join("") + `</div></div>`;
+      q.opts.map((o,i)=>`<button class="chip opt ${saved&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
   } else {
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，无错选有漏选1分，有错选0分</small></div><div class="optrow">` +
-      q.dec.map(d=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${esc(d.label)}</button>`).join("") + `</div></div>`;
+      q.dec.map((d,i)=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${i<9?`<span class="okn">${i+1}</span>`:""}${esc(d.label)}</button>`).join("") + `</div></div>`;
   }
   document.getElementById("ansGate").classList.add("on");
   const fb = document.getElementById("qFb");
@@ -608,7 +619,8 @@ function currentAnswer(){
 function syncButtons(){
   const done = round.scores[round.i] != null && round.mode==="practice";
   document.getElementById("btnPrev").disabled = round.i===0;
-  document.getElementById("btnSkip").style.display = done ? "none" : "";
+  // 考试模式无「跳过」语义（可回改，交卷统一判分），与练习已提交态同样隐藏
+  document.getElementById("btnSkip").style.display = (done || round.mode==="exam") ? "none" : "";
   const submit = document.getElementById("btnSubmit");
   if (round.mode === "practice"){
     submit.textContent = done ? (round.i===round.qs.length-1 ? "查看结果" : "下一题")
@@ -730,11 +742,15 @@ function gotoPrev(){
   }
 }
 function skipQuestion(){
+  // 仅练习模式立即判分记错；考试模式只暂存未答（finishExam 交卷统一判分，避免双计错次）
   const q = round.qs[round.i];
   const a = q.t==="case" ? {v:null,r:null,c:null} : q.t==="var" ? null : [];
-  const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
-  round.answers[round.i] = a; round.scores[round.i] = s;
-  recordWrong(q, a, s);
+  round.answers[round.i] = a;
+  if (round.mode === "practice"){
+    const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
+    round.scores[round.i] = s;
+    recordWrong(q, a, s);
+  }
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else showResult();
 }
@@ -832,7 +848,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
       let n = 0;
       for (const [k, v] of Object.entries(d.wrong||{})){
         if (!BANK[k]) continue;
-        if (!wrong[k] || (v.last||0) >= (wrong[k].last||0)){ wrong[k] = v; n++; }
+        if (!wrong[k] || (v.last||0) > (wrong[k].last||0)){ wrong[k] = v; n++; }
       }
       persistWrong(); renderWbStats();
       if (document.getElementById("wbBox").style.display !== "none") renderWbList();
@@ -883,6 +899,79 @@ document.getElementById("qCard").addEventListener("error", e=>{
     tip.style.display = "";
   }
 }, true);
+
+// ---------- 视频复盘快捷键（与判例页同套；倍速记忆共用 cfa.rate） ----------
+const RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2];
+let vRate = 1;
+try { const r = parseFloat(localStorage.getItem("cfa.rate")); if (r > 0) vRate = r; } catch(_) {}
+function applyRate(){ const v = document.getElementById("qvid"); if (v) try { v.playbackRate = vRate; } catch(_) {} }
+function setRate(dir){
+  let i = RATES.findIndex(r=>Math.abs(r-vRate)<1e-9);
+  if (i < 0) i = RATES.indexOf(1);
+  i = Math.min(RATES.length-1, Math.max(0, i+dir));
+  vRate = RATES[i]; applyRate();
+  try { localStorage.setItem("cfa.rate", String(vRate)); } catch(_) {}
+  qkeyTip(vRate + "× 倍速");
+}
+function qkeyTip(msg){
+  const t = document.getElementById("qkeyTip");
+  if (!t) return;
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(qkeyTip._t);
+  qkeyTip._t = setTimeout(()=>t.classList.remove("on"), 1200);
+}
+
+// ---------- 键盘操作：数字选答 / Enter 提交 / 视频快捷键 ----------
+function pickOption(n){
+  const q = round.qs[round.i];
+  if (q.t === "scale"){
+    const opts = Array.from(document.querySelectorAll("#qForm .opt"));
+    if (opts[n]) opts[n].classList.toggle("on");
+    return;
+  }
+  // 单选题（case 三轴 / var 四选一）：数字作用于第一个尚未作答的轴；全部已答则落到最后一轴（可改选）
+  const axes = q.t === "var" ? ["o"]
+    : ["v", ...(q.ans && q.ans.r ? ["r"] : []), ...(q.ans && q.ans.c ? ["c"] : [])];
+  const ax = axes.find(a=>!document.querySelector(`#qForm .opt[data-axis="${a}"].on`)) || axes[axes.length-1];
+  const opts = Array.from(document.querySelectorAll(`#qForm .opt[data-axis="${ax}"]`));
+  if (opts[n]) opts.forEach(x=>x.classList.toggle("on", x===opts[n]));
+}
+document.addEventListener("keydown", e=>{
+  const tag = (e.target.tagName||"").toLowerCase();
+  if (tag==="input"||tag==="select"||tag==="textarea"){ if(e.key==="Escape") e.target.blur(); return; }
+  // 开始屏 / 结果屏：Enter 开始 / 返回
+  if (document.getElementById("scrStart").style.display !== "none"){
+    if (e.key==="Enter"){ e.preventDefault(); if (!document.getElementById("btnStart").disabled) startRound(pool()); }
+    return;
+  }
+  if (document.getElementById("scrResult").style.display !== "none"){
+    if (e.key==="Enter"){ e.preventDefault(); document.getElementById("btnBack").click(); }
+    return;
+  }
+  // 视频快捷键（非轻量版且有视频的题型）
+  const q = round && round.qs[round.i];
+  if (q && !LITE && q.t !== "var"){
+    const vd = document.getElementById("qvid");
+    if (vd){
+      if (e.key==="ArrowLeft"){ e.preventDefault(); vd.currentTime = Math.max(0, vd.currentTime-5); return; }
+      if (e.key==="ArrowRight"){ e.preventDefault(); if (vd.duration) vd.currentTime = Math.min(vd.duration-.05, vd.currentTime+5); return; }
+      if (e.key===","){ e.preventDefault(); vd.pause(); vd.currentTime = Math.max(0, vd.currentTime-1/25); return; }
+      if (e.key==="."){ e.preventDefault(); vd.pause(); if (vd.duration) vd.currentTime = Math.min(vd.duration-.05, vd.currentTime+1/25); return; }
+      if (e.key==="r"||e.key==="R"){ vd.loop = !vd.loop; qkeyTip(vd.loop?"循环：开":"循环：关"); return; }
+      if (e.key==="["){ e.preventDefault(); setRate(-1); return; }
+      if (e.key==="]"){ e.preventDefault(); setRate(1); return; }
+    }
+  }
+  if (e.key==="Enter"){
+    e.preventDefault();
+    if (e.shiftKey) gotoPrev(); else submitAnswer();
+    return;
+  }
+  if (/^[1-9]$/.test(e.key) && !round.locked){
+    e.preventDefault();
+    pickOption(+e.key - 1);
+  }
+});
 
 // ---------- 初始化 ----------
 document.addEventListener("cfa:lite", ()=>{

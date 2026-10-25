@@ -242,8 +242,9 @@ body.sb-off .sidebar{display:none}
 .d-head .match{flex-basis:100%;display:flex;align-items:center;flex-wrap:wrap;gap:6px;margin:2px 0 0;
   font-family:var(--font-display);font-size:21px;font-weight:700;line-height:1.5;letter-spacing:.3px}
 .d-head .match .crest{height:24px}
-.d-video{max-width:960px;margin:13px auto 6px}
+.d-video{max-width:960px;margin:13px auto 6px;position:relative}
 .d-video video{width:100%;aspect-ratio:16/9;background:#000;border-radius:var(--r-md);display:block}
+.vhint{font-size:12px;color:var(--faint);text-align:center;margin:2px 0 0}
 .vsw-row{display:flex;gap:8px;margin:9px 0 2px}
 .vsw{padding:3px 13px;border-radius:999px;border:1px solid var(--line);background:var(--card2);
   cursor:pointer;font-size:12.5px;color:var(--muted);font-family:inherit}
@@ -265,6 +266,15 @@ body.sb-off .sidebar{display:none}
 .d-foot a{color:var(--brand);text-decoration:none}
 .d-foot a:hover{text-decoration:underline}
 .d-nav{display:flex;gap:10px;margin-top:15px;max-width:960px}
+.d-head .match .vs{color:var(--faint);font-weight:400;font-size:14px;margin:0 2px}
+/* 相关判例（同分类推荐，点击跳转） */
+.relate{max-width:960px;margin:14px auto 0}
+.rl-h{font-size:12px;color:var(--muted);letter-spacing:1px;margin-bottom:7px}
+.rl-row{display:flex;flex-wrap:wrap;gap:7px}
+.rl-row .ftag .dot{width:8px;height:8px;margin-right:6px}
+.rl-row .ftag b{font-weight:400;color:var(--faint);margin-left:4px}
+/* 首屏列表行进入动效（仅首次渲染触发，筛选重建不复播） */
+.plist-rows.anim .prow{animation:fadeUp .26s var(--ease) both;animation-delay:calc(var(--i)*12ms)}
 .d-nav button{flex:1;display:flex;align-items:center;justify-content:center;gap:7px;padding:10px;
   border-radius:var(--r-md);border:1px solid var(--line);background:var(--card2);cursor:pointer;
   font-size:14px;color:var(--ink2);font-family:inherit}
@@ -352,6 +362,7 @@ html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
   .sidebar{position:fixed;left:0;top:var(--top-h);bottom:0;width:284px;z-index:70;
     transform:translateX(-105%);transition:transform .18s;box-shadow:var(--shadow)}
   body.sb-open .sidebar{transform:none}
+  body.sb-off .sidebar{display:flex}  /* 桌面收起态不能压死窄屏抽屉 */
   body.detail-open .plist{display:none}
   .mobile-back{display:inline-flex;align-items:center;gap:6px;border:0;background:none;
     color:var(--brand);padding:2px 0 10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
@@ -410,9 +421,10 @@ __TOPBAR__
       <div class="d-head" id="dHead"></div>
       <div class="src-actions" id="srcActions"></div>
       <div class="vfail-tip" id="vfailTip"></div>
-      <div class="d-video"><video id="dvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"></video></div>
+      <div class="d-video"><div class="vkey-tip" id="vkeyTip"></div><video id="dvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"></video></div>
       <div class="vsw-row" id="vswRow" style="display:none"></div>
       <p class="d-note" id="dNote"></p>
+      <p class="d-note vhint" id="vHint">⌨ <span class="kbd">←</span><span class="kbd">→</span> 5秒 · <span class="kbd">,</span><span class="kbd">.</span> 逐帧 · <span class="kbd">R</span> 循环 · <span class="kbd">[</span><span class="kbd">]</span> 倍速</p>
       <div class="txt" id="dText"></div>
       <div class="ans-gate" id="ansGate">__I_EYEOFF_B__<div class="ag-txt"><b>隐藏答案模式已开启</b><span>先看视频、读完事件经过，自己做出判断后再揭示官方认定。切换判例后重新隐藏。</span></div><button class="btn primary" id="ansRevealBtn">显示本题答案</button></div>
       <details class="d-note-box" id="dCatNote"><summary></summary><div></div></details>
@@ -426,6 +438,10 @@ __TOPBAR__
       <div class="d-nav">
         <button id="prevBtn">__I_UP__ 上一个 <span class="kbd">↑</span></button>
         <button id="nextBtn">下一个 <span class="kbd">↓</span> __I_DOWN__</button>
+      </div>
+      <div class="relate" id="dRelated" style="display:none">
+        <div class="rl-h">相关判例 · 同分类（点击跳转）</div>
+        <div class="rl-row" id="relRow"></div>
       </div>
     </div>
   </section>
@@ -604,22 +620,28 @@ function renderList(){
   document.getElementById("shownCount").textContent = list.length;
   const groups = {};
   list.forEach(c => (groups[c.category] = groups[c.category]||[]).push(c));
+  let ri = 0;
   const rows = CATS.filter(k=>groups[k.id]).map(k =>
     `<div class="ph">${k.name} <b>${groups[k.id].length} 例</b></div>` +
     groups[k.id].map(c=>{
       const short = (c.comp||"").replace("联赛","");
       const varChip = c.var==="none" ? "" :
         `<span class="rv ${c.var==="wrong"?"bad":""}">V${c.var==="wrong"?"✗":"✓"}</span>`;
-      return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" aria-current="${state.sel===c.seq}">
+      return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" style="--i:${Math.min(ri++,18)}" aria-current="${state.sel===c.seq}">
         <span class="dot ${c.v}"></span>
         <span class="ptxt"><b>${crest(c.home,16,true)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16,true)}${esc(c.away)}</b>
         <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · <span class="rvn">${VN[c.v]}</span></i></span>
         <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}</span>
         ${varChip}</div>`;
     }).join("")).join("");
-  document.getElementById("plistRows").innerHTML = rows ||
+  const rowsEl = document.getElementById("plistRows");
+  rowsEl.innerHTML = rows ||
     `<div class="plist-empty">没有符合条件的判例，请调整筛选。</div>`;
+  // 首屏行进入动效只播一次，筛选/搜索重建列表不再复播（避免每次键入 225 行重动画）
+  if (renderList.first){ rowsEl.classList.add("anim"); renderList.first = false; }
+  else rowsEl.classList.remove("anim");
 }
+renderList.first = true;
 
 function applyFilter(){
   renderSidebar();
@@ -686,6 +708,27 @@ document.getElementById("dvid").addEventListener("error", ()=>{
   showVFailTip("视频无法播放（本地缺失且官方直链不可达）。可切换轻量版：纯文字 + 官方链接，无需视频。", true);
 });
 
+// ---------- 视频复盘快捷键（倍速记忆 cfa.rate） ----------
+const RATES = [0.25, 0.5, 0.75, 1, 1.25, 1.5, 2];
+let vRate = 1;
+try { const r = parseFloat(localStorage.getItem("cfa.rate")); if (r > 0) vRate = r; } catch(_) {}
+function applyRate(){ const vd = document.getElementById("dvid"); if (vd) try { vd.playbackRate = vRate; } catch(_) {} }
+function setRate(dir){
+  let i = RATES.findIndex(r=>Math.abs(r-vRate)<1e-9);
+  if (i < 0) i = RATES.indexOf(1);
+  i = Math.min(RATES.length-1, Math.max(0, i+dir));
+  vRate = RATES[i]; applyRate();
+  try { localStorage.setItem("cfa.rate", String(vRate)); } catch(_) {}
+  vkeyTip(vRate + "× 倍速");
+}
+function vkeyTip(msg){
+  const t = document.getElementById("vkeyTip");
+  if (!t) return;
+  t.textContent = msg; t.classList.add("on");
+  clearTimeout(vkeyTip._t);
+  vkeyTip._t = setTimeout(()=>t.classList.remove("on"), 1200);
+}
+
 // ---------- 轻量版切换 ----------
 function syncEmptyState(){
   document.getElementById("detailEmpty").innerHTML = LITE
@@ -738,11 +781,14 @@ function select(seq, scrollRow=true){
   document.getElementById("dcard").style.display = "block";
   // 隐藏答案模式：切题后重新隐藏，需再次点击「显示本题答案」揭示
   document.getElementById("dcard").classList.toggle("revealed", !HIDE);
-  const match = [c.comp, c.round, (c.home&&c.away)?`${c.home} VS ${c.away}`:"", c.minute?`第${c.minute}分钟`:""]
-    .filter(Boolean).join(" · ");
-  const matchHTML = match
-    .replace(c.home, `${crest(c.home,22,true)}${esc(c.home)}`)
-    .replace(c.away, `${crest(c.away,22,true)}${esc(c.away)}`);
+  // 分段拼接（勿用 replace：空队名会触发 replace("",…) 前插、队名互为子串时首个匹配错位）
+  const segs = [];
+  if (c.comp) segs.push(esc(c.comp));
+  if (c.round) segs.push(esc(c.round));
+  if (c.home && c.away)
+    segs.push(`${crest(c.home,22,true)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,22,true)}${esc(c.away)}`);
+  if (c.minute) segs.push(`第${esc(String(c.minute))}分钟`);
+  const matchHTML = segs.join(" · ");
   const varBadge = c.var==="none" ? "" :
     `<span class="badge ${c.var==="wrong"?"wrong":"info"}">VAR${c.var==="wrong"?"错误":"正确"}</span>`;
   document.getElementById("dHead").innerHTML =
@@ -764,6 +810,7 @@ function select(seq, scrollRow=true){
     dvidWrap.style.display = "none";
     vsr.style.display = "none"; vsr.innerHTML = "";
     document.getElementById("dNote").textContent = "";
+    document.getElementById("vHint").style.display = "none";
     vfail.style.display = "none";
     srcActs.style.display = "flex";
     srcActs.innerHTML =
@@ -780,11 +827,14 @@ function select(seq, scrollRow=true){
       dvidWrap.style.display = "none";
       vsr.style.display = "none"; vsr.innerHTML = "";
       document.getElementById("dNote").textContent = "该判例无视频片段";
+      document.getElementById("vHint").style.display = "none";
     } else {
       dvidWrap.style.display = "";
       try{ vid.pause(); }catch(_){}
       ossTried = !!(vidsMissing && (c.video_urls||[])[0]);
       vid.src = videoSrc(c, 0);
+      applyRate();
+      document.getElementById("vHint").style.display = "";
       if (c.videos.length > 1) {
         vsr.style.display = "flex";
         vsr.innerHTML = c.videos.map((f,i)=>
@@ -807,6 +857,21 @@ function select(seq, scrollRow=true){
     DATA.notes[c.category] || "";
   document.getElementById("dTags").innerHTML =
     (c.tags||[]).map(t=>`<span class="tag">${esc(t)}</span>`).join("");
+  // 相关判例推荐：同分类、共享标签多者优先，最多 6 条
+  {
+    const rel = DATA.cases
+      .filter(x=>x.seq!==c.seq && x.category===c.category)
+      .map(x=>({x, sc:(x.tags||[]).filter(t=>(c.tags||[]).includes(t)).length}))
+      .sort((a,b)=>b.sc-a.sc||a.x.seq-b.x.seq).slice(0,6);
+    const relBox = document.getElementById("dRelated");
+    if (rel.length){
+      relBox.style.display = "";
+      document.getElementById("relRow").innerHTML = rel.map(r=>{
+        const label = (r.x.home && r.x.away) ? `${r.x.home} vs ${r.x.away}` : `第${r.x.issue}期 #${r.x.no}`;
+        return `<button class="ftag" data-seq="${r.x.seq}"><span class="dot ${r.x.v}"></span>${esc(label)}<b>${r.x.issue}期#${r.x.no}</b></button>`;
+      }).join("");
+    } else relBox.style.display = "none";
+  }
   document.getElementById("dFoot").innerHTML =
     `来源：<a href="${esc(iss.url)}" target="_blank" rel="noopener">${esc(iss.title)}</a>（${iss.date.slice(0,4)}-${iss.date.slice(4,6)}-${iss.date.slice(6,8)}发布）`;
   document.getElementById("detail").scrollTop = 0;
@@ -886,6 +951,12 @@ document.getElementById("favTags").addEventListener("click", e=>{
     persistFav(); renderFavUI(c); renderFavList();
   }
 });
+document.getElementById("favTags").addEventListener("keydown", e=>{
+  if (e.target.id === "customTag" && e.key === "Enter") {
+    e.preventDefault();
+    document.getElementById("addTag").click();
+  }
+});
 document.getElementById("dHead").addEventListener("click", e=>{
   if (e.target.closest("#favBtn")) toggleFav(state.sel);
 });
@@ -911,7 +982,7 @@ document.getElementById("noteBox").addEventListener("input", ()=>{
       "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
     renderFavList();
     const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-    if (row) row.textContent = (isFav(seq)?"★":"") + (hasNote(seq)?"📝":"");
+    if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
   }, 800);
 });
 function renderFavList(){
@@ -984,7 +1055,12 @@ document.getElementById("verList").addEventListener("click", e=>{
   document.querySelectorAll(".ver-item").forEach(x=>x.classList.toggle("on", x===b));
   applyFilter();
 });
-fSearch.addEventListener("input", ()=>{ state.q = fSearch.value; applyFilter(); });
+fSearch.addEventListener("input", ()=>{
+  state.q = fSearch.value;
+  const rows = document.getElementById("plistRows"), st = rows.scrollTop;  // 搜索输入不丢列表滚动位置
+  applyFilter();
+  rows.scrollTop = st;
+});
 fSearch.addEventListener("search", ()=>{ state.q = fSearch.value; applyFilter(); }); // 搜索框✕清空按钮
 document.getElementById("compList").addEventListener("click", e=>{
   const b = e.target.closest("[data-comp]"); if(!b) return;
@@ -1005,6 +1081,10 @@ document.getElementById("issueList").addEventListener("click", e=>{
 });
 document.getElementById("prevBtn").onclick = ()=>step(-1);
 document.getElementById("nextBtn").onclick = ()=>step(1);
+document.getElementById("relRow").addEventListener("click", e=>{
+  const b = e.target.closest("[data-seq]"); if(!b) return;
+  select(+b.dataset.seq);
+});
 document.getElementById("vswRow").addEventListener("click", e=>{
   const b = e.target.closest(".vsw"); if(!b) return;
   const c = bySeq[state.sel]; if(!c || LITE || !hasVideos(c)) return;
@@ -1013,6 +1093,7 @@ document.getElementById("vswRow").addEventListener("click", e=>{
   try{ vid.pause(); }catch(_){}
   ossTried = !!(vidsMissing && (c.video_urls||[])[state.vIdx]);
   vid.src = videoSrc(c, state.vIdx);
+  applyRate();
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
 document.getElementById("btnSb").onclick = ()=>{
@@ -1038,6 +1119,17 @@ document.addEventListener("keydown", e=>{
     return;
   }
   if (e.key==="/"){ e.preventDefault(); fSearch.focus(); return; }
+  // 视频复盘快捷键（完整版且当前判例有视频）：←→ ±5s，, . 逐帧(1/25s)，R 循环，[ ] 倍速
+  const vd = document.getElementById("dvid"), vc = bySeq[state.sel];
+  if (!LITE && vd && vc && hasVideos(vc)) {
+    if (e.key==="ArrowLeft"){ e.preventDefault(); vd.currentTime = Math.max(0, vd.currentTime-5); return; }
+    if (e.key==="ArrowRight"){ e.preventDefault(); if (vd.duration) vd.currentTime = Math.min(vd.duration-.05, vd.currentTime+5); return; }
+    if (e.key===","){ e.preventDefault(); vd.pause(); vd.currentTime = Math.max(0, vd.currentTime-1/25); return; }
+    if (e.key==="."){ e.preventDefault(); vd.pause(); if (vd.duration) vd.currentTime = Math.min(vd.duration-.05, vd.currentTime+1/25); return; }
+    if (e.key==="r"||e.key==="R"){ vd.loop = !vd.loop; vkeyTip(vd.loop?"循环：开":"循环：关"); return; }
+    if (e.key==="["){ e.preventDefault(); setRate(-1); return; }
+    if (e.key==="]"){ e.preventDefault(); setRate(1); return; }
+  }
   if (e.key==="Escape"){ document.querySelectorAll(".modal-mask.open")
       .forEach(m=>m.classList.remove("open")); return; }
   if (e.key==="ArrowDown"){ e.preventDefault(); step(1); }

@@ -398,6 +398,42 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 .bigscore{display:flex;align-items:baseline;gap:12px;margin:6px 0 2px}
 .bigscore b{font-size:44px;font-family:var(--font-display)}
 .bigscore span{color:var(--muted);font-size:14px}
+.passbadge{display:inline-block;padding:3px 13px;border-radius:999px;font-size:13px;font-weight:700}
+.passbadge.ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
+.passbadge.no{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
+.edots{display:none;flex-wrap:wrap;gap:5px;margin:4px 0 10px}
+.edot{width:26px;height:22px;display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);border-radius:6px;font-size:11px;color:var(--muted);
+  cursor:pointer;background:var(--card2);font-variant-numeric:tabular-nums}
+.edot.done{border-color:var(--green);color:var(--green)}
+.edot.cur{border-color:var(--brand);color:var(--brand);font-weight:700;background:var(--info-bg)}
+.anbox{margin-top:10px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card2)}
+.anbox summary{cursor:pointer;padding:10px 14px;font-size:13.5px;font-weight:600;color:var(--ink2)}
+.anbox summary:hover{color:var(--brand)}
+.ana-flex{display:flex;gap:18px;flex-wrap:wrap;align-items:center;padding:4px 16px 14px}
+#anaRadar{width:260px;max-width:100%;height:auto;flex:none}
+.ana-text{flex:1;min-width:220px;font-size:13px;line-height:1.9;color:var(--ink2)}
+.ana-text p{margin:0}
+.rd-grid{fill:none;stroke:var(--line2);stroke-width:1}
+.rd-fill{fill:var(--brand);fill-opacity:.18;stroke:var(--brand);stroke-width:1.8}
+.rd-lab{fill:var(--muted);font-size:10px}
+.rd-lab.rd-weak{fill:var(--red);font-weight:700}
+.rd-hint{color:var(--red)}
+#histList{padding:2px 16px 12px}
+.histrow{display:flex;align-items:center;gap:14px;padding:6px 0;border-bottom:1px dashed var(--line2);
+  font-size:12.5px;color:var(--muted);font-variant-numeric:tabular-nums}
+.histrow b{color:var(--ink);font-size:13px}
+.histrow b.ok{color:var(--green)}.histrow b.mid{color:var(--amber)}.histrow b.bad{color:var(--red)}
+.histrow i{font-style:normal;color:var(--brand);font-size:11px;font-weight:700}
+.histrow.best{background:var(--info-bg);border-radius:6px;padding:6px 8px}
+.rbar{display:flex;align-items:center;gap:10px;margin:7px 0;font-size:12.5px}
+.rbar .rb-n{width:150px;flex:none;color:var(--ink2);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rbar .rb-track{flex:1;height:9px;border-radius:99px;background:var(--line2);overflow:hidden}
+.rbar .rb-track i{display:block;height:100%;border-radius:99px}
+.rbar .rb-track i.ok{background:var(--green)}.rbar .rb-track i.mid{background:var(--amber)}.rbar .rb-track i.bad{background:var(--red)}
+.rbar b{width:44px;text-align:right;font-variant-numeric:tabular-nums}
+.rbar b.ok{color:var(--green)}.rbar b.mid{color:var(--amber)}.rbar b.bad{color:var(--red)}
+.rbar small{color:var(--faint);width:52px;text-align:right}
 .rrow{display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-bottom:1px solid var(--line2);font-size:13.5px}
 .rrow .rmark{flex:none;font-weight:700;width:34px}
 .rrow .rmain{min-width:0;flex:1}
@@ -437,6 +473,13 @@ __TOPBAR__
       <div class="seg" id="segMode">
         <button data-v="practice" class="on">练习（每题即时反馈）</button>
         <button data-v="exam">考试（做完统一出分）</button>
+      </div>
+    </div>
+    <div class="frow"><span class="flbl">限时</span>
+      <div class="seg" id="segTimer" title="考试模式生效：倒计时结束自动交卷；练习模式不限时">
+        <button data-v="off" class="on">不限时</button>
+        <button data-v="std">标准 75秒/题</button>
+        <button data-v="relaxed">宽松 120秒/题</button>
       </div>
     </div>
     <div class="frow"><span class="flbl">题数</span>
@@ -480,6 +523,17 @@ __TOPBAR__
       </div>
       <div id="wbList"></div>
     </div>
+    <details class="anbox" id="anaBox" style="display:none">
+      <summary>🎯 我的分析 · 分类正确率雷达（判例题作答历史）</summary>
+      <div class="ana-flex">
+        <svg id="anaRadar" viewBox="0 0 260 240" role="img" aria-label="分类正确率雷达图"></svg>
+        <div id="anaText" class="ana-text"></div>
+      </div>
+    </details>
+    <details class="anbox" id="histBox" style="display:none">
+      <summary>🏅 历史成绩（考试模式）</summary>
+      <div id="histList"></div>
+    </details>
   </div>
 </section>
 
@@ -490,6 +544,7 @@ __TOPBAR__
       <b id="qProgress" style="font-size:14px"></b>
       <span id="qScore" style="font-size:13px;color:var(--muted)"></span>
     </div>
+    <div class="edots" id="examDots" style="display:none"></div>
     <div id="qCard"></div>
     <div class="ansgate" id="ansGate">🤔 先看视频、读完事件经过，在心里做出你的判罚，再作答。</div>
     <div id="qForm"></div>
@@ -507,12 +562,17 @@ __TOPBAR__
 <section id="scrResult" style="display:none">
   <div class="panel">
     <div class="bigscore"><b id="rScore">0</b><span id="rPct"></span></div>
-    <p id="rRate" style="margin:0 0 10px;font-size:14px"></p>
+    <p id="rRate" style="margin:0 0 6px;font-size:14px"></p>
+    <p id="rPass" style="margin:0 0 10px"></p>
     <div class="frow">
       <button class="btn primary" id="btnAgain">再来一轮</button>
       <button class="btn" id="btnWrongRedo">错题重练</button>
       <button class="btn" id="btnBack">返回开始屏</button>
     </div>
+  </div>
+  <div class="panel" id="rCatsPanel" style="display:none">
+    <b style="font-size:14px">本轮分类正确率（判例题）</b>
+    <div id="rCats" style="margin-top:10px"></div>
   </div>
   <div class="panel"><div id="rList"></div></div>
 </section>
@@ -585,8 +645,146 @@ function qLink(q){
                         : `scale.html#h${q.s}-${q.series}-${q.id}`;
 }
 
+// ---------- 逐题作答历史（cfa.quiz.stats：不只记错题，雷达/薄弱点分析用） ----------
+const STATS_KEY = "cfa.quiz.stats";
+let qstats = {};
+try { qstats = JSON.parse(localStorage.getItem(STATS_KEY) || "{}") || {}; } catch(_) { qstats = {}; }
+function recordStat(k, ok){
+  const e = qstats[k] || {r:0, w:0};
+  ok ? e.r++ : e.w++;
+  qstats[k] = e;
+  try { localStorage.setItem(STATS_KEY, JSON.stringify(qstats)); } catch(_) {}
+}
+function streakTouch(){
+  const d = new Date();
+  const today = d.toISOString().slice(0, 10);
+  const yesterday = new Date(d.getTime() - 86400000).toISOString().slice(0, 10);
+  let st = { last: "", days: 0 };
+  try { st = JSON.parse(localStorage.getItem("cfa.streak") || '{"last":"","days":0}') || st; } catch(_) {}
+  if (st.last === today) return;
+  st.days = st.last === yesterday ? (st.days || 0) + 1 : 1;
+  st.last = today;
+  try { localStorage.setItem("cfa.streak", JSON.stringify(st)); } catch(_) {}
+}
+
+// ---------- 考试计时（倒计时结束自动交卷；练习模式不启用） ----------
+let examTimer = null;
+function fmtMS(sec){
+  const m = Math.floor(sec / 60), s = sec % 60;
+  return `${m}:${String(s).padStart(2, "0")}`;
+}
+function startTimer(totalSec){
+  stopTimer();
+  if (!totalSec) return;
+  round.left = totalSec;
+  examTimer = setInterval(()=>{
+    round.left--;
+    const el = document.getElementById("qScore");
+    if (el) el.textContent = `⏳ 剩余 ${fmtMS(Math.max(0, round.left))} · 超时自动交卷`;
+    if (round.left <= 0){
+      stopTimer();
+      alert("时间到，自动交卷。");
+      finishExam();
+    }
+  }, 1000);
+}
+function stopTimer(){ if (examTimer){ clearInterval(examTimer); examTimer = null; } }
+
+// ---------- 答题卡进度点（考试模式：灰=未答 绿=已答 高亮=当前） ----------
+function updateDots(){
+  const box = document.getElementById("examDots");
+  if (!round || round.mode !== "exam"){ box.style.display = "none"; return; }
+  box.style.display = "flex";
+  box.innerHTML = round.qs.map((_, i)=>{
+    const cls = i === round.i ? "cur" : (round.answers[i] != null ? "done" : "");
+    return `<span class="edot ${cls}" data-i="${i}">${i + 1}</span>`;
+  }).join("");
+}
+document.getElementById("examDots").addEventListener("click", e=>{
+  const d = e.target.closest(".edot"); if (!d) return;
+  if (round.scores[round.i] == null) round.answers[round.i] = currentAnswer();
+  round.i = +d.dataset.i;
+  renderQuestion();
+});
+
+// ---------- 我的分析：分类正确率雷达（判例题作答历史） ----------
+const CATS = [...new Map(DATA.bank.filter(q=>q.t==="case").map(q=>[q.cat, q.catname]))];
+function catAcc(){
+  return CATS.map(([id, name])=>{
+    let r = 0, w = 0;
+    for (const q of DATA.bank) if (q.t === "case" && q.cat === id && qstats[q.k]){
+      r += qstats[q.k].r; w += qstats[q.k].w;
+    }
+    return { id, name, r, w, n: r + w, acc: (r + w) ? r / (r + w) : null };
+  });
+}
+function renderAnalysis(){
+  const box = document.getElementById("anaBox");
+  const acc = catAcc();
+  if (!acc.some(a=>a.n)) { box.style.display = "none"; return; }
+  box.style.display = "";
+  const cx = 130, cy = 118, R = 82;
+  const pt = (i, rr)=>{
+    const a = -Math.PI / 2 + i * 2 * Math.PI / CATS.length;
+    return [cx + rr * Math.cos(a), cy + rr * Math.sin(a)];
+  };
+  let svg = "";
+  for (const f of [0.25, 0.5, 0.75, 1]){
+    const ring = CATS.map((_, i)=>pt(i, R * f).map(v=>v.toFixed(1)).join(",")).join(" ");
+    svg += `<polygon points="${ring}" class="rd-grid"/>`;
+  }
+  for (let i = 0; i < CATS.length; i++){
+    const [x, y] = pt(i, R);
+    svg += `<line x1="${cx}" y1="${cy}" x2="${x.toFixed(1)}" y2="${y.toFixed(1)}" class="rd-grid"/>`;
+  }
+  const val = acc.map((a, i)=>pt(i, R * (a.acc == null ? 0 : Math.max(a.acc, 0.03))).map(v=>v.toFixed(1)).join(",")).join(" ");
+  svg += `<polygon points="${val}" class="rd-fill"/>`;
+  acc.forEach((a, i)=>{
+    const [x, y] = pt(i, R + 16);
+    const anchor = x < cx - 5 ? "end" : x > cx + 5 ? "start" : "middle";
+    svg += `<text x="${x.toFixed(1)}" y="${(y + 3).toFixed(1)}" text-anchor="${anchor}" `
+      + `class="rd-lab ${a.n >= 5 && a.acc != null && a.acc < 0.6 ? "rd-weak" : ""}">${a.name}</text>`;
+  });
+  document.getElementById("anaRadar").innerHTML = svg;
+  const done = acc.filter(a=>a.n >= 5);
+  const hint = done.length
+    ? (done.sort((a,b)=>a.acc - b.acc)[0])
+    : null;
+  document.getElementById("anaText").innerHTML =
+    `<p><b>总作答：</b>${acc.reduce((s,a)=>s + a.n, 0)} 次（判例题）</p>` +
+    acc.filter(a=>a.n).map(a=>
+      `<p>${a.name}：<b>${Math.round(a.acc * 100)}%</b>（对 ${a.r} / 错 ${a.w}）${a.n < 5 ? " <small>（不足 5 次）</small>" : ""}</p>`).join("") +
+    (hint ? `<p class="rd-hint">⚠ 最薄弱：<b>${hint.name}</b>——建议在开始屏把题源/分类锁定该类，或到 season 页该分类下逐例复盘。</p>` : "");
+}
+
+// ---------- 历史成绩（考试模式，保留最近 20 次） ----------
+const HIST_KEY = "cfa.quiz.history";
+let qhist = [];
+try { qhist = JSON.parse(localStorage.getItem(HIST_KEY) || "[]") || []; } catch(_) { qhist = []; }
+function recordHistory(got, max, n){
+  qhist.unshift({ t: Date.now(), got, max, n });
+  qhist = qhist.slice(0, 20);
+  try { localStorage.setItem(HIST_KEY, JSON.stringify(qhist)); } catch(_) {}
+  renderHistory();
+}
+function renderHistory(){
+  const box = document.getElementById("histBox");
+  if (!qhist.length){ box.style.display = "none"; return; }
+  box.style.display = "";
+  const best = Math.max(...qhist.map(h => h.max ? Math.round(h.got / h.max * 100) : 0));
+  box.querySelector("#histList").innerHTML = qhist.map(h=>{
+    const pct = h.max ? Math.round(h.got / h.max * 100) : 0;
+    const d = new Date(h.t), pad = x=>String(x).padStart(2, "0");
+    return `<div class="histrow ${pct === best ? "best" : ""}">
+      <span>${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}</span>
+      <b>${h.got}/${h.max}</b><span>${h.n} 题</span>
+      <b class="${pct >= 90 ? "ok" : pct >= 60 ? "mid" : "bad"}">${pct}%</b>
+      ${pct === best ? "<i>最佳</i>" : ""}</div>`;
+  }).join("");
+}
+
 // ---------- 开始屏状态 ----------
-const sel = {mode:"practice", count:10, src:"all", seasons:new Set(), range:"all"};
+const sel = {mode:"practice", count:10, src:"all", seasons:new Set(), range:"all", timer:"off"};
 function renderSeasonChips(){
   const seasons = ["2026","2025","2024"];
   document.getElementById("seasonChips").innerHTML =
@@ -650,7 +848,11 @@ function startRound(list){
   let qs = shuffle(list.slice());
   if (sel.count > 0) qs = qs.slice(0, sel.count);
   round = {qs, i:0, mode:sel.mode, answers:qs.map(()=>null), scores:qs.map(()=>null), locked:false};
+  streakTouch();
+  if (round.mode === "exam" && sel.timer !== "off")
+    startTimer(qs.length * (sel.timer === "relaxed" ? 120 : 75));
   showScreen("quiz");
+  updateDots();
   renderQuestion();
 }
 function showScreen(name){
@@ -669,6 +871,7 @@ function stopVideo(){
 function renderQuestion(){
   const q = round.qs[round.i];
   round.locked = false;
+  updateDots();
   const done = round.scores[round.i] != null;
   document.getElementById("qProgress").textContent = `第 ${round.i+1} / ${round.qs.length} 题`;
   const gotSoFar = round.scores.filter(Boolean).reduce((s,x)=>s+x.got,0);
@@ -855,6 +1058,7 @@ function submitAnswer(){
       const a = currentAnswer();
       const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
       round.answers[round.i] = a; round.scores[round.i] = s;
+      recordStat(q.k, s.got === s.max);
       if (s.got < s.max) recordWrong(q, a, s);
       else if (wrong[q.k]){ srsAdvance(q.k); persistWrong(); }
       round.locked = true;
@@ -868,18 +1072,24 @@ function submitAnswer(){
   }
   // 考试模式：只记录答案，可返回修改，交卷时统一判分与记错题
   round.answers[round.i] = currentAnswer();
+  updateDots();
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else finishExam();
 }
 function finishExam(){
+  stopTimer();
+  let totalGot = 0, totalMax = 0;
   round.qs.forEach((q,i)=>{
     const a = round.answers[i] ?? (q.t==="case" ? {v:null,r:null,c:null} : q.t==="var" ? null : []);
     const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
     round.scores[i] = s;
+    totalGot += s.got; totalMax += s.max;
+    recordStat(q.k, s.got === s.max);
     if (s.got < s.max) recordWrong(q, a, s);
     else if (wrong[q.k]){ srsAdvance(q.k); }
   });
   persistWrong();
+  recordHistory(totalGot, totalMax, round.qs.length);
   showResult();
 }
 function gotoPrev(){
@@ -897,6 +1107,7 @@ function skipQuestion(){
   if (round.mode === "practice"){
     const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : scoreScale(q, a);
     round.scores[round.i] = s;
+    recordStat(q.k, false);
     recordWrong(q, a, s);
   }
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
@@ -924,6 +1135,34 @@ function showResult(){
     pct>=75 ? "良好——注意复盘错题，堵上薄弱点。" :
     pct>=60 ? "及格——建议把错题加入收藏反复练习。" :
               "还需要加油——先从错题重练开始，逐类攻克。";
+  // 模拟考及格线（90%）：考试模式才判定，练习模式不显示
+  const passEl = document.getElementById("rPass");
+  if (round.mode === "exam"){
+    passEl.innerHTML = pct >= 90
+      ? `<span class="passbadge ok">✓ 模拟考核通过（及格线 90%）</span>`
+      : `<span class="passbadge no">未达及格线 90%——把错题重练一遍再来</span>`;
+  } else passEl.innerHTML = "";
+  // 本轮分类正确率条（判例题；得分率=Σgot/Σmax）
+  {
+    const cats = {};
+    round.qs.forEach((q, i)=>{
+      if (q.t !== "case") return;
+      const s = round.scores[i] || {got:0, max:0};
+      const c = cats[q.cat] = cats[q.cat] || {name: q.catname, got:0, max:0};
+      c.got += s.got; c.max += s.max;
+    });
+    const panel = document.getElementById("rCatsPanel");
+    const rows = Object.entries(cats).sort((a,b)=>b[1].max-a[1].max);
+    if (rows.length){
+      panel.style.display = "";
+      document.getElementById("rCats").innerHTML = rows.map(([id, c])=>{
+        const pct2 = c.max ? Math.round(c.got / c.max * 100) : 0;
+        return `<div class="rbar"><span class="rb-n">${esc(c.name)}</span>
+          <span class="rb-track"><i style="width:${pct2}%" class="${pct2>=90?"ok":pct2>=60?"mid":"bad"}"></i></span>
+          <b class="${pct2>=90?"ok":pct2>=60?"mid":"bad"}">${pct2}%</b><small>${c.got}/${c.max}</small></div>`;
+      }).join("");
+    } else panel.style.display = "none";
+  }
   document.getElementById("rList").innerHTML = round.qs.map((q,i)=>{
     const s = round.scores[i] || {got:0, max:0, detail:[]};
     const a = round.answers[i];
@@ -935,6 +1174,7 @@ function showResult(){
       <a class="btn wbbtn" href="${qLink(q)}">查看</a></div>`;
   }).join("");
   renderWbStats();
+  renderAnalysis();
   showScreen("result");
 }
 
@@ -945,6 +1185,7 @@ document.querySelectorAll(".seg").forEach(seg=>{
     seg.querySelectorAll("button").forEach(x=>x.classList.toggle("on", x===b));
     const id = seg.id;
     if (id==="segMode") sel.mode = b.dataset.v;
+    if (id==="segTimer") sel.timer = b.dataset.v;
     if (id==="segCount") sel.count = +b.dataset.v;
     if (id==="segSrc") sel.src = b.dataset.v;
     if (id==="segRange") sel.range = b.dataset.v;
@@ -1164,7 +1405,7 @@ document.addEventListener("cfa:lite", ()=>{
     renderQuestion();
   }
 });
-renderSeasonChips(); renderWbStats(); updatePoolTip();
+renderSeasonChips(); renderWbStats(); updatePoolTip(); renderAnalysis(); renderHistory();
 </script>
 </body>
 </html>

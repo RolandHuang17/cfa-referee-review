@@ -234,6 +234,28 @@ def test_quiz_bank_pool():
                     )
                 if not (q.get("src") or "").strip():
                     problems.append(f"{where} 缺条文出处引文（src）")
+
+            # 出处引文逐字校验：src 按空白归一（含全/半角括号统一，PDF 转换两种混用）
+            # 后按省略号分段，每段必须能在所引章节原文（同样归一）中找到——防止凭记忆
+            # 写的「条文」与真实原文有出入。（引文允许 …… 省略中段，不允许改字/添字）
+            laws_text = {}
+            for s in json.loads((DATA / "laws.json").read_text(encoding="utf-8"))[
+                "sections"
+            ]:
+                laws_text[s["id"]] = re.sub(r"\s+", "", re.sub(r"<[^>]+>", "", s["html"]))
+            for q in tq:
+                src = re.sub(r"\s+", "", q.get("src", "")).replace("（", "(").replace(
+                    "）", ")"
+                )
+                body = laws_text.get(q.get("law"), "").replace("（", "(").replace(
+                    "）", ")"
+                )
+                frags = [f for f in re.split(r"……+", src) if f]
+                missing = [f for f in frags if f not in body]
+                if missing:
+                    problems.append(
+                        f"theory {q.get('id')} 出处引文与原文不符: {missing[0][:40]}…"
+                    )
             m2 = re.search(r',"theory":(\d+)\}', text)
             if not m2:
                 problems.append("quiz.html meta 缺 theory 计数")

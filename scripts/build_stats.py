@@ -295,6 +295,133 @@ def team_stats(matches, view):
     return teams
 
 
+# ---------- 趋势概览（构建期 SVG，零依赖；口径=合集全部判例，含女足/全运会） ----------
+
+
+def build_trends(cases, issues):
+    per_issue = {}
+    for i in issues:
+        per_issue[i["no"]] = {"no": i["no"], "date": i["date"], "wrong": 0, "var": 0}
+    cat = {}
+    for c in cases:
+        rec = per_issue.get(c["issue"])
+        if rec and c["referee_verdict"] == "wrong":
+            rec["wrong"] += 1
+        if rec and c["var_verdict"] == "wrong":
+            rec["var"] += 1
+        name = c.get("category_name") or c.get("category")
+        d = cat.setdefault(name, {"wrong": 0, "correct": 0, "pending": 0})
+        key = c["referee_verdict"] if c["referee_verdict"] in d else "pending"
+        d[key] += 1
+    rows = sorted(per_issue.values(), key=lambda r: r["no"])
+    cats = sorted(cat.items(), key=lambda kv: -sum(kv[1].values()))
+    return {"issues": rows, "cats": cats}
+
+
+def _svg_issue_trend(rows):
+    """逐期错漏判柱状 + VAR 错误折线叠加（构建期 SVG，颜色走 CSS 变量适配明暗）。"""
+    if not rows:
+        return ""
+    w, h, pad_l, pad_b, pad_t = 720, 210, 34, 26, 14
+    n = len(rows)
+    ymax = max(4, max(r["wrong"] for r in rows))
+    inner_w, inner_h = w - pad_l - 12, h - pad_b - pad_t
+    step = inner_w / n
+    bw = max(4, min(26, step * 0.62))
+    parts = [
+        f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="逐期错漏判数量趋势图" '
+        'class="tsvg">'
+    ]
+    for gy in range(0, ymax + 1):
+        y = pad_t + inner_h * (1 - gy / ymax)
+        parts.append(
+            f'<line x1="{pad_l}" y1="{y:.1f}" x2="{w - 12}" y2="{y:.1f}" '
+            'class="ts-grid"/>'
+        )
+        parts.append(
+            f'<text x="{pad_l - 6}" y="{y + 3.5:.1f}" class="ts-yl">{gy}</text>'
+        )
+    # VAR 错误折线
+    pts = []
+    for i, r in enumerate(rows):
+        x = pad_l + step * (i + 0.5)
+        y = pad_t + inner_h * (1 - min(r["var"], ymax) / ymax)
+        pts.append(f"{x:.1f},{y:.1f}")
+    if any(r["var"] for r in rows):
+        parts.append(f'<polyline points="{" ".join(pts)}" class="ts-var"/>')
+    for i, r in enumerate(rows):
+        x = pad_l + step * (i + 0.5)
+        bh = inner_h * r["wrong"] / ymax
+        if r["wrong"]:
+            parts.append(
+                f'<rect x="{x - bw / 2:.1f}" y="{pad_t + inner_h - bh:.1f}" '
+                f'width="{bw:.1f}" height="{bh:.1f}" class="ts-bar">'
+                f"<title>第{r['no']}期（{r['date'][:4]}-{r['date'][4:6]}-{r['date'][6:]}）"
+                f"：错漏判 {r['wrong']} 例 / VAR 错误 {r['var']} 例</title></rect>"
+            )
+        if r["var"]:
+            parts.append(
+                f'<circle cx="{x:.1f}" cy="{pad_t + inner_h * (1 - min(r["var"], ymax) / ymax):.1f}" '
+                'r="3" class="ts-var-dot"><title>第'
+                f"{r['no']}期 VAR 错误 {r['var']} 例</title></circle>"
+            )
+    lab_step = max(1, (n + 11) // 12)
+    for i, r in enumerate(rows):
+        if r["no"] % lab_step == 0 or i == n - 1:
+            x = pad_l + step * (i + 0.5)
+            parts.append(
+                f'<text x="{x:.1f}" y="{h - 8}" class="ts-xl">{r["no"]}</text>'
+            )
+    parts.append("</svg>")
+    return "".join(parts)
+
+
+def _svg_cat_dist(cats):
+    """教学分类×判定堆叠横条（错漏判/支持原判/不予认定）。"""
+    if not cats:
+        return ""
+    row_h, label_w, w = 24, 148, 720
+    h = len(cats) * row_h + 26
+    total = max(sum(v.values()) for _, v in cats)
+    bar_w = w - label_w - 56
+    parts = [
+        f'<svg viewBox="0 0 {w} {h}" role="img" aria-label="教学分类判定分布图" class="tsvg">'
+    ]
+    parts.append(
+        f'<text x="{w - 4}" y="12" class="ts-legend" text-anchor="end">'
+        "■ 错漏判 ■ 支持原判 ■ 不予认定</text>"
+    )
+    parts.append(
+        '<rect x="' + str(w - 210) + '" y="4" width="10" height="8" class="ts-b-w"/>'
+        '<rect x="' + str(w - 148) + '" y="4" width="10" height="8" class="ts-b-c"/>'
+        '<rect x="' + str(w - 86) + '" y="4" width="10" height="8" class="ts-b-p"/>'
+    )
+    legend = (
+        ("ts-b-w", "wrong", "错漏判"),
+        ("ts-b-c", "correct", "支持原判"),
+        ("ts-b-p", "pending", "不予认定"),
+    )
+    for i, (name, v) in enumerate(cats):
+        y = 22 + i * row_h
+        n_all = sum(v.values())
+        parts.append(
+            f'<text x="{label_w - 8}" y="{y + 14}" class="ts-cl" '
+            f'text-anchor="end">{name}（{n_all}）</text>'
+        )
+        x = label_w
+        for cls, key, cname in legend:
+            seg = bar_w * v[key] / total
+            if seg > 0:
+                parts.append(
+                    f'<rect x="{x:.1f}" y="{y + 2}" width="{seg:.1f}" '
+                    f'height="{row_h - 9}" class="{cls}">'
+                    f"<title>{name} · {cname} {v[key]} 例</title></rect>"
+                )
+                x += seg
+    parts.append("</svg>")
+    return "".join(parts)
+
+
 def build_data(season):
     impact, scores, cmap = load(season)
     matches = build_matches(impact, scores, cmap)
@@ -304,9 +431,13 @@ def build_data(season):
     teams = {item["name"]: item for item in catalog.values()}
 
     # 补充期数信息用于链接展示
-    cases = json.loads((DATA / SEASONS[season]["cases"]).read_text(encoding="utf-8"))[
-        "cases"
-    ]
+    case_data = json.loads(
+        (DATA / SEASONS[season]["cases"]).read_text(encoding="utf-8")
+    )
+    cases = case_data["cases"]
+    trends = build_trends(cases, case_data["issues"])
+    trend_issues_svg = _svg_issue_trend(trends["issues"])
+    trend_cats_svg = _svg_cat_dist(trends["cats"])
     cmap2 = {c["seq"]: c for c in cases}
     for view_teams in (victims, benefits):
         for t in view_teams.values():
@@ -360,7 +491,7 @@ def build_data(season):
         for i in m["items"]:
             type_counts[i["type"]] = type_counts.get(i["type"], 0) + 1
 
-    return {
+    data = {
         "built": date.today().isoformat(),
         "season": season,
         "page": SEASONS[season]["page"],
@@ -378,6 +509,7 @@ def build_data(season):
             (DATA / SEASONS[season]["scores"]).read_text(encoding="utf-8")
         )["note"],
     }
+    return data, trend_issues_svg, trend_cats_svg
 
 
 HTML = r"""<!DOCTYPE html>
@@ -395,6 +527,27 @@ HTML = r"""<!DOCTYPE html>
 .page-head .sub a{color:var(--brand);text-decoration:none}
 .page-head .sub a:hover{text-decoration:underline}
 .wrap{max-width:1180px;margin:0 auto;padding:0 16px}
+.trends{margin:18px 0 6px;border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card)}
+.trends summary{cursor:pointer;padding:12px 16px;font-size:14px;font-weight:600;color:var(--ink2);
+  user-select:none;list-style-position:inside}
+.trends summary:hover{color:var(--brand)}
+.tr-box{padding:4px 16px 14px}
+.tr-box + .tr-box{border-top:1px dashed var(--line)}
+.tr-h{font-size:13.5px;font-weight:600;margin:10px 0 4px;color:var(--ink)}
+.tr-sub{font-weight:400;font-size:12px;color:var(--muted);margin-left:8px}
+.tsvg{width:100%;height:auto;display:block}
+.ts-grid{stroke:var(--line2);stroke-width:1}
+.ts-yl{fill:var(--muted);font-size:10px;text-anchor:end}
+.ts-xl{fill:var(--muted);font-size:10px;text-anchor:middle}
+.ts-bar{fill:var(--red-bg);stroke:var(--red);stroke-width:1;rx:2}
+.ts-var{fill:none;stroke:var(--brand);stroke-width:1.8;stroke-linejoin:round}
+.ts-var-dot{fill:var(--brand)}
+.ts-cl{fill:var(--ink2);font-size:11.5px}
+.ts-legend{fill:var(--muted);font-size:10.5px}
+.ts-b-w{fill:var(--red)}
+.ts-b-c{fill:var(--green)}
+.ts-b-p{fill:var(--faint)}
+@media print{.trends{break-inside:avoid}}
 .statbar{display:grid;grid-template-columns:repeat(auto-fit,minmax(128px,1fr));gap:10px;margin-top:16px}
 .stat{background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);
   padding:10px 14px;box-shadow:var(--shadow-sm);
@@ -503,6 +656,17 @@ __TOPBAR__
 </div>
 
 <main class="wrap">
+  <details class="trends" open>
+    <summary>📈 趋势概览（合集全部判例口径，含女足/全运会——与下方得失盘点的男子职业联赛口径不同）</summary>
+    <div class="tr-box">
+      <div class="tr-h">逐期错漏判数量与 VAR 错误<span class="tr-sub">柱=该期官方认定错漏判数 · 折线/圆点=其中 VAR 错误数 · 悬停查看明细</span></div>
+      __TREND_ISSUES__
+    </div>
+    <div class="tr-box">
+      <div class="tr-h">教学分类 × 判定分布<span class="tr-sub">横条=该分类三赛季判例总量中的错漏判/支持原判/不予认定构成</span></div>
+      __TREND_CATS__
+    </div>
+  </details>
   <div class="note">
     <b>统计口径：</b>①仅计入评议组明确认定的错漏判（支持原判与不予认定的不计）；②「确定得失球」修正仅含进球判定类错误——被漏判的进球（认定应有效）计为本队应得1球、被错判有效的对方进球计为对方应扣除1球；③点球不折算进球，计为「机会因素」；④红黄牌类错误全部计入，无论是否影响比分；⑤「结果或被改变」＝修正比分后该队积分提高（如负变平、平变胜）；「存在影响可能」＝修正后积分不变，但另有漏判点球/红牌等机会因素且分差≤1；⑥同一比赛多个错漏判先合并再判定；⑦本页不推算积分榜连锁影响。
   </div>
@@ -677,7 +841,7 @@ document.getElementById("teamList").addEventListener("keydown", e=>{
 
 def build_season(season):
     cfg = SEASONS[season]
-    data = build_data(season)
+    data, trend_issues_svg, trend_cats_svg = build_data(season)
     tb = topbar(
         active=cfg["out"],
         stats=cfg["out"],
@@ -701,6 +865,8 @@ def build_season(season):
         .replace("__PAGE__", cfg["page"])
         .replace("__ISSUEDESC__", cfg["issueDesc"])
         .replace("__BUILT__", date.today().isoformat())
+        .replace("__TREND_ISSUES__", trend_issues_svg)
+        .replace("__TREND_CATS__", trend_cats_svg)
     )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]

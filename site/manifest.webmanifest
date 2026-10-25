@@ -1,0 +1,14 @@
+{
+  "name": "裁判学习一站式平台",
+  "short_name": "裁判学习",
+  "description": "中国足协裁判评议 2024–2026 三赛季判例合集：视频复盘、教学分类、各队得失盘点、统一判罚尺度与竞赛规则。",
+  "lang": "zh-CN",
+  "start_url": "index.html",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#f7f2e7",
+  "theme_color": "#b3573a",
+  "icons": [
+    {"src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any"}
+  ]
+}

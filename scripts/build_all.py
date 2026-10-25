@@ -39,6 +39,7 @@ def main():
     run("build_hns.py")
     run("build_quiz.py")
     run("build_search.py")
+    run("build_pwa.py")
     run("build_seo.py")
     run("build_feed.py")
     if SITE_ASSETS.exists():

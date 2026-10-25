@@ -653,6 +653,40 @@ def test_seo_discovery_layer():
     print("发现层校验通过: meta/sitemap/robots/feed")
 
 
+def test_pwa_offline_layer():
+    """PWA 离线层：sw.js/manifest/icon 存在且策略正确；每页有注册片段与 manifest 链接。"""
+    problems = []
+    sw = SITE / "sw.js"
+    if not sw.exists():
+        problems.append("缺少 site/sw.js")
+    else:
+        text = sw.read_text(encoding="utf-8")
+        for token, what in (("/videos/", "跳过 videos"), ("navigate", "导航策略"),
+                            ("VERSION", "版本戳"), ("caches.delete", "旧缓存清理")):
+            if token not in text:
+                problems.append(f"sw.js 缺 {what}")
+    mf = SITE / "manifest.webmanifest"
+    if not mf.exists():
+        problems.append("缺少 site/manifest.webmanifest")
+    else:
+        m = json.loads(mf.read_text(encoding="utf-8"))
+        if m.get("start_url") != "index.html" or not m.get("icons"):
+            problems.append("manifest 异常（start_url/icons）")
+    if not (SITE / "icon.svg").exists():
+        problems.append("缺少 site/icon.svg")
+    for name in PAGES:
+        path = SITE / name
+        text = path.read_text(encoding="utf-8") if path.exists() else ""
+        if not text:
+            continue
+        if "serviceWorker.register" not in text:
+            problems.append(f"{name} 缺 SW 注册片段")
+        if 'rel="manifest"' not in text:
+            problems.append(f"{name} 缺 manifest 链接")
+    _finish(problems)
+    print("PWA 离线层校验通过: sw/manifest/icon + 全页注册")
+
+
 def test_bat_file_gbk_encoded():
     """硬约束 4：启动合集网页.bat 必须存为 GBK（cmd 按 ANSI 码页解析，UTF-8 会乱码中断）。"""
     raw = (ROOT / "启动合集网页.bat").read_bytes()
@@ -683,6 +717,7 @@ CHECKS = [
     test_data_conform_to_schemas,
     test_xlinks_references_resolve,
     test_seo_discovery_layer,
+    test_pwa_offline_layer,
     test_bat_file_gbk_encoded,
     test_internal_links_resolve,
     test_team_catalog_complete,

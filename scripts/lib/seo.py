@@ -82,6 +82,7 @@ def meta_tags(page_file, extra_jsonld=None):
         ]
     lines += [
         f'<link rel="icon" href="{FAVICON}">',
+        '<link rel="manifest" href="manifest.webmanifest">',
         '<link rel="alternate" type="application/atom+xml" '
         f'title="{SITE_NAME}·评议更新订阅" href="feed.xml">',
     ]

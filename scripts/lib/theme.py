@@ -250,6 +250,12 @@ _TOGGLE_JS = (
     "document.body.classList.remove('nav-open');});</script>"
 )
 
+# PWA Service Worker 注册（仅在线 http(s)；file:// 双击离线用法静默跳过，见 build_pwa.py）
+_SW_JS = (
+    "<script>if(/^https?:$/.test(location.protocol)&&'serviceWorker' in navigator)"
+    "{try{navigator.serviceWorker.register('sw.js')}catch(e){}}</script>"
+)
+
 
 def inject_theme(html, meta=""):
     """注入主题 CSS/首帧脚本/切换脚本；meta 为 lib.seo.meta_tags() 的输出（可选）。"""
@@ -257,4 +263,4 @@ def inject_theme(html, meta=""):
     if meta:
         head_extra = f"{meta}\n{head_extra}"
     html = html.replace("</head>", head_extra + "</head>", 1)
-    return html.replace("</body>", f"{_TOGGLE_JS}</body>", 1)
+    return html.replace("</body>", f"{_TOGGLE_JS}{_SW_JS}</body>", 1)

@@ -12,6 +12,7 @@ import json
 from urllib.parse import quote
 
 from lib.pages import by_file
+from lib.site_stats import counts
 
 SITE_URL = "https://rolandhuang17.github.io/cfa-referee-review"
 SITE_NAME = "裁判学习一站式平台"
@@ -48,8 +49,8 @@ def jsonld_dataset():
         "@context": "https://schema.org",
         "@type": "Dataset",
         "name": "中国足协裁判评议判例库（2024–2026）",
-        "description": "三赛季 81 期裁判评议全量判例：事件描述、申诉意见、评议组认定原文、"
-        "教学分类与错漏判影响标注。",
+        "description": f"三赛季 {counts()['issues']} 期裁判评议全量判例：事件描述、"
+        "申诉意见、评议组认定原文、教学分类与错漏判影响标注。",
         "url": SITE_URL + "/",
         "inLanguage": "zh-CN",
         "isAccessibleForFree": True,

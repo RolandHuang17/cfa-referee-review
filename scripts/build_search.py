@@ -5,7 +5,7 @@
 页面端纯 JS 子串匹配（中文无分词，indexOf 足够快）+ 来源分组过滤 + 命中上下文摘录。
 
 收录范围与体量控制：
-- 三赛季判例 612 条（desc/appeal/conclusion/tags/对阵，锚点直达判例卡）
+- 三赛季全部判例（desc/appeal/conclusion/tags/对阵，锚点直达判例卡）
 - 竞赛规则 24 章（html 剥标签全文，锚点直达章节）
 - 统一尺度 104 例（note+决定矩阵，锚点直达场景卡）
 - 国际资料：UEFA 判例 / IFAB FAQ / weekly 期目 / CONMEBOL / RFEF / HNS / PRO 文章
@@ -143,8 +143,8 @@ def build_docs():
                     )
     # UEFA 判例（中文标题 + 英文原标题都可搜）
     uefa, uzh = _read(UEFA_JSON), _read(UEFA_ZH_JSON)
-    for grp in uefa.get("groups", []):
-        for it in grp.get("items", []):
+    for gi, grp in enumerate(uefa.get("groups", [])):
+        for i, it in enumerate(grp.get("items", []), 1):
             zh_title = (uzh.get("items", {}).get(it.get("id", "")) or {}).get(
                 "title", ""
             )
@@ -152,7 +152,7 @@ def build_docs():
                 "intl",
                 "UEFA",
                 zh_title or it.get("title", ""),
-                "uefa.html",
+                f"uefa.html#u-{gi}c{i}",
                 f"{it.get('title', '')} {zh_title} {grp.get('name_cn', '')} {it.get('caption', '')}",
             )
     # IFAB FAQ + 条款（中文层全文）

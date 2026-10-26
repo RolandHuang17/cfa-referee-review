@@ -493,6 +493,7 @@ function ttsStop(){
 
 function select(id, scroll=true){
   const s = byId[id]; if(!s) return;
+  flushNote();
   cur = id;
   ttsStop();  // 切章即停上一章的朗读
   document.getElementById("emptyBox").style.display = "none";
@@ -734,19 +735,41 @@ function loadNote(){
     (secNotes[cur] && secNotes[cur].text && secNotes[cur].text.trim()) ? "· 有笔记" : "";
 }
 let noteTimer = null;
-document.getElementById("secNote").addEventListener("input", ()=>{
-  document.getElementById("noteStat").textContent = "正在保存…";
-  clearTimeout(noteTimer);
-  noteTimer = setTimeout(()=>{
-    const t = document.getElementById("secNote").value;
-    if(t.trim()) secNotes[cur] = {text: t, ts: Date.now()};
-    else delete secNotes[cur];
-    saveNotes();
+let pendingNote = null;  // {sec, text} 冻结输入时的章节与文本，避免切章串写
+function saveNote(sec, text){
+  if(!sec) return;
+  if(text.trim()) secNotes[sec] = {text, ts: Date.now()};
+  else delete secNotes[sec];
+  saveNotes();
+  if (cur === sec){
+    loadNote();
     const d = new Date();
     document.getElementById("noteStat").textContent =
       "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-    loadNote();
+  }
+}
+function flushNote(){
+  if (noteTimer !== null){ clearTimeout(noteTimer); noteTimer = null; }
+  if (!pendingNote) return;
+  const p = pendingNote; pendingNote = null;
+  saveNote(p.sec, p.text);
+}
+document.getElementById("secNote").addEventListener("input", ()=>{
+  if (!cur) return;
+  if (pendingNote && pendingNote.sec !== cur) flushNote();
+  const sec = cur;
+  pendingNote = {sec, text: document.getElementById("secNote").value};
+  document.getElementById("noteStat").textContent = "正在保存…";
+  if (noteTimer !== null) clearTimeout(noteTimer);
+  noteTimer = setTimeout(()=>{
+    noteTimer = null;
+    const p = pendingNote; pendingNote = null;
+    if (p) saveNote(p.sec, p.text);
   }, 800);
+});
+window.addEventListener("pagehide", flushNote);
+document.addEventListener("visibilitychange", ()=>{
+  if (document.visibilityState === "hidden") flushNote();
 });
 document.getElementById("btnExportN").onclick = ()=>{
   const blob = new Blob(

@@ -22,6 +22,7 @@ sys.path.insert(0, str(ROOT / "scripts"))
 from lib.crest_catalog import load_catalog, normalize_team, validate_catalog  # noqa: E402
 from lib.pages import PAGE_FILES  # noqa: E402
 from lib.paths import DATA, SITE  # noqa: E402
+from lib.site_stats import cheatsheet_count, counts, quiz_counts  # noqa: E402
 from lib.team_names import ALIASES  # noqa: E402
 
 # 页面清单唯一权威源在 scripts/lib/pages.py（sitemap/搜索/SEO 同源），此处只消费
@@ -808,8 +809,94 @@ def test_bat_file_gbk_encoded():
     print("启动合集网页.bat 为 GBK 编码")
 
 
+def test_site_counts_are_dynamic():
+    """页面/SEO 数字必须与数据实时计算值一致（防 81/612/592 再漂移）。"""
+    problems = []
+    c = counts()
+    index = (SITE / "index.html").read_text(encoding="utf-8")
+    for needle in (f"{c['issues']} 期", f"{c['cases']} 判例"):
+        if needle not in index:
+            problems.append(f"index.html 缺动态计数: {needle}")
+    q = quiz_counts()
+    quiz = (SITE / "quiz.html").read_text(encoding="utf-8")
+    m = re.search(
+        r'"meta":\{"case":(\d+),"scale":(\d+),"var":(\d+),"theory":(\d+)',
+        quiz,
+    )
+    if not m:
+        problems.append("quiz.html 缺题库 meta")
+    else:
+        got = tuple(int(x) for x in m.groups())
+        want = (q["case"], q["scale"], q["var"], q["theory"])
+        if got != want:
+            problems.append(f"quiz.html 题库 meta {got} != 实时计数 {want}")
+    cards = cheatsheet_count()
+    cheatsheet = (SITE / "cheatsheet.html").read_text(encoding="utf-8")
+    if f"{cards} 张卡" not in cheatsheet:
+        problems.append(f"cheatsheet.html 缺动态卡数: {cards} 张卡")
+    _finish(problems)
+    print(
+        f"动态计数校验通过: {c['issues']} 期/{c['cases']} 判例/{q['total']} 题/{cards} 卡"
+    )
+
+
+def test_scale_placeholder_text_sanitized():
+    """官方的 Fair Challenge / White 37 / Indirect Free Kick 占位文本不得进页面或题库。"""
+    problems = []
+    scale = json.loads((DATA / "scale.json").read_text(encoding="utf-8"))
+    for year, yd in scale.items():
+        if not isinstance(yd, dict):
+            continue
+        for sec in yd.get("sections", []):
+            for group in sec.get("groups", []):
+                for item in group.get("items", []):
+                    reason = (item.get("reason") or "").strip().lower()
+                    note = (item.get("note") or "").strip().lower()
+                    where = f"scale {year} {item.get('id')}"
+                    if reason == "fair challenge" or reason.startswith("white 37"):
+                        problems.append(f"{where} reason 仍是占位文本")
+                    if note in ("indirect free kick", "_"):
+                        problems.append(f"{where} note 仍是占位文本")
+    scale_html = (SITE / "scale.html").read_text(encoding="utf-8")
+    for needle in ("Fair Challenge", "White 37", "Indirect Free Kick"):
+        if needle in scale_html:
+            problems.append(f"scale.html 仍含占位文本: {needle}")
+    quiz_html = (SITE / "quiz.html").read_text(encoding="utf-8")
+    for needle in (
+        '"note":"Indirect Free Kick"',
+        '"reason":"Fair Challenge"',
+        '"reason":"White 37',
+    ):
+        if needle in quiz_html:
+            problems.append(f"quiz.html 仍含占位数据: {needle}")
+    _finish(problems)
+    print("尺度占位文本校验通过")
+
+
+def test_stats_pending_score():
+    """source=待补 的比分不得被当作真实比分参与修正。"""
+    import build_stats
+
+    _, scores, _ = build_stats.load("2024")
+    pending = [k for k, v in scores.items() if (v.get("source") or "") == "待补"]
+    if not pending:
+        return
+    impact, scores, cmap = build_stats.load("2024")
+    matches = build_stats.build_matches(impact, scores, cmap)
+    problems = []
+    for key in pending:
+        m = matches.get(key)
+        if m and m.get("score"):
+            problems.append(f"待补比分仍参与修正: {key}")
+    _finish(problems)
+    print(f"待补比分校验通过: {len(pending)} 场")
+
+
 CHECKS = [
     test_pages_exist_and_are_self_contained,
+    test_site_counts_are_dynamic,
+    test_scale_placeholder_text_sanitized,
+    test_stats_pending_score,
     test_season_case_counts,
     test_impact_and_scores_consistency,
     test_site_pages_in_sync_with_data,

@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated": "2026-10-04",
+ "generated": "2026-10-26",
  "note": "考题答案库（判例轴）：r=判罚决定 c=纪律处分，取值见 rLabels/cLabels；auto=脚本起草，reviewed=人工已校对（quiz 页只对 reviewed 条目出②③问）",
  "rLabels": {
   "playon": "不犯规（比赛继续）",
@@ -4009,6 +4009,33 @@
    "auto": true,
    "reviewed": true,
    "conf": "medium"
+  },
+  "2025-215": {
+   "c": "yellow",
+   "auto": false,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-226": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": false,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-227": {
+   "r": "playon",
+   "c": "none",
+   "auto": false,
+   "reviewed": true,
+   "conf": "high"
+  },
+  "2026-228": {
+   "r": "goal_invalid",
+   "c": "none",
+   "auto": false,
+   "reviewed": true,
+   "conf": "high"
   }
  }
 }

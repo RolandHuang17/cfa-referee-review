@@ -61,7 +61,7 @@ HTML = r"""<!DOCTYPE html>
 __TOPBAR__
 <div class="cs-head"><div class="wrap">
   <h1>考点速查卡</h1>
-  <div class="sub">考前一夜的八张卡：手球考量链 / 犯规三档 / DOGSO·SPA / VAR 介入 / 红黄牌速查 / 点球程序 / 越位三步 / 重新开始方式。<b>点击卡片翻面看细则</b>；打印即得单页讲义（全部展开）。条文依据《足球竞赛规则 2026/27》简体中文版（<a href="rules.html">规则全文</a>），评议口径提示提炼自三赛季评议。</div>
+  <div class="sub">考前一夜的 __NCARDS__ 张卡：手球考量链 / 犯规三档 / DOGSO·SPA / VAR 介入 / 红黄牌速查 / 点球程序 / 越位三步 / 重新开始方式 / 2026/27 新规。<b>点击卡片翻面看细则</b>；打印即得单页讲义（全部展开）。条文依据《足球竞赛规则 2026/27》简体中文版（<a href="rules.html">规则全文</a>），评议口径提示提炼自三赛季评议。</div>
 </div></div>
 <div class="cs-grid" id="csGrid"></div>
 <script>
@@ -102,7 +102,11 @@ def main():
         brand_sub="考点速查",
         seasons=("2026", "2025", "2024"),
     )
-    html = HTML.replace("__CARDS__", cards_js).replace("__TOPBAR__", tb)
+    html = (
+        HTML.replace("__CARDS__", cards_js)
+        .replace("__TOPBAR__", tb)
+        .replace("__NCARDS__", str(len(data["cards"])))
+    )
     html = inject_theme(html, meta=meta_tags("cheatsheet.html"))
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "cheatsheet.html"

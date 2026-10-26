@@ -20,6 +20,9 @@ from lib.team_names import normalize_name
 from lib.theme import inject_theme, js_icons, topbar
 
 from lib.paths import DATA, SITE
+from lib.site_stats import counts
+
+_COUNTS = counts()
 
 SEASONS = {
     "2026": {
@@ -29,7 +32,7 @@ SEASONS = {
         "out": "stats-2026.html",
         "page": "season-2026.html",
         "season": "2026",
-        "issueDesc": "2026赛季第1—22期（赛季进行中）",
+        "issueDesc": f"2026赛季第1—{_COUNTS['seasons']['2026']['issues']}期（赛季进行中）",
     },
     "2025": {
         "cases": "cases-2025.json",
@@ -38,7 +41,7 @@ SEASONS = {
         "out": "stats-2025.html",
         "page": "season-2025.html",
         "season": "2025",
-        "issueDesc": "2025赛季第1—32期",
+        "issueDesc": f"2025赛季第1—{_COUNTS['seasons']['2025']['issues']}期",
     },
     "2024": {
         "cases": "cases-2024.json",
@@ -47,7 +50,7 @@ SEASONS = {
         "out": "stats-2024.html",
         "page": "season-2024.html",
         "season": "2024",
-        "issueDesc": "2024赛季第1—27期",
+        "issueDesc": f"2024赛季第1—{_COUNTS['seasons']['2024']['issues']}期",
     },
 }
 
@@ -149,6 +152,10 @@ def build_matches(impact, scores, cmap):
 
     for key, m in matches.items():
         sc = scores.get(key)
+        if sc and (
+            (sc.get("source") or "").strip() == "待补" or "h" not in sc or "a" not in sc
+        ):
+            sc = None
         m["score"] = (
             {
                 "h": sc["h"],
@@ -728,6 +735,7 @@ const RS = {
   pending:['r-pending','比分待补']};
 
 let curView = 'victims', curLg = '';
+let openTeams = new Set();  // 切视角重建列表时保留已展开球队
 
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
   .replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
@@ -755,7 +763,7 @@ function renderTeam(name, t, idx){
       corrLine = ` <span class="corr">修正比分 ${c[0]}:${c[1]}</span>`;
     }
     const label = (curView==='benefits'?TLB:TL)[d.type];
-    return `<div class="drow">
+    return `<div class="drow" data-lg="${esc(d.league)}">
       <span class="badge">${d.league}${typeof d.round==="number" ? "第"+d.round+"轮" : "·"+d.round}</span>
       <span class="mt">${esc(d.home)} ${d.score?d.score.h+" : "+d.score.a:"—"} ${esc(d.away)}</span>
       ${d.match_note?`<span class="badge">${esc(d.match_note)}</span>`:""}
@@ -771,7 +779,7 @@ function renderTeam(name, t, idx){
   const crest = team && team.status === 'verified' && team.path
     ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
     : `<span class="team-dot" style="width:22px;height:22px;background:${(team&&team.bg)||'#e9f2fb'};border:1px solid ${(team&&team.fg)||'#0b4c8c'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
-  return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'};--i:${Math.min(idx||0,12)}">
+  return `<div class="teamcard" data-name="${esc(name)}" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'};--i:${Math.min(idx||0,12)}">
     <div class="thead" role="button" tabindex="0" aria-label="展开或收起该队明细">
       <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
@@ -784,15 +792,32 @@ function renderTeam(name, t, idx){
   </div>`;
 }
 
+function applyLg(){
+  let any = false;
+  document.querySelectorAll("#teamList .teamcard").forEach(c=>{
+    const lgs = JSON.parse(c.dataset.lg || "[]");
+    const teamOn = !curLg || lgs.includes(curLg);
+    c.style.display = teamOn ? "" : "none";
+    c.querySelectorAll(".drow").forEach(r=>{
+      r.style.display = (!curLg || r.dataset.lg === curLg) ? "" : "none";
+    });
+    if (teamOn) any = true;
+  });
+  document.getElementById("noResult").style.display = any ? "none" : "block";
+}
 function render(){
   const data = DATA[curView];
   const names = Object.keys(data).sort((a,b)=>{
     const A=data[a], B=data[b];
     return (B.swing*1000+B.cases) - (A.swing*1000+A.cases) || a.localeCompare(b);
   });
+  const open = new Set(openTeams);
   document.getElementById("teamList").innerHTML =
-    names.map((n,idx)=>renderTeam(n, data[n], idx)).join("") ||
-    `<div class="noresult">该联赛下没有数据。</div>`;
+    names.map((n,idx)=>renderTeam(n, data[n], idx)).join("");
+  document.querySelectorAll("#teamList .teamcard").forEach(c=>{
+    if (open.has(c.dataset.name)) c.classList.add("open");
+  });
+  applyLg();
 }
 
 document.getElementById("btnVictim").onclick = e=>{
@@ -814,24 +839,27 @@ document.querySelectorAll(".lg-chip").forEach(b=>{
   b.onclick = ()=>{
     curLg = b.dataset.lg;
     document.querySelectorAll(".lg-chip").forEach(x=>x.classList.toggle('on', x===b));
-    document.querySelectorAll(".teamcard").forEach(c=>{
-      const lgs = JSON.parse(c.dataset.lg);
-      c.style.display = (!curLg || lgs.includes(curLg)) ? "" : "none";
-    });
+    applyLg();
   };
 });
 
 render();
 
 // 球队卡展开/收起（委托 + 键盘可达：Enter/空格 与点击等效）
+function toggleCard(card){
+  card.classList.toggle("open");
+  const name = card.dataset.name;
+  if (card.classList.contains("open")) openTeams.add(name);
+  else openTeams.delete(name);
+}
 document.getElementById("teamList").addEventListener("click", e=>{
   const t = e.target.closest(".thead");
-  if (t) t.parentElement.classList.toggle("open");
+  if (t) toggleCard(t.parentElement);
 });
 document.getElementById("teamList").addEventListener("keydown", e=>{
   if (e.key !== "Enter" && e.key !== " ") return;
   const t = e.target.closest(".thead");
-  if (t){ e.preventDefault(); t.parentElement.classList.toggle("open"); }
+  if (t){ e.preventDefault(); toggleCard(t.parentElement); }
 });
 </script>
 </body>

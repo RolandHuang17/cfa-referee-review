@@ -1061,6 +1061,7 @@ document.getElementById("btnHideAns").setAttribute("aria-pressed", HIDE ? "true"
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
+  flushNote();
   if (window.matchMedia && window.matchMedia("(max-width:1080px)").matches)
     document.body.classList.add("detail-open");
   state.sel = seq;
@@ -1273,6 +1274,7 @@ document.getElementById("dHead").addEventListener("click", e=>{
   if (e.target.closest("#favBtn")) toggleFav(state.sel);
 });
 function renderNoteUI(c){
+  flushNote();
   const wrap = document.getElementById("noteWrap");
   wrap.style.display = "block";
   document.getElementById("noteBox").value = (notes[c.seq]&&notes[c.seq].text)||"";
@@ -1316,23 +1318,43 @@ document.getElementById("btnNoteTime").addEventListener("click", ()=>{
   box.dispatchEvent(new Event("input", {bubbles:true}));
 });
 let noteTimer = null;
-document.getElementById("noteBox").addEventListener("input", ()=>{
-  const seq = state.sel; if(!seq) return;
-  document.getElementById("noteStatus").textContent = "正在保存…";
-  clearTimeout(noteTimer);
-  noteTimer = setTimeout(()=>{
-    const t = document.getElementById("noteBox").value;
-    if (t.trim()) notes[seq] = {text: t, ts: Date.now()};
-    else delete notes[seq];
-    persistFav();
+let pendingNote = null;  // 输入时冻结的 {seq, text}，防止切题后旧定时器读到新 textarea
+function saveNote(seq, text){
+  if (!seq) return;
+  if (text.trim()) notes[seq] = {text, ts: Date.now()};
+  else delete notes[seq];
+  persistFav();
+  renderFavList();
+  const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
+  if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
+  if (state.sel === seq){
     const d = new Date();
     document.getElementById("noteStatus").textContent =
       "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-    renderFavList();
-    const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-    if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
     renderNoteView();
+  }
+}
+function flushNote(){
+  if (noteTimer !== null){ clearTimeout(noteTimer); noteTimer = null; }
+  if (!pendingNote) return;
+  const p = pendingNote; pendingNote = null;
+  saveNote(p.seq, p.text);
+}
+document.getElementById("noteBox").addEventListener("input", ()=>{
+  const seq = state.sel; if(!seq) return;
+  if (pendingNote && pendingNote.seq !== seq) flushNote();
+  pendingNote = {seq, text: document.getElementById("noteBox").value};
+  document.getElementById("noteStatus").textContent = "正在保存…";
+  if (noteTimer !== null) clearTimeout(noteTimer);
+  noteTimer = setTimeout(()=>{
+    noteTimer = null;
+    const p = pendingNote; pendingNote = null;
+    if (p) saveNote(p.seq, p.text);
   }, 800);
+});
+window.addEventListener("pagehide", flushNote);
+document.addEventListener("visibilitychange", ()=>{
+  if (document.visibilityState === "hidden") flushNote();
 });
 
 // ---------- 笔记汇总弹层：全季一览 + 笔记内搜索 + 点击跳判例 ----------

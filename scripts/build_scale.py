@@ -299,6 +299,32 @@ def PKG_VID(year):
     return SCALE_VIDEOS / year
 
 
+PLACEHOLDER_REASONS = ("fair challenge",)
+PLACEHOLDER_NOTES = {"indirect free kick", "_"}
+
+
+def sanitize_placeholders(data):
+    """官方 2025/2026 源包在部分场景的 Reason/视频说明里留了模板占位文本。
+
+    这些不是该场景的解释（如 B1 的 Reason 也写 White 37），直接展示会误导；
+    统一清空，页面/题库按“无说明”降级，真正的解释仍由中文 note 承担。
+    """
+    for year_data in data.values():
+        if not isinstance(year_data, dict):
+            continue
+        for section in year_data.get("sections", []):
+            for group in section.get("groups", []):
+                for item in group.get("items", []):
+                    reason = (item.get("reason") or "").strip()
+                    low = reason.lower()
+                    if low in PLACEHOLDER_REASONS or low.startswith("white 37"):
+                        item["reason"] = ""
+                    note = (item.get("note") or "").strip()
+                    if note.lower() in PLACEHOLDER_NOTES:
+                        item["note"] = ""
+    return data
+
+
 def extract_season(year: str, pkg: Path):
     cats = []
     cat_root = pkg / "files" / "categories"
@@ -446,6 +472,11 @@ HTML = r"""<!DOCTYPE html>
 .hhead h3{margin:0;font-size:16.5px;font-weight:600}
 .hvideo video{width:100%;max-width:880px;aspect-ratio:16/9;background:#000;
   border-radius:var(--r-md);display:block}
+.hfallback{display:flex;align-items:center;justify-content:center;min-height:120px;
+  padding:18px;border:1px dashed var(--brand);border-radius:var(--r-md);
+  background:var(--info-bg);color:var(--brand);font-size:13.5px;line-height:1.8;
+  text-align:center;text-decoration:none}
+.hfallback:hover{text-decoration:underline}
 .hnote{font-size:14.5px;line-height:1.9;margin:12px 0 0;text-indent:2em}
 .drow{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:11px}
 .dlbl{font-size:12px;color:var(--muted);letter-spacing:1px;margin-right:4px}
@@ -506,6 +537,30 @@ __TOPBAR__
       try { history.replaceState(null, "", "#s" + t.dataset.season); } catch(_) {}
     });
   });
+  // 在线版没有本地 videos/：播放失败时把播放器替换成官方发布页链接
+  document.addEventListener("error", function(e){
+    var v = e.target && e.target.closest ? e.target.closest("video") : null;
+    if (!v) return;
+    var box = v.closest(".hvideo");
+    if (!box || box.dataset.failed) return;
+    box.dataset.failed = "1";
+    var url = v.dataset.fallback || "";
+    box.innerHTML = "";
+    if (url) {
+      var a = document.createElement("a");
+      a.className = "hfallback";
+      a.href = url;
+      a.target = "_blank";
+      a.rel = "noopener";
+      a.textContent = "本地视频不可用，前往中国足协官网观看本赛季统一尺度材料 ↗";
+      box.appendChild(a);
+    } else {
+      var span = document.createElement("span");
+      span.className = "hfallback";
+      span.textContent = "视频不可用";
+      box.appendChild(span);
+    }
+  }, true);
   // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
   // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
   (function(){
@@ -560,14 +615,20 @@ def build_page(data):
                             ),
                         )
                     )
+                    extra = ""
+                    if h["note"]:
+                        extra += f'  <p class="hnote">{h["note"]}</p>\n'
+                    if h["reason"]:
+                        extra += f'  <p class="hreason">Reason: {h["reason"]}</p>\n'
+                    if h.get("varrule"):
+                        extra += (
+                            f'  <p class="hreason">⚖ VAR 介入：{h["varrule"]}</p>\n'
+                        )
                     cards += f"""<article class="hcard" id="h{s}-{h["series"]}-{h["id"]}">
   <div class="hhead"><span class="hid">{h["id"]}</span><h3>{h["title"]}</h3></div>
-  <div class="hvideo"><video controls preload="none"{f' poster="{h["poster"]}"' if h["poster"] else ""}><source src="{h["video"]}" type="video/mp4"></video></div>
-  <p class="hnote">{h["note"]}</p>
+  <div class="hvideo"><video controls preload="none" data-fallback="{SCALE_SOURCE_URLS[s]}"{f' poster="{h["poster"]}"' if h["poster"] else ""}><source src="{h["video"]}" type="video/mp4"></video></div>
   <div class="drow"><span class="dlbl">判罚决定</span>{chips}</div>
-  {f'<p class="hreason">Reason: {h["reason"]}</p>' if h["reason"] else ""}
-  {f'<p class="hreason">⚖ VAR 介入：{h["varrule"]}</p>' if h.get("varrule") else ""}
-</article>"""
+{extra}</article>"""
                 sec += (
                     f'<section class="gsec" id="{anchor}">'
                     f"<h2>{g['name']} <b>{len(g['items'])}例</b></h2>{cards}</section>"
@@ -621,6 +682,7 @@ def main():
             )
         elif year not in data:
             print(f"跳过 {year}: 原包缺失且无已提取数据")
+    data = sanitize_placeholders(data)
     for year in data:  # 组排序
         for sec in data[year]["sections"]:
             sec["groups"] = sort_groups(sec["groups"])

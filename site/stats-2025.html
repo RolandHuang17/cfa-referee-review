@@ -485,6 +485,7 @@ const RS = {
   pending:['r-pending','比分待补']};
 
 let curView = 'victims', curLg = '';
+let openTeams = new Set();  // 切视角重建列表时保留已展开球队
 
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
   .replace(/"/g,"&quot;").replace(/'/g,"&#39;")}
@@ -512,7 +513,7 @@ function renderTeam(name, t, idx){
       corrLine = ` <span class="corr">修正比分 ${c[0]}:${c[1]}</span>`;
     }
     const label = (curView==='benefits'?TLB:TL)[d.type];
-    return `<div class="drow">
+    return `<div class="drow" data-lg="${esc(d.league)}">
       <span class="badge">${d.league}${typeof d.round==="number" ? "第"+d.round+"轮" : "·"+d.round}</span>
       <span class="mt">${esc(d.home)} ${d.score?d.score.h+" : "+d.score.a:"—"} ${esc(d.away)}</span>
       ${d.match_note?`<span class="badge">${esc(d.match_note)}</span>`:""}
@@ -528,7 +529,7 @@ function renderTeam(name, t, idx){
   const crest = team && team.status === 'verified' && team.path
     ? `<img class="crest" src="${team.path}" alt="${esc(name)}队徽" style="height:24px;vertical-align:-5px;margin-right:6px">`
     : `<span class="team-dot" style="width:22px;height:22px;background:${(team&&team.bg)||'#e9f2fb'};border:1px solid ${(team&&team.fg)||'#0b4c8c'}" title="${esc(name)}：队徽待核验" aria-label="${esc(name)}"></span>`;
-  return `<div class="teamcard" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'};--i:${Math.min(idx||0,12)}">
+  return `<div class="teamcard" data-name="${esc(name)}" data-lg='${JSON.stringify(t.leagues)}' data-sort="${sortKey}" style="${inLg?'':'display:none'};--i:${Math.min(idx||0,12)}">
     <div class="thead" role="button" tabindex="0" aria-label="展开或收起该队明细">
       <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
@@ -541,15 +542,32 @@ function renderTeam(name, t, idx){
   </div>`;
 }
 
+function applyLg(){
+  let any = false;
+  document.querySelectorAll("#teamList .teamcard").forEach(c=>{
+    const lgs = JSON.parse(c.dataset.lg || "[]");
+    const teamOn = !curLg || lgs.includes(curLg);
+    c.style.display = teamOn ? "" : "none";
+    c.querySelectorAll(".drow").forEach(r=>{
+      r.style.display = (!curLg || r.dataset.lg === curLg) ? "" : "none";
+    });
+    if (teamOn) any = true;
+  });
+  document.getElementById("noResult").style.display = any ? "none" : "block";
+}
 function render(){
   const data = DATA[curView];
   const names = Object.keys(data).sort((a,b)=>{
     const A=data[a], B=data[b];
     return (B.swing*1000+B.cases) - (A.swing*1000+A.cases) || a.localeCompare(b);
   });
+  const open = new Set(openTeams);
   document.getElementById("teamList").innerHTML =
-    names.map((n,idx)=>renderTeam(n, data[n], idx)).join("") ||
-    `<div class="noresult">该联赛下没有数据。</div>`;
+    names.map((n,idx)=>renderTeam(n, data[n], idx)).join("");
+  document.querySelectorAll("#teamList .teamcard").forEach(c=>{
+    if (open.has(c.dataset.name)) c.classList.add("open");
+  });
+  applyLg();
 }
 
 document.getElementById("btnVictim").onclick = e=>{
@@ -571,24 +589,27 @@ document.querySelectorAll(".lg-chip").forEach(b=>{
   b.onclick = ()=>{
     curLg = b.dataset.lg;
     document.querySelectorAll(".lg-chip").forEach(x=>x.classList.toggle('on', x===b));
-    document.querySelectorAll(".teamcard").forEach(c=>{
-      const lgs = JSON.parse(c.dataset.lg);
-      c.style.display = (!curLg || lgs.includes(curLg)) ? "" : "none";
-    });
+    applyLg();
   };
 });
 
 render();
 
 // 球队卡展开/收起（委托 + 键盘可达：Enter/空格 与点击等效）
+function toggleCard(card){
+  card.classList.toggle("open");
+  const name = card.dataset.name;
+  if (card.classList.contains("open")) openTeams.add(name);
+  else openTeams.delete(name);
+}
 document.getElementById("teamList").addEventListener("click", e=>{
   const t = e.target.closest(".thead");
-  if (t) t.parentElement.classList.toggle("open");
+  if (t) toggleCard(t.parentElement);
 });
 document.getElementById("teamList").addEventListener("keydown", e=>{
   if (e.key !== "Enter" && e.key !== " ") return;
   const t = e.target.closest(".thead");
-  if (t){ e.preventDefault(); t.parentElement.classList.toggle("open"); }
+  if (t){ e.preventDefault(); toggleCard(t.parentElement); }
 });
 </script>
 <script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.grp-btn');document.querySelectorAll('.navgrp').forEach(function(g){var open=!!t&&g===t.parentElement&&!g.classList.contains('open');g.classList.toggle('open',open);var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});var nb=e.target.closest&&e.target.closest('#btnNav');if(nb){document.body.classList.toggle('nav-open');return;}if(document.body.classList.contains('nav-open')&&!(e.target.closest&&e.target.closest('.navdrawer')))document.body.classList.remove('nav-open');if(e.target.closest&&e.target.closest('.navdrawer a'))document.body.classList.remove('nav-open');});document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;document.querySelectorAll('.navgrp.open').forEach(function(g){g.classList.remove('open');var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});document.body.classList.remove('nav-open');});</script><script>if(/^https?:$/.test(location.protocol)&&'serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js')}catch(e){}}</script></body>

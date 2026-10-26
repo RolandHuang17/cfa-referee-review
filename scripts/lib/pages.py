@@ -9,11 +9,17 @@ title/desc 在批次化改造中由 lib/seo.py 注入各页 <head>（meta/og/can
 priority/changefreq 仅供 sitemap；season 进行中的赛季 weekly，已收尾赛季 monthly。
 """
 
+from lib.site_stats import cheatsheet_count, counts, quiz_counts
+
+_COUNTS = counts()
+_QUIZ = quiz_counts()
+
 PAGES = [
     {
         "file": "index.html",
         "title": "裁判学习一站式平台",
-        "desc": "中国足协裁判评议 2024–2026 三赛季 81 期全量判例合集：视频、教学分类、"
+        "desc": f"中国足协裁判评议 2024–2026 三赛季 {_COUNTS['issues']} 期 "
+        f"{_COUNTS['cases']} 判例全量合集：视频、教学分类、"
         "各队得失盘点、统一判罚尺度与竞赛规则，完全离线可用。",
         "priority": "1.0",
         "changefreq": "weekly",
@@ -29,7 +35,8 @@ PAGES = [
     {
         "file": "season-2025.html",
         "title": "2025 赛季裁判评议合集",
-        "desc": "2025 赛季中国足协裁判评议 32 期 227 判例全量合集：视频复盘、认定原文与"
+        "desc": f"2025 赛季中国足协裁判评议 {_COUNTS['seasons']['2025']['issues']} 期 "
+        f"{_COUNTS['seasons']['2025']['cases']} 判例全量合集：视频复盘、认定原文与"
         "教学分类，支持筛选/收藏/笔记。",
         "priority": "0.8",
         "changefreq": "monthly",
@@ -37,7 +44,8 @@ PAGES = [
     {
         "file": "season-2024.html",
         "title": "2024 赛季裁判评议合集",
-        "desc": "2024 赛季中国足协裁判评议 27 期 160 判例全量合集：视频复盘、认定原文与"
+        "desc": f"2024 赛季中国足协裁判评议 {_COUNTS['seasons']['2024']['issues']} 期 "
+        f"{_COUNTS['seasons']['2024']['cases']} 判例全量合集：视频复盘、认定原文与"
         "教学分类，支持筛选/收藏/笔记。",
         "priority": "0.8",
         "changefreq": "monthly",
@@ -157,22 +165,27 @@ PAGES = [
     {
         "file": "quiz.html",
         "title": "裁判考题模式",
-        "desc": "三赛季判例 592 题 + 统一尺度场景 97 题 + IFAB VAR 协议 12 题随机出卷："
-        "判罚决定/纪律处分/复核结论作答判分，错题本与间隔复习。",
+        "desc": f"三赛季判例 {_QUIZ['case']} 题 + 统一尺度场景 {_QUIZ['scale']} 题 + "
+        f"IFAB VAR 协议 {_QUIZ['var']} 题 + 规则理论 {_QUIZ['theory']} 题"
+        f"（共 {_QUIZ['total']} 题）随机出卷：判罚决定/纪律处分/复核结论作答判分，"
+        "错题本与间隔复习。",
         "priority": "0.8",
         "changefreq": "weekly",
     },
     {
         "file": "cheatsheet.html",
         "title": "考点速查卡",
-        "desc": "考前一夜的八张速查卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步与重新开始方式；手机翻卡 + 可打印讲义。",
+        "desc": f"考前一夜的 {cheatsheet_count()} 张速查卡：手球考量链、犯规三档、"
+        "DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步、重新开始方式"
+        "与 2026/27 新规；手机翻卡 + 可打印讲义。",
         "priority": "0.8",
         "changefreq": "monthly",
     },
     {
         "file": "search.html",
         "title": "全站搜索",
-        "desc": "一次搜遍三赛季 612 个判例、竞赛规则全文、104 例统一尺度场景与全部国际评议资料。",
+        "desc": f"一次搜遍三赛季 {_COUNTS['cases']} 个判例、竞赛规则全文、"
+        "104 例统一尺度场景与全部国际评议资料。",
         "priority": "0.8",
         "changefreq": "weekly",
     },

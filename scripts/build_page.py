@@ -15,6 +15,9 @@ from lib.theme import inject_theme, icon, js_icons, topbar
 from lib.xlinks import resolve as resolve_xlinks
 
 from lib.paths import DATA, SITE
+from lib.site_stats import counts
+
+_COUNTS = counts()
 
 # 赛季配置（输出文件/存储键/期数/统计页链接）
 SEASONS = {
@@ -23,8 +26,9 @@ SEASONS = {
         "title": "2026赛季中国足协裁判评议全集 · 新裁判教学合集",
         "brand": "2026评议合集",
         "stats": "stats-2026.html",
-        "issueCount": 23,
-        "issueDesc": "2026赛季第1—23期（赛季进行中，持续更新）",
+        "issueCount": _COUNTS["seasons"]["2026"]["issues"],
+        "issueDesc": f"2026赛季第1—{_COUNTS['seasons']['2026']['issues']}期"
+        "（赛季进行中，持续更新）",
         "favKey": "cfa2026.fav",
         "noteKey": "cfa2026.notes",
         "seenKey": "cfa2026.seen",
@@ -35,8 +39,9 @@ SEASONS = {
         "title": "2025赛季中国足协裁判评议全集 · 新裁判教学合集",
         "brand": "2025评议合集",
         "stats": "stats-2025.html",
-        "issueCount": 32,
-        "issueDesc": "2025赛季第1—32期（第1—23期原发布于赛事新闻栏目）",
+        "issueCount": _COUNTS["seasons"]["2025"]["issues"],
+        "issueDesc": f"2025赛季第1—{_COUNTS['seasons']['2025']['issues']}期"
+        "（第1—23期原发布于赛事新闻栏目）",
         "favKey": "cfa2025.fav",
         "noteKey": "cfa2025.notes",
         "seenKey": "cfa2025.seen",
@@ -47,8 +52,8 @@ SEASONS = {
         "title": "2024赛季中国足协裁判评议全集 · 新裁判教学合集",
         "brand": "2024评议合集",
         "stats": "stats-2024.html",
-        "issueCount": 27,
-        "issueDesc": "2024赛季第1—27期",
+        "issueCount": _COUNTS["seasons"]["2024"]["issues"],
+        "issueDesc": f"2024赛季第1—{_COUNTS['seasons']['2024']['issues']}期",
         "favKey": "cfa2024.fav",
         "noteKey": "cfa2024.notes",
         "seenKey": "cfa2024.seen",
@@ -1033,6 +1038,7 @@ document.getElementById("btnHideAns").setAttribute("aria-pressed", HIDE ? "true"
 // ---------- 选中判例 ----------
 function select(seq, scrollRow=true){
   const c = bySeq[seq]; if (!c) return;
+  flushNote();
   if (window.matchMedia && window.matchMedia("(max-width:1080px)").matches)
     document.body.classList.add("detail-open");
   state.sel = seq;
@@ -1245,6 +1251,7 @@ document.getElementById("dHead").addEventListener("click", e=>{
   if (e.target.closest("#favBtn")) toggleFav(state.sel);
 });
 function renderNoteUI(c){
+  flushNote();
   const wrap = document.getElementById("noteWrap");
   wrap.style.display = "block";
   document.getElementById("noteBox").value = (notes[c.seq]&&notes[c.seq].text)||"";
@@ -1288,23 +1295,43 @@ document.getElementById("btnNoteTime").addEventListener("click", ()=>{
   box.dispatchEvent(new Event("input", {bubbles:true}));
 });
 let noteTimer = null;
-document.getElementById("noteBox").addEventListener("input", ()=>{
-  const seq = state.sel; if(!seq) return;
-  document.getElementById("noteStatus").textContent = "正在保存…";
-  clearTimeout(noteTimer);
-  noteTimer = setTimeout(()=>{
-    const t = document.getElementById("noteBox").value;
-    if (t.trim()) notes[seq] = {text: t, ts: Date.now()};
-    else delete notes[seq];
-    persistFav();
+let pendingNote = null;  // 输入时冻结的 {seq, text}，防止切题后旧定时器读到新 textarea
+function saveNote(seq, text){
+  if (!seq) return;
+  if (text.trim()) notes[seq] = {text, ts: Date.now()};
+  else delete notes[seq];
+  persistFav();
+  renderFavList();
+  const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
+  if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
+  if (state.sel === seq){
     const d = new Date();
     document.getElementById("noteStatus").textContent =
       "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-    renderFavList();
-    const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-    if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
     renderNoteView();
+  }
+}
+function flushNote(){
+  if (noteTimer !== null){ clearTimeout(noteTimer); noteTimer = null; }
+  if (!pendingNote) return;
+  const p = pendingNote; pendingNote = null;
+  saveNote(p.seq, p.text);
+}
+document.getElementById("noteBox").addEventListener("input", ()=>{
+  const seq = state.sel; if(!seq) return;
+  if (pendingNote && pendingNote.seq !== seq) flushNote();
+  pendingNote = {seq, text: document.getElementById("noteBox").value};
+  document.getElementById("noteStatus").textContent = "正在保存…";
+  if (noteTimer !== null) clearTimeout(noteTimer);
+  noteTimer = setTimeout(()=>{
+    noteTimer = null;
+    const p = pendingNote; pendingNote = null;
+    if (p) saveNote(p.seq, p.text);
   }, 800);
+});
+window.addEventListener("pagehide", flushNote);
+document.addEventListener("visibilitychange", ()=>{
+  if (document.visibilityState === "hidden") flushNote();
 });
 
 // ---------- 笔记汇总弹层：全季一览 + 笔记内搜索 + 点击跳判例 ----------

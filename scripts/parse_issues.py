@@ -245,6 +245,68 @@ def classify(conc: str):
     return "unclear", var, True
 
 
+# 标题语义存在歧义时的人工口径（键已去空白；只在精确命中时生效）
+TITLE_EXPECT_OVERRIDES = {
+    "认定裁判判罚正确但有一起VAR介入错误": 0,
+    "认定8个判例正确但漏判两张黄牌": 2,
+    "认定北京国安上海申花两起关键越位判罚正确": 0,
+    "认定3例裁判判罚均正确": 0,
+}
+
+
+def _title_num(text: str) -> int:
+    return int(text) if text.isdigit() else cn2int(text)
+
+
+def parse_expected_wrong(title: str) -> int:
+    """从官方标题提取“错漏判”认定数（不是判例总数）。
+
+    2024 标题写法远比 2025/2026 分散：有四起/7次/8个判例中有3起/漏判两张黄牌/
+    判罚均正确/无错漏判。旧正则只认“认定N例…错漏判”，且把“判罚”的“判”误当
+    “错漏判”，导致 2024 大量为 0 甚至方向相反。
+    """
+    text = re.sub(r"\s+", "", title or "")
+    if not text:
+        return 0
+    for key, value in TITLE_EXPECT_OVERRIDES.items():
+        if key in text:
+            return value
+    if "无错漏判" in text:
+        return 0
+    # “漏判N张黄牌”按官方口径计 N 例（2024 第6期：8例正确但漏判2黄）
+    m = re.search(r"漏判([一二三四五六七八九十百两\d]+)张黄牌", text)
+    if m:
+        return _title_num(m.group(1))
+    # “X个/起/例判例中有Y起错漏判”取 Y
+    m = re.search(
+        r"[一二三四五六七八九十百两\d]+(?:个|起|例).{0,8}?中有"
+        r"([一二三四五六七八九十百两\d]+)(?:起|例|次).{0,3}?错漏判",
+        text,
+    )
+    if m:
+        return _title_num(m.group(1))
+    # “评定X起…错判”（2024 第3期标题用“评定一起中超错判”）
+    m = re.search(
+        r"评定[^，。]{0,12}?([一二三四五六七八九十百两\d]+)(?:起|例|次)"
+        r"[^，。]{0,8}?错判",
+        text,
+    )
+    if m:
+        return _title_num(m.group(1))
+    # “认定（本轮/共/有）X起/例/次（裁判）错漏判/漏判”
+    m = re.search(
+        r"认定(?:本轮|本期|第[一二三四五六七八九十百两\d]+期)?(?:共|有)?"
+        r"([一二三四五六七八九十百两\d]+)(?:起|例|次|个)?(?:裁判)?(?:错漏判|漏判)",
+        text,
+    )
+    if m:
+        return _title_num(m.group(1))
+    # “判罚正确/均正确/关键…正确”且没有错漏判字样 → 0
+    if "正确" in text and not re.search(r"错漏判|漏判", text):
+        return 0
+    return 0
+
+
 def parse_issue(html: str, n: int, url: str, seq: int):
     """解析单期官方评议页 HTML（纯函数，golden 测试直接消费 data/issues/ 归档）。
 
@@ -253,10 +315,7 @@ def parse_issue(html: str, n: int, url: str, seq: int):
     """
     title_m = re.search(r"<title>(.*?)</title>", html, re.S)
     title = clean(title_m.group(1)).split("-中国足球协会")[0] if title_m else ""
-    expect = 0
-    tm = re.search(r"认定([一二三四五六七八九十百两\d]+)例(?:裁判)?[错漏判]+", title)
-    if tm:
-        expect = cn2int(tm.group(1)) if not tm.group(1).isdigit() else int(tm.group(1))
+    expect = parse_expected_wrong(title)
     content = extract_content(html)
     paras = split_paragraphs(content)
     summary, cur, prev_text, issue_cases = [], None, "", []

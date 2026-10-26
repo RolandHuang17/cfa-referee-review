@@ -2,7 +2,7 @@
 """考题模式 → site/quiz.html（三赛季判例 + 统一尺度场景 随机出题、判分、错题本）。
 
 题库（build_bank）：
-  - 赛季判例：video_files 非空且 conclusion 非空（592 题，含 17 题「证据不足不予认定」）；
+  - 赛季判例：video_files 非空且 conclusion 非空（判例池，含「证据不足不予认定」）；
     结构化正确答案取自 data/quiz-answers.json（gen_quiz_answers.py 产物，仅收 reviewed 条目，
     未复核或无条目的题只出「复核结论」一问）。
   - 尺度场景：data/scale.json 全部含视频场景（剔除「VAR 机制讲解」伪矩阵项），
@@ -21,6 +21,7 @@ from datetime import date
 from lib.crest_catalog import load_catalog, normalize_team
 from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE
 from lib.seo import meta_tags
+from lib.site_stats import is_quiz_case, is_quiz_scale
 from lib.theme import icon, inject_theme, js_icons, topbar
 from lib.xlinks import resolve as resolve_xlinks
 
@@ -206,7 +207,7 @@ def build_bank():
     for season in ("2026", "2025", "2024"):
         d = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         for c in d["cases"]:
-            if not (c.get("video_files") and (c.get("conclusion") or "").strip()):
+            if not is_quiz_case(c):
                 continue
             item = {
                 "k": f"{season}-{c['seq']}",
@@ -249,11 +250,7 @@ def build_bank():
                 for g in sec["groups"]:
                     for it in g["items"]:
                         dec = it.get("decision") or []
-                        if not dec or any(
-                            x.get("label") == "VAR 机制讲解" for x in dec
-                        ):
-                            continue
-                        if not it.get("video"):
+                        if not is_quiz_scale(it):
                             continue
                         bank.append(
                             {
@@ -709,6 +706,9 @@ function startTimer(totalSec){
     if (el) el.textContent = `⏳ 剩余 ${fmtMS(Math.max(0, round.left))} · 超时自动交卷`;
     if (round.left <= 0){
       stopTimer();
+      // 超时前把当前题已点选但未提交的答案暂存，否则会按未答计 0 分
+      if (round.qs[round.i] && round.scores[round.i] == null)
+        round.answers[round.i] = currentAnswer();
       alert("时间到，自动交卷。");
       finishExam();
     }
@@ -942,7 +942,7 @@ function renderQuestion(){
     ? `<p class="qtext">${esc(q.desc.replace(/^判例[一二三四五六七八九十百]+[：:]/,"").trim())}</p>`
     : (q.t==="var" || q.t==="theory")
     ? `<p class="qtext">${esc(q.q)}</p>`
-    : `<p class="qtext">${esc(q.note)}</p>`;
+    : `<p class="qtext">${esc(q.note || "请观看视频，选择与场景对应的判罚决定。")}</p>`;
   const appeal = (q.t==="case" && q.appeal)
     ? `<details class="qappeal"><summary>查看申诉方主张（提示）</summary><p>${esc(q.appeal.replace(/^[^：]*申诉意见认为：/,"").trim())}</p></details>` : "";
   document.getElementById("qCard").innerHTML = `<div class="qhead">${head}</div>${vidHtml}${text}${appeal}`;
@@ -1141,6 +1141,9 @@ function submitAnswer(){
 }
 function finishExam(){
   stopTimer();
+  // 兜底：手动交卷/超时交卷前都暂存当前题答案，重复写入幂等
+  if (round.qs[round.i] && round.scores[round.i] == null)
+    round.answers[round.i] = currentAnswer();
   let totalGot = 0, totalMax = 0;
   round.qs.forEach((q,i)=>{
     const a = round.answers[i] ?? (q.t==="case" ? {v:null,r:null,c:null} : (q.t==="var"||q.t==="theory") ? null : []);
@@ -1419,7 +1422,7 @@ function pickOption(n){
     return;
   }
   // 单选题（case 三轴 / var 四选一）：数字作用于第一个尚未作答的轴；全部已答则落到最后一轴（可改选）
-  const axes = q.t === "var" ? ["o"]
+  const axes = (q.t === "var" || q.t === "theory") ? ["o"]
     : ["v", ...(q.ans && q.ans.r ? ["r"] : []), ...(q.ans && q.ans.c ? ["c"] : [])];
   const ax = axes.find(a=>!document.querySelector(`#qForm .opt[data-axis="${a}"].on`)) || axes[axes.length-1];
   const opts = Array.from(document.querySelectorAll(`#qForm .opt[data-axis="${ax}"]`));

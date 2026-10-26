@@ -423,6 +423,7 @@ def main():
         n = it["no"]
         cs = [c for c in cases if c["issue"] == n]
         w = sum(1 for c in cs if c["referee_verdict"] == "wrong")
+        it["parsed_wrong"] = w  # parse 阶段是自动判定，人工分类后重算
         note = ""
         if w != it["expected_wrong"]:
             note = f"标题{it['expected_wrong']}例（差异见页面注释）"

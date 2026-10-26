@@ -21,7 +21,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "scripts"))
 
 from lib.paths import DATA, ISSUES  # noqa: E402
-from parse_issues import parse_issue, parse_season  # noqa: E402
+from parse_issues import parse_expected_wrong, parse_issue, parse_season  # noqa: E402
 
 FAILURES = []
 
@@ -189,12 +189,38 @@ def test_committed_special_fixes_2024_2026():
     _finish(problems)
 
 
+def test_parse_expected_wrong_titles():
+    """2024/2025/2026 的多种官方标题写法 → 错漏判认定数。"""
+    cases = [
+        ("足球职业联赛裁判评议组认定本轮有四起裁判错漏判", 4),
+        ("第四期足球裁判评议认定裁判判罚正确 但有一起VAR介入错误", 0),
+        ("第三期足球职业联赛裁判评议 评定一起中超错判", 1),
+        ("第五期足球裁判评议认定7次裁判错漏判和VAR错误介入", 7),
+        ("第六期足球裁判评议认定8个判例正确但漏判两张黄牌", 2),
+        ("第七期足球裁判评议认定11个判例中有6起错漏判", 6),
+        ("中国足协裁判评议组认定第九期11起判例中有3起错漏判", 3),
+        ("第十七期裁判评议认定北京国安上海申花两起关键越位判罚正确", 0),
+        ("第十九期裁判评议认定3例裁判判罚均正确", 0),
+        ("2026赛季第十一期裁判评议认定本轮中超无错漏判", 0),
+        ("2026年第十八期裁判评议认定一例错漏判", 1),
+        ("2026年第二十一期裁判评议认定两例错漏判", 2),
+        ("2025赛季第二十三期裁判评议认定1例裁判漏判", 1),
+    ]
+    problems = [
+        f"标题认定数解析错误: {title!r} -> {parse_expected_wrong(title)}，期望 {want}"
+        for title, want in cases
+        if parse_expected_wrong(title) != want
+    ]
+    _finish(problems)
+
+
 CHECKS = [
     test_parse_2026_issue20_first_case_without_prefix,
     test_parse_2024_issue1_summary_style,
     test_parse_season_2025_video_dedup,
     test_committed_manual_enrichment_2025,
     test_committed_special_fixes_2024_2026,
+    test_parse_expected_wrong_titles,
 ]
 
 

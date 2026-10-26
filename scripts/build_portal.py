@@ -7,6 +7,7 @@ import json
 from datetime import date
 
 from lib.seo import jsonld_dataset, jsonld_website, meta_tags
+from lib.site_stats import cheatsheet_count, counts
 from lib.theme import inject_theme, icon, topbar
 
 from lib.paths import (
@@ -524,17 +525,17 @@ __TOPBAR__
       <h2>全站搜索</h2>
       <p class="desc">一次搜遍三赛季判例、竞赛规则全文、统一尺度场景与国际评议资料——输入「手球」「越位」「DOGSO」等关键词直达对应判例与规则章节。</p>
       <div class="nums">
-        <div><b>612</b><span>判例全文</span></div>
-        <div><b>104</b><span>尺度场景</span></div>
+        <div><b>__TOTAL_CASES__</b><span>判例全文</span></div>
+        <div><b>__S_SCENES__</b><span>尺度场景</span></div>
       </div>
       <div class="go">开始搜索 __I_RIGHT__</div>
     </a>
     <a class="ecard c-rules" style="--i:16" href="cheatsheet.html">
       <div class="icon">__I_FILE__</div>
       <h2>考点速查卡</h2>
-      <p class="desc">考前一夜的八张卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步、重新开始方式——手机翻卡，打印即讲义。</p>
+      <p class="desc">考前一夜的 __N_CARDS__ 张卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步、重新开始方式与 2026/27 新规——手机翻卡，打印即讲义。</p>
       <div class="nums">
-        <div><b>8</b><span>速查卡</span></div>
+        <div><b>__N_CARDS__</b><span>速查卡</span></div>
         <div><b>A4</b><span>打印讲义</span></div>
       </div>
       <div class="go">翻开速查卡 __I_RIGHT__</div>
@@ -726,6 +727,8 @@ def main():
         .replace("__S_SCENES__", str(sc["scenes"]))
         .replace("__S_GROUPS__", str(sc["groups"]))
         .replace("__S_VIDEOS__", str(sc["videos"]))
+        .replace("__TOTAL_CASES__", str(counts()["cases"]))
+        .replace("__N_CARDS__", str(cheatsheet_count()))
         .replace("__U_CASES__", str(u["cases"]))
         .replace("__U_GROUPS__", str(u["groups"]))
         .replace("__RA_EDS__", str(ra["editions"]))

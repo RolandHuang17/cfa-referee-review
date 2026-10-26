@@ -16,7 +16,7 @@ re-organized by a unified teaching taxonomy, plus:
   UEFA Clear Line (83 cases), IFAB VAR protocol (full text + FAQ), Spain's RFEF
   Criterios Arbitrales, USA PRO weekly reviews (207 articles), CONMEBOL VAR cases,
   Croatia's HNS weekly analyses, plus a global directory of 23 official resources.
-- **Quiz mode** (quiz.html) — 799 questions with spaced repetition
+- **Quiz mode** (quiz.html) — 816 questions with spaced repetition
   (Leitner scheduler), wrong-answer book, and Anki TSV export.
 
 ## Key properties

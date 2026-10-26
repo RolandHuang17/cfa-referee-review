@@ -4,11 +4,11 @@
 
 ## 项目是什么
 
-「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 81 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收23期228判例227视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
+「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 82 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收23期228判例227视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**二十二个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（十六张入口卡片 + 浏览模式开关）
-- `site/search.html` 全站统一搜索（构建期内联 1500 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
+- `site/search.html` 全站统一搜索（构建期内联 1500+ 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点（顶部「趋势概览」构建期 SVG：逐期错漏判/VAR 错误趋势 + 教学分类×判定分布）
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
@@ -22,8 +22,8 @@
 - `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档 YouTube 官方节目 + 乌克兰 UAF 文章型源，结构化期目索引 246 期：官方说明原文 + 中文译注层全覆盖，逐期跳官方页）
 - `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ + 8 个配套协议页 173 条款，中英原文开关）
 - `site/hns.html` 克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名逐判例「认定正确/错误」+ 每判例官方视频直链，判例级中文全译；收录随每周新轮自动生长）
-- `site/quiz.html` 考题模式（799 题四题源随机出卷：三赛季判例 595 + 统一尺度场景 97 + IFAB VAR 协议 12 + 规则理论 92——理论题全部从 laws.json 条文撰写并附出处引文，选项按次打乱）：判罚决定/纪律处分/复核结论作答判分；错题本 + Leitner 间隔复习 + Anki TSV 导出；限时模考（75s/120s 每题倒计时、超时自动交卷、及格线 90%、历史成绩）；逐题作答历史 + 10 分类正确率雷达薄弱点分析
-- `site/cheatsheet.html` 考点速查卡（八张：手球考量链/犯规三档/DOGSO·SPA/VAR 介入/红黄牌速查/点球程序/越位三步/重新开始方式——卡面速记+翻面细则，手机 3D 翻卡 + 打印单页讲义；data/cheatsheet.json 策表）
+- `site/quiz.html` 考题模式（816 题四题源随机出卷：三赛季判例 595 + 统一尺度场景 97 + IFAB VAR 协议 12 + 规则理论 112——理论题全部从 laws.json 条文撰写并附出处引文，选项按次打乱）：判罚决定/纪律处分/复核结论作答判分；错题本 + Leitner 间隔复习 + Anki TSV 导出；限时模考（75s/120s 每题倒计时、超时自动交卷、及格线 90%、历史成绩）；逐题作答历史 + 10 分类正确率雷达薄弱点分析
+- `site/cheatsheet.html` 考点速查卡（九张：手球考量链/犯规三档/DOGSO·SPA/VAR 介入/红黄牌速查/点球程序/越位三步/重新开始方式/2026-27 新规——卡面速记+翻面细则，手机 3D 翻卡 + 打印单页讲义；data/cheatsheet.json 策表）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
 
@@ -318,7 +318,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - **学习功能层（localStorage）**：学习足迹 `cfa{季}.seen`（看过即记）/ `cfa{季}.last`（继续上次学习）/ `cfa.streak`（连续天数，season 访问与 quiz 出卷都记）；**放映模式**复用唯一 `.d-video` 节点移入覆盖层、退出按记录的 parent+nextSibling 精确归位；**挑战模式** `?case=N&hideans=1` 仅本会话（不写 cfa.hideans）；**帧截图** canvas 抓帧+水印（在线直链跨域污染时降级提示）；**学习路径** state.path + PATH_SETS 集合过滤（baseMatch 的 path 维度，锚点深链优先于路径）
 - **响应式断点**：season 页唯一一套 1280 / 1080 / 640。≤1080px：侧栏变抽屉（`body.sb-open`，顶栏 btnSb 切换）、列表/详情二选一（`body.detail-open`，select() 自动加）。其余页面另有自己的断点（topbar 压缩 760px、rules/scale/uefa 抽屉 900px、portal 960px），不与 season 页共用
 - 收藏/笔记存 localStorage：键 `cfa2026.fav/notes`、`cfa2025.fav/notes`、`cfa2024.fav/notes`（按赛季隔离，且按 origin 隔离，file:// 与 http:// 不同源，故有导出/导入 JSON 功能）
-- **quiz 页（build_quiz.py）**：客户端渲染三屏（开始/答题/结果）；题库 DATA 内联（判例+尺度场景两种题型）；判分「复核结论 1 分 + 判罚决定 1 分 + 纪律处分 1 分」（无答案库轴不出题）、尺度矩阵多选满分 2 分；错题本键 `cfa.quiz.wrong`；season 页隐藏答案模式开关 `#btnHideAns`（`cfa.hideans`，`html[data-hideans]` CSS 门控 + `.d-card.revealed` 逐题揭示，切题自动重隐）
+- **quiz 页（build_quiz.py）**：客户端渲染三屏（开始/答题/结果）；题库 DATA 内联（判例/尺度场景/IFAB 协议/规则理论四题型）；判分「复核结论 1 分 + 判罚决定 1 分 + 纪律处分 1 分」（无答案库轴不出题）、尺度矩阵多选满分 2 分；错题本键 `cfa.quiz.wrong`；season 页隐藏答案模式开关 `#btnHideAns`（`cfa.hideans`，`html[data-hideans]` CSS 门控 + `.d-card.revealed` 逐题揭示，切题自动重隐）
 - **轻量版模式（cfa.lite）**：全局浏览模式开关——门户分段控件（`#modeFull/#modeLite`）+ season/scale 顶栏 `#btnLite`（theme.py `_TOGGLE_JS` 统一处理：写 `cfa.lite`、切 `html[data-lite]`、派发 `cfa:lite` 事件；`_EARLY_JS` 首帧前设置防闪烁）。开启后（build_page.py）：`select()` 走 LITE 分支，无任何视频逻辑，`#srcActions` 渲染「打开官方评议页」（`issues[].url`，按期跳转）+ 每条 `video_urls` 官方直链（新标签页在线播放）；scale 页 CSS 隐藏全部场景视频 `.hvideo` 并显示官方发布页横幅（`SCALE_SOURCE_URLS` 按赛季随页签切换，官方材料为 zip 发布无逐例链接）。筛选/收藏/笔记/锚点两模式共用同一套（同一 localStorage 键，笔记本用法核心）。完整版遇本地视频 404 自动改用官方直链（`vidsMissing` 会话级直连，`ossTried` 防循环），彻底失败且未开轻量时弹 `#vfailTip` 一次性提示条（sessionStorage `cfa.vfail` 记忆关闭）
 - **锚点**：`season-*.html#case-<seq>` 打开时自动选中对应判例（stats-*.html 明细链接依赖此；初始化代码必须在 applyFilter **之前**捕获 hash——`initialHashSeq`，否则会被自动选中的 replaceState 覆盖——已踩过）
 - 搜索框监听 `input` 和 `search` 事件（后者是 type=search ✕ 清空按钮触发）；`esc()` 必须转义引号（用于 data-* 属性）
@@ -359,7 +359,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 改动后依次验证（命令一律在仓库根执行）：
 - [ ] `python scripts/build_all.py` 无报错（改动任何 builder 后的全量重建入口）
-- [ ] `python -m pytest tests/ -q` 通过（integrity：21页面/三赛季数据/schema契约/互链策表/发现层/PWA/impact一致性/页面-数据同步/考题池基准/weekly+hns+ifab 数据层/离线资源/内部链接/队徽目录；golden：解析器结构坑 + 2025 人工数据锚点）；裸跑 `python tests/test_integrity.py` 等价
+- [ ] `python -m pytest tests/ -q` 通过（integrity：22页面/三赛季数据/schema契约/互链策表/发现层/PWA/impact一致性/页面-数据同步/考题池基准/weekly+hns+ifab 数据层/离线资源/内部链接/队徽目录；golden：解析器结构坑 + 2025 人工数据锚点）；裸跑 `python tests/test_integrity.py` 等价
 - [ ] search.html：关键词（手球/越位/DOGSO/某队名）搜索命中、分组 chips 过滤、判例结果锚点直达 `#case-N`、规则结果直达 `#law-N`、`/` 聚焦
 - [ ] quiz.html：开始屏「复习到期」按钮显到期数、答对晋级/答错归零（错题本可见 N 天后复习）、「导出 Anki」产出 TSV 且 Anki 可导入（#separator:tab/#html:true 文件头）、其余原有清单项
 - [ ] season 页：详情「关联规则/尺度场景」链接行可跳转、`#cat-handball` 深链进入分类筛选、笔记 ⏱ 按钮插 [mm:ss] 且预览层点击跳画面、rules 页章节底部「相关判例分类」反链三季入口

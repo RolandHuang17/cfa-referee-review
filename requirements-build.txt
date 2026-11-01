@@ -14,4 +14,4 @@ pymupdf>=1.28.2
 opencc-python-reimplemented>=0.1.7
 # 测试运行器：CI 的 Verify 步骤跑 python -m pytest（test_integrity 裸跑不需要它，
 # 但 pytest 收集 tests/ 全量——本地也可只装上面两个依赖后裸跑 test_integrity）
-pytest>=7.0
+pytest>=9.2.0

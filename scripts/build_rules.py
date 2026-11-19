@@ -11,14 +11,16 @@ import re
 from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
 
-import pymupdf
-import opencc
+from copy import deepcopy
+from html import escape
+
+from lib.law_blocks import anchored_section
 
 from lib.paths import IFAB_PDF, LAWS_JSON, RULES_IMG_DIR, SITE
 
 RULES_HTML = SITE / "rules.html"
 
-CC = opencc.OpenCC("t2s")
+CC = None
 
 # 足球术语对照（在OpenCC之前应用；键为繁体原文形态，值为规范简体）
 GLOSSARY = {
@@ -174,6 +176,11 @@ PARTIAL_DIAGRAMS = {
 
 
 def convert(text: str) -> str:
+    global CC
+    if CC is None:
+        import opencc
+
+        CC = opencc.OpenCC("t2s")
     # 术语替换必须在OpenCC之前（键为繁体原文形态），替换值均为规范简体
     for k in sorted(GLOSSARY, key=len, reverse=True):
         text = text.replace(k, GLOSSARY[k])
@@ -612,6 +619,11 @@ __TOPBAR__
           </div>
         </details>
         <div id="secHtml"></div>
+        <details class="notebox" id="hlMissing" style="display:none">
+          <summary id="hlMissingTitle"></summary>
+          <p>以下高亮暂未在本章正文定位，原引文仍保留，可复制或导出后对照。</p>
+          <div id="hlMissingQuotes"></div>
+        </details>
         <div class="secrel" id="secRel" style="display:none"></div>
       </div>
       <div class="dnav">
@@ -886,7 +898,14 @@ function addHighlight(color){
 }
 function applyHl(){
   const list = hlData.filter(h=>h.sec===cur);
+  const missing = document.getElementById("hlMissing");
+  missing.style.display = "none";
+  // 导入后重新渲染，避免对已有高亮再套一层 mark。
+  for (const mark of secHtmlEl.querySelectorAll("mark.hl"))
+    mark.replaceWith(document.createTextNode(mark.textContent));
+  secHtmlEl.normalize();
   if(!list.length) return;
+  const matched = new Set();
   const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT);
   const nodes = []; let n;
   while((n = walker.nextNode())) nodes.push(n);
@@ -909,12 +928,19 @@ function applyHl(){
       (frag = frag || document.createDocumentFragment())
         .appendChild(document.createTextNode(rest.slice(0, best.i)));
       const mk = document.createElement("mark");
+      matched.add(best.h);
       mk.className = "hl h" + best.h.color; mk.dataset.ts = best.h.ts;
       mk.textContent = rest.slice(best.i, best.i + best.q.length);
       frag.appendChild(mk);
       rest = rest.slice(best.i + best.q.length);
     }
     if(frag) node.parentNode.replaceChild(frag, node);
+  }
+  const unmatched = list.filter(h=>!matched.has(h));
+  if (unmatched.length){
+    document.getElementById("hlMissingTitle").textContent = `未定位的旧高亮（${unmatched.length}）`;
+    document.getElementById("hlMissingQuotes").innerHTML = unmatched.map(h=>`<blockquote>${esc(h.quote)}</blockquote>`).join("");
+    missing.style.display = "";
   }
 }
 secHtmlEl.addEventListener("click", e=>{
@@ -980,6 +1006,7 @@ document.addEventListener("visibilitychange", ()=>{
   if (document.visibilityState === "hidden") flushNote();
 });
 document.getElementById("btnExportN").onclick = ()=>{
+  flushNote();
   const blob = new Blob(
     [JSON.stringify({highlights: hlData, notes: secNotes, exported: new Date().toISOString(), app:"cfa-rules-2026"}, null, 1)],
     {type:"application/json"});
@@ -995,6 +1022,7 @@ document.getElementById("importFileN").addEventListener("change", e=>{
   const rd = new FileReader();
   rd.onload = () => {
     try {
+      flushNote();
       const d = JSON.parse(rd.result);
       let n = 0;
       const seen = new Set(hlData.map(h=>h.sec+"|"+h.quote));
@@ -1013,9 +1041,20 @@ document.getElementById("importFileN").addEventListener("change", e=>{
 });
 
 // ---------- 初始化 ----------
-{ const m = location.hash.match(/^#([\w-]+)$/);
-  if(m && byId[m[1]]) select(m[1]);
-  else select(DATA.sections[0].id, false); }
+function restoreLocation(){
+  const target = decodeURIComponent(location.hash.slice(1));
+  const id = target.split("-p-")[0];
+  select(byId[id] ? id : DATA.sections[0].id, false);
+  if (target.includes("-p-")){
+    history.replaceState(null, "", "#" + target);
+    requestAnimationFrame(()=>{
+      const block = document.getElementById(target);
+      if (block) block.scrollIntoView({block:"center"});
+    });
+  }
+}
+restoreLocation();
+window.addEventListener("hashchange", restoreLocation);
 syncReadUI();
 </script>
 </body>
@@ -1024,6 +1063,26 @@ syncReadUI();
 
 
 def build_html_page(sections):
+    sections = deepcopy(sections)
+    annotations_path = LAWS_JSON.parent / "law-annotations.json"
+    annotations = (
+        json.loads(annotations_path.read_text(encoding="utf-8"))
+        if annotations_path.exists()
+        else []
+    )
+    for section in sections:
+        section["html"], _ = anchored_section(section)
+        for item in annotations:
+            if item["law"] == section["id"]:
+                section["html"] += (
+                    '<aside class="panel" role="note"><b>项目校注 · 官方 PDF 第'
+                    + str(item["page"])
+                    + "页</b><p>"
+                    + escape(item["note"])
+                    + '</p><a href="'
+                    + escape(item["source"], quote=True)
+                    + '" target="_blank" rel="noopener noreferrer">核对 IFAB 英文原文</a></aside>'
+                )
     from lib.xlinks import load_table, resolve
 
     data = {"season": "2026/27", "sections": sections}
@@ -1068,6 +1127,14 @@ def build_html_page(sections):
 
 
 def main():
+    import sys
+
+    if "--from-json" in sys.argv:
+        data = json.loads(LAWS_JSON.read_text(encoding="utf-8"))
+        build_html_page(data["sections"])
+        return
+    import pymupdf
+
     doc = pymupdf.open(str(IFAB_PDF))
     starts = find_law_starts(doc)
     print("章起始页:", dict(sorted(starts.items())))

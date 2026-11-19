@@ -1628,6 +1628,114 @@
      "note": "56号正常争抢碰撞，攻方犯规误判"
     }
    ]
+  },
+  "229": {
+   "league": "中乙联赛",
+   "round": 26,
+   "home": "厦门飞鹭",
+   "away": "泰安天贶",
+   "issue": 24,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "厦门飞鹭",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "16号未处越位位置，后续进球应有效"
+    }
+   ]
+  },
+  "231": {
+   "league": "中乙联赛",
+   "round": 28,
+   "home": "温州俱乐部德赛",
+   "away": "兰州陇原竞技天佑德",
+   "issue": 24,
+   "case_no": 3,
+   "match_note": "",
+   "items": [
+    {
+     "team": "兰州陇原竞技天佑德",
+     "type": "denied_goal",
+     "swing": 1,
+     "note": "球始终处于场地内，4号进球应有效"
+    }
+   ]
+  },
+  "233": {
+   "league": "中甲联赛",
+   "round": 29,
+   "home": "广西恒宸",
+   "away": "无锡吴钩",
+   "issue": 25,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "广西恒宸",
+     "type": "opp_goal_should_disallow",
+     "swing": -1,
+     "note": "无锡吴钩19号越位干扰比赛，进球应无效"
+    }
+   ]
+  },
+  "236": {
+   "league": "中乙联赛",
+   "round": 29,
+   "home": "兰州陇原竞技天佑德",
+   "away": "湖北青年星",
+   "issue": 25,
+   "case_no": 4,
+   "match_note": "",
+   "items": [
+    {
+     "team": "兰州陇原竞技天佑德",
+     "type": "missed_yellow_opponent",
+     "swing": 0,
+     "note": "湖北青年星19号鲁莽使用手臂，漏判犯规及黄牌"
+    }
+   ]
+  },
+  "237": {
+   "league": "中乙联赛",
+   "round": 29,
+   "home": "武汉三镇B队",
+   "away": "青岛红狮",
+   "issue": 25,
+   "case_no": 5,
+   "match_note": "",
+   "items": [
+    {
+     "team": "武汉三镇B队",
+     "type": "missed_penalty",
+     "swing": 0,
+     "note": "青岛红狮队员手臂处于不自然位置，漏判手球点球"
+    }
+   ]
+  },
+  "240": {
+   "league": "中甲联赛",
+   "round": 30,
+   "home": "深圳青年人",
+   "away": "苏州东吴",
+   "issue": 26,
+   "case_no": 1,
+   "match_note": "",
+   "items": [
+    {
+     "team": "深圳青年人",
+     "type": "wrong_penalty_against",
+     "swing": 0,
+     "note": "苏州东吴42号越位在先，后续点球不应判罚"
+    },
+    {
+     "team": "深圳青年人",
+     "type": "wrong_red_self",
+     "swing": 0,
+     "note": "越位在先，后续16号红牌不应判罚"
+    }
+   ]
   }
  }
 }

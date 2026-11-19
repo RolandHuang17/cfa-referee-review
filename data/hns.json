@@ -1,8 +1,900 @@
 {
  "source": "https://hns.family/hns/suci",
  "source_name": "克罗地亚足协 HNS《Sudačka analiza》逐轮判例分析（Sudačka komisija / Layec）",
- "fetched": "2026-10-26",
+ "fetched": "2026-11-14",
  "rounds": [
+  {
+   "id": "32028",
+   "title": "Sudačka analiza 13. kola SuperSport HNL-a",
+   "date": "2026-11-11",
+   "round": 13,
+   "url": "https://hns.family/vijesti/32028/",
+   "incidents": [
+    {
+     "no": 1,
+     "match": "LOKOMOTIVA - RUDEŠ",
+     "referee": "Terzić",
+     "minute": "77",
+     "type": "kazneni udarac",
+     "videos": [
+      "olAQ3MghHwM"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon što je napadač Rudeša s brojem 88 ušao po lijevoj strani suparničkog kaznenog prostora, na njega je startao branič Lokomotive s brojem 6 koji ga je sapleo te je napadač pao na travnjak. Sudac, koji je bio samo nekoliko metara udaljen od mjesta incidenta, dosudio je kazneni udarac."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre - smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Prilikom procjene prekršaja sudac mora uzeti u obzir sljedeće tehničke kriterije:"
+      },
+      {
+       "k": "li",
+       "t": "Jasan kontakt sa suparnikom"
+      },
+      {
+       "k": "li",
+       "t": "Značajan utjecaj na kretanje suparničkog igrača."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s tehničkim razmatranjima Komisija nogometnih sudaca smatra da su ispunjeni svi tehnički kriteriji za dosuđivanje kaznenog udarca te stoga u potpunosti podržava odluku suca."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 2,
+     "match": "GORICA - SLAVEN BELUPO",
+     "referee": "Pavlešić",
+     "minute": "60",
+     "type": "kazneni udarac",
+     "videos": [
+      "4u9edYTK0NM"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon centaršuta s lijeve strane u kazneni prostor domaćina lopta je putovala prema vratarevom prostoru te je uslijedila borba za poziciju dvojice suparničkih igrača u kojem je napadač Slaven Belupa s brojem 8 pao na tlo. Sudac, koji je bio usredotočen na let lopte, nije uočio incident i dopustio je nastavak igre. Nekoliko trenutaka kasnije, VAR je preporučio sucu pregled incidenta zbog mogućeg prekršaja budući da je napadač bio povučen dok je lopta putovala prema njemu."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre - smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s našim tehničkim razmatranjima povlačenje za dres ili držanje suparničkog igrača smatrat će se jasnim prekršajem koji zahtijeva VAR intervenciju kada:"
+      },
+      {
+       "k": "li",
+       "t": "Branič djeluje namjerno"
+      },
+      {
+       "k": "li",
+       "t": "Branič koristi obje ruke kako bi držao suparnika dulje vrijeme"
+      },
+      {
+       "k": "li",
+       "t": "Postoji utjecaj na igru i na napadača"
+      },
+      {
+       "k": "li",
+       "t": "Lopta je blizu mjesta incidenta ili će uskoro stići."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s tehničkim razmatranjima Komisija nogometnih sudaca podržava VAR intervenciju. Propust suca da dosudi kazneni udarac predstavlja jasnu i očiglednu pogrešku slijedom čega je VAR intervencija opravdana. Komisija nogometnih sudaca nalazi opravdanim dosuđeni kazneni udarac."
+      }
+     ],
+     "verdict": "other"
+    },
+    {
+     "no": 3,
+     "match": "ISTRA 1961 - RIJEKA",
+     "referee": "Vukančić",
+     "minute": "25",
+     "type": "nasilno ponašanje",
+     "videos": [
+      "im2BHJ1W73I"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Dok se igralo na sredini terena igrač Rijeke s brojem 21 udario je laktom igrača Istre 1961 s brojem 3. Budući da sudac nije uočio prekršaj napadača, jer je njegova pažnja bila usmjerena na igru, komunicirao je sa svojim pomoćnim sucem, koji ga je obavijestio o neprimjerenoj reakciji napadača, a sudac je igrača opomenuo zbog nesportskog ponašanja. Nekoliko trenutaka kasnije, VAR je preporučio pregled incidenta na terenu za igru zbog mogućeg crvenog kartona (moguće nasilničko ponašanje)."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre - smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Nasilno ponašanje je kada igrač koristi ili pokuša upotrijebiti pretjeranu silu ili brutalnost prema suparniku bez borbe za loptu. Povrh navedenog treba reći da kada igrač koji se ne bori za loptu namjerno udari suparnika ili bilo koju drugu osobu u glavu ili lice rukom ili ramenom, kriv je za nasilno ponašanje, osim ako je korištena sila bila zanemarivog intenziteta."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupne snimke Komisija nogometnih sudaca podržava obje odluke: VAR intervenciju i odluku o crvenom kartonu. Komisija sudaca ponavlja da se svaki fizički čin koji se dogodi izvan zone gdje se nalazi lopta sustavno pregledava i analizira s posebnom pažnjom. Ovaj pristup ima za cilj zaštititi sliku nogometa i kazniti odgovorne za nasilničko ponašanje."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 4,
+     "match": "ISTRA 1961 - RIJEKA",
+     "referee": "Vukančić",
+     "minute": "79",
+     "type": "nasilno ponašanje i kazneni udarac",
+     "videos": [
+      "0paFOQ9J27g"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon udarca iz kuta domaće momčadi, u trenutku kada su igrači Rijeke iznosili loptu prema sredini terena za igru, branič Rijeke s brojem 45 udario je suparnika laktom. Sudac, čija je pažnja bila usmjerena na igru, nije uočio prekršaj braniča dopustivši nastavak igre. Nekoliko trenutaka poslije, VAR je preporučio pregled incidenta na terenu za igru zbog mogućeg crvenog kartona i kaznenog udarca uslijed nasilničkog ponašanja braniča unutar vlastitog kaznenog prostora. Nakon što je pregledao incident sudac je isključio braniča Rijeke s brojem 45 zbog nasilničkog ponašanja i dosudio kazneni udarac za Istru 1961."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre - smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Nasilno ponašanje je kada igrač koristi ili pokuša upotrijebiti pretjeranu silu ili brutalnost prema suparniku bez borbe za loptu."
+      },
+      {
+       "k": "p",
+       "t": "Povrh navedenog treba reći da kada igrač koji se ne bori za loptu namjerno udari suparnika ili bilo koju drugu osobu u glavu ili lice rukom ili ramenom, kriv je za nasilno ponašanje, osim ako je korištena sila bila zanemariva. Nasilno ponašanje prema suparniku kažnjava se izravnim slobodnim udarcem ili kaznenim udarcem ako je prekršaj počinjen unutar kaznenog prostora."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupne snimke Komisija nogometnih sudaca podržava odluku VAR-a o intervenciji i konačnu odluku suca o isključenju igrača Rijeke te dosuđivanju kaznenog udarca za Istru 1961. Komisija sudaca ponavlja da se svaki fizički čin koji se dogodi izvan zone gdje se nalazi lopta sustavno pregledava i analizira s posebnom pažnjom. Ovaj pristup ima za cilj zaštititi sliku nogometa i kazniti odgovorne za nasilničko ponašanje."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 5,
+     "match": "OSIJEK - HAJDUK",
+     "referee": "Čulina",
+     "minute": "16",
+     "type": "prekršaj i crveni karton",
+     "videos": [
+      "7WA1KmxlaeQ"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Tijekom duela u blizini tehničkih prostora, igrač Osijeka s brojem 26 startao je na nogu/stopalo suparničkog igrača bez dodirivanja lopte. Pozicioniran iza incidenta, sudac je odmah pokazao igraču Osijeka crveni karton zbog grube igre. Nekoliko trenutaka poslije VAR je preporučio pregled incidenta na terenu za igru zbog moguće jasne i očite pogreške u procjeni prilikom odluke o isključenju igrača. Nakon relativno dugog pregleda incidenta, tijekom kojeg je sudac procjenjivao različite kriterije za crveni karton zbog fizičkog prekršaja, sudac je odlučio poništiti svoju početnu odluku (crveni karton) i pokazati žuti karton zbog preoštrog starta."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre - smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Prekršaj koji zaslužuje crveni karton zbog grube igre mora ispunjavati sljedeće kriterije:"
+      },
+      {
+       "k": "p",
+       "t": "Igrač koji nasrne na protivnika u borbi za loptu sprijeda, sa strane ili straga koristeći jednu ili obje noge, s pretjeranom silom ili ugrožavajući sigurnost suparnika, kriv je zbog grube igre, pri čemu treba uzeti u obzir mjesto kontakta te da su brzina i intenzitet starta značajni."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju snimke Komisija nogometnih sudaca podržava odluku o crvenom kartonu donesenu na terenu. S obzirom na brzinu i intenzitet udarca u stopalo/gležanj igrača Hajduka, odluka o crvenom kartonu ne može se smatrati jasnom i očitom pogreškom."
+      }
+     ],
+     "verdict": "other"
+    },
+    {
+     "no": 6,
+     "match": "VARAŽDIN - DINAMO",
+     "referee": "Erceg",
+     "minute": "73",
+     "type": "kazneni udarac",
+     "videos": [
+      "_BrvECyqtzA"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Branič Varaždina s brojem 14 startao je desnom nogom na lijevo stopalo napadača Dinama s brojem 9 i tako ga spriječio u kretanju. Unatoč blizini, sudac nije uočio prekršaj i dopustio je nastavak igre. Nakon određene odgode uzrokovane pregledom cijele faze početnog napada, VAR je preporučio pregled incidenta na terenu za igru zbog mogućeg prekršaja (kaznenog udarca). Sudac je brzo pregledao incident na monitoru i u konačnici dosudio kazneni udarac zbog preoštrog starta te pokazao braniču drugi žuti karton."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre - smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Prilikom procjene prekršaja unutar kaznenog prostora, sudac mora uzeti u obzir sljedeće tehničke elemente:"
+      },
+      {
+       "k": "li",
+       "t": "Jasan kontakt s suparnikom"
+      },
+      {
+       "k": "li",
+       "t": "Stvaran i značajan utjecaj na kretanje suparničkog igrača."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s VAR protokolom, prije nego što se igra nastavi, sudac mora primijeniti odluku propisanu Pravilima nogometne igre. U ovom je slučaju sudac ispravno opomenuo braniča Varaždina zbog preoštrog starta odnosno isključio ga iz igre zbog druge opomene te je ispravno i dosudio kazneni udarac za Dinamo budući su bili ispunjeni svi tehnički kriteriji za obje odluke. Dakle, Komisija nogometnih sudaca podržava odluke koje su donijeli VAR i sudac."
+      }
+     ],
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "31973",
+   "title": "Sudačka analiza 12. kola SuperSport HNL-a",
+   "date": "2026-11-03",
+   "round": 12,
+   "url": "https://hns.family/vijesti/31973/",
+   "incidents": [
+    {
+     "no": 1,
+     "match": "RUDEŠ - DINAMO",
+     "referee": "Čulina",
+     "minute": "71",
+     "type": "nasilno ponašanje",
+     "videos": [
+      "7eeXp_Ln3ks"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon duela sa suparničkim igračem i dodavanja lopte svom suigraču, igrač Dinama s brojem 23 namjerno je udario svojom lijevom rukom po licu braniča Rudeša s brojem 27."
+      },
+      {
+       "k": "p",
+       "t": "Sudac je igraču koji je napravio prekršaj pokazao izravni crveni karton zbog nasilnog ponašanja."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Nasilno ponašanje je kada igrač koristi ili pokuša upotrijebiti pretjeranu silu ili brutalnost prema suparniku bez borbe za loptu. Povrh navedenog, treba reći da kada igrač koji se ne bori za loptu namjerno udari suparnika ili bilo koju drugu osobu u glavu ili lice rukom ili ramenom, kriv je za nasilno ponašanje, osim ako je korištena sila bila zanemariva."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s Pravilima nogometne igre i na temelju snimke iz koje proizlazi namjerni udarac laktom u lice braniča, Komisija nogometnih sudaca potvrđuje ispravnost crvenog kartona za igrača Dinama."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 2,
+     "match": "RUDEŠ - DINAMO",
+     "referee": "Čulina",
+     "minute": "79",
+     "type": "kažnjivo igranje rukom u napadačkoj fazi",
+     "videos": [
+      "tEFIAOGreG8"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Tijekom napadačke faze igrač Dinama s brojem 9 dolazi do lopte na oko 25 metara od vrata te nakon nekoliko metara vođenja lopte postiže pogodak. Sudac taj pogodak priznaje."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s Pravilima nogometne igre prekršaj je ako igrač postigne pogodak:"
+      },
+      {
+       "k": "li",
+       "t": "izravno rukom, čak i ako je slučajno, uključujući i vratara"
+      },
+      {
+       "k": "li",
+       "t": "odmah nakon što je lopta dodirnula njegovu ruku, čak i ako je slučajno"
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju tehničkih razmatranja i primjenom Pravila nogometne igre, Komisija nogometnih sudaca potvrđuje konačnu odluku o nepriznavanju pogotka Dinama."
+      },
+      {
+       "k": "p",
+       "t": "Unatoč navedenom, svakako treba napomenuti da vrijeme za analizu incidenta, kao i VAR intervencija usmjerena na preporuku pregleda situacije na terenu, nisu u skladu s VAR protokolom."
+      },
+      {
+       "k": "p",
+       "t": "Naime, budući da je igranje rukom napadača u ovom slučaju jasno i očigledno, VAR je trebao obavijestiti suca o počinjenom prekršaju koji predstavlja činjeničnu odluku pa sudac nije trebao biti pozvan na pregled situacije na terenu."
+      }
+     ],
+     "verdict": "other"
+    },
+    {
+     "no": 3,
+     "match": "RIJEKA - VARAŽDIN",
+     "referee": "Strukan",
+     "minute": "35",
+     "type": "kazneni udarac",
+     "videos": [
+      "O5adLBdzF0k"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon dodavanja upućenog s lijeve strane u domaći kazneni prostor napadač Varaždina s brojem 38 pao je na travnjak uslijed borbe za loptu s braničem Rijeke s brojem 51. Sudac, koji se nalazio blizu incidenta, uočava povlačenje za dres i dosuđuje kazneni udarac."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s našim tehničkim razmatranjima za povlačenje suparničkog igrača moraju se uzeti u obzir sljedeći elementi:"
+      },
+      {
+       "k": "li",
+       "t": "namjera braniča"
+      },
+      {
+       "k": "li",
+       "t": "položaj ruku oko napadača"
+      },
+      {
+       "k": "li",
+       "t": "trajanje povlačenja/držanja"
+      },
+      {
+       "k": "li",
+       "t": "utjecaj povlačenja suparničkog igrača"
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupne snimke Komisija nogometnih sudaca smatra da su bili prisutni svi tehnički elementi za dosuđivanje kaznenog udarca. Branič ni u jednom trenutku nije pokušao igrati loptom. Umjesto toga, očito je koristio obje ruke kako bi obuhvatio i zadržao napadača, što predstavlja prekršaj koji zahtijeva dosuđivanje kaznenog udarca."
+      },
+      {
+       "k": "p",
+       "t": "Nadalje, sudac je ispravno opomenuo braniča zbog prekršaja držanja suparničkog igrača u obećavajućem napadu. Budući da napadač nije imao kontrolu nad loptom i s obzirom na blizinu vratara, situacija se ne može klasificirati kao jasna prilika za postizanje pogotka slijedom čega je žuti karton odgovarajuća disciplinska mjera."
+      }
+     ],
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "31942",
+   "title": "Sudačka analiza 11. kola SuperSport HNL-a",
+   "date": "2026-10-28",
+   "round": 11,
+   "url": "https://hns.family/vijesti/31942/",
+   "incidents": [
+    {
+     "no": 1,
+     "match": "VARAŽDIN - SLAVEN BELUPO",
+     "referee": "Terzić",
+     "minute": "72",
+     "type": "zaleđe",
+     "videos": [
+      "Fxrhk0Bz0cc"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon slobodnog udarca izvedenog s lijeve strane kaznenog prostora Slaven Belupa, loptu prvo igra napadač Varaždina s brojem 5 (koji se ne nalazi u poziciji zaleđa), a gostujući vratar je potom odbija. Tijekom nastavka akcije u igru se uključuje još jedan napadač Varaždina s brojem 17 koji, krećući se prema naprijed, ulazi u vrata te ometa vratara. U konačnici loptom igra igrač Varaždina s brojem 22 koji postiže pogodak. Sudac i pomoćni sudac su priznali pogodak."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Igrač koji se nalazi u zaleđu u trenutku kada suigrač odigra loptu ili je dodirne, bit će kažnjen samo ako se uključi u aktivnu igru na sljedeći način:"
+      },
+      {
+       "k": "li",
+       "t": "utjecajem na suparničkog igrača:"
+      },
+      {
+       "k": "li",
+       "t": "jasnim pokušajem igranja loptom koja se nalazi u blizini, pri čemu taj potez utječe na suparnika, ili"
+      },
+      {
+       "k": "li",
+       "t": "očiglednom kretnjom koja jasno utječe na sposobnost suparnika da igra loptom."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupnih videozapisa Komisija nogometnih sudaca zaključuje da se napadač Varaždina s brojem 17 nalazi u kažnjivom zaleđu. Naime, igrač Varaždina s brojem 17 je toliko blizu protivničkog vratara da su došli u kontakt nogama, što se smatra ometanjem vratara u trenutku postizanja pogotka. Uzimajući u obzir sve naprijed navedeno, Komisija nogometnih sudaca podržava VAR intervenciju i konačnu odluku o nepriznavanju pogotka zbog zaleđa."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 2,
+     "match": "VARAŽDIN - SLAVEN BELUPO",
+     "referee": "Terzić",
+     "minute": "79",
+     "type": "gruba igra",
+     "videos": [
+      "iJz-ElUvghY"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon dodavanja kroz sredinu terena igrač Slaven Belupa s brojem 90 uklizao je prema suparničkom igraču s obje noge koje su bile u zraku, pri čemu je u konačnici zahvatio gležanj igrača Varaždina s brojem 20. Sudac je odmah pokazao izravni crveni karton igraču Slaven Belupa s brojem 90 zbog grubog prekršaja."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Isključenje iz igre mora se dogoditi kada:"
+      },
+      {
+       "k": "li",
+       "t": "je fizička opasnost za igrača očita"
+      },
+      {
+       "k": "li",
+       "t": "je start igrača koji je napravio prekršaj nekontroliran te uključuje brzinu, intenzitet i opasan kontakt (obično iznad gležnja)."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupnih snimki Komisija nogometnih sudaca potvrđuje ispravnost odluke koju je sudac donio na terenu budući da su ispunjeni svi kriteriji za isključenje igrača Slaven Belupa s brojem 90."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 3,
+     "match": "ISTRA 1961 - HAJDUK",
+     "referee": "Kolarić",
+     "minute": "7",
+     "type": "mogući prekršaj prije pogotka",
+     "videos": [
+      "nhm4h_vB2Io"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon izvedenog udarca iz kuta te nakon nekoliko odbijanja lopte, napadač Hajduka s brojem 8 postiže pogodak. Malo prije toga branič je pokušao igrati loptu glavom, međutim nije uspio te je lopta došla do drugog napadača koji je postigao pogodak. Sudac je priznao pogodak, a odluku je potvrdio VAR."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s VAR protokolom, sudac može donijeti odluku o poništavanju pogotka tek nakon što lopta napusti teren za igru i uđe u vrata. Poništavanje pogotka mora ispunjavati sljedeće kriterije:"
+      },
+      {
+       "k": "li",
+       "t": "Jasno utvrđen prekršaj napadača tijekom napadačke faze (APP)"
+      },
+      {
+       "k": "li",
+       "t": "Jasan kontakt i udarac za dosuđivanje prekršaja."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupnih snimki i gore navedenih tehničkih razmatranja Komisija nogometnih sudaca smatra da ni u jednom trenutku nijedan od napadača nije počinio prekršaj koji bi opravdao poništavanje pogotka. Način na koji je napadač postigao pogodak (tzv. škarice) bio je normalan nogometni potez koji ni na koji način nije utjecao na braniča."
+      }
+     ],
+     "verdict": "other"
+    },
+    {
+     "no": 4,
+     "match": "ISTRA 1961 - HAJDUK",
+     "referee": "Kolarić",
+     "minute": "79",
+     "type": "kazneni udarac",
+     "videos": [
+      "OffbZwVCXCo"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon što je igrač Istre 961 izveo udarac iz kuta, u borbi za poziciju branič Hajduka s brojem 3 povukao je za dres napadača Istre 1961 s brojem 3 koji je pao na travnjak. Sudac, koji je bio savršeno pozicioniran, odmah je dosudio kazneni udarac."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s našim tehničkim razmatranjima, prekršaji gornjeg dijela tijela - posebno prekršaji povlačenja za dres - moraju ispunjavati sljedeće kriterije:"
+      },
+      {
+       "k": "li",
+       "t": "Utjecaj na suparničkog igrača"
+      },
+      {
+       "k": "li",
+       "t": "Trajanje povlačenja."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Komisija nogometnih sudaca u potpunosti je suglasna s odlukom suca, odnosno s dosuđenim kaznenim udarcem."
+      }
+     ],
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "31907",
+   "title": "Sudačka analiza 10. kola SuperSport HNL-a",
+   "date": "2026-10-20",
+   "round": 10,
+   "url": "https://hns.family/vijesti/31907/",
+   "incidents": [
+    {
+     "no": 1,
+     "match": "RUDEŠ - RIJEKA",
+     "referee": "Škobić",
+     "minute": "65",
+     "type": "preoštar start",
+     "videos": [
+      "ZkITZmgJ8lA"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Na loptu na sredini terena istovremeno su startali igrač Rijeke s brojem 6 i igrač Rudeša s brojem 88. Igrač Rijeke s brojem 6 odigrao je loptu desnom nogom, nakon čega je na travnjaku došlo do fizičkog kontakta između potkoljenice njegove lijeve noge i desne noge igrača Rudeša s brojem 88. Sudac, koji je bio u dobroj poziciji, dosudio je izravni slobodni udarac za Rudeš bez disciplinske mjere."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Kod incidenata koji se odnose na procjenu prekršaja i disciplinske mjere potrebno je u obzir uzeti nekoliko tehničkih elemenata:"
+      },
+      {
+       "k": "li",
+       "t": "namjera oba igrača je igrati loptom"
+      },
+      {
+       "k": "li",
+       "t": "igrač Rijeke jasno prvi dolazi do lopte i odigrava je dok s drugom nogom jasno radi prekršaj velikom brzinom, zbog čega nije imao kontrolu nad tijelom"
+      },
+      {
+       "k": "li",
+       "t": "kontakt igrača Rijeke sa suparnikom je posljedica njegovog klizećeg starta"
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju snimke i gore navedenih tehničkih razmatranja, start igrača Rijeke s brojem 6 smatra se preoštrim startom jer je igrač startao svojom drugom nogom nesmotreno i velikom silinom na nogu suparničkog igrača. S obzirom na to da je nakon toga došlo do opasnog kontakta s nogom suparničkog igrača, Komisija nogometnih sudaca smatra da je igrač trebao biti opomenut, odnosno isključen zbog druge opomene."
+      }
+     ],
+     "verdict": "incorrect"
+    },
+    {
+     "no": 2,
+     "match": "RUDEŠ - RIJEKA",
+     "referee": "Škobić",
+     "minute": "70",
+     "type": "sprječavanje igrača u izrazitoj prilici za postizanje pogotka",
+     "videos": [
+      "q98-NM9awck"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Branič Rudeša s brojem 4 uhvatio je igrača Rijeke s brojem 18 za ruku u trenutku kada se u punom trku (brzini) kretao za loptom koju mu je uputio suigrač, a zbog čega je u konačnici napadač Rijeke pao. Sudac je smatrao da je branič Rudeša spriječio"
+      },
+      {
+       "k": "p",
+       "t": "izglednu priliku"
+      },
+      {
+       "k": "p",
+       "t": "za postizanje pogotka (situacija jedan na jedan s vratarem) zbog čega je dosudio prekršaj i isključio braniča."
+      },
+      {
+       "k": "p",
+       "t": "Uzimajući u obzir poziciju napadača i drugog braniča s desne strane te vratara, VAR je navedenu odluku suca smatrao jasnom i očiglednom pogreškom, zbog čega je pozvao suca na pregled snimke na terenu za igru. Nakon što je pregledao situaciju na terenu za igru, sudac je ostao pri prvotnoj odluci."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Igrač koji spriječi suparnika u postizanju pogotka ili u"
+      },
+      {
+       "k": "p",
+       "t": "izglednoj prilici"
+      },
+      {
+       "k": "p",
+       "t": "za postizanje pogotka kažnjava se isključenjem. Prilikom donošenja odluke uzimaju se u obzir sljedeći kriteriji:"
+      },
+      {
+       "k": "li",
+       "t": "Udaljenost prekršaja od vrata momčadi koja se brani"
+      },
+      {
+       "k": "li",
+       "t": "Općeniti smjer igre/kretanja lopte"
+      },
+      {
+       "k": "li",
+       "t": "Mogućnost da se zadrži ili ostvari kontrola nad loptom"
+      },
+      {
+       "k": "li",
+       "t": "Pozicija i broj braniča odnosno pozicija i broj napadača"
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Uzimajući u obzir dostupne snimke utvrđujemo da se branič služio rukama, držeći napadača za lijevu ruku kako bi ga zaustavio/onemogućio u kretanju. U trenutku prekršaja napadač se kretao u punoj brzini i bio je u situaciji ostvarivanja posjeda/kontrole nad loptom (u idućih korak-dva bio bi na udarcu ili u poziciji da driblingom zaobiđe vratara). Drugi branič, koji je bio pozicioniran s desne strane na otprilike 10 metara, odnosno vratar nisu bili u poziciji da jasno i očito sustignu i utječu na napadača. Uzimajući u obzir navedene kriterije Komisija sudaca smatra isključenje opravdanom odlukom na terenu za igru i ne očekuje VAR intervenciju."
+      }
+     ],
+     "verdict": "other"
+    },
+    {
+     "no": 3,
+     "match": "SLAVEN BELUPO - DINAMO",
+     "referee": "Strukan",
+     "minute": "30",
+     "type": "kazneni udarac",
+     "videos": [
+      "9CEkc0YvXr0"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Tijekom napada na desnoj strani domaćeg kaznenog prostora branič Slaven Belupa s brojem 15 srušio je svojom lijevom nogom napadača Dinama s brojem 7. Kontakt je bio dovoljno značajan da napadač izgubi ravnotežu i padne. Sudac, koji je bio u dobroj poziciji, odmah je dosudio kazneni udarac."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s našim tehničkim razmatranjima jasan i snažan kontakt koji rezultira padom igrača unutar kaznenog prostora smatra se prekršajem odnosno kaznenim udarcem."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Komisija nogometnih sudaca u potpunosti se slaže s odlukom suca, odnosno dosuđenim kaznenim udarcem."
+      }
+     ],
+     "verdict": "correct"
+    }
+   ]
+  },
+  {
+   "id": "31878",
+   "title": "Sudačka analiza 9. kola SuperSport HNL-a",
+   "date": "2026-10-13",
+   "round": 9,
+   "url": "https://hns.family/vijesti/31878/",
+   "incidents": [
+    {
+     "no": 1,
+     "match": "GORICA - RUDEŠ",
+     "referee": "Kolarić",
+     "minute": "27",
+     "type": "kazneni udarac",
+     "videos": [
+      "4Sa7e5-YXiA"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon što je lopta upućena u kazneni prostor Rudeša branič gostujuće momčadi s brojem 42 s obje je ruke u leđa gurnuo igrača Gorice s brojem 50. Sudac, koji je bio u dobroj poziciji i imajući dobar pogled na situaciju, dosudio je kazneni udarac. Nakon provjere potencijalnog zaleđa VAR je potvrdio sučevu odluku na terenu."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "Kod incidenata koji se odnose na guranje u gornji dio tijela napadača unutar kaznenog prostora, potrebno je uzeti u obzir nekoliko tehničkih elemenata:"
+      },
+      {
+       "k": "li",
+       "t": "Namjera braniča u vezi s obrambenom akcijom"
+      },
+      {
+       "k": "li",
+       "t": "Snaga kontakta i guranja"
+      },
+      {
+       "k": "li",
+       "t": "Utjecaj na kretanje napadača"
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju snimke Komisija nogometnih sudaca u potpunosti je suglasna s odlukom suca da je guranje braniča utjecalo na kretanje napadača. Unatoč navedenom, a budući da napadač nije imao kontrolu nad loptom (bila je u zraku), ne očekuje se opomena braniču."
+      }
+     ],
+     "verdict": "other"
+    },
+    {
+     "no": 2,
+     "match": "HAJDUK - DINAMO",
+     "referee": "Pajač",
+     "minute": "62",
+     "type": "prekršaj",
+     "videos": [
+      "Jb94d36HIqU"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Treba uzeti u obzir da je zbog izuzetne količine oborina (vode na terenu) utakmica igrana u vrlo teškim uvjetima kada je igrač Hajduka s brojem 14, pokušavajući frontalno startati na loptu, ostvario kontakt s nogom suparničkog igrača. Sudac, koji je bio dobro pozicioniran, smatrao je da je start nepromišljen i da je igrač zaslužio žuti karton."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "S obzirom na preporuke za zaštitom fizičkog integriteta igrača, suci trebaju biti oprezni i odlučni u pogledu svakog nepromišljenog čina koji možebitno ugrožava fizički integritet igrača. Intenzitet i brzina kretanja te sam kontakt trebaju se procijeniti temeljem utvrđenih kriterija i u skladu s uvjetima na terenu za igru:"
+      },
+      {
+       "k": "li",
+       "t": "ima li nedostatka kontrole u radnji braniča"
+      },
+      {
+       "k": "li",
+       "t": "je li došlo do kontakta iznad ili ispod gležnja"
+      },
+      {
+       "k": "li",
+       "t": "je li došlo do torzije (savijanja) kao posljedice kontakta."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju dostupne snimke i njezine kvalitete, možemo vidjeti da je start braniča djelomično kontroliran te da posjeduje elemente brzine. Branič ostvaruje kontakt s napadačevim lijevim stopalom svojom potkoljenicom, nisko na terenu za igru, uz povlačenje svojih nogu brinući za sigurnost suparničkog igrača. Međutim, kontakt je frontalan s utjecajem na napadačevo stopalo dok su brzina i snaga kontakta pojačani vrlo lošim stanjem terena za igru. S tehničkog stajališta, Komisija nogometnih sudaca podržava odluku suca o disciplinskoj mjeri opomene donesene na terenu za igru te istu ne smatra jasnom i očiglednom pogreškom."
+      }
+     ],
+     "verdict": "correct"
+    },
+    {
+     "no": 3,
+     "match": "SLAVEN BELUPO - RIJEKA",
+     "referee": "Terzić",
+     "minute": "4",
+     "type": "kazneni udarac",
+     "videos": [
+      "zd7PRxFevXs"
+     ],
+     "paras": [
+      {
+       "k": "p",
+       "t": "Nakon što je gostujući igrač s brojem 23 ušao u suparnički kazneni prostor s lijeve strane, srušio ga je branič Slaven Belupa s brojem 22 bez da je odigrao ili dotaknuo loptu."
+      },
+      {
+       "k": "p",
+       "t": "Sudac, koji je bio idealno pozicioniran, dosudio je kazneni udarac."
+      },
+      {
+       "k": "p",
+       "t": "Prije izvođenja kaznenog udarca sudac je proveo standardni postupak proaktivnog djelovanja upozoravajući sve igrače:"
+      },
+      {
+       "k": "li",
+       "t": "vratara da ostane na svojoj gol-liniji dok se udarac ne izvede;"
+      },
+      {
+       "k": "li",
+       "t": "ostale igrače da ostanu izvan kaznenog prostora i najmanje 9,15 metara udaljeni od lopte dok se udarac ne izvede."
+      },
+      {
+       "k": "p",
+       "t": "Vratar je obranio kazneni udarac, a njegov suigrač s brojem 15 prvi je došao do lopte te ju je uputio izvan granica terena za igru. Nakon VAR pregleda, sudac je odredio da se kazneni udarac ponovno izvede jer je branič ušao u kazneni prostor prije nego što je udarac izveden."
+      },
+      {
+       "k": "p",
+       "t": "Tehnička razmatranja (Pravila nogometne igre, smjernice):"
+      },
+      {
+       "k": "p",
+       "t": "U skladu s Pravilima nogometne igre suigrač vratara bit će kažnjen zbog povrede Pravila samo ako je:"
+      },
+      {
+       "k": "li",
+       "t": "prerani ulazak je očito utjecalo na izvođača;"
+      },
+      {
+       "k": "li",
+       "t": "ili igrač koji je prerano ušao u kazneni prostor igra loptom ili je u duelu sa suparničkim igračem za loptu, spriječio suparničku momčad da postigne pogodak ili stvori priliku za postizanje pogotka."
+      },
+      {
+       "k": "p",
+       "t": "U skladu s VAR protokolom, VAR je dužan pregledati incident i obavijestiti suca o eventualnom prekršaju suigrača vratara."
+      },
+      {
+       "k": "p",
+       "t": "Očekivana odluka:"
+      },
+      {
+       "k": "p",
+       "t": "Na temelju snimke Komisija nogometnih sudaca jasno je utvrdila prerani ulazak braniča u kazneni prostor prilikom izvođenja kaznenog udarca. Komisija nogometnih sudaca podržava VAR intervenciju i odluku o ponovnom izvođenju kaznenog udarca."
+      }
+     ],
+     "verdict": "correct"
+    }
+   ]
+  },
   {
    "id": "31756",
    "title": "Sudačka analiza 8. kola SuperSport HNL-a",
@@ -41,7 +933,7 @@
        "t": "Na temelju tehničkih razmatranja i smjernica Komisija nogometnih sudaca smatra da je klizeći start igrača Rudeša trebao biti kažnjen crvenim kartonom zbog kontakta iznad gležnja s otvorenim đonom i ispruženom nogom. Nakon analize intenziteta koji je igrač Rudeša pokazao tijekom starta Komisija nogometnih sudaca smatra da ne pokazivanje crvenog kartona predstavlja \"jasnu i očitu\" pogrešku. VAR je u ovoj situaciji trebao intervenirati i preporučiti sucu pregled snimke."
       }
      ],
-     "verdict": "incorrect"
+     "verdict": "other"
     },
     {
      "no": 2,
@@ -119,7 +1011,7 @@
        "t": "U slučajevima kada nema jasnih dokaza o prekršaju, jer dostupni kutovi kamere ne pokazuju uvjerljivo kojim je dijelom tijela branič odigrao loptu, VAR intervencija se ne očekuje, niti bi se trebala dogoditi. U ovom konkretnom slučaju, Komisija nogometnih sudaca smatra da je neadekvatna priprema snimke za pregled na terenu i prekomjerno ponavljanje incidenta (24 puta) dovela suca u vrlo težak položaj, što ga je navelo da vjeruje da je pogriješio time što izvorno nije dosudio kazneni udarac. S obzirom da snimka ne pokazuje jasnu i očitu pogrešku suca, VAR intervencija se ne očekuje."
       }
      ],
-     "verdict": "correct"
+     "verdict": "other"
     },
     {
      "no": 4,
@@ -479,5 +1371,6 @@
     }
    ]
   }
- ]
+ ],
+ "latest_content": "2026-11-11"
 }

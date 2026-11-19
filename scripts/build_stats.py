@@ -19,6 +19,7 @@ from lib.seo import meta_tags
 from lib.team_names import normalize_name
 from lib.theme import inject_theme, js_icons, topbar
 
+from lib.issue_notes import ISSUE_NOTES, title_wrong_count
 from lib.paths import DATA, SITE
 from lib.site_stats import counts
 
@@ -325,13 +326,36 @@ def build_trends(cases, issues):
     return {"issues": rows, "cats": cats}
 
 
+def issue_counts_table(season):
+    data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+    counts = {r["no"]: r for r in build_trends(data["cases"], data["issues"])["issues"]}
+    rows = []
+    for issue in data["issues"]:
+        n = issue["no"]
+        official = title_wrong_count(issue)
+        scope = "中超" if "中超无" in issue["title"] else "标题披露范围"
+        note = ISSUE_NOTES.get(season, {}).get(n, "")
+        rows.append(
+            f'<tr><td><a href="season-{season}.html#case-{next(c["seq"] for c in data["cases"] if c["issue"] == n)}">第{n}期</a></td>'
+            f"<td>{official if official is not None else '未披露'}（{scope}）</td>"
+            f"<td>{counts[n]['wrong']}</td><td>{counts[n]['var']}</td><td>{note or '按原文逐例记录'}</td></tr>"
+        )
+    return (
+        "<details><summary>逐期数量与官方标题口径对照</summary>"
+        "<p>主裁与 VAR 分别统计。公开评议由申诉和选取的典型判例构成，覆盖范围随期目变化。</p>"
+        '<div style="overflow-x:auto"><table><thead><tr><th>期目</th><th>官方标题</th><th>合集主裁</th><th>VAR</th><th>说明</th></tr></thead><tbody>'
+        + "".join(rows)
+        + "</tbody></table></div></details>"
+    )
+
+
 def _svg_issue_trend(rows):
     """逐期错漏判柱状 + VAR 错误折线叠加（构建期 SVG，颜色走 CSS 变量适配明暗）。"""
     if not rows:
         return ""
     w, h, pad_l, pad_b, pad_t = 720, 210, 34, 26, 14
     n = len(rows)
-    ymax = max(4, max(r["wrong"] for r in rows))
+    ymax = max(4, max(max(r["wrong"], r["var"]) for r in rows))
     inner_w, inner_h = w - pad_l - 12, h - pad_b - pad_t
     step = inner_w / n
     bw = max(4, min(26, step * 0.62))
@@ -352,7 +376,7 @@ def _svg_issue_trend(rows):
     pts = []
     for i, r in enumerate(rows):
         x = pad_l + step * (i + 0.5)
-        y = pad_t + inner_h * (1 - min(r["var"], ymax) / ymax)
+        y = pad_t + inner_h * (1 - r["var"] / ymax)
         pts.append(f"{x:.1f},{y:.1f}")
     if any(r["var"] for r in rows):
         parts.append(f'<polyline points="{" ".join(pts)}" class="ts-var"/>')
@@ -368,7 +392,7 @@ def _svg_issue_trend(rows):
             )
         if r["var"]:
             parts.append(
-                f'<circle cx="{x:.1f}" cy="{pad_t + inner_h * (1 - min(r["var"], ymax) / ymax):.1f}" '
+                f'<circle cx="{x:.1f}" cy="{pad_t + inner_h * (1 - r["var"] / ymax):.1f}" '
                 'r="3" class="ts-var-dot"><title>第'
                 f"{r['no']}期 VAR 错误 {r['var']} 例</title></circle>"
             )
@@ -666,8 +690,8 @@ __TOPBAR__
   <details class="trends" open>
     <summary>📈 趋势概览（合集全部判例口径，含女足/全运会——与下方得失盘点的男子职业联赛口径不同）</summary>
     <div class="tr-box">
-      <div class="tr-h">逐期错漏判数量与 VAR 错误<span class="tr-sub">柱=该期官方认定错漏判数 · 折线/圆点=其中 VAR 错误数 · 悬停查看明细</span></div>
-      __TREND_ISSUES__
+      <div class="tr-h">逐期错漏判数量与 VAR 错误<span class="tr-sub">柱=合集逐例复核的主裁错漏判数 · 折线/圆点=独立统计的 VAR 错误数 · 悬停查看明细</span></div>
+      __TREND_ISSUES__\n      __ISSUE_COUNTS__
     </div>
     <div class="tr-box">
       <div class="tr-h">教学分类 × 判定分布<span class="tr-sub">横条=该分类三赛季判例总量中的错漏判/支持原判/不予认定构成</span></div>
@@ -895,6 +919,7 @@ def build_season(season):
         .replace("__BUILT__", date.today().isoformat())
         .replace("__TREND_ISSUES__", trend_issues_svg)
         .replace("__TREND_CATS__", trend_cats_svg)
+        .replace("__ISSUE_COUNTS__", issue_counts_table(season))
     )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]

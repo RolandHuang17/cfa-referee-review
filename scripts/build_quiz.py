@@ -239,6 +239,7 @@ def build_bank():
                     a["c"] = ans["c"]
                 if a:
                     item["ans"] = a
+                item["discipline_target"] = ans.get("discipline_target", "")
             bank.append(item)
     n_scale = 0
     if SCALE_JSON.exists():
@@ -845,7 +846,7 @@ function renderWbList(){
   const now = Date.now();
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
     const q = BANK[k]; if (!q) return "";
-    const yourTxt = e.t==="case" ? axisText(e.your) : (e.t==="var"||e.t==="theory") ? (q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
+    const yourTxt = e.t==="case" ? axisText(e.your) : (e.t==="var"||e.t==="theory") ? (e.your!=null && e.your!=="" && q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
     const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
     const dueTxt = e.done ? "已掌握" : (e.due||0)<=now ? "⏰ 复习到期" :
       `${Math.ceil(((e.due||0)-now)/86400000)} 天后复习`;
@@ -971,12 +972,12 @@ function renderQuestion(){
       axes.push(`<div class="axis"><div class="ah">② 正确的判罚决定 <small>1分</small></div><div class="optrow">` +
         R_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.r===v?"on":""}" data-axis="r" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
     if (q.ans && q.ans.c)
-      axes.push(`<div class="axis"><div class="ah">③ 纪律处分 <small>1分</small></div><div class="optrow">` +
+      axes.push(`<div class="axis"><div class="ah">③ 纪律处分${q.discipline_target?" · "+esc(q.discipline_target):""} <small>1分</small></div><div class="optrow">` +
         C_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.c===v?"on":""}" data-axis="c" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
     document.getElementById("qForm").innerHTML = axes.join("");
   } else if (q.t === "var"){
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">官方决定 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q.opts.map((o,i)=>`<button class="chip opt ${saved&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
+      q.opts.map((o,i)=>`<button class="chip opt ${saved!=null&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
   } else if (q.t === "theory"){
     // 选项按次打乱显示（题库文件中正确项均在首位）；saved 存的是原始下标，经 _disp 反查高亮
     if (!q._disp){
@@ -987,9 +988,9 @@ function renderQuestion(){
       }
     }
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">正确条文 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q._disp.map((orig,i)=>`<button class="chip opt ${saved&&+saved===orig?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(q.opts[orig])}</button>`).join("") + `</div></div>`;
+      q._disp.map((orig,i)=>`<button class="chip opt ${saved!=null&&+saved===orig?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(q.opts[orig])}</button>`).join("") + `</div></div>`;
   } else {
-    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，无错选有漏选1分，有错选0分</small></div><div class="optrow">` +
+    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，部分正确且无错选1分，空答或错选0分</small></div><div class="optrow">` +
       q.dec.map((d,i)=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${i<9?`<span class="okn">${i+1}</span>`:""}${esc(d.label)}</button>`).join("") + `</div></div>`;
   }
   document.getElementById("ansGate").classList.add("on");
@@ -1052,7 +1053,7 @@ function scoreScale(q, selArr){
   const active = q.dec.filter(d=>d.active).map(d=>d.label);
   const fp = selArr.filter(x=>!active.includes(x));
   const miss = active.filter(x=>!selArr.includes(x));
-  const got = (!fp.length && !miss.length) ? 2 : (!fp.length ? 1 : 0);
+  const got = !selArr.length || !active.length || fp.length ? 0 : (miss.length ? 1 : 2);
   return {got, max:2, detail:[
     {name:"判罚决定", ok:got===2, yours:selArr.length?selArr.join("、"):"（未答）", right:active.join("、")||"（无）"},
     {name:"错选/漏选", ok:!fp.length, yours:fp.length?("错选 "+fp.join("、")):"无错选", right:miss.length?("漏选 "+miss.join("、")):"无漏选"}
@@ -1139,10 +1140,12 @@ function submitAnswer(){
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else finishExam();
 }
-function finishExam(){
+function finishExam(captureCurrent=true){
+  if (round.finished) return;
+  round.finished = true;
   stopTimer();
   // 兜底：手动交卷/超时交卷前都暂存当前题答案，重复写入幂等
-  if (round.qs[round.i] && round.scores[round.i] == null)
+  if (captureCurrent && round.qs[round.i] && round.scores[round.i] == null)
     round.answers[round.i] = currentAnswer();
   let totalGot = 0, totalMax = 0;
   round.qs.forEach((q,i)=>{
@@ -1177,6 +1180,7 @@ function skipQuestion(){
     recordWrong(q, a, s);
   }
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
+  else if (round.mode === "exam") finishExam(false);
   else showResult();
 }
 function countUp(el, got, max){
@@ -1236,7 +1240,7 @@ function showResult(){
     const missTxt = s.detail.filter(d=>!d.ok).map(d=>`${d.name}：正确 ${d.right}`).join("；");
     return `<div class="rrow" style="--i:${Math.min(i,12)}"><span class="rmark ${allOk?"hit":"miss"}">${allOk?"✓":s.got>0?"△":"✗"}</span>
       <div class="rmain"><div>${qTitle(q)}</div>
-      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(q.t==="var"||q.t==="theory")?(q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
+      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(q.t==="var"||q.t==="theory")?(a!=null&&a!==""&&q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a></div>`;
   }).join("");
   renderWbStats();
@@ -1354,7 +1358,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
 document.getElementById("qForm").addEventListener("click", e=>{
   const b = e.target.closest(".opt"); if (!b || round.locked) return;
   const q = round.qs[round.i];
-  if (q.t === "case" || q.t === "var"){   // 单选轴（var 的四选项也是单选）
+  if (q.t === "case" || q.t === "var" || q.t === "theory"){   // 单选轴
     const axis = b.dataset.axis;
     document.querySelectorAll(`#qForm .opt[data-axis="${axis}"]`).forEach(x=>x.classList.toggle("on", x===b));
   } else {

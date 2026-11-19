@@ -6,6 +6,8 @@
 """
 
 import json
+import re
+from lib.issue_notes import ISSUE_NOTES
 import sys
 from datetime import date
 
@@ -96,30 +98,6 @@ CATEGORY_NOTES = {
     "other_program": "统一尺度要点：①VAR介入原则：仅限清晰明显的错漏判以及严重事件（红牌、点球、进球、认错人）；VAR查看≠介入，介入的标志是裁判员做出「电视信号」手势；VAR介入后裁判员可不回看而直接采纳结论，但仍须做出电视手势。②裁判员选位跑位影响判罚质量，虽不构成改判依据，但应持续改进。③耳麦通讯受干扰时，对讲机等备用通讯设备的使用符合VAR操作要求。④球队官员在技术区域外实施暴力行为可被红牌罚令出场。",
 }
 
-ISSUE_NOTES = {
-    "2026": {
-        3: "本期标题认定7例；合集另计入2例「申诉问题支持原判但漏判黄牌」的纪律处罚漏判（判例四、判例十五），官方标题口径未计入。",
-        4: "本期标题认定5例；合集另计入点球重罚程序错误与越位误判等纪律/程序类错误。",
-        5: "本期标题认定3例；合集另计入1例漏判黄牌与1例漏判越位进球。",
-        6: "本期标题认定6例；合集另计入1例漏判黄牌。",
-        7: "本期标题认定8例；合集另计入3例纪律处罚漏判与越位误判类错误。",
-        8: "本期标题认定5例；合集另计入1例漏判黄牌。",
-        10: "本期标题认定5例；合集另计入1例多余黄牌。",
-        11: "本期标题口径为「本轮中超无错漏判」（本期中超判例均支持原判）；合集另计入本期中甲/中乙错漏判6例。",
-        13: "本期标题认定5例；合集另计入1例多余黄牌。",
-        14: "本期标题认定2例；合集另计入1例漏判黄牌。",
-        16: "本期标题认定4例；合集另计入1例漏判黄牌。",
-        19: "本期标题认定3例；合集另计入1例多余黄牌。",
-        22: "本期标题口径为「本轮中超无错漏判」（本期无中超判例）；合集计入中甲/中乙错漏判2例。",
-    },
-    "2025": {
-        9: "本期标题认定6例，其中判例三为VAR越位划线错误（评议组对裁判员判定不予认定），本合集计入VAR错误统计。",
-        26: "本期判例七（头撞事件）当期未认定，第27期补充认定为漏判红牌；本合集将该错漏判随原判例计入第26期。",
-        27: "本期文章的认定1例为对第26期判例七的补充认定（已计入第26期）；本期新增判例二经评议为支持原判。",
-        31: "本期标题口径下判例四（红牌问题）不予认定；评议组同时认定申花10号动作构成非体育行为、应黄牌警告，本合集按口径将未出示黄牌计入错漏判（漏判黄牌）。",
-    },
-    "2024": {},
-}
 
 VERDICT_NAME = {"wrong": "错漏判", "correct": "支持原判", "pending": "不予认定"}
 # 教学分类 ↔ 规则章节 ↔ 尺度场景 互链（data/xlinks.json 策表解析产物，三季共用）
@@ -165,8 +143,33 @@ def build_paths(raw_cases):
 VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
+def rule_context(case, scores, editions):
+    match = re.search(r"第(\d+)轮", case.get("round", ""))
+    round_no = match.group(1) if match else "0"
+    key = "|".join(
+        (
+            case.get("comp", ""),
+            round_no,
+            normalize_team(case.get("home", "")),
+            normalize_team(case.get("away", "")),
+        )
+    )
+    record = scores.get(key, {})
+    day = record.get("date", "")
+    if record.get("source") == "待补" or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+        return {"date": "", "edition": "", "source": ""}
+    applicable = [e for e in editions if e["effective"] <= day]
+    if not applicable:
+        return {"date": day, "edition": "", "source": ""}
+    return {"date": day, **applicable[-1]}
+
+
 def build_data(season):
     data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+    scores = json.loads(
+        (DATA / f"match-scores-{season}.json").read_text(encoding="utf-8")
+    )["scores"]
+    editions = json.loads((DATA / "rule-editions.json").read_text(encoding="utf-8"))
     cases = []
     for c in data["cases"]:
         comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
@@ -202,6 +205,7 @@ def build_data(season):
                 "video_urls": c["video_urls"],
                 "category": c["category"],
                 "tags": c.get("tags", []),
+                "rule_context": rule_context(c, scores, editions),
                 "v": c["referee_verdict"],
                 "var": c["var_verdict"],
             }
@@ -1129,8 +1133,15 @@ function select(seq, scrollRow=true){
     const box = document.getElementById("dXlinks");
     if (xl && (xl.laws.length || xl.scale.length)){
       const parts = [];
+      const rule = c.rule_context || {};
+      const context = rule.edition
+        ? "已核比赛日期 " + rule.date + " · 执行版本参考 " + rule.edition
+        : (rule.date ? "比赛日期 " + rule.date + " · 适用版本待核" : "比赛当日适用规则版本待核");
+      parts.push('<span class="fml-k">' + esc(context) + '</span>');
+      if (rule.source) parts.push(`<a class="fml-link" href="${esc(rule.source)}" target="_blank" rel="noopener noreferrer">官方执行依据</a>`);
+
       if (xl.laws.length)
-        parts.push(`<span class="fml-k">关联规则</span>` + xl.laws.map(l=>
+        parts.push(`<span class="fml-k">现行规则 2026/27</span>` + xl.laws.map(l=>
           `<a class="fml-link" href="${esc(l.url)}">${IC.book}${esc(l.title)}</a>`).join(""));
       if (xl.scale.length)
         parts.push(`<span class="fml-k">尺度场景</span>` + xl.scale.map(s=>
@@ -1389,6 +1400,7 @@ document.getElementById("favList").addEventListener("click", e=>{
   applyFilter();
 });
 document.getElementById("btnExport").onclick = ()=>{
+  flushNote();
   const blob = new Blob([JSON.stringify({fav, notes, exported: new Date().toISOString(), app:"cfa-referee-review-"+CFG.season}, null, 1)],
     {type:"application/json"});
   const a = document.createElement("a");
@@ -1403,6 +1415,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
   const rd = new FileReader();
   rd.onload = () => {
     try {
+      flushNote();
       const d = JSON.parse(rd.result);
       if (d.app !== "cfa-referee-review-" + CFG.season) {
         alert("导入失败：这不是当前赛季导出的收藏与笔记文件"); return;
@@ -1415,6 +1428,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
         if (!notes[s] || (v.ts||0) > (notes[s].ts||0)) { notes[s] = v; n++; }
       }
       persistFav(); renderFavList(); applyFilter();
+      if (bySeq[state.sel]) { renderNoteUI(bySeq[state.sel]); renderFavUI(bySeq[state.sel]); }
       alert(`导入完成：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }
   };
@@ -1480,13 +1494,27 @@ document.getElementById("vswRow").addEventListener("click", e=>{
   applyRate();
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
-document.getElementById("btnSb").onclick = ()=>{
-  // 桌面端收起/展开侧栏; 窄屏(≤1080px)侧栏为抽屉,切换其开合
-  if (window.matchMedia && matchMedia("(max-width:1080px)").matches)
-    document.body.classList.toggle("sb-open");
-  else
+const sbButton = document.getElementById("btnSb");
+function closeSidebar(){
+  document.body.classList.remove("sb-open");
+  sbButton.setAttribute("aria-expanded", "false");
+  sbButton.focus();
+}
+sbButton.onclick = ()=>{
+  if (matchMedia("(max-width:1080px)").matches){
+    const open = document.body.classList.toggle("sb-open");
+    sbButton.setAttribute("aria-expanded", String(open));
+    if (open) document.getElementById("fSearch").focus();
+  } else {
     document.body.classList.toggle("sb-off");
+  }
 };
+document.addEventListener("keydown", e=>{
+  if (e.key === "Escape" && document.body.classList.contains("sb-open")){
+    e.preventDefault();
+    closeSidebar();
+  }
+});
 document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
 document.getElementById("btnTop").onclick = ()=>document.getElementById("detail").scrollTo({top:0,behavior:"smooth"});
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
@@ -1651,6 +1679,7 @@ const hasPen = t => (t||[]).includes("点球");
     <p><b>隐藏答案模式：</b>顶栏「隐藏答案」按钮开启（自动记忆，三赛季页共用）。开启后详情只显示比赛事件与申诉意见，评议组认定、判定徽章、分类要点与标签全部隐藏，列表中的判定圆点与判定文字也会隐去——先看视频自己判断，再点「显示本题答案」逐题揭示；切换判例后重新隐藏，适合自测式学习。判定筛选与统计总表仍可正常使用。</p>
     <p><b>视频播放：</b>完整版优先播放本地 videos 文件夹；在线访问（如 GitHub Pages）本地视频缺失时，会自动改用官方直链在线播放，离线用户不受任何影响。</p>
     <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，${CFG.issueDesc}。每条判例附原文链接。</p>
+    <p>本页规则链接用于现行规则学习。历史比赛适用版本须结合比赛日期与赛事执行通知核对。</p>
     <p><b>期数口径注释：</b>${issNotes ? issNotes + "。" : ""}其余各期与官方标题认定数一致。</p>
     <p><b>离线使用：</b>将本页 HTML 与 videos 文件夹放在一起，双击即可离线学习；配套页面 <a href="${CFG.stats}" target="_blank">${CFG.stats}</a> 为各队得失盘点。</p>
     <p><b>声明：</b>本合集为教学研究用途，判罚认定权属于中国足协裁判委员会评议组。</p>`;

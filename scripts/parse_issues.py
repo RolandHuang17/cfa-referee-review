@@ -48,6 +48,9 @@ ISSUE_URL = {
         21: "https://www.thecfa.cn/cppy/20260916/38169.html",
         22: "https://www.thecfa.cn/cppy/20260923/38210.html",
         23: "https://www.thecfa.cn/cppy/20261014/38283.html",
+        24: "https://www.thecfa.cn/cppy/20261028/38340.html",
+        25: "https://www.thecfa.cn/cppy/20261105/38390.html",
+        26: "https://www.thecfa.cn/cppy/20261111/38415.html",
     },
     "2025": {
         1: "https://www.thecfa.cn/zyls1/20250227/35667.html",
@@ -363,6 +366,15 @@ def parse_issue(html: str, n: int, url: str, seq: int):
         if re.search(r"评议组|对于此判例", text) or cur["conclusion"]:
             cur["conclusion"] += ("\n" if cur["conclusion"] else "") + text
     for c in issue_cases:
+        inline = re.search(
+            r"(?:对于此判例[，,：:]?\s*)?评议组(?:成员)?(?:一致|大多数成员|多数成员)?认为[，,：:]",
+            c["desc"],
+        )
+        if inline:
+            c["conclusion"] = c["desc"][inline.start() :] + (
+                "\\n" + c["conclusion"] if c["conclusion"] else ""
+            )
+            c["desc"] = c["desc"][: inline.start()].rstrip()
         c["conclusion"] = re.sub(
             r"中国足协将继续秉持.*$", "", c["conclusion"], flags=re.S
         ).strip()
@@ -424,7 +436,12 @@ def main():
     import sys
 
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
-    data = parse_season(season)
+    if season == "2025":
+        from rebuild_cases import rebuild
+
+        data = rebuild(season)
+    else:
+        data = parse_season(season)
     out = DATA / f"cases-{season}.json"
     out.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     cases = data["cases"]

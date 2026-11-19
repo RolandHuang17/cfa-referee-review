@@ -2,7 +2,7 @@
 """打包轻量站点 zip：site/ 剔除 videos/（约 30GB 本地视频不入包）。
 
 用法：python scripts/package_site.py [版本号]
-输出：dist/cfa-referee-site-<版本>.zip（含全部页面/manifest/sw/队徽/尺度海报，几 MB）
+输出：dist/cfa-referee-site-<版本>.zip（含全部页面/manifest/sw/队徽，排除视频与尺度海报）
 用途：GitHub Release 附件——不想 clone 的人多一条获取路径；也是发版前的体积体检。
 """
 

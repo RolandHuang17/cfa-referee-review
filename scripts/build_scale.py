@@ -563,11 +563,11 @@ __TOPBAR__
   }, true);
   // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
   // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
-  (function(){
+  function restoreHash(){
     var h = decodeURIComponent(location.hash || "").slice(1);
     if (!h) return;
     var season = null, isCard = false;
-    if (/^s\d{4}$/.test(h)) season = h.slice(1);
+    if (/^s\d{4}(?:-|$)/.test(h)) { season = h.slice(1, 5); isCard = h.length > 5; }
     else if (/^h\d{4}-/.test(h)) { season = h.slice(1, 5); isCard = true; }
     else return;
     var t = Array.prototype.filter.call(tabs, function(x){ return x.dataset.season === season; })[0];
@@ -577,7 +577,9 @@ __TOPBAR__
       var target = document.getElementById(h);
       if (target) requestAnimationFrame(function(){ target.scrollIntoView({block: "start"}); });
     }
-  })();
+  }
+  restoreHash();
+  window.addEventListener("hashchange", restoreHash);
 })();
 </script>
 </body>
@@ -618,6 +620,8 @@ def build_page(data):
                     extra = ""
                     if h["note"]:
                         extra += f'  <p class="hnote">{h["note"]}</p>\n'
+                    if not any(d["active"] for d in h["decision"]):
+                        extra += '<p class="hnote">官方材料未提供本场景的判罚矩阵，供观看讨论。</p>'
                     if h["reason"]:
                         extra += f'  <p class="hreason">Reason: {h["reason"]}</p>\n'
                     if h.get("varrule"):

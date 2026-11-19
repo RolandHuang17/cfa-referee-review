@@ -19,8 +19,9 @@
   CI 每次 push 自动构建发布 Pages。
 - **必须人工**：新期 URL 写入两处表；比分查证（SofaScore 优先，流程见
   match-scores note 字段）；判定复核与 pending 改判；队徽目检；译文补译。
-- **红线**：`data/cases-2025.json` 含管线外人工数据（对阵/赛事/结论引语/seq215
-  改判），**不要对 2025 重跑 parse**——golden 测试看护，覆盖即红。
+- **历史精修**：`case-overrides.json` 保存带原值校验的修订。使用
+  `rebuild_cases.py <赛季>` 在内存中完成解析、拆分、分类与校订，验证后原子写出。
+  2025 的历史精修通过重建回归测试保护。
 
 ## 节奏
 

@@ -19,9 +19,12 @@ import re
 import sys
 import time
 
-from lib.safe_http import fetch_text
+from lib.atomic_json import write_json
+from lib.source_cache import SourceCache
 
 from lib.paths import PRO_CACHE, PRO_JSON
+
+CACHE_READER = SourceCache()
 
 BASE = "https://proreferees.com"
 CATEGORIES = [
@@ -46,22 +49,7 @@ def fetch_page(url: str) -> str:
         or "home"
     )
     cache_f = PRO_CACHE / f"{slug}.html"
-    PRO_CACHE.mkdir(parents=True, exist_ok=True)
-    if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
-        return cache_f.read_text(encoding="utf-8", errors="replace")
-    for i, wait in enumerate([0] + BACKOFFS):
-        if wait:
-            time.sleep(wait)
-        try:
-            st, txt = fetch_text(url, timeout=40, retries=2)
-            if st == 200 and len(txt) > MIN_BODY:
-                cache_f.write_text(txt, encoding="utf-8")
-                return txt
-            if st == 404:
-                return ""
-        except Exception:  # noqa: BLE001
-            pass
-    return ""
+    return CACHE_READER.read(url, cache_f, MIN_BODY, mutable="/category/" in url)
 
 
 def parse_listing(page: str) -> list:
@@ -130,7 +118,10 @@ def classify(title: str) -> dict:
 
 
 def parse_all():
-    articles = []
+    old = json.loads(PRO_JSON.read_text(encoding="utf-8")) if PRO_JSON.exists() else {}
+    articles = list(old.get("articles", []))
+    checked = []
+
     for slug, name_cn, kind in CATEGORIES:
         for pageno in range(1, MAX_PAGES + 1):
             url = (
@@ -142,6 +133,8 @@ def parse_all():
             if not page:
                 break
             items = parse_listing(page)
+            if pageno == 1 and items and url in CACHE_READER.verified:
+                checked.append(slug)
             new = 0
             for it in items:
                 dm = re.search(r"/(20\d\d)/(\d\d)/(\d\d)/", it["url"])
@@ -152,34 +145,42 @@ def parse_all():
                 )
                 new += 1
             print(f"{slug} p{pageno}: +{new}", flush=True)
-            if new == 0:  # 本页无新文章（列表模式变化）即止
+            if new == 0:
+                CACHE_READER.failed.add(url)
                 break
             if pageno < MAX_PAGES:
-                time.sleep(__import__("random").uniform(*DELAY))
+                if not CACHE_READER.offline:
+                    time.sleep(random.uniform(*DELAY))
     # 去重（IVR 分类与官网首页可能重复；VAR a Fondo 归入 IVR 分类）
-    seen, uniq = set(), []
-    for a in sorted(articles, key=lambda x: x["date"], reverse=True):
-        if a["url"] not in seen:
-            seen.add(a["url"])
-            uniq.append(a)
-    # v2：逐篇提取文章内嵌 YouTube 视频直链（增量：已带 videos 字段的跳过）
+    merged = {}
+    for item in articles:
+        previous = merged.get(item["url"], {})
+        merged[item["url"]] = dict(previous)
+        for key, value in item.items():
+            if value not in ("", None, []) or key not in merged[item["url"]]:
+                merged[item["url"]][key] = value
+    uniq = sorted(merged.values(), key=lambda x: x["date"], reverse=True)
+    # 空列表可能来自暂时抓取失败，下次重试；--refresh 同时重查已有链接。
     n_vid = 0
     for a in uniq:
-        if isinstance(a.get("videos"), list):
+        if a.get("videos") and not CACHE_READER.refresh:
             continue
         vids = article_videos(a["url"])
-        a["videos"] = vids
+        a["videos"] = vids or a.get("videos", [])
         if vids:
             n_vid += 1
         print(
             f"  videos {a['url'].rstrip('/').split('/')[-1][:44]}: {len(vids)}",
             flush=True,
         )
-        time.sleep(random.uniform(*DELAY))
+        if not CACHE_READER.offline:
+            time.sleep(random.uniform(*DELAY))
     data = {
         "source": BASE + "/category/inside-video-review/",
         "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
-        "fetched": time.strftime("%Y-%m-%d"),
+        "fetched": time.strftime("%Y-%m-%d")
+        if len(checked) == len(CATEGORIES) and not CACHE_READER.failed
+        else old.get("fetched", ""),
         "ussf": {
             "videos": "https://www.ussoccer.com/refereeing/videos",
             "learning": "https://learning.ussoccer.com/referee",
@@ -187,9 +188,9 @@ def parse_all():
         },
         "articles": uniq,
     }
-    PRO_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    data["latest_content"] = max((a["date"] for a in uniq), default="")
+    if uniq:
+        write_json(PRO_JSON, data)
     by_series = {}
     for a in uniq:
         by_series[a["series"]] = by_series.get(a["series"], 0) + 1
@@ -197,9 +198,11 @@ def parse_all():
 
 
 def main():
+    global CACHE_READER
     mode = sys.argv[1] if len(sys.argv) > 1 else "all"
-    if mode in ("fetch", "all"):
-        pass  # fetch 在 parse 内逐页进行（列表页即抓即析）
+    if mode not in ("fetch", "parse", "all"):
+        raise SystemExit("用法: fetch_pro.py [fetch|parse|all] [--refresh]")
+    CACHE_READER = SourceCache(offline=mode == "parse", refresh="--refresh" in sys.argv)
     parse_all()
 
 

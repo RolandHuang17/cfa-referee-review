@@ -73,7 +73,7 @@ __TOPBAR__
   <div class="wrap">
     <h1>克罗地亚评议 · Sudačka analiza</h1>
     <div class="sub">克罗地亚足协裁判委员会（Layec 署名）逐轮发布《Sudačka analiza》：逐判例给出「认定正确 / 认定错误」结论 + 技术考量 + 预期决定 + 每判例一段官方视频——全球公开源中与足协评议形态最接近的之一 · 克罗地亚语原文可折叠展开 · 版权归 HNS 所有</div>
-    <div class="src-banner">__I_EXTERNAL__ 视频为 YouTube 官方页直链（不内嵌）；__SOURCE_LINK__ · 数据核对日期 __CHECKED__</div>
+    <div class="src-banner">__I_EXTERNAL__ 视频为 YouTube 官方页直链（不内嵌）；__SOURCE_LINK__ · 数据核对日期 __CHECKED__。初判、最终判罚与 VAR 程序存在多层评价时标为“详见原文”。</div>
     __SEARCHBAR__
   </div>
 </header>
@@ -194,7 +194,7 @@ def build_page(data, zh):
                     inc.get("referee"),
                     " ".join(p.get("t", "") for p in (zinc or {}).get("paras", [])),
                 )
-                body += f"""<div class="ccard" data-verdict="{esc(inc.get("verdict", "other"))}" data-search="{blob}">
+                body += f"""<div class="ccard" id="hns-{r["id"]}-{inc["no"]}" data-verdict="{esc(inc.get("verdict", "other"))}" data-search="{blob}">
   <div class="chead"><span class="cmatch">{esc(inc.get("match") or "判例 " + str(inc.get("no")))}</span>
     <span class="badge {vbadge}">{esc(vlabel)}</span></div>
   <div class="cinfo">{info_html}</div>

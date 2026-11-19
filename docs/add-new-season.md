@@ -72,7 +72,7 @@ python scripts/fetch_crests.py              # 队徽目录校验
 - 比分需**人工查证**后填 `data/match-scores-2027.json`；查不到的留空，页面会显示
   「待补」，这是设计内行为，不要造假数据填充。
 - 影响范围只算男子中超/中甲/中乙及足协杯（女超/女甲/全运会排除）。
-- 新出现的赞助冠名、笔误变体往 `generate_teams_catalog.py` 的 `ALIASES` 加——
+- 新出现的赞助冠名、笔误变体往 `scripts/lib/team_names.py` 的 `ALIASES` 加——
   **这是队名归一的唯一单点**，不要在 builder 里另建映射表。
 - `impact` / `scores` 里的队名必须是**归一化后**的标准名。
 - 新队徽走 [crest-guide.md](crest-guide.md)。
@@ -104,7 +104,7 @@ python scripts/verify_videos.py 2027              # 大小 vs 服务器 HEAD
 以及页面内联数据与 data JSON 不同步的 stale-build 护栏——所以每处都要手动同步：
 
 ```python
-PAGES = [..., "season-2027.html", "stats-2027.html"]      # 页面清单（漏加=新页不被检查）
+# 页面清单在 scripts/lib/pages.py 新增，测试消费该清单
 EXPECTED = {..., "2027": (判例数, 视频数, {"wrong": N, "correct": N, "pending": N})}
 SEASONS = (..., "2027")
 EXPECTED_QUIZ = {..., "2027": 判例池基准}                  # 「有视频且有认定原文」的判例数

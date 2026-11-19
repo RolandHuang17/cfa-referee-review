@@ -850,7 +850,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   <div class="hhead"><span class="hid">G4</span><h3>比赛管理</h3></div>
   <div class="hvideo"><video controls preload="none" data-fallback="https://www.thecfa.cn/cpwjxz/20240229/33785.html"><source src="videos/scale/2024/highlights-G4.mp4" type="video/mp4"></video></div>
   <div class="drow"><span class="dlbl">判罚决定</span><span class="dchip">不犯规</span><span class="dchip">间接任意球</span><span class="dchip">直接任意球</span><span class="dchip">罚球点球</span><span class="dchip">不出牌</span><span class="dchip">黄牌</span><span class="dchip">红牌</span></div>
-</article></section><section class="gsec" id="s2024-0-6"><h2>视频助理裁判 <b>8例</b></h2><article class="hcard" id="h2024-highlights-F1">
+<p class="hnote">官方材料未提供本场景的判罚矩阵，供观看讨论。</p></article></section><section class="gsec" id="s2024-0-6"><h2>视频助理裁判 <b>8例</b></h2><article class="hcard" id="h2024-highlights-F1">
   <div class="hhead"><span class="hid">F1</span><h3>视频助理裁判</h3></div>
   <div class="hvideo"><video controls preload="none" data-fallback="https://www.thecfa.cn/cpwjxz/20240229/33785.html"><source src="videos/scale/2024/highlights-F1.mp4" type="video/mp4"></video></div>
   <div class="drow"><span class="dlbl">判罚决定</span><span class="dchip on">VAR 机制讲解</span></div>
@@ -946,11 +946,11 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   }, true);
   // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
   // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
-  (function(){
+  function restoreHash(){
     var h = decodeURIComponent(location.hash || "").slice(1);
     if (!h) return;
     var season = null, isCard = false;
-    if (/^s\d{4}$/.test(h)) season = h.slice(1);
+    if (/^s\d{4}(?:-|$)/.test(h)) { season = h.slice(1, 5); isCard = h.length > 5; }
     else if (/^h\d{4}-/.test(h)) { season = h.slice(1, 5); isCard = true; }
     else return;
     var t = Array.prototype.filter.call(tabs, function(x){ return x.dataset.season === season; })[0];
@@ -960,7 +960,9 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       var target = document.getElementById(h);
       if (target) requestAnimationFrame(function(){ target.scrollIntoView({block: "start"}); });
     }
-  })();
+  }
+  restoreHash();
+  window.addEventListener("hashchange", restoreHash);
 })();
 </script>
 <script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.grp-btn');document.querySelectorAll('.navgrp').forEach(function(g){var open=!!t&&g===t.parentElement&&!g.classList.contains('open');g.classList.toggle('open',open);var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});var nb=e.target.closest&&e.target.closest('#btnNav');if(nb){document.body.classList.toggle('nav-open');return;}if(document.body.classList.contains('nav-open')&&!(e.target.closest&&e.target.closest('.navdrawer')))document.body.classList.remove('nav-open');if(e.target.closest&&e.target.closest('.navdrawer a'))document.body.classList.remove('nav-open');});document.addEventListener('keydown',function(e){if(e.key!=='Escape')return;document.querySelectorAll('.navgrp.open').forEach(function(g){g.classList.remove('open');var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});document.body.classList.remove('nav-open');});</script><script>if(/^https?:$/.test(location.protocol)&&'serviceWorker' in navigator){try{navigator.serviceWorker.register('sw.js')}catch(e){}}</script></body>

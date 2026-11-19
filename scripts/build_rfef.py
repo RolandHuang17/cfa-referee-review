@@ -424,7 +424,7 @@ def build_page(data):
                 label = dec_label(
                     it.get("decision_norm", "other"), it.get("decision_es", "")
                 )
-                card = f'<article class="hcard"><div class="hhead"><span class="hid">{esc(it["id"])}</span>'
+                card = f'<article class="hcard" id="r-{esc(it["id"])}"><div class="hhead"><span class="hid">{esc(it["id"])}</span>'
                 card += f'<span class="badge {n_badge}">{esc(label)}'
                 es_dec = (
                     f'<span class="es" style="font-weight:400;margin-left:4px">{esc(it["decision_es"])}</span>'

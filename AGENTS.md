@@ -4,11 +4,11 @@
 
 ## 项目是什么
 
-「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 82 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收23期228判例227视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
+「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 85 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收26期240判例239视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**二十二个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（十六张入口卡片 + 浏览模式开关）
-- `site/search.html` 全站统一搜索（构建期内联 1500+ 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
+- `site/search.html` 全站统一搜索（构建期内联 3400+ 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点（顶部「趋势概览」构建期 SVG：逐期错漏判/VAR 错误趋势 + 教学分类×判定分布）
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
@@ -18,11 +18,11 @@
 - `site/rfef.html` 西班牙 CTA《Criterios Arbitrales》判罚标准手册（RFEF 官方手册中文译制 + 西语原文开关 + 本地化判例视频，缺失时回退官方直链）
 - `site/conmebol.html` 南美 VAR 判例（CONMEBOL《Situación de Análisis VAR》60 案：比赛/日期/城市/球场/情境/分钟 + 官方 YouTube 判例视频链接；列表页+文章页双级抓取）
 - `site/intl.html` 全球评议资源导航（4 组 23 项：官方周更节目/文章、YouTube 频道型、VAR 音频透明化、官方课程与测验；已在 weekly.html 建立索引的节目特别标注并互链；人工策展 intl.json）
-- `site/pro.html` 美国 PRO 评议索引（MLS/NWSL 周更 VAR 评析全量 207 篇：Inside Video Review / VAR a Fondo / The Definitive Angle，纯链接索引）+ USSF 视频入口指南
+- `site/pro.html` 美国 PRO 评议索引（MLS/NWSL 周更 VAR 评析全量 228 篇：Inside Video Review / VAR a Fondo / The Definitive Angle，纯链接索引）+ USSF 视频入口指南
 - `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档 YouTube 官方节目 + 乌克兰 UAF 文章型源，结构化期目索引 246 期：官方说明原文 + 中文译注层全覆盖，逐期跳官方页）
 - `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ + 8 个配套协议页 173 条款，中英原文开关）
 - `site/hns.html` 克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名逐判例「认定正确/错误」+ 每判例官方视频直链，判例级中文全译；收录随每周新轮自动生长）
-- `site/quiz.html` 考题模式（816 题四题源随机出卷：三赛季判例 595 + 统一尺度场景 97 + IFAB VAR 协议 12 + 规则理论 112——理论题全部从 laws.json 条文撰写并附出处引文，选项按次打乱）：判罚决定/纪律处分/复核结论作答判分；错题本 + Leitner 间隔复习 + Anki TSV 导出；限时模考（75s/120s 每题倒计时、超时自动交卷、及格线 90%、历史成绩）；逐题作答历史 + 10 分类正确率雷达薄弱点分析
+- `site/quiz.html` 考题模式（842 题四题源随机出卷：三赛季判例 622 + 统一尺度场景 96 + IFAB VAR 协议 12 + 规则理论 112——理论题全部从 laws.json 条文撰写并附出处引文，选项按次打乱）：判罚决定/纪律处分/复核结论作答判分；错题本 + Leitner 间隔复习 + Anki TSV 导出；限时模考（75s/120s 每题倒计时、超时自动交卷、及格线 90%、历史成绩）；逐题作答历史 + 10 分类正确率雷达薄弱点分析
 - `site/cheatsheet.html` 考点速查卡（九张：手球考量链/犯规三档/DOGSO·SPA/VAR 介入/红黄牌速查/点球程序/越位三步/重新开始方式/2026-27 新规——卡面速记+翻面细则，手机 3D 翻卡 + 打印单页讲义；data/cheatsheet.json 策表）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。
@@ -35,7 +35,7 @@
 
 ## 环境
 
-- Python 3.9+（`pyproject.toml` 的 `requires-python`；CI 锁 3.11），**零第三方依赖**（规则模块构建除外）
+- Python 3.9+（数据渲染为标准库，规则 PDF 重提取需要 Python 3.10+；`pyproject.toml` 的 `requires-python`；CI 锁 3.11），**零第三方依赖**（规则模块构建除外）
 - Windows 优先（脚本在 Windows 上开发；`启动合集网页.bat` 仅支持 Windows，**必须存 GBK**）
 - 视频不进仓库（三赛季约 30GB），clone 后运行 `python scripts/download_videos_parallel.py [赛季]` 重新下载（断点续传、可中断重跑）
 - `site/assets/`（队徽+尺度海报）也不入库（构建中间态，与 `assets/` 重复）：clone 后先跑一次 `python scripts/build_all.py` 复原完整站点（纯标准库，几秒）
@@ -298,7 +298,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 操作流程与目检清单见 [docs/crest-guide.md](docs/crest-guide.md)，此处只留架构要点：
 
-- **目录制**：`data/teams.json`（111 个标准队伍，当前 verified 72 / fallback 39）+ `scripts/lib/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
+- **目录制**：`data/teams.json`（114 个标准队伍，当前 verified 72 / fallback 42）+ `scripts/lib/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
 - **两级状态**：`status=verified` 才渲染真实队徽 `<img>`；`fallback` 渲染文字徽章（initials+配色），是**设计内行为而非降级**
 - **采集工具**：`fetch_crests_online.py`（中文维基词条图片，严格限本队词条防跨队误配）与 `fetch_crests_round2.py`（Commons+英文维基）；两者下载后**必须人工目检图片**再算 verified
 - **校验器**：`fetch_crests.py`（build_all 里调用；verified 必须有文件+`assets/crests/` 路径前缀+source_url+source_type，校验逻辑在 `lib/crest_catalog.validate_catalog()`，与 `tests/test_integrity.py` 共用）
@@ -340,7 +340,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 6. **球队名归一是单点**：`scripts/lib/team_names.py` 的 `ALIASES`/`normalize_name`（赞助冠名/笔误变体 → 标准名，如 河南俱乐部彩陶坊→河南俱乐部、杭州临江吴越→杭州临平吴越）；generate_teams_catalog 与 make_impact* 都从这里取，build_stats 构建时兜底再归一一次；impact/scores 里的队名必须是归一化后名字（test_integrity 强制）；**新增 alias 只改这一处**（旧的 build_page/fetch_crests 双处 NAME_VARIANTS 已废弃）
 7. **两 URL 表同步**：fetch_issues.py 的 `ISSUES` 与 parse_issues.py 的 `ISSUE_URL` 是同一套 URL 的两份拷贝，加新期必须同步
 8. **expectation 断言**：`tests/test_integrity.py` 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
-8b. **cases-2025.json 含管线外人工数据**：seq11 对阵、19 处 comp、seq126/128/131 结论申诉引语、seq215 改判均非当前 parse 产物（历史精修）——**不要对 2025 重跑 parse→fix→classify 全链**（会静默覆盖丢失）；`tests/test_golden_parsers.py` 把这些字段钉死，覆盖即红。2024/2026 全链重跑已验证字节级幂等
+8b. **人工校订可重放**：`data/case-overrides.json` 保存历史精修及预期原值。赛季入口改走 `scripts/rebuild_cases.py`，先解析、拆分、分类、校订并验证候选，再原子写出。预期原值变化时对照官方原文解决冲突。2025 的旧 `parse_issues.py` 入口同样转入完整重建，已保护精修字段。
 8c. **页面清单单源**：`scripts/lib/pages.py` 是全站页面清单唯一权威源（测试/sitemap/搜索/SEO 共用）；新增页面只改这里 + 对应 builder，不要在消费方复制清单
 9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。凡指向它的 `<video>` 或 `<a>` 必须带 `referrerpolicy="no-referrer"`（直链再加 `rel="noreferrer"`），否则轻量版直链与完整版在线回退全部失效
 
@@ -368,7 +368,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - [ ] season 页隐藏答案模式：开关持久化、详情答案区隐藏、逐题揭示后切题重隐、列表圆点不泄底、与轻量版叠加正常
 - [ ] quiz.html：开始屏筛选叠加、练习即时反馈、考试交卷出分、判例三问与尺度多选两种题型、错题本记忆/收藏/重练/导出导入、`#case-N` 锚点回跳、明暗主题；键盘操作（数字键 1-9 选答/Enter 提交翻题/Shift+Enter 上一题，考试模式无「跳过」且跳题不双计错次）、视频快捷键同判例页
 - [ ] 浏览器打开 index.html：门户十四张卡片数字正确、浏览模式分段开关与说明文字正确
-- [ ] season-2026.html：228 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换；视频复盘快捷键（←→ 5秒/, . 逐帧/R 循环/[ ] 倍速并记忆 cfa.rate，浮动提示）、详情底部「相关判例」同分类推荐可点击跳转、搜索输入不丢列表滚动位置、笔记保存后列表图标为 SVG
+- [ ] season-2026.html：240 行列表、详情视频可播放可拖进度、筛选（分类/判定/期数/搜索/收藏视图）相互叠加、↑↓键盘切换、统计与说明弹层、`#case-183` 锚点直达、收藏+笔记刷新后仍在、明暗切换；视频复盘快捷键（←→ 5秒/, . 逐帧/R 循环/[ ] 倍速并记忆 cfa.rate，浮动提示）、详情底部「相关判例」同分类推荐可点击跳转、搜索输入不丢列表滚动位置、笔记保存后列表图标为 SVG
 - [ ] season-2024.html：160 行列表、视频路径 videos/2024/ 可播放
 - [ ] 轻量版回归：门户选轻量 → season 详情无视频窗口且有「官方评议页/官方视频」链接、`#case-194`（无视频判例）只显示评议页链接、笔记两模式共用、scale 页视频隐藏+官方发布页横幅、uefa 页 lite 下隐藏 iframe（如有）只留链接、顶栏「轻量版」随时切回完整版、刷新记忆保持
 - [ ] 完整版在线回退：临时改名 site/videos 后刷新 → 自动改用官方直链播放并出提示条；恢复原名后 → 本地播放
@@ -376,7 +376,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - [ ] rules.html：划词出现高亮工具条、三种颜色可标可删、章节笔记自动保存、导出导入、阅读进度（目录✓标记+头部进度条，`cfa2026rules.read`）、字号调节持久化（`cfa.rules.fs`）
 - [ ] rfef.html：栏目导航/判例卡片/认定徽章渲染正确、西语原文开关持久化、过滤框（编号/中文/西语）可用、本地视频可播、临时删一个视频文件刷新 → 该视频回退官方直链、lite 模式视频隐藏+官方手册横幅、明暗主题
 - [ ] rap.html：各期索引与外链、训练三步说明、era 分组、明暗主题
-- [ ] pro.html：筛选 chips（系列/联赛）+ 搜索框（标题/系列/联赛）过滤正常、年份分组与 207 篇索引、官方页外链、USSF 指南区、明暗主题
+- [ ] pro.html：筛选 chips（系列/联赛）+ 搜索框（标题/系列/联赛）过滤正常、年份分组与 228 篇索引、官方页外链、USSF 指南区、明暗主题
 - [ ] conmebol.html：赛事/情境筛选 chips + 搜索框（对阵/球场/情境）、年份分组 60 案、官方分析+判例视频双链接、明暗主题
 - [ ] weekly.html：节目筛选 chips（含 UAF 文章型源「官方文章」链接）、搜索、年份分组、≈ 近似日期标记、译注与原文折叠、官方观看直链 rel 属性、明暗主题
 - [ ] ifab.html：章节导航（含 8 个配套协议章区）、中英原文开关（刷新持久化）、FAQ 折叠、配套材料区内外链、明暗主题
@@ -394,7 +394,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - search.html 索引内联 ~950KB（判例/规则/尺度全量 + 国际资料截断），中文子串线性扫描已够快；进一步瘦身可用前缀索引（见 docs/ROADMAP.md 候选）；PRO/HNS/CONMEBOL/RFEF 的国际资料条目无逐条锚点，搜索结果跳页面级
 - xlinks.json 的 dogso/sfp_vc/simulation/goal_decision 四类暂无专属尺度场景组（官方三季宣讲未单设），只链规则章节；官方增设后补策表即可
 - weekly.html 的中文译注层目前覆盖节目简介与各节目近期期目，其余回退官方原文说明（按 weekly-zh 增量补译）；英格兰《Mic'd Up》因官方发布形态分散（Sky 频道内短片、无完整播放列表）仅收录 3 期；YouTube 存量回补依赖页面 ytInitialData 结构，若其变更则仅影响回补通道（RSS 主通道不受影响）；ifab-zh.json 为 2026-10 首译，欢迎对照官方英文原文修订
-- 111 支标准队伍中 39 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽
+- 114 支标准队伍中 42 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽
 - 官方标题认定数与合集口径存在差异（漏判黄牌/低级别联赛/本轮中超口径），已在页面"说明"弹层按期注释（ISSUE_NOTES）
 - 2026 判例的判定与影响标注为按同一方法论复核（非官方逐条人工背书），把握度低的判 pending 并注释
 - 收藏/笔记仅存浏览器本地，无云同步（导出/导入 JSON 作为迁移方案）

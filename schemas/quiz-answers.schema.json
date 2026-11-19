@@ -34,6 +34,9 @@
           "r": {"enum": ["playon", "directfk", "indirectfk", "penalty", "retake",
                          "goal_valid", "goal_invalid"]},
           "c": {"enum": ["none", "yellow", "red"]},
+          "discipline_target": {"type": "string", "minLength": 1},
+          "review_note": {"type": "string"},
+          "review_source": {"type": "string"},
           "auto": {"type": "boolean"},
           "reviewed": {"type": "boolean"},
           "conf": {"enum": ["high", "medium", "low"]}

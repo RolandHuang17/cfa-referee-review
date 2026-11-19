@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""生成 site/search.html：全站统一搜索（一次入口搜全部 20 个页面的内容）。
+"""生成 site/search.html：全站统一搜索（一次入口检索全站学习内容）。
 
 构建期把可搜索文档压成紧凑数组内联（[类型, 分组标签, 标题, 链接, 全文] 五元组），
 页面端纯 JS 子串匹配（中文无分词，indexOf 足够快）+ 来源分组过滤 + 命中上下文摘录。
@@ -100,6 +100,23 @@ def build_docs():
                     )
                 ),
             )
+    from lib.compare import load_compare
+
+    for lesson in load_compare()["lessons"]:
+        add(
+            "case",
+            "尺度对照课",
+            lesson["title"],
+            f"compare.html#lesson-{lesson['id']}",
+            f"尺度对照课 双案盲判 {lesson['title']} {lesson['question']}",
+        )
+    add(
+        "case",
+        "自由配对",
+        "自由配对 · 同类判例对读",
+        "compare.html#free",
+        "尺度对照课 自由配对 跨赛季 判例比较",
+    )
     # 考点速查卡（卡面 + 翻面全文可搜）
     cheatsheet = _read(DATA / "cheatsheet.json")
     for card in cheatsheet.get("cards", []):

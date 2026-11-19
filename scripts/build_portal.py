@@ -242,6 +242,7 @@ def portal_catalog(stats, bank_size):
                     f"{load_scale_stats()['scenes']} 个场景",
                 ),
                 ("quiz.html", "考题与限时模考", f"{bank_size} 道题"),
+                ("compare.html", "裁判尺度对照课", "双案盲判与自由配对"),
                 ("cheatsheet.html", "考点速查卡", f"{cheatsheet_count()} 张"),
                 ("search.html", "全站搜索", "判例与条文"),
             ],

@@ -173,6 +173,13 @@ PAGES = [
         "changefreq": "weekly",
     },
     {
+        "file": "compare.html",
+        "title": "裁判尺度对照课",
+        "desc": "用成对的足协真实判例练习手球、越位、纪律处分和罚球区接触。分别作出初判，核对官方认定，也可自选同类判例对读。",
+        "priority": "0.8",
+        "changefreq": "monthly",
+    },
+    {
         "file": "cheatsheet.html",
         "title": "考点速查卡",
         "desc": f"考前一夜的 {cheatsheet_count()} 张速查卡：手球考量链、犯规三档、"

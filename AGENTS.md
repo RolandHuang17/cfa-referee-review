@@ -7,7 +7,7 @@
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 85 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收26期240判例239视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
 核心交付物是 `site/` 下的**二十二个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
-- `site/index.html` 门户首页（十六张入口卡片 + 浏览模式开关）
+- `site/index.html` 门户首页（判例研习、分类资料目录、个人学习进度与浏览模式开关）
 - `site/search.html` 全站统一搜索（构建期内联 3400+ 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点（顶部「趋势概览」构建期 SVG：逐期错漏判/VAR 错误趋势 + 教学分类×判定分布）
@@ -120,10 +120,9 @@ python scripts/generate_teams_catalog.py      # 7. 队伍目录重建（读全�
 python scripts/fetch_crests.py                # 8. 队徽目录校验（校验器，不联网）
 python scripts/fetch_laws.py                  # 9. 下载 IFAB 官方 2026-27 繁体规则 PDF → data/local/laws/
 python scripts/build_rules.py                 # 10. 规则提取+繁转简+术语表 → data/laws.json + rules.html
-python scripts/build_scale.py                 # 11. 统一尺度宣讲页（原包在位时重新解码提取：
-                                              #     2026/2025: 仓库外 ../统一尺度宣讲原始包-{2026,2025}；
-                                              #     2024: data/local/scale-2024/，第三代 XML/GBK 包走
-                                              #     extract_season_2024；否则用 data/scale.json 构建 → scale.html）
+python scripts/build_scale.py --from-json      # 11. 读 data/scale.json 生成 scale.html；也是默认构建路径
+python scripts/build_scale.py --extract        # 官方材料更新时显式提取，核对既有场景键与素材后发布；
+                                              # 2026/2025 包位于仓库外，2024 包位于 data/local/scale-2024/
 python scripts/fetch_uefa.py all              # 11.5 (一次性) 抓取 UEFA Clear Line 判例库 → data/uefa.json
                                               #     ⚠ uefa.com 对高频请求 tarpit：页间隔 35-55s，可断点续抓
                                               #     （缓存 data/local/uefa-cache/，gitignored）；parse 子命令纯本地重解析
@@ -213,7 +212,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 ### quiz-answers.json（考题答案库，gen_quiz_answers.py 产物 + 人工校对，提交进仓库）
 - `{version, rLabels, cLabels, answers: {"{season}-{seq}": {r?, c?, auto, reviewed, conf?}}}`——r=判罚决定（playon/directfk/indirectfk/penalty/retake/goal_valid/goal_invalid），c=纪律处分（none/yellow/red）
 - 由脚本对认定原文按句极性起草（auto=true），**人工校对后 reviewed 才为 true**；`scripts/build_quiz.py` 只对 reviewed 条目出「判罚决定/纪律处分」两问，未复核题只出「复核结论」一问
-- 校对工作流：`gen_quiz_answers.py` 生成 `data/local/quiz-review/review.tsv` 全量对照表 → 人工复核写 `approved.txt`（认可）/`overrides.tsv`（修正，r/c 为 "-" 表示删除该轴）→ `gen_quiz_answers.py --apply-review` 回写；`--recheck` 只重建未 reviewed 条目，`--approve-high` 批量认可 high 条目
+- 校对工作流：默认运行 `gen_quiz_answers.py` 或使用 `--recheck` 会保留完整的已复核记录，新草稿列入 `data/local/quiz-review/review.tsv`。需要重新审阅全库时用 `--preview-all` 生成独立的 `draft-answers.json` 和全量对照表。人工核对后写 `approved.txt` 或 `overrides.tsv`，再用 `--apply-review` 回写。修正行的 r/c 值可用 `-` 删除该轴。
 - 错题本键 `cfa.quiz.wrong`（quiz 页 localStorage）：`{key: {t, s, your(上次错选), correct, star, wrong, last, done, stage(Leitner 档), due(到期时间戳)}}`；作答历史 `cfa.quiz.stats`（{key:{r,w}} 对错都记，雷达分析用）；考试历史 `cfa.quiz.history`（最近 20 次）
 
 ### uefa-zh.json（UEFA 判例中文译制层，与 uefa.json 并存，提交进仓库）
@@ -246,7 +245,9 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 ### conmebol.json（南美 VAR 判例，fetch_conmebol.py 产物，提交进仓库）
 - `{source, source_name, fetched, cases[]}`；`cases[]{title, url, date, excerpt_es, comp, comp_cn, match, fecha, ciudad, estadio, situacion_es, situacion_norm, minuto, youtube}`
 - 双级抓取：Elementor 列表页（分页 /2/…/10/，data-max-page 指示）+ 每案文章页增强（字段各自独立成 <p>，全页剥标签后取最后一组完整字段；YouTube 取字段区之后首个 embed）
-- situacion_norm 归一：penalty/no_penalty/red_card/offside/no_goal/ofr_penalty/other（官方西语原文保留在 situacion_es）
+- situacion_norm 归一：penalty/no_penalty/red_card/offside/no_offside/goal/no_goal/ofr_penalty/other（官方西语原文保留在 situacion_es）
+
+UEFA、RFEF、CONMEBOL 与 IFAB 的正式快照由 `lib/source_snapshot.py` 比较来源记录后原子替换。使用相应抓取命令的 `all --refresh` 联网复核，`parse` 读取本地缓存。缺页或既有记录缺失应先核查来源。纯缓存重解析沿用原核查日期。
 
 ### conmebol-zh.json（conmebol 情境译制层，并存提交，绝不可互相覆写）
 - `{note, translated, cases{url: {situation}}}`——按判例文章 url 平铺（rfef-zh 同构，无块序脆弱性）；命中即中文情境主显、西语原文保留标注，未命中回退西语并 ⚠；无官方情境标签（situacion_es 空）的案子不要求译文
@@ -300,7 +301,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 - **目录制**：`data/teams.json`（114 个标准队伍，当前 verified 72 / fallback 42）+ `scripts/lib/crest_catalog.py`（normalize_team/aliases）；页面 builder 通过 `crest()` 渲染，未登记队名显示 "?" 徽章
 - **两级状态**：`status=verified` 才渲染真实队徽 `<img>`；`fallback` 渲染文字徽章（initials+配色），是**设计内行为而非降级**
-- **采集工具**：`fetch_crests_online.py`（中文维基词条图片，严格限本队词条防跨队误配）与 `fetch_crests_round2.py`（Commons+英文维基）；两者下载后**必须人工目检图片**再算 verified
+- **采集工具**：`fetch_crests_online.py` 和 `fetch_crests_round2.py` 分别从中文维基、Commons 与英文维基寻找候选。候选图片与 `source.json` 同存 `data/local/crest-candidates/`。人工核验来源与球队归属后，在 `assets/crests/` 选择不冲突的文件名，登记 `crest_overrides.json` 并重建目录。
 - **校验器**：`fetch_crests.py`（build_all 里调用；verified 必须有文件+`assets/crests/` 路径前缀+source_url+source_type，校验逻辑在 `lib/crest_catalog.validate_catalog()`，与 `tests/test_integrity.py` 共用）
 - **人工成果唯一权威源**：`data/crest_overrides.json`——`generate_teams_catalog.py` 重建 teams.json 时会合并它，所以手改 teams.json 会丢
 - 已知坑：自动采集易采到**更名前旧徽/同名异 club**（曾采到广州富力旧徽当广州豹、永昌旧徽当沧州雄狮、省队语境采俱乐部徽），宁缺毋滥回退 fallback
@@ -342,7 +343,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 8. **expectation 断言**：`tests/test_integrity.py` 的 `EXPECTED` 是三赛季判例数/视频数/判定分布的回归护栏，改了分类或解析必须同步；`generate_teams_catalog.py` 重建会**覆盖手改**，verified 成果只能走 crest_overrides.json
 8b. **人工校订可重放**：`data/case-overrides.json` 保存历史精修及预期原值。赛季入口改走 `scripts/rebuild_cases.py`，先解析、拆分、分类、校订并验证候选，再原子写出。预期原值变化时对照官方原文解决冲突。2025 的旧 `parse_issues.py` 入口同样转入完整重建，已保护精修字段。
 8c. **页面清单单源**：`scripts/lib/pages.py` 是全站页面清单唯一权威源（测试/sitemap/搜索/SEO 共用）；新增页面只改这里 + 对应 builder，不要在消费方复制清单
-9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。凡指向它的 `<video>` 或 `<a>` 必须带 `referrerpolicy="no-referrer"`（直链再加 `rel="noreferrer"`），否则轻量版直链与完整版在线回退全部失效
+9. **videooss CDN 拒绝带 Referer 的请求（403）**：`videooss.thecfa.cn` 只接受无 Referer 的请求（实测：无 Referer → 206 且支持 Range 拖进度；带任何 Referer → 403）。赛季页和题库页应在文档头设置 `<meta name="referrer" content="no-referrer">` 控制媒体请求；指向官方视频的链接保留 `rel="noreferrer"` 和 `referrerpolicy="no-referrer"`。实播验收须验证本地缺失后的官方回退
 
 ## 扩展任务指南
 
@@ -386,7 +387,7 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 - [ ] 全站顶栏导航：三组下拉（赛季/工具/国际评议，当前页所在组陶土下划线），点击展开、Esc/外点关闭；≤1080 汉堡按钮 + 全量导航抽屉（Esc 关闭）；≤760 品牌截断+顶栏可横滑兜底（11 个代表页 scrollWidth ≤ 视口宽）
 - [ ] 打印样式：浏览器打印预览中顶栏/侧栏/列表/视频隐藏、正文黑字白底全宽（season 详情/rules 章节/stats 球队卡可出讲义）；stats 球队卡可用 Tab+Enter 展开（无内联 onclick）；列表页 `/` 聚焦搜索
 - [ ] `python scripts/verify_videos.py [赛季]`（如动过视频/数据）
-- [ ] 统计口径：2026 错漏判 96、支持原判 123、不予认定 9；2025 错漏判 83、支持 138、不予 6；2024 错漏判 60、支持 99、不予 1（与 cases-*.json 一致）
+- [ ] 统计口径：2026 错漏判 102、支持原判 129、不予认定 9（截至第 26 期，后续逐期对照 tests/test_integrity.py 的独立基准）；2025 错漏判 83、支持 138、不予 6；2024 错漏判 60、支持 99、不予 1（与 cases-*.json 一致）
 
 ## 已知不足（欢迎改进）
 

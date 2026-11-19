@@ -421,7 +421,7 @@
    "round": "第4轮",
    "home": "广西平果哈嘹",
    "away": "无锡吴钩",
-   "minute": "",
+   "minute": "90+10",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -481,7 +481,7 @@
    "round": "第2轮",
    "home": "上海海港B队",
    "away": "湖南湘涛",
-   "minute": "",
+   "minute": "90+11",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -843,7 +843,7 @@
    "round": "第8轮",
    "home": "上海海港",
    "away": "上海申花",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "wrong",
    "video_urls": [
@@ -963,7 +963,7 @@
    "round": "第5轮",
    "home": "北京雨虹修缮女足",
    "away": "长春大众卓越女足",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -1142,7 +1142,7 @@
    "round": "第9轮",
    "home": "浙江俱乐部",
    "away": "河南俱乐部",
-   "minute": "",
+   "minute": "45+2",
    "referee_verdict": "wrong",
    "var_verdict": "correct",
    "video_urls": [
@@ -1538,7 +1538,7 @@
    "round": "第9轮",
    "home": "大连英博",
    "away": "广州俱乐部",
-   "minute": "",
+   "minute": "90+12",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -1997,7 +1997,7 @@
    "round": "第13轮",
    "home": "南通支云",
    "away": "沧州雄狮",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_urls": [
@@ -2122,7 +2122,7 @@
    "round": "第9轮",
    "home": "海门珂缔缘",
    "away": "北京理工",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -2151,7 +2151,7 @@
    "round": "第9轮",
    "home": "海门珂缔缘",
    "away": "北京理工",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -2700,7 +2700,7 @@
    "round": "第15轮",
    "home": "广西平果哈嘹",
    "away": "重庆铜梁龙",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -2760,7 +2760,7 @@
    "round": "第15轮",
    "home": "苏州东吴",
    "away": "石家庄功夫",
-   "minute": "",
+   "minute": "90+9",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -2789,7 +2789,7 @@
    "round": "第14轮",
    "home": "日照宇启",
    "away": "大连鲲城",
-   "minute": "",
+   "minute": "90+8",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -2974,7 +2974,7 @@
    "round": "第15轮",
    "home": "湖北青年星",
    "away": "大连鲲城",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -3526,7 +3526,7 @@
    "round": "第18轮",
    "home": "赣州瑞狮",
    "away": "广西蓝航",
-   "minute": "",
+   "minute": "45+2",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -3619,7 +3619,7 @@
    "round": "第18轮",
    "home": "西安崇德荣海",
    "away": "泰安天贶",
-   "minute": "",
+   "minute": "90+8",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -3679,7 +3679,7 @@
    "round": "第21轮",
    "home": "北京国安",
    "away": "上海申花",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -3716,7 +3716,7 @@
    "round": "第23轮",
    "home": "天津津门虎",
    "away": "武汉三镇",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -3869,7 +3869,7 @@
    "round": "第23轮",
    "home": "上海申花",
    "away": "上海海港",
-   "minute": "",
+   "minute": "45+11",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -4203,7 +4203,7 @@
    "round": "第21轮",
    "home": "湖北青年星",
    "away": "海口名城",
-   "minute": "",
+   "minute": "90+8",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -4264,7 +4264,7 @@
    "round": "第21轮",
    "home": "北京理工",
    "away": "广西蓝航",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -4356,7 +4356,7 @@
    "round": "第22轮",
    "home": "泰安天贶",
    "away": "江西黑马青年",
-   "minute": "",
+   "minute": "45+2",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -4541,7 +4541,7 @@
    "round": "第26轮",
    "home": "南通支云",
    "away": "青岛海牛",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_urls": [
@@ -4573,7 +4573,7 @@
    "round": "第26轮",
    "home": "南通支云",
    "away": "青岛海牛",
-   "minute": "",
+   "minute": "90+13",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -4791,7 +4791,7 @@
    "round": "第26轮",
    "home": "南京城市",
    "away": "石家庄功夫",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -4852,7 +4852,7 @@
    "round": "第28轮",
    "home": "武汉三镇",
    "away": "浙江俱乐部",
-   "minute": "",
+   "minute": "45+2",
    "referee_verdict": "wrong",
    "var_verdict": "correct",
    "video_urls": [
@@ -4915,7 +4915,7 @@
    "round": "第27轮",
    "home": "广州俱乐部",
    "away": "江西庐山",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -4946,7 +4946,7 @@
    "round": "第27轮",
    "home": "广州俱乐部",
    "away": "江西庐山",
-   "minute": "",
+   "minute": "90+8",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [

@@ -18,6 +18,8 @@ async (page) => {
       await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, {once:true}));
     }
   });
+  await page.goto(base + '/study/search.html');
+  await page.locator('#q').waitFor();
   await page.goto(base + '/study/season-2026.html#case-229');
   await page.locator('#btnLite').click();
   await page.locator('#noteBox').fill('离线升级测试笔记 [00:05]');
@@ -36,10 +38,19 @@ async (page) => {
   check((await page.title()).includes('2026'), '升级后已访问判例无法离线读');
   await page.goto(base + '/study/legacy.html');
   check((await page.locator('body').innerText()).includes('legacy lesson'), '旧版已读内容未迁移');
-  await page.goto(base + '/study/never-visited.html');
+  await page.goto(base + '/study/never-visited/nested.html');
   check((await page.locator('body').innerText()).includes('页面不存在'), '未缓存页面缺少离线反馈');
-  await page.goto(base + '/study/index.html');
-  check((await page.title()).includes('裁判'), '离线首页不可用');
+  const home = page.locator('.e-link').first();
+  check(await home.evaluate(a => a.href) === base + '/study/index.html', '嵌套错误页的首页链接失去部署前缀');
+  await home.click();
+  check(page.url() === base + '/study/index.html' && (await page.title()).includes('裁判'), '离线首页不可用');
+  await page.goto(base + '/study/never-visited/nested.html');
+  await page.locator('#q404').fill('越位');
+  await page.locator('#go404').click();
+  check(new URL(page.url()).pathname === '/study/search.html', '嵌套错误页的搜索地址错误');
+  check(await page.locator('#q').count() === 1 && await page.locator('#q').inputValue() === '越位',
+    '已缓存的搜索页未能离线打开新关键词');
+  check(await page.locator('#sres a').count() > 0, '离线搜索未渲染结果');
   const cached = await page.evaluate(async v => {
     const name = (await caches.keys()).find(k => k.endsWith('offline-test-' + v));
     return (await (await caches.open(name)).keys()).map(r => r.url);

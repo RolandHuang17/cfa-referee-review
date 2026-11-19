@@ -19,15 +19,17 @@
 """
 
 import html as htmllib
-import json
 import random
 import re
 import sys
 import time
 
+from lib.source_snapshot import SnapshotReads, publish
 from lib.safe_http import fetch_text
 
 from lib.paths import RFEF_CACHE, RFEF_JSON
+
+READS = SnapshotReads()
 
 BASE = "https://www.card.rfef.es"
 INDEX = BASE + "/manual/indice/"
@@ -154,9 +156,9 @@ def fetch_page(url: str) -> str:
     slug = url.rstrip("/").rsplit("/", 1)[-1] or "indice"
     cache_f = RFEF_CACHE / f"{slug}.html"
     RFEF_CACHE.mkdir(parents=True, exist_ok=True)
-    if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
-        print(f"缓存命中: {cache_f.name}", flush=True)
-        return cache_f.read_text(encoding="utf-8", errors="replace")
+    cached = READS.cached(url, cache_f, MIN_BODY)
+    if cached is not None:
+        return cached
     for i, wait in enumerate([0] + BACKOFFS):
         if wait:
             print(f"  失败，退避 {wait}s 后第 {i} 次重试…", flush=True)
@@ -164,7 +166,7 @@ def fetch_page(url: str) -> str:
         try:
             st, txt = fetch_text(url, timeout=45, retries=2)
             if st == 200 and len(txt) > MIN_BODY:
-                cache_f.write_text(txt, encoding="utf-8")
+                READS.store(url, cache_f, txt)
                 print(f"  已缓存 {len(txt) // 1024}KB → {cache_f.name}", flush=True)
                 return txt
             print(f"  HTTP {st}, {len(txt)}B", flush=True)
@@ -184,6 +186,8 @@ def fetch_all():
         if i < len(TOPICS) - 1:
             time.sleep(random.uniform(*DELAY))
     print(f"fetch 完成: {ok}/{len(TOPICS)} 专题已缓存", flush=True)
+    if ok != len(TOPICS):
+        raise ValueError("部分 RFEF 专题未取得，正式快照保持原样")
 
 
 # ---------------- 解析 ----------------
@@ -464,13 +468,22 @@ def parse_page(page: str, slug: str) -> dict:
     }
 
 
+def identities(data):
+    for section in data.get("sections", []):
+        for group in section["groups"]:
+            for item in group["items"]:
+                key = (section["key"], group["code"], item["id"])
+                yield key
+                for video in item.get("videos", []):
+                    yield (*key, video["id"])
+
+
 def parse_all():
     sections = []
     for slug, _cn in TOPICS:
         cache_f = RFEF_CACHE / f"{slug}.html"
         if not cache_f.exists():
-            print(f"⚠ 缓存缺失，跳过: {slug}", flush=True)
-            continue
+            raise ValueError(f"专题缓存缺失: {slug}")
         page = cache_f.read_text(encoding="utf-8", errors="replace")
         sec = parse_page(page, slug)
         n_it = sum(len(g["items"]) for g in sec["groups"])
@@ -481,20 +494,17 @@ def parse_all():
         if n_it:
             sections.append(sec)
         else:
-            print(f"⚠ 无判例，检查解析: {slug}", flush=True)
+            raise ValueError(f"专题解析为空: {slug}")
     data = {
         "source": INDEX,
         "source_name": "RFEF/CTA《Criterios Arbitrales》判罚标准手册",
         "season": "2026/27",
-        "fetched": time.strftime("%Y-%m-%d"),
         "extra_topics": [
             {"key": k, "name_cn": cn, "url": topic_url(k)} for k, cn in EXTRA_TOPICS
         ],
         "sections": sections,
     }
-    RFEF_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    publish(RFEF_JSON, data, identities, checked=READS.checked)
     n = sum(len(g["items"]) for s in sections for g in s["groups"])
     v = sum(
         len(it.get("videos", []))
@@ -509,7 +519,9 @@ def parse_all():
 
 
 def main():
-    mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    global READS
+    mode = next((arg for arg in sys.argv[1:] if not arg.startswith("--")), "all")
+    READS = SnapshotReads(offline=mode == "parse", refresh="--refresh" in sys.argv)
     if mode in ("fetch", "all"):
         fetch_all()
     if mode in ("parse", "all"):

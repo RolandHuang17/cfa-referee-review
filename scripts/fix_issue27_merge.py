@@ -5,6 +5,7 @@ import json
 
 from lib.atomic_json import write_json
 from lib.paths import DATA
+from parse_issues import recount_videos
 
 
 def fix_data(data):
@@ -16,6 +17,7 @@ def fix_data(data):
         assert "【第27期补充认定】" in c183["conclusion"]
         assert "【第27期补充认定】" in c188["conclusion"]
         assert len(c195["video_files"]) == 1
+        recount_videos(data)
         return data
     # 1) 拆分 #195 结论
     SPLIT3 = "判例三（第二十六期判例二）："
@@ -71,7 +73,7 @@ def fix_data(data):
     c183["tags"] = ["证据不足", "腋窝以下", "第27期补充认定"]
     c188["tags"] = ["红牌", "暴力行为", "比赛停止时", "第27期补充认定"]
 
-    data["cases"] = [cases[c["seq"]] for c in data["cases"]]
+    recount_videos(data)
     return data
 
 

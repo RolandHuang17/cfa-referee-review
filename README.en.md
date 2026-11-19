@@ -17,7 +17,7 @@ re-organized by a unified teaching taxonomy, plus:
   Criterios Arbitrales, USA PRO weekly reviews (228 articles), CONMEBOL VAR cases,
   Croatia's HNS weekly analyses, plus a global directory of 23 official resources.
 - **Quiz mode** (quiz.html) — 842 questions with spaced repetition
-  (Leitner scheduler), wrong-answer book, and Anki TSV export.
+  (Leitner scheduler), category-specific drills for weak topics, a wrong-answer book, and Anki TSV export.
 
 ## Key properties
 

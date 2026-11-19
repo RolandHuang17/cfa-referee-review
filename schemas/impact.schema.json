@@ -33,8 +33,9 @@
                                   "missed_penalty", "wrong_penalty_against",
                                   "missed_red_opponent", "wrong_red_self",
                                   "missed_yellow_opponent", "wrong_yellow_self",
-                                  "wrong_foul_called_self", "wrong_offside_self"]},
-                "swing": {"enum": [1, -1, 0]},
+                                  "wrong_foul_called_self", "wrong_offside_self",
+                                  "missed_foul_called", "missed_offside_opponent"]},
+                "swing": {"type": "integer", "enum": [1, -1, 0]},
                 "note": {"type": "string"}
               }
             }

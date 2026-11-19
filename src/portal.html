@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="zh-CN" data-type="software" data-motion="on" data-radius="soft">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#f3f1ea" media="(prefers-color-scheme:light)"><meta name="theme-color" content="#191813" media="(prefers-color-scheme:dark)">
+<meta name="page-type" content="software"><meta name="site-kind" content="software">
+<title>足球裁判判例学习 · 裁判学习平台</title>
+<script>document.documentElement.classList.add('m-enter');setTimeout(function(){document.documentElement.classList.add('m-enter-done')},700)</script>
+<style>__PORTAL_CSS__</style>
+<noscript><style>.page-portal .screen,.page-portal .closing{height:auto;min-height:100svh}.page-portal .shelf-list[hidden]{display:block}.page-portal .shelf-picker{display:none}</style></noscript>
+</head>
+<body class="page-portal">
+__TOPBAR__
+<main id="main" tabindex="-1">
+<section class="hero hero--triptych screen" data-enter="rise" aria-labelledby="portalTitle"><div class="wrap">
+  <div class="hero-text hero__grid">
+    <div class="hero-copy">
+      <h1 id="portalTitle"><span>足球裁判</span><wbr><span>判例学习</span></h1>
+      <p class="intro hero__lead">跟着中国足协的 __TOTAL__ 个比赛判例，练习判罚，核对评议组认定。</p>
+    </div>
+    <article class="app-frame case-player hero__window" data-ui="case-review" aria-label="判例研习示例">
+      <div class="case-head"><span>判例研习</span><span>2026 · 第16期 · 判例11</span></div>
+      <div class="case-meta">中乙联赛 · 第16轮 · 第6分钟</div>
+      <div class="case-image"><img src="__CASE_PHOTO__" alt="兰州陇原竞技主罚前场任意球，双方队员在禁区前站位" width="708" height="348"></div>
+      <div class="case-sheet">
+        <div class="match-title">兰州陇原竞技 <span>对</span> 泰安天贶</div>
+        <p id="sampleText" aria-live="polite">头球攻门后，球疑似触及防守队员手臂。现有画面能否确定接触部位？</p>
+        <div class="sample-controls"><button type="button" id="sampleReview" aria-pressed="false">查看评议认定</button><a href="season-2026.html#case-183">完整判例 __ARROW__</a></div>
+      </div>
+    </article>
+    <div class="hero-action hero__cta">
+      <div class="study-label" id="caseLabel">今日判例</div>
+      <div class="study-teams"><span id="homeTeam"></span><span class="team-versus">对</span><span id="awayTeam"></span></div>
+      <div class="study-meta" id="caseIssue"></div><div class="study-meta" id="caseTopic"></div>
+      <a class="study-button btn" href="season-2026.html" id="todayCase"><span id="caseAction">开始学习</span> __ARROW__</a>
+      <a id="dailyLink" href="season-2026.html" hidden>打开今日判例</a>
+    </div>
+  </div>
+</div></section>
+<section id="library" class="library screen" aria-labelledby="libraryTitle"><div class="wrap">
+  <div class="library-grid">
+    <div class="library-body">
+      <h2 id="libraryTitle">学习资料目录</h2>
+      <form role="search" action="search.html" class="portal-search"><label for="portalSearch">全站搜索</label><div class="search-fields"><input id="portalSearch" name="q" type="search" placeholder="查判例、球队、规则条文"><button type="submit">搜索</button></div><span class="visually-hidden" role="status"></span></form>
+      <div class="shelf-picker"><label for="shelfPicker">资料分类</label><select id="shelfPicker">__OPTIONS__</select></div>
+      <div class="catalog-lists">__GROUPS__</div>
+    </div>
+    <figure class="frame library-photo" data-moment="liquid-hover"><picture><source media="(max-width:520px)" srcset="__REF_MOBILE_PHOTO__" width="576" height="382"><img src="__REF_PHOTO__" width="1280" height="848" alt="乌干达青少年足球赛场上，裁判伸臂示意比赛方向" loading="lazy" decoding="async"></picture></figure>
+  </div>
+</div></section>
+</main>
+<footer class="closing" aria-labelledby="studyTitle"><div class="wrap">
+  <div class="study-board">
+    <div class="study-settings">
+      <h2 id="studyTitle">我的学习</h2>
+      <p class="intro">查看这台设备上的学习进度，接着复习到期错题。</p>
+      <fieldset class="modes"><legend>浏览模式</legend><div class="mode-switch"><button type="button" id="modeFull" aria-pressed="true">完整版</button><button type="button" id="modeLite" aria-pressed="false">轻量版</button></div><p id="modeDesc" aria-live="polite"></p></fieldset>
+      <a class="study-button" id="studyFromSettings" href="season-2026.html"><span>开始学习</span> __ARROW__</a>
+    </div>
+    <div class="app-frame progress-panel" id="myStudy" data-ui="learning-progress">
+      <div class="measure-head"><span>本机学习记录</span>__BOOK__</div>
+      <div class="progress-rows">
+        <a href="season-2026.html" id="msFoot"><span><b>0</b> 已看判例</span> __ARROW__</a>
+        <a href="quiz.html?range=due" id="msDue"><span><b>0</b> 到期错题</span> __ARROW__</a>
+        <div><span><b id="msStreak">0</b> 连续学习天数</span></div>
+        <div><span><b id="msFav">0</b> 收藏判例</span></div>
+      </div>
+    </div>
+  </div>
+  <div class="legal"><span>判例来自中国足协裁判委员会评议组，规则文本归 IFAB 所有。</span><div><a href="NOTICE.md">版权声明</a><a href="https://commons.wikimedia.org/wiki/File:Referee_at_a_football_game.jpg" target="_blank" rel="noopener">摄影 · Samson Ssemakadde</a><a href="feed.xml">订阅评议</a></div></div>
+</div></footer>
+<script>__STUDY_CALENDAR__
+__LEARNING_RECORDS__</script>
+<script>__PORTAL_JS__</script>
+<script type="module">__PORTAL_EFFECT__</script>
+</body></html>

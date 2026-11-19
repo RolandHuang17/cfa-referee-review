@@ -10,14 +10,17 @@
 """
 
 import html as htmllib
-import json
 import random
 import re
 import time
+import sys
 
+from lib.source_snapshot import SnapshotReads, publish
 from lib.safe_http import fetch_text
 
 from lib.paths import CONMEBOL_CACHE, CONMEBOL_JSON
+
+READS = SnapshotReads()
 
 BASE = "https://www.conmebol.com"
 COLUMN = BASE + "/sistema-asistencia-arbitral-por-video/"
@@ -47,14 +50,19 @@ COMP_CN = {
     "conmebol-recopa": "南美优胜者杯（Recopa）",
     "recopa": "南美优胜者杯（Recopa）",
 }
-SIT_RULES = [
-    (r"on field review.*penal", "ofr_penalty"),
-    (r"penal", "penalty"),
-    (r"no penal", "no_penalty"),
-    (r"tarjeta roja", "red_card"),
-    (r"fuera de juego", "offside"),
-    (r"no gol|gol anulado", "no_goal"),
-]
+SITUATIONS = {
+    "penal": "penalty",
+    "mano penal": "penalty",
+    "no penal": "no_penalty",
+    "on field review – penal": "ofr_penalty",
+    "tarjeta roja": "red_card",
+    "roja": "red_card",
+    "fuera de juego": "offside",
+    "no fuera de juego": "no_offside",
+    "no gol": "no_goal",
+    "gol anulado": "no_goal",
+    "gol": "goal",
+}
 
 
 def clean(text: str) -> str:
@@ -62,11 +70,7 @@ def clean(text: str) -> str:
 
 
 def norm_situation(s: str) -> str:
-    t = (s or "").lower()
-    for pat, norm in SIT_RULES:
-        if re.search(pat, t):
-            return norm
-    return "other"
+    return SITUATIONS.get(" ".join((s or "").casefold().split()), "other")
 
 
 def fetch_page(url: str, min_body: int = 0) -> str:
@@ -78,15 +82,16 @@ def fetch_page(url: str, min_body: int = 0) -> str:
     )
     cache_f = CONMEBOL_CACHE / f"{slug}.html"
     CONMEBOL_CACHE.mkdir(parents=True, exist_ok=True)
-    if cache_f.exists() and cache_f.stat().st_size > min_body:
-        return cache_f.read_text(encoding="utf-8", errors="replace")
+    cached = READS.cached(url, cache_f, min_body)
+    if cached is not None:
+        return cached
     for i, wait in enumerate([0] + BACKOFFS):
         if wait:
             time.sleep(wait)
         try:
             st, txt = fetch_text(url, timeout=45, retries=2)
             if st == 200 and len(txt) > min_body:
-                cache_f.write_text(txt, encoding="utf-8")
+                READS.store(url, cache_f, txt)
                 return txt
         except Exception:  # noqa: BLE001
             pass
@@ -183,7 +188,7 @@ def enrich(c: dict) -> dict:
     的第一个 YouTube embed。"""
     page = fetch_page(c["url"], MIN_ART)
     if not page:
-        return c
+        raise ValueError(f"判例文章不可用: {c['url']}")
     text = clean(page)
     # 球队词序列：大写开头词 + 西语连词小写词（de/del/la/...），防吞前文句子
     # （re.I 会让 am/pm 这类时间尾巴伪装成球队词，故整体大小写敏感）
@@ -218,17 +223,29 @@ def enrich(c: dict) -> dict:
     return c
 
 
+def identities(data):
+    for case in data.get("cases", []):
+        yield case["url"], "case"
+        for field in ("youtube", "situacion_es", "fecha", "minuto"):
+            if case.get(field):
+                yield case["url"], field
+
+
 def main():
+    global READS
+    READS = SnapshotReads(offline="parse" in sys.argv, refresh="--refresh" in sys.argv)
     seen, cases = set(), []
     url, page_no = COLUMN, 1
     max_page = MAX_PAGES
     while url and page_no <= max_page and page_no <= MAX_PAGES:
         page = fetch_page(url)
         if not page:
-            print(f"⚠ 第 {page_no} 页抓取失败，停止", flush=True)
-            break
+            raise ValueError(f"第 {page_no} 页抓取失败")
         got, next_url, mp = parse_page(page)
-        max_page = min(max_page, mp or MAX_PAGES)
+        if page_no == 1:
+            max_page = mp
+        if max_page > MAX_PAGES:
+            raise ValueError(f"来源有 {max_page} 页，超过本次抓取上限 {MAX_PAGES}")
         new = 0
         for c in got:
             if c["url"] not in seen:
@@ -238,10 +255,10 @@ def main():
         print(
             f"p{page_no}: +{new}（累计 {len(cases)}，max_page={max_page}）", flush=True
         )
-        if new == 0:
-            break
+        if not new or (not next_url and page_no < max_page):
+            raise ValueError(f"第 {page_no} 页无新增或提前缺失后续分页")
         url, page_no = next_url, page_no + 1
-        if url and page_no <= max_page:
+        if not READS.offline and url and page_no <= max_page:
             time.sleep(random.uniform(*DELAY))
     # 赛事名兜底：torneos-* 类不可靠，从标题推导（⚠ 先查 eliminatoria：
     # 「Eliminatorias Sudamericanas」含 sudamericana 字样，顺序反了会误判）
@@ -263,7 +280,7 @@ def main():
         enrich(c)
         if (c.get("situacion_es"), c.get("youtube")) != before:
             n_en += 1
-        if i < len(cases) - 1:
+        if not READS.offline and i < len(cases) - 1:
             time.sleep(random.uniform(1.5, 3.0))
     comp_map = {}
     for c in cases:
@@ -271,12 +288,9 @@ def main():
     data = {
         "source": COLUMN,
         "source_name": "CONMEBOL《Situación de Análisis VAR》逐案判例",
-        "fetched": time.strftime("%Y-%m-%d"),
         "cases": cases,
     }
-    CONMEBOL_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    publish(CONMEBOL_JSON, data, identities, checked=READS.checked)
     print(f"parse 完成: {len(cases)} 案 {comp_map} → {CONMEBOL_JSON}", flush=True)
 
 

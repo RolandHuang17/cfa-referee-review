@@ -165,6 +165,12 @@ html[data-lite] .lite-banner{display:flex}
 .lite-banner a:hover{text-decoration:underline}
 html[data-lite] .vgrid{display:none}
 html[data-lite] .sit{font-size:15px}
+@media (max-width:640px){
+  .page-head-top{display:grid;grid-template-columns:minmax(0,1fr)}
+  .head-tools{width:100%;align-items:stretch}
+  .head-filter input{width:100%;min-width:0;min-height:44px}
+  .head-tools .es-toggle{align-self:flex-start;min-height:44px}
+}
 @media (max-width:900px){
   .layout{grid-template-columns:minmax(0,1fr)}
   .gnavs{position:static;flex-direction:row;flex-wrap:wrap}
@@ -199,7 +205,7 @@ __TOPBAR__
       </div>
       <div class="head-tools">
         <div class="search-wrap head-filter">__I_SEARCH__<input id="fFilter" type="search"
-          placeholder="过滤判例（编号/中文/西语）" autocomplete="off"></div>
+          aria-label="筛选判例编号、中文或西语" placeholder="过滤判例（编号/中文/西语）" autocomplete="off"></div>
         <button id="btnEs" class="es-toggle" type="button" aria-pressed="false">西语原文：关</button>
       </div>
     </div>

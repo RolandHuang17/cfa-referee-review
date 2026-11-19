@@ -28,6 +28,8 @@ SIT_LABEL = {
     "no_penalty": "非点球",
     "red_card": "红牌",
     "offside": "越位",
+    "no_offside": "不构成越位",
+    "goal": "进球",
     "no_goal": "进球无效",
     "other": "判例",
 }
@@ -38,6 +40,8 @@ SIT_BADGE = {
     "no_penalty": "correct",
     "no_goal": "pending",
     "offside": "info",
+    "no_offside": "info",
+    "goal": "info",
     "other": "info",
 }
 COMP_CN = {

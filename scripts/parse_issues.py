@@ -209,9 +209,9 @@ def parse_case_head(text: str):
             if m2:
                 home, away = m2.group(1), m2.group(2)
     minute = ""
-    m = re.search(r"比赛第\s*(\d+)\s*分钟", text)
+    m = re.search(r"比赛第\s*(\d+(?:\s*[+＋]\s*\d+)?)\s*分钟", text)
     if m:
-        minute = m.group(1)
+        minute = re.sub(r"\s+", "", m.group(1)).replace("＋", "+")
     return head, comp, rnd, home, away, minute
 
 
@@ -398,6 +398,15 @@ def parse_issue(html: str, n: int, url: str, seq: int):
     return issue, issue_cases, seq
 
 
+def recount_videos(data):
+    for issue in data["issues"]:
+        issue["video_count"] = sum(
+            len(case["video_files"])
+            for case in data["cases"]
+            if case["issue"] == issue["no"]
+        )
+
+
 def parse_season(season: str):
     raw = ISSUES / season
     urls = ISSUE_URL[season]
@@ -425,11 +434,9 @@ def parse_season(season: str):
         del c["videos"]
     # video_count 以去重后的 video_urls 为准（parse_issue 里按原始 videos
     # 计的只是中间值，跨协议重复会虚增）
-    for i in issues:
-        i["video_count"] = sum(
-            len(c["video_urls"]) for c in cases if c["issue"] == i["no"]
-        )
-    return {"season": season, "issues": issues, "cases": cases}
+    data = {"season": season, "issues": issues, "cases": cases}
+    recount_videos(data)
+    return data
 
 
 def main():

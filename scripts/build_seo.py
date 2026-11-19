@@ -80,6 +80,17 @@ def build_404():
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>页面不存在 · 裁判学习平台</title>
+<script>
+if (/^https?:$/.test(location.protocol)) {{
+  const production = new URL({json.dumps(SITE_URL + "/")});
+  const controller = navigator.serviceWorker && navigator.serviceWorker.controller;
+  const root = controller ? new URL("./", controller.scriptURL) :
+    location.origin === production.origin ? production : new URL("./", location.href);
+  const base = document.createElement("base");
+  base.href = root.href;
+  document.head.appendChild(base);
+}}
+</script>
 <style>
 .err-wrap{{max-width:640px;margin:0 auto;padding:48px 16px 80px;text-align:center}}
 .err-code{{font-family:var(--font-display);font-size:88px;font-weight:700;
@@ -119,7 +130,9 @@ def build_404():
 (function(){{
   function go(){{
     var q = document.getElementById("q404").value.trim();
-    location.href = q ? "search.html?q=" + encodeURIComponent(q) : "search.html";
+    const target = new URL("search.html", document.baseURI);
+    if (q) target.searchParams.set("q", q);
+    location.href = target.href;
   }}
   document.getElementById("go404").onclick = go;
   document.getElementById("q404").addEventListener("keydown", function(e){{

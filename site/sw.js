@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "d5e91bac94eae656";
+const VERSION = "9c7854c34e91ffbf";
 const SCOPE = new URL(self.registration.scope).pathname;
 const PREFIX = "cfa-site-" + encodeURIComponent(SCOPE) + "-";
 const CACHE = PREFIX + VERSION;
@@ -50,7 +50,9 @@ self.addEventListener("fetch", e => {
         const response = await network(cache);
         if (response.ok || response.status < 500) return response;
       } catch (_) {}
-      return (await cache.match(req)) || (await cache.match("404.html")) ||
+      // Static HTML reads its filters and search terms in the browser.
+      const saved = await cache.match(req, {ignoreSearch: url.pathname.endsWith(".html")});
+      return saved || (await cache.match("404.html")) ||
         new Response("当前页面尚未离线保存，请联网后重试。", {status:503, headers:{"Content-Type":"text/plain;charset=utf-8"}});
     })());
   } else {

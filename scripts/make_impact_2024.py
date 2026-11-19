@@ -236,8 +236,8 @@ IMPACT = {
     90: [
         {
             "team": "大连鲲城",
-            "type": "opp_goal_should_disallow",
-            "note": "青年星41号越位位置干扰，漏判越位犯规在先",
+            "type": "missed_offside_opponent",
+            "note": "中国足协认定漏判攻方越位犯规；该次进攻未进球",
         }
     ],
     95: [
@@ -472,6 +472,7 @@ def main():
         "wrong_foul_called_self": "错判犯规",
         "missed_foul_called": "漏判犯规",
         "wrong_offside_self": "误判越位",
+        "missed_offside_opponent": "漏判对方越位",
     }
     SWING = {"denied_goal": 1, "opp_goal_should_disallow": -1}
 

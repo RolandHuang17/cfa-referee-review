@@ -70,6 +70,10 @@ def validate(instance, schema, path="$"):
         for key, value in instance.items():
             if key in props:
                 problems += validate(value, props[key], f"{path}.{key}")
+            elif isinstance(schema.get("additionalProperties"), dict):
+                problems += validate(
+                    value, schema["additionalProperties"], f"{path}.{key}"
+                )
             elif schema.get("additionalProperties") is False:
                 problems.append(
                     f"{path}: 多余字段 {key!r}（additionalProperties=false）"

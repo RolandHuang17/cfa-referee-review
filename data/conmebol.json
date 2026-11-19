@@ -30,7 +30,7 @@
    "ciudad": "Maturín",
    "estadio": "Estadio Monumental de Maturín",
    "situacion_es": "No penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "90+1",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=cqIswbOpZ_I"
@@ -62,7 +62,7 @@
    "ciudad": "Brasilia",
    "estadio": "Mané Garrincha",
    "situacion_es": "No penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "90",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=wKO51YOqyQA"
@@ -126,7 +126,7 @@
    "ciudad": "Asunción",
    "estadio": "Defensores del Chaco",
    "situacion_es": "No Penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "4",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=mflaS7sW0r8"
@@ -158,7 +158,7 @@
    "ciudad": "La Paz",
    "estadio": "Hernando Siles",
    "situacion_es": "No Penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "90",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=bRtHUuWFzsI"
@@ -222,7 +222,7 @@
    "ciudad": "Barranquilla",
    "estadio": "Metropolitano",
    "situacion_es": "Gol",
-   "situacion_norm": "other",
+   "situacion_norm": "goal",
    "minuto": "51",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=Rw1yVbm5Ai0"
@@ -270,7 +270,7 @@
    "ciudad": "Quito",
    "estadio": "Rodrigo Paz Delgado",
    "situacion_es": "No penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "97",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=G-d_1wQBvbk"
@@ -302,7 +302,7 @@
    "ciudad": "Montevideo",
    "estadio": "Centenario",
    "situacion_es": "No Penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "70",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=_7FgHuICQaE"
@@ -334,7 +334,7 @@
    "ciudad": "Barranquilla",
    "estadio": "Metropolitano",
    "situacion_es": "No Penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "47",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=6BS1qT8CX5Y"
@@ -398,7 +398,7 @@
    "ciudad": "Lima",
    "estadio": "Estadio Nacional",
    "situacion_es": "No fuera de juego",
-   "situacion_norm": "offside",
+   "situacion_norm": "no_offside",
    "minuto": "1",
    "comp_cn": "南美杯",
    "youtube": "https://www.youtube.com/watch?v=1haBd4cgoBw"
@@ -478,7 +478,7 @@
    "ciudad": "Rio de Janeiro",
    "estadio": "Maracaná",
    "situacion_es": "No Penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "no_penalty",
    "minuto": "20",
    "comp_cn": "南美优胜者杯（Recopa）",
    "youtube": "https://www.youtube.com/watch?v=qfZzutbouf0"
@@ -638,7 +638,7 @@
    "ciudad": "San Cristóbal",
    "estadio": "Polideportivo Pueblo Nuevo",
    "situacion_es": "Gol",
-   "situacion_norm": "other",
+   "situacion_norm": "goal",
    "minuto": "80",
    "comp_cn": "南美杯",
    "youtube": "https://www.youtube.com/watch?v=-wr3bty7Y3M"
@@ -654,7 +654,7 @@
    "ciudad": "La Paz",
    "estadio": "Hernando Siles",
    "situacion_es": "Gol – No Gol",
-   "situacion_norm": "no_goal",
+   "situacion_norm": "other",
    "minuto": "81",
    "comp_cn": "南美杯",
    "youtube": "https://www.youtube.com/watch?v=CG4tMa1I4oM"
@@ -766,7 +766,7 @@
    "ciudad": "Barranquilla",
    "estadio": "Metropolitano",
    "situacion_es": "Gol",
-   "situacion_norm": "other",
+   "situacion_norm": "goal",
    "minuto": "71",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=o6OeGEhUGhs"
@@ -878,7 +878,7 @@
    "ciudad": "Montevideo",
    "estadio": "Centenario",
    "situacion_es": "Invasión en el área penal",
-   "situacion_norm": "penalty",
+   "situacion_norm": "other",
    "minuto": "49",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=usdakO9PwVA"
@@ -958,7 +958,7 @@
    "ciudad": "Quito",
    "estadio": "Rodrigo Paz Delgado",
    "situacion_es": "Roja",
-   "situacion_norm": "other",
+   "situacion_norm": "red_card",
    "minuto": "10",
    "comp_cn": "世界杯预选赛（南美区）",
    "youtube": "https://www.youtube.com/watch?v=gfWsavnRE2s"

@@ -8,7 +8,7 @@
 | 内容 | 来源 | 跟更方式 |
 |---|---|---|
 | 裁判评议正文/视频 | thecfa.cn「裁判评议结果发布」/cppy/ 栏目 | `fetch_issues.py`（URL 表在脚本内） |
-| 统一尺度宣讲包 | 官方 zip 发布（2026/2025 在仓库外 ../统一尺度宣讲原始包-*，2024 在 data/local/scale-2024/） | 官方发布后替换原包重跑 `build_scale.py` |
+| 统一尺度宣讲包 | 官方 zip 发布（2026/2025 在仓库外 ../统一尺度宣讲原始包-*，2024 在 data/local/scale-2024/） | 日常构建读 `scale.json`，获得完整原包后运行 `build_scale.py --extract` |
 | IFAB 规则 PDF | theifab.com 官方繁体版 | `fetch_laws.py`（URL 在脚本内） |
 | UEFA Clear Line | uefa.com（tarpit，页间隔 35-55s） | `fetch_uefa.py all` |
 | RFEF / PRO / CONMEBOL / weekly / HNS | 各官网（safe_http 白名单内） | 各 `fetch_*.py` |
@@ -16,12 +16,14 @@
 ## 可以自动化 vs 必须人工
 
 - **可自动化**：抓取→解析→分类→影响→构建→测试全链（`update_season.py` 串好）；
-  CI 每次 push 自动构建发布 Pages。
+  CI 在以 main 为目标的 PR 或手工触发时运行检查，Pages 工作流由 main 推送或手工触发。
 - **必须人工**：新期 URL 写入两处表；比分查证（SofaScore 优先，流程见
   match-scores note 字段）；判定复核与 pending 改判；队徽目检；译文补译。
 - **历史精修**：`case-overrides.json` 保存带原值校验的修订。使用
   `rebuild_cases.py <赛季>` 在内存中完成解析、拆分、分类与校订，验证后原子写出。
-  2025 的历史精修通过重建回归测试保护。
+  三赛季历史快照通过归档重建回归测试保护。
+- **人工答案**：默认起草保留已复核的答案、纪律对象与来源。用 `gen_quiz_answers.py --preview-all` 比较全量机器草稿，复核后再用 `--apply-review`。
+- **国际快照与队徽**：UEFA、RFEF、CONMEBOL、IFAB 仅在来源完整时发布新快照，纯缓存工作沿用既有核查日期。采集到的队徽连同来源存放在 `data/local/crest-candidates/`，用户目检后登记到 `crest_overrides.json`。
 
 ## 节奏
 
@@ -33,7 +35,7 @@
 
 1. 通读 AGENTS.md（10 分钟项目全貌）。
 2. `python scripts/build_all.py && python tests/test_integrity.py` 确认本机构建绿。
-3. 从 docs/ROADMAP.md 的「进行中」挑一件事做。
+3. 结合 [路线图](ROADMAP.md) 与 [问题清单](BUG_TRACKER.md) 选择下一项有验收条件的工作。
 
 ## 权限与账号
 

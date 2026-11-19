@@ -4,9 +4,7 @@
 上海申花的队徽错配到佛山南狮/湖北青年星/温州/嘉定汇龙），此后改成「自动采集只作候选，
 必须人工目检，宁缺毋滥回退文字徽章」。这条红线优先于覆盖率。
 
-当前状态：111 支标准队伍中 72 支有已核验的真实队徽，39 支显示文字徽章（历史队、
-女足与全运会省队为主）。**人工补录已于 2026-10 止步，39 是设计内终态，不是待修的
-bug。**
+2026 年 11 月核对的队伍目录有 114 支队伍。72 支显示人工核验的队徽，42 支使用文字徽章。后者主要涉及历史球队、女足与全运会省队。取得可核查来源后再补录。
 
 ## 体系构成
 
@@ -29,8 +27,7 @@ python scripts/fetch_crests_online.py     # 中文维基
 python scripts/fetch_crests_round2.py     # Commons + 英文维基
 ```
 
-两个脚本都走 `lib/safe_http.py`（域名白名单 + 强制 https + DoH 校验公网 IP + IP
-钉扎），下载后写入 `assets/crests/`。**采完必须逐张看图**，确认后才算 verified。
+两个脚本通过 `lib/safe_http.py` 发出请求。图片与包含队名、图片 URL、来源页的 `source.json` 保存在 `data/local/crest-candidates/` 的独立子目录。核对来源页、球队和图片内容后，执行路径 B 登记。
 
 采集时的已知环境坑：
 
@@ -47,7 +44,7 @@ python scripts/fetch_crests_round2.py     # Commons + 英文维基
 ## 路径 B：纯人工补录
 
 1. 找到可靠的官方或维基来源图片，下载为 png 存到 `assets/crests/{slug}.png`
-   （slug 取 teams.json 里该队的 `slug` 字段，保持唯一）。
+   （选择尚未被其他俱乐部核验记录占用的文件名；队伍目录重新编号后数字 slug 可能重用）。
 2. 在 `data/crest_overrides.json` 登记：
    ```json
    "标准队名": {
@@ -86,7 +83,7 @@ python scripts/fetch_crests_round2.py     # Commons + 英文维基
 
 ## 队名归一
 
-新队名（赞助冠名、笔误变体、更名）只改**一处**：`generate_teams_catalog.py` 的
+新队名（赞助冠名、笔误变体、更名）只改**一处**：`scripts/lib/team_names.py` 的
 `ALIASES`。旧的 `build_page.py` / `fetch_crests.py` 双处 `NAME_VARIANTS` 已废弃，
 不要重新引入第二张映射表。
 

@@ -89,7 +89,9 @@ self.addEventListener("fetch", e => {
         const response = await network(cache);
         if (response.ok || response.status < 500) return response;
       } catch (_) {}
-      return (await cache.match(req)) || (await cache.match("404.html")) ||
+      // Static HTML reads its filters and search terms in the browser.
+      const saved = await cache.match(req, {ignoreSearch: url.pathname.endsWith(".html")});
+      return saved || (await cache.match("404.html")) ||
         new Response("当前页面尚未离线保存，请联网后重试。", {status:503, headers:{"Content-Type":"text/plain;charset=utf-8"}});
     })());
   } else {
@@ -108,9 +110,8 @@ self.addEventListener("fetch", e => {
 def main():
     digest = hashlib.sha256()
     for page in sorted(SITE.glob("*.html")):
-        if page.name != "404.html":
-            digest.update(page.name.encode("utf-8"))
-            digest.update(page.read_bytes())
+        digest.update(page.name.encode("utf-8"))
+        digest.update(page.read_bytes())
     ts = digest.hexdigest()[:16]
     (SITE / "manifest.webmanifest").write_text(MANIFEST, encoding="utf-8")
     (SITE / "icon.svg").write_text(ICON_SVG, encoding="utf-8")

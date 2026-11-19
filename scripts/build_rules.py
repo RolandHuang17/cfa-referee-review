@@ -16,7 +16,7 @@ from html import escape
 
 from lib.law_blocks import anchored_section
 
-from lib.paths import IFAB_PDF, LAWS_JSON, RULES_IMG_DIR, SITE
+from lib.paths import IFAB_PDF, LAWS_JSON, RULES_IMG_DIR, SITE, SRC
 
 RULES_HTML = SITE / "rules.html"
 
@@ -607,11 +607,14 @@ __TOPBAR__
         <h2 id="secTitle"></h2>
         <div class="pages" id="secPages"></div>
         <div class="hltip">划选正文文字可添加高亮：<b>黄=重要</b> / <b>绿=已掌握</b> / <b>红=易错</b>；点击已有高亮可删除。高亮与笔记保存在本浏览器。</div>
+        <div role="status" id="writeStatus"></div>
+        <button type="button" class="btn" id="retryWrite" hidden>重试保存</button>
         <details class="notebox" id="noteWrap">
           <summary>本节笔记 <span class="hasnote" id="noteFlag"></span></summary>
+          <div id="noteCopies"></div>
           <textarea id="secNote" placeholder="写下对本章的理解、执法要点、疑问…（自动保存）"></textarea>
           <div class="nrow">
-            <span id="noteStat"></span>
+            <span id="noteStat" role="status"></span>
             <span style="flex:1"></span>
             <button id="btnExportN">导出笔记/高亮</button>
             <button id="btnImportN">导入</button>
@@ -646,6 +649,7 @@ __TOPBAR__
   <button class="br" data-c="r">红 · 易错</button>
 </div>
 <script>
+__RECORDS_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const byId = {};
@@ -836,9 +840,16 @@ document.addEventListener("click", e=>{
 
 // ---------- 划词高亮（localStorage: cfa2026rules.hl） ----------
 const HL_KEY = "cfa2026rules.hl";
-let hlData = [];
-try { hlData = JSON.parse(localStorage.getItem(HL_KEY) || "[]") || []; } catch(_) { hlData = []; }
-function saveHl(){ try { localStorage.setItem(HL_KEY, JSON.stringify(hlData)); } catch(_){} }
+const highKey = h => JSON.stringify([h.sec, h.ts, h.quote]);
+const hlStore = new LearningRecords(HL_KEY, false, highKey);
+let hlData = Object.values(hlStore.read());
+function writeHighlight(h, value) {
+  const id = highKey(h);
+  hlStore.read();
+  hlStore.put(id, value, hlStore.base(id));
+  hlData = Object.values(hlStore.read());
+  showWriteStatus();
+}
 const secHtmlEl = document.getElementById("secHtml");
 const hlBar = document.getElementById("hlBar");
 
@@ -871,8 +882,8 @@ function addHighlight(color){
   const quote = sel.toString();
   if(quote.replace(/\s+/g,"").length < 2) return;
   const ts = Date.now();
-  hlData.push({sec: cur, quote, color, ts});
-  saveHl();
+  const highlight = {sec: cur, quote, color, ts};
+  writeHighlight(highlight, highlight);
   const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT);
   const nodes = []; let n;
   while((n = walker.nextNode())){
@@ -947,8 +958,8 @@ secHtmlEl.addEventListener("click", e=>{
   const mk = e.target.closest("mark.hl"); if(!mk) return;
   const ts = mk.dataset.ts;
   if(confirm("删除这条高亮？")){
-    hlData = hlData.filter(h=>String(h.ts)!==String(ts));
-    saveHl();
+    const item = hlData.find(h=>h.sec===cur && String(h.ts)===String(ts));
+    if (item) writeHighlight(item, null);
     document.querySelectorAll(`#secHtml mark.hl[data-ts="${CSS.escape(ts)}"]`).forEach(m=>{
       const p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
     });
@@ -957,56 +968,22 @@ secHtmlEl.addEventListener("click", e=>{
 
 // ---------- 章节笔记（localStorage: cfa2026rules.notes） ----------
 const NOTE_KEY = "cfa2026rules.notes";
-let secNotes = {};
-try { secNotes = JSON.parse(localStorage.getItem(NOTE_KEY) || "{}") || {}; } catch(_) { secNotes = {}; }
-function saveNotes(){ try { localStorage.setItem(NOTE_KEY, JSON.stringify(secNotes)); } catch(_){} }
-function loadNote(){
-  const ta = document.getElementById("secNote");
-  ta.value = (secNotes[cur] && secNotes[cur].text) || "";
-  document.getElementById("noteStat").textContent =
-    (secNotes[cur] && secNotes[cur].text && secNotes[cur].text.trim()) ? "已保存" : "";
-  document.getElementById("noteFlag").textContent =
-    (secNotes[cur] && secNotes[cur].text && secNotes[cur].text.trim()) ? "· 有笔记" : "";
-}
-let noteTimer = null;
-let pendingNote = null;  // {sec, text} 冻结输入时的章节与文本，避免切章串写
-function saveNote(sec, text){
-  if(!sec) return;
-  if(text.trim()) secNotes[sec] = {text, ts: Date.now()};
-  else delete secNotes[sec];
-  saveNotes();
-  if (cur === sec){
-    loadNote();
-    const d = new Date();
-    document.getElementById("noteStat").textContent =
-      "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-  }
-}
-function flushNote(){
-  if (noteTimer !== null){ clearTimeout(noteTimer); noteTimer = null; }
-  if (!pendingNote) return;
-  const p = pendingNote; pendingNote = null;
-  saveNote(p.sec, p.text);
-}
-document.getElementById("secNote").addEventListener("input", ()=>{
-  if (!cur) return;
-  if (pendingNote && pendingNote.sec !== cur) flushNote();
-  const sec = cur;
-  pendingNote = {sec, text: document.getElementById("secNote").value};
-  document.getElementById("noteStat").textContent = "正在保存…";
-  if (noteTimer !== null) clearTimeout(noteTimer);
-  noteTimer = setTimeout(()=>{
-    noteTimer = null;
-    const p = pendingNote; pendingNote = null;
-    if (p) saveNote(p.sec, p.text);
-  }, 800);
+const noteStore = new LearningRecords(NOTE_KEY, true);
+let secNotes = noteStore.read();
+const noteEditor = new LearningNoteEditor(noteStore, {
+  input: "secNote", status: "noteStat", copies: "noteCopies",
+}, () => {
+  secNotes = noteStore.read();
+  document.getElementById("noteFlag").textContent = secNotes[cur]?.text ? "· 有笔记" : "";
+  showWriteStatus();
 });
-window.addEventListener("pagehide", flushNote);
-document.addEventListener("visibilitychange", ()=>{
-  if (document.visibilityState === "hidden") flushNote();
-});
+const showWriteStatus = watchLearningWrites([noteStore, hlStore], document.getElementById("retryWrite"),
+  document.getElementById("writeStatus"), () => { loadNote(); applyHl(); });
+function flushNote(){ noteEditor.flush(); }
+function loadNote(){ if (cur) noteEditor.open(cur); }
 document.getElementById("btnExportN").onclick = ()=>{
   flushNote();
+  secNotes = noteStore.read(); hlData = Object.values(hlStore.read());
   const blob = new Blob(
     [JSON.stringify({highlights: hlData, notes: secNotes, exported: new Date().toISOString(), app:"cfa-rules-2026"}, null, 1)],
     {type:"application/json"});
@@ -1024,16 +1001,23 @@ document.getElementById("importFileN").addEventListener("change", e=>{
     try {
       flushNote();
       const d = JSON.parse(rd.result);
+      if (d.app !== "cfa-rules-2026") throw Error("规则笔记文件标识不匹配");
       let n = 0;
-      const seen = new Set(hlData.map(h=>h.sec+"|"+h.quote));
-      for (const h of (d.highlights||[])) {
-        if (h.sec && h.quote && !seen.has(h.sec+"|"+h.quote)) { hlData.push(h); n++; }
+      const identity = h => JSON.stringify([h.sec, h.quote]);
+      const seen = new Set(Object.values(hlStore.read()).map(identity));
+      for (const h of (d.highlights || [])) {
+        if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;
+        writeHighlight(h, h); seen.add(identity(h)); n++;
       }
-      for (const [s, v] of Object.entries(d.notes||{})) {
-        if (!secNotes[s] || (v.ts||0) > (secNotes[s].ts||0)) { secNotes[s] = v; n++; }
+      secNotes = noteStore.read();
+      for (const [s, raw] of Object.entries(d.notes || {})) {
+        const v = noteFromBackup(raw);
+        if (byId[s] && v && (!secNotes[s] || v.ts > (secNotes[s].ts || 0))) {
+          noteStore.put(s, v, noteStore.base(s)); n++;
+        }
       }
-      saveHl(); saveNotes(); applyHl(); loadNote();
-      alert(`导入完成：合并了 ${n} 条记录`);
+      applyHl(); loadNote(); showWriteStatus();
+      alert((hlStore.pending.size || noteStore.pending.size ? "已读入，部分记录待保存" : "导入完成") + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }
   };
   rd.readAsText(f, "utf-8");
@@ -1115,6 +1099,9 @@ def build_html_page(sections):
             json.dumps(data, ensure_ascii=False, separators=(",", ":")).replace(
                 "</", "<\\/"
             ),
+        )
+        .replace(
+            "__RECORDS_JS__", (SRC / "learning-records.js").read_text(encoding="utf-8")
         )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)

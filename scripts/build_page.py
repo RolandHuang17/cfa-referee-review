@@ -16,7 +16,7 @@ from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
 from lib.xlinks import resolve as resolve_xlinks
 
-from lib.paths import DATA, SITE
+from lib.paths import DATA, SITE, SRC
 from lib.site_stats import counts
 
 _COUNTS = counts()
@@ -143,7 +143,7 @@ def build_paths(raw_cases):
 VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
-def rule_context(case, scores, editions):
+def rule_context(case, scores, editions, published):
     match = re.search(r"第(\d+)轮", case.get("round", ""))
     round_no = match.group(1) if match else "0"
     key = "|".join(
@@ -156,7 +156,18 @@ def rule_context(case, scores, editions):
     )
     record = scores.get(key, {})
     day = record.get("date", "")
-    if record.get("source") == "待补" or not re.fullmatch(r"\d{4}-\d{2}-\d{2}", day):
+    verified = bool(record.get("source")) and record["source"] != "待补"
+    try:
+        match_day = date.fromisoformat(day)
+        published_day = date.fromisoformat(
+            f"{published[:4]}-{published[4:6]}-{published[6:]}"
+        )
+        verified = (
+            verified and day == match_day.isoformat() and match_day <= published_day
+        )
+    except (ValueError, TypeError):
+        verified = False
+    if not verified:
         return {"date": "", "edition": "", "source": ""}
     applicable = [e for e in editions if e["effective"] <= day]
     if not applicable:
@@ -170,6 +181,7 @@ def build_data(season):
         (DATA / f"match-scores-{season}.json").read_text(encoding="utf-8")
     )["scores"]
     editions = json.loads((DATA / "rule-editions.json").read_text(encoding="utf-8"))
+    published = {i["no"]: i["date"] for i in data["issues"]}
     cases = []
     for c in data["cases"]:
         comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
@@ -205,7 +217,9 @@ def build_data(season):
                 "video_urls": c["video_urls"],
                 "category": c["category"],
                 "tags": c.get("tags", []),
-                "rule_context": rule_context(c, scores, editions),
+                "rule_context": rule_context(
+                    c, scores, editions, published.get(c["issue"], "")
+                ),
                 "v": c["referee_verdict"],
                 "var": c["var_verdict"],
             }
@@ -254,6 +268,7 @@ HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
 <style>
@@ -604,9 +619,11 @@ __TOPBAR__
       <div class="notewrap" id="noteWrap" style="display:none">
         <div class="note-tools">
           <button class="ntbtn" id="btnNoteTime" title="在光标处插入当前视频时间标记（如 [12:34]，完整版有视频时可用）">⏱ 插入时间标记</button>
-          <span class="nstatus" id="noteStatus"></span>
+          <span class="nstatus" id="noteStatus" role="status"></span>
         </div>
         <textarea id="noteBox" placeholder="写下你的学习笔记…（自动保存；复盘时可用「⏱ 插入时间标记」记录视频时刻，预览中的 [时间] 可点击跳转）"></textarea>
+        <div id="noteCopies"></div><div role="status" id="writeStatus"></div>
+        <button type="button" class="btn" id="retryWrite" hidden>重试保存</button>
         <div class="note-view" id="noteView" style="display:none"></div>
       </div>
       <div class="fmlinks" id="dXlinks" style="display:none"></div>
@@ -674,6 +691,8 @@ __TOPBAR__
 </div>
 
 <script>
+__RECORDS_JS__
+__CALENDAR_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const CATS = DATA.categories;
@@ -693,12 +712,14 @@ const CFG = DATA.cfg;
 const FAV_KEY = CFG.favKey, NOTE_KEY = CFG.noteKey;
 const SEEN_KEY = CFG.seenKey, LAST_KEY = CFG.lastKey;
 const TAG_PRESETS = ["精选", "有疑问", "尺度标杆", "易错点", "课堂讨论"];
-let fav = {}, notes = {};
-try { fav = JSON.parse(localStorage.getItem(FAV_KEY) || "{}") || {}; } catch(_) { fav = {}; }
-try { notes = JSON.parse(localStorage.getItem(NOTE_KEY) || "{}") || {}; } catch(_) { notes = {}; }
-function persistFav() {
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(fav));
-        localStorage.setItem(NOTE_KEY, JSON.stringify(notes)); } catch(_) {}
+const favStore = new LearningRecords(FAV_KEY);
+const noteStore = new LearningRecords(NOTE_KEY, true);
+let fav = favStore.read(), notes = noteStore.read();
+function persistFav(seq) {
+  const value = fav[seq];
+  favStore.put(seq, value ? {...value, ts: Date.now()} : null, favStore.base(seq));
+  fav = favStore.read();
+  showWriteStatus();
 }
 function isFav(seq) { return !!fav[seq]; }
 function hasNote(seq) { return !!(notes[seq] && notes[seq].text && notes[seq].text.trim()); }
@@ -722,17 +743,6 @@ function updateSeenUI(seq) {
   renderCats();
 }
 // 连续学习天数（跨页共享 cfa.streak：访问 season 页即记一天；quiz 出卷也记）
-function streakTouch() {
-  const d = new Date();
-  const today = d.toISOString().slice(0, 10);
-  const yesterday = new Date(d.getTime() - 86400000).toISOString().slice(0, 10);
-  let st = { last: "", days: 0 };
-  try { st = JSON.parse(localStorage.getItem("cfa.streak") || '{"last":"","days":0}') || st; } catch(_) {}
-  if (st.last === today) return;
-  st.days = st.last === yesterday ? (st.days || 0) + 1 : 1;
-  st.last = today;
-  try { localStorage.setItem("cfa.streak", JSON.stringify(st)); } catch(_) {}
-}
 function crest(team, h, mark) {
   const item = DATA.teams && DATA.teams[team];
   if (!item) return `<span class="team-badge" title="${esc(team)}：未登记">?</span>`;
@@ -1198,9 +1208,10 @@ function step(dir){
 // ---------- 收藏与笔记 ----------
 function toggleFav(seq){
   const c = bySeq[seq]; if(!c) return;
+  fav = favStore.read();
   if (isFav(seq)) delete fav[seq];
   else fav[seq] = {tags: [], ts: Date.now()};
-  persistFav();
+  persistFav(seq);
   renderFavUI(c); renderFavList();
   const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
   if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
@@ -1209,6 +1220,7 @@ function renderFavUI(c){
   const btn = document.getElementById("favBtn");
   if (!btn) return;
   btn.classList.toggle("on", isFav(c.seq));
+  btn.setAttribute("aria-pressed", String(isFav(c.seq)));
   btn.innerHTML = isFav(c.seq) ? `${IC["star-f"]} 已收藏` : `${IC.star} 收藏`;
   const box = document.getElementById("favTags");
   if (!isFav(c.seq)) { box.style.display = "none"; return; }
@@ -1222,12 +1234,14 @@ function renderFavUI(c){
     `<input id="customTag" placeholder="自定义标签"><button class="ftag" id="addTag">添加</button>`;
 }
 document.getElementById("favTags").addEventListener("click", e=>{
+  fav = favStore.read();
   const del = e.target.closest("[data-del]");
   if (del) {
     const c = bySeq[state.sel]; if(!c) return;
-    const arr = fav[c.seq]?.tags || [];
+    if (!fav[c.seq]) { renderFavUI(c); return; }
+    const arr = fav[c.seq].tags || [];
     fav[c.seq].tags = arr.filter(t=>t!==del.dataset.del);
-    persistFav(); renderFavUI(c); renderFavList();
+    persistFav(c.seq); renderFavUI(c); renderFavList();
     return;
   }
   if (e.target.id === "addTag") {
@@ -1238,7 +1252,7 @@ document.getElementById("favTags").addEventListener("click", e=>{
     if (!fav[c.seq]) fav[c.seq] = {tags:[], ts:Date.now()};
     fav[c.seq].tags = fav[c.seq].tags||[];
     if (!fav[c.seq].tags.includes(t)) fav[c.seq].tags.push(t);
-    persistFav(); renderFavUI(c); renderFavList();
+    persistFav(c.seq); renderFavUI(c); renderFavList();
     return;
   }
   const chip = e.target.closest(".ftag[data-tag]");
@@ -1249,7 +1263,7 @@ document.getElementById("favTags").addEventListener("click", e=>{
     const t = chip.dataset.tag;
     if (fav[c.seq].tags.includes(t)) fav[c.seq].tags = fav[c.seq].tags.filter(x=>x!==t);
     else fav[c.seq].tags.push(t);
-    persistFav(); renderFavUI(c); renderFavList();
+    persistFav(c.seq); renderFavUI(c); renderFavList();
   }
 });
 document.getElementById("favTags").addEventListener("keydown", e=>{
@@ -1262,13 +1276,8 @@ document.getElementById("dHead").addEventListener("click", e=>{
   if (e.target.closest("#favBtn")) toggleFav(state.sel);
 });
 function renderNoteUI(c){
-  flushNote();
-  const wrap = document.getElementById("noteWrap");
-  wrap.style.display = "block";
-  document.getElementById("noteBox").value = (notes[c.seq]&&notes[c.seq].text)||"";
-  document.getElementById("noteStatus").textContent =
-    hasNote(c.seq) ? "已保存" : "自动保存，无需手动确认";
-  renderNoteView();
+  document.getElementById("noteWrap").style.display = "block";
+  noteEditor.open(c.seq);
 }
 // ---------- 时间戳笔记：[mm:ss] 标记可点击跳转视频 ----------
 function fmtTs(sec){
@@ -1305,45 +1314,23 @@ document.getElementById("btnNoteTime").addEventListener("click", ()=>{
   box.focus(); box.setSelectionRange(np, np);
   box.dispatchEvent(new Event("input", {bubbles:true}));
 });
-let noteTimer = null;
-let pendingNote = null;  // 输入时冻结的 {seq, text}，防止切题后旧定时器读到新 textarea
-function saveNote(seq, text){
-  if (!seq) return;
-  if (text.trim()) notes[seq] = {text, ts: Date.now()};
-  else delete notes[seq];
-  persistFav();
+const noteEditor = new LearningNoteEditor(noteStore, {
+  input: "noteBox", status: "noteStatus", copies: "noteCopies",
+}, () => {
+  notes = noteStore.read();
+  showWriteStatus();
+  renderNoteView();
   renderFavList();
-  const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-  if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
-  if (state.sel === seq){
-    const d = new Date();
-    document.getElementById("noteStatus").textContent =
-      "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-    renderNoteView();
-  }
-}
-function flushNote(){
-  if (noteTimer !== null){ clearTimeout(noteTimer); noteTimer = null; }
-  if (!pendingNote) return;
-  const p = pendingNote; pendingNote = null;
-  saveNote(p.seq, p.text);
-}
-document.getElementById("noteBox").addEventListener("input", ()=>{
-  const seq = state.sel; if(!seq) return;
-  if (pendingNote && pendingNote.seq !== seq) flushNote();
-  pendingNote = {seq, text: document.getElementById("noteBox").value};
-  document.getElementById("noteStatus").textContent = "正在保存…";
-  if (noteTimer !== null) clearTimeout(noteTimer);
-  noteTimer = setTimeout(()=>{
-    noteTimer = null;
-    const p = pendingNote; pendingNote = null;
-    if (p) saveNote(p.seq, p.text);
-  }, 800);
+  const seq = noteEditor.id;
+  const mark = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
+  if (mark) mark.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
 });
-window.addEventListener("pagehide", flushNote);
-document.addEventListener("visibilitychange", ()=>{
-  if (document.visibilityState === "hidden") flushNote();
-});
+const showWriteStatus = watchLearningWrites([noteStore, favStore], document.getElementById("retryWrite"),
+  document.getElementById("writeStatus"), () => {
+    fav = favStore.read();
+    if (bySeq[state.sel]) { noteEditor.open(state.sel); renderFavUI(bySeq[state.sel]); }
+  });
+function flushNote(){ noteEditor.flush(); }
 
 // ---------- 笔记汇总弹层：全季一览 + 笔记内搜索 + 点击跳判例 ----------
 function renderNotesView(){
@@ -1401,6 +1388,7 @@ document.getElementById("favList").addEventListener("click", e=>{
 });
 document.getElementById("btnExport").onclick = ()=>{
   flushNote();
+  fav = favStore.read(); notes = noteStore.read();
   const blob = new Blob([JSON.stringify({fav, notes, exported: new Date().toISOString(), app:"cfa-referee-review-"+CFG.season}, null, 1)],
     {type:"application/json"});
   const a = document.createElement("a");
@@ -1421,15 +1409,22 @@ document.getElementById("importFile").addEventListener("change", e=>{
         alert("导入失败：这不是当前赛季导出的收藏与笔记文件"); return;
       }
       let n = 0;
-      for (const [s, v] of Object.entries(d.fav||{})) {
-        if (!fav[s] || (v.ts||0) > (fav[s].ts||0)) { fav[s] = v; n++; }
+      fav = favStore.read(); notes = noteStore.read();
+      for (const [s, v] of Object.entries(d.fav || {})) {
+        if (!bySeq[s] || !v || !Array.isArray(v.tags) || !v.tags.every(t => typeof t === "string")) continue;
+        if (!fav[s] || (v.ts || 0) > (fav[s].ts || 0)) {
+          favStore.put(s, {tags: v.tags, ts: Number(v.ts) || 0}, favStore.base(s)); n++;
+        }
       }
-      for (const [s, v] of Object.entries(d.notes||{})) {
-        if (!notes[s] || (v.ts||0) > (notes[s].ts||0)) { notes[s] = v; n++; }
+      for (const [s, raw] of Object.entries(d.notes || {})) {
+        const v = noteFromBackup(raw);
+        if (bySeq[s] && v && (!notes[s] || v.ts > (notes[s].ts || 0))) {
+          noteStore.put(s, v, noteStore.base(s)); n++;
+        }
       }
-      persistFav(); renderFavList(); applyFilter();
+      fav = favStore.read(); notes = noteStore.read(); showWriteStatus(); renderFavList(); applyFilter();
       if (bySeq[state.sel]) { renderNoteUI(bySeq[state.sel]); renderFavUI(bySeq[state.sel]); }
-      alert(`导入完成：合并了 ${n} 条记录`);
+      alert((favStore.pending.size || noteStore.pending.size ? '已读入，部分记录待保存' : '导入完成') + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }
   };
   rd.readAsText(f, "utf-8");
@@ -1687,7 +1682,7 @@ const hasPen = t => (t||[]).includes("点球");
 
 // ---------- 初始化 ----------
 syncEmptyState();
-streakTouch();
+touchStudyDay();
 renderPaths();
 document.getElementById("totalCount").textContent = DATA.cases.length;
 document.getElementById("seenCount").textContent = Object.keys(seen).length;
@@ -1789,6 +1784,12 @@ def build_season(season):
     }
     html = inject_theme(
         HTML.replace("__DATA__", data_js)
+        .replace(
+            "__RECORDS_JS__", (SRC / "learning-records.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__CALENDAR_JS__", (SRC / "study-calendar.js").read_text(encoding="utf-8")
+        )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)
         .replace("__TITLE__", cfg["title"])

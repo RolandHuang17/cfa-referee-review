@@ -18,7 +18,8 @@ low=靠兜底默认值。产出条目 reviewed=false —— **未校对的轴不
   3. python scripts/gen_quiz_answers.py --apply-review   → 回写 reviewed/修正值
      （--approve-high 同时把全部 high 条目置 reviewed，须先抽样复核认可）
 
---recheck 只重建 reviewed!=true 的条目，人工成果不丢。
+默认及 --recheck 保留所有已校对答案，仅起草未校对条目。
+--preview-all 把全量机器草稿写到 data/local/quiz-review/draft-answers.json。
 """
 
 import json
@@ -26,6 +27,7 @@ import re
 import sys
 from datetime import date
 
+from lib.atomic_json import write_json
 from lib.paths import DATA, LOCAL
 
 SEASONS = ("2024", "2025", "2026")
@@ -351,16 +353,16 @@ def collect():
     return pool
 
 
-def draft_all(recheck=False):
+def draft_all(*, redraft=False):
     old = {}
     if OUT.exists():
         old = json.loads(OUT.read_text(encoding="utf-8")).get("answers", {})
     pool = collect()
-    answers, rows = {}, []
+    answers = {k: v for k, v in old.items() if v.get("reviewed") and not redraft}
+    rows = []
     for season, c in pool:
         key = f"{season}-{c['seq']}"
-        if recheck and old.get(key, {}).get("reviewed"):
-            answers[key] = old[key]
+        if key in answers:
             continue
         r, cc, conf, why = derive(
             c["conclusion"], c["desc"], c.get("referee_verdict", "")
@@ -383,7 +385,13 @@ def draft_all(recheck=False):
     return answers, rows, pool
 
 
-def write_out(answers):
+def write_out(answers, output=None):
+    output = output or OUT
+    if (
+        output.exists()
+        and json.loads(output.read_text(encoding="utf-8")).get("answers") == answers
+    ):
+        return
     payload = {
         "version": 1,
         "generated": date.today().isoformat(),
@@ -393,7 +401,7 @@ def write_out(answers):
         "cLabels": C_LABELS,
         "answers": answers,
     }
-    OUT.write_text(json.dumps(payload, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json(output, payload)
 
 
 def write_review_tsv(rows):
@@ -450,7 +458,11 @@ def apply_review():
             if not line.strip() or line.startswith("key\t"):
                 continue
             parts = line.split("\t")
-            k, r, c = parts[0].strip(), parts[1].strip(), parts[2].strip()
+            if len(parts) != 3:
+                raise ValueError(f"校对行应有三列: {line}")
+            k, r, c = (part.strip() for part in parts)
+            if r not in {"", "-", *R_LABELS} or c not in {"", "-", *C_LABELS}:
+                raise ValueError(f"未知答案值: {k} {r} {c}")
             if k not in answers:
                 print(f"⚠ overrides 指向不存在的 key: {k}")
                 continue
@@ -477,11 +489,13 @@ def main():
     if "--apply-review" in sys.argv:
         apply_review()
         return
-    answers, rows, pool = draft_all(recheck="--recheck" in sys.argv)
-    write_out(answers)
+    preview = "--preview-all" in sys.argv
+    output = REVIEW_DIR / "draft-answers.json" if preview else OUT
+    answers, rows, pool = draft_all(redraft=preview)
+    write_out(answers, output)
     tsv = write_review_tsv(rows)
     print(
-        f"生成 {OUT}: {len(answers)} 条（high {sum(1 for r_ in rows if r_[4] == 'high')} / "
+        f"生成 {output}: {len(answers)} 条（high {sum(1 for r_ in rows if r_[4] == 'high')} / "
         f"medium {sum(1 for r_ in rows if r_[4] == 'medium')} / low {sum(1 for r_ in rows if r_[4] == 'low')}）"
     )
     print(f"对照表: {tsv}（共 {len(rows)} 行）")

@@ -69,8 +69,8 @@ html:not([data-theme="light"]) .page-portal{--action:#acd5ae;--action-ink:#10261
 @media(hover:hover){.page-portal .shelf-list a:hover,.page-portal .progress-rows a:hover,.page-portal .sample-controls a:hover{color:var(--action);text-decoration:underline}.page-portal .study-button:hover{transform:translateY(-2px)}}
 @media(prefers-reduced-motion:no-preference){.m-enter .hero[data-enter] :is(.hero-copy,.case-player,.hero-action){animation:portal-enter .55s cubic-bezier(.16,1,.3,1) both}.m-enter .hero[data-enter] .case-player{animation-delay:70ms}.m-enter .hero[data-enter] .hero-action{animation-delay:140ms}@keyframes portal-enter{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}}
 @media(max-width:1199px) and (min-width:1024px){
-.page-portal .hero-copy,.page-portal .hero-action{grid-column:1 / span 4}.page-portal .hero-action{grid-row:2;align-self:start}.page-portal .hero-copy{align-self:end}
-.page-portal .case-player{grid-column:5 / span 8;grid-row:1 / span 2}}
+.page-portal .hero-copy,.page-portal .hero-action{grid-column:1 / span 5}.page-portal .hero-action{grid-row:2;align-self:start}.page-portal .hero-copy{align-self:end}
+.page-portal .case-player{grid-column:7 / span 6;grid-row:1 / span 2}}
 @media(max-width:1023px){.page-portal{--gut:64px}
 .page-portal .shelf-picker,.page-portal .shelf-list a{border-bottom:0}
 .page-portal .shelf-list{margin-top:6px}

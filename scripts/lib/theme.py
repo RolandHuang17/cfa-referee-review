@@ -123,6 +123,7 @@ def topbar(
                 ("scale.html", "统一尺度", "sliders"),
                 ("cheatsheet.html", "考点速查卡", "file-text"),
                 ("quiz.html", "考题模式", "quiz"),
+                ("compare.html", "尺度对照课", "book"),
             ],
         ),
         (
@@ -203,7 +204,7 @@ def topbar(
         '<span class="when-light">' + icon("moon") + "</span></button>"
     )
     sub = f'<span class="brand-sub">{brand_sub}</span>' if brand_sub else ""
-    current = ' aria-current="page"' if portal else ""
+    current = ' aria-current="page"' if active == "index.html" else ""
     brand = (
         f'<a class="brand" href="index.html"{current}>{icon("shield", 19)}'
         f"<b>裁判学习平台</b>{sub}</a>"

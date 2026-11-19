@@ -6,6 +6,7 @@ A fully offline-capable static site that archives **all 85 issues of the Chinese
 Association's official referee reviews (2024–2026 seasons, 627 cases with video)**,
 re-organized by a unified teaching taxonomy, plus:
 
+- **Paired case lessons** (compare.html) — four two-case exercises with official CFA evidence, replayable observation clips and printable personal reviews. Pick any two cases in the same teaching category across the three seasons to read them side by side.
 - **Per-team impact stats** (stats-2026/2025/2024.html) — every officially confirmed
   wrong call, score-correction analysis, both victim/beneficiary views.
 - **Official unified-caliber briefings** (scale.html) — 104 typical scenarios across

@@ -1,0 +1,220 @@
+/* Lesson authoring and the reader share the comparison desk's paper and ink. */
+.page-compare .coach-shell {
+  color:var(--ink); width:calc(100% - 2 * var(--gut)); max-width:1280px;
+  margin-inline:auto; min-width:0; overflow-wrap:anywhere;
+}
+.coach-shell :is(h1,h2,h3,p,ol,ul,blockquote) {margin-block:0}
+.coach-head {margin-block:14px clamp(20px,3vw,38px)}
+.coach-shell h1 {
+  margin:0 0 10px; font:650 clamp(2rem,1.55rem + 2vw,3.5rem)/1.18 var(--font-display);
+  letter-spacing:-.035em; text-wrap:balance;
+}
+.coach-shell h2 {font:650 clamp(1.35rem,1.08rem + 1vw,2rem)/1.3 var(--font-display)}
+.coach-shell h3 {font:650 1.12rem/1.45 var(--font)}
+.coach-shell p {line-height:1.7}
+.coach-shell a {text-underline-offset:.23em}
+.coach-toolbar,.coach-actions,.coach-item-tools {
+  display:flex; flex-wrap:wrap; align-items:center; gap:8px 12px;
+}
+.coach-toolbar {margin-block:0 20px;align-items:end}
+.coach-shell summary {min-height:44px;align-content:center;cursor:pointer;text-underline-offset:.2em}
+.coach-shell summary:focus-visible {outline-offset:2px}
+.coach-shell details[open] > summary {font-weight:600}
+.coach-shell details > details {margin:12px 0 0}
+.coach-shell details a {overflow-wrap:anywhere}
+.coach-actions {margin-block:16px 0}
+.coach-shell :where(button,.coach-primary,.coach-secondary,.coach-toolbar a,.coach-actions a,.coach-item-tools a) {
+  display:inline-flex; align-items:center; justify-content:center; gap:.45em;
+  min-height:44px; min-width:44px; max-width:100%; padding:8px 13px;
+  font:600 1rem/1.4 var(--font); border:1px solid var(--line); border-radius:8px;
+  background:var(--card); color:var(--ink); text-align:center; text-decoration:none;
+  white-space:normal; cursor:pointer;
+}
+.coach-shell :is(button,.coach-primary,.coach-secondary):disabled {opacity:.55;cursor:not-allowed}
+.coach-shell .coach-primary {color:var(--action-ink);background:var(--action);border-color:transparent}
+.coach-shell :focus-visible {outline:3px solid var(--action);outline-offset:3px}
+.coach-shell :is(button,a,[tabindex],input,select,textarea) {scroll-margin-block:calc(var(--nav) + 12px) 20px}
+.coach-filters {display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:6px 12px}
+.coach-backups {margin-block:clamp(16px,2vw,28px)}
+.coach-shell :is(label,legend) {font-weight:600}
+.coach-field {display:grid;gap:6px;min-width:0;margin-block:14px}
+.coach-shell :is(input:not([type="checkbox"],[type="radio"],[type="hidden"]),textarea,select) {
+  display:block; width:100%; max-width:100%; min-width:0; min-height:46px;
+  color:var(--ink); background:var(--bg); border:1px solid var(--muted); border-radius:7px;
+  font:inherit; padding:9px 11px;
+}
+.coach-export label:has(input[type="checkbox"]) {display:flex;align-items:center;gap:8px;min-height:44px;font-weight:400}
+.coach-item-head {display:flex;justify-content:space-between;align-items:flex-start;gap:6px 14px;flex-wrap:wrap}
+.coach-item-head .coach-count {font-size:.875rem}
+.coach-item-head .coach-item-tools {margin:0}
+.coach-shell .coach-field :is(input,select,textarea) {font-weight:400}
+.coach-shell textarea {resize:vertical;line-height:1.55;min-height:84px}
+.coach-shell :is(input[type="radio"],input[type="checkbox"]) {accent-color:var(--action)}
+.coach-shell :is(input,textarea)::placeholder {color:var(--muted);opacity:1}
+.coach-cases {list-style:none;padding:0;margin-block:12px 0;min-width:0}
+.coach-item {min-width:0;padding-block:16px;border-bottom:1px solid var(--line)}
+.coach-item:first-child {border-top:1px solid var(--line)}
+.coach-item-tools {margin-block:8px 0;gap:6px}
+.coach-item-tools button {font-size:.9375rem}
+.coach-status,.coach-count {color:var(--ink2);font-variant-numeric:tabular-nums}
+.coach-status:empty {margin:0}
+.coach-shell :is(img,video) {max-width:100%;height:auto}
+@media (hover:hover) {
+  .coach-shell :is(button:not(:disabled),.coach-actions a,.coach-toolbar a,.coach-secondary):hover {
+    border-color:var(--action);
+  }
+  .coach-shell .coach-primary:hover {box-shadow:inset 0 0 0 1px var(--action-ink)}
+}
+
+/* Project one case at a time, with room for a long prompt or an official ruling. */
+html[data-coach-view="present"] .page-compare .portal-nav {display:none}
+html[data-coach-view="present"] .page-compare #workspace {
+  padding-block:clamp(16px,3vw,44px);min-height:100svh;
+}
+html[data-coach-view="present"] .page-compare #workspace:fullscreen {
+  width:100%;height:100%;overflow:auto;background:var(--bg);color:var(--ink);
+}
+.page-compare #coach-print {display:none}
+.page-compare .coach-shell.coach-stage {max-width:1040px}
+.coach-stage .coach-keys {margin-block-start:10px;color:var(--ink2);font-size:.9375rem}
+.coach-stage {min-width:0;background:var(--bg);color:var(--ink)}
+.coach-stage .coach-count {margin-block:0 12px;font-size:clamp(1rem,.9rem + .5vw,1.4rem)}
+.coach-stage .coach-content {
+  max-width:1040px;margin:clamp(20px,4vw,60px) auto;padding-block:clamp(16px,2vw,32px);
+  border-block:1px solid var(--line);font-size:clamp(1.25rem,1rem + 1.25vw,2.25rem);
+}
+.coach-stage .coach-content h2 {font-size:clamp(1.65rem,1.25rem + 1.75vw,3rem);text-wrap:balance}
+.coach-stage .coach-content > * + *,.coach-handout > * + * {margin-top:1em}
+.coach-stage .coach-content p {line-height:1.55}
+.coach-stage .coach-content video {display:block;max-height:58svh;max-width:100%;margin-inline:auto}
+.coach-answer {
+  padding:clamp(12px,1.6vw,24px); border-inline-start:4px solid var(--action);
+  background:var(--bg2); line-height:1.65; white-space:pre-line;
+}
+.page-compare .coach-shell.coach-handout,.coach-handout {max-width:76ch;margin-inline:auto;min-width:0}
+.coach-handout-item {padding-block:clamp(20px,3vw,36px);border-top:1px solid var(--line)}
+.coach-shell .coach-handout-item > * + *,#coach-print .coach-handout-item > * + * {margin-top:12px}
+.coach-handout-item header p,.coach-handout-header > p {color:var(--ink2);margin-bottom:6px}
+.coach-handout-item h3 {margin-top:1.2em}
+.coach-handout-item blockquote {
+  margin-inline:0;padding-inline-start:16px;border-inline-start:3px solid var(--action);
+}
+.coach-handout-text,.coach-handout-item blockquote {white-space:pre-wrap;line-height:1.75}
+.coach-handout-item a {display:inline-block;min-height:44px;align-content:center}
+
+@media (max-width:760px) {
+  .coach-toolbar,.coach-actions {gap:8px}
+  .coach-toolbar {margin-bottom:14px}
+  .coach-stage .coach-content {margin-block:18px}
+  .coach-shell h1 {text-wrap:wrap}
+}
+@media (forced-colors:active) {
+  .coach-shell :is(a,button):focus-visible {outline-color:Highlight}
+  .coach-shell .coach-primary,.coach-answer {border-color:ButtonText}
+}
+@media print {
+  html[data-coach-view] .page-compare #workspace {padding:0;min-height:0}
+  html:is([data-coach-view="editor"],[data-coach-view="present"]) #workspace > :not(#coach-print),
+  html[data-coach-view="student"] #workspace > :not(#coach-sheet) {display:none!important}
+  html:is([data-coach-view="editor"],[data-coach-view="present"]) #workspace > #coach-print,
+  html[data-coach-view="student"] #workspace > #coach-sheet {display:block!important}
+
+  .coach-shell.coach-toolbar,.coach-shell .coach-toolbar,.coach-shell .coach-actions,.coach-shell .coach-item-tools,.coach-shell button {display:none!important}
+  .page-compare .coach-shell,.coach-handout,.coach-stage,.coach-content {
+    width:auto;max-width:none;color:#111;background:white;
+  }
+  .coach-handout-item {border-color:#aaa;padding-block:12pt}
+  .coach-handout-item a {min-height:0;color:inherit}
+  .coach-shell :is(h1,h2,h3),.coach-handout-item > header {break-after:avoid}
+  .coach-shell p {orphans:3;widows:3}
+  .coach-shell .coach-answer {background:white;color:#111;border-color:#333}
+}
+
+/* The selection desk stays live while the teacher builds the running order. */
+.page-compare #workspace.coach-picker-page {padding:0}
+.coach-picker-page .hero-text {gap:clamp(16px,2.5vh,32px)}
+.coach-picker-frame {
+  display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:1px;
+  width:100%;border:1px solid var(--line);border-radius:12px;overflow:hidden;
+  background:var(--line);color:var(--ink);
+}
+.coach-picker-form,.coach-match-preview {min-width:0;background:var(--card)}
+.coach-picker-form {padding:clamp(15px,2.1vw,30px);align-content:center}
+.coach-pick-caption,.coach-plan-select,.coach-plan-tools {
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 12px;
+}
+.coach-pick-caption {align-items:baseline;flex-wrap:nowrap}
+.coach-pick-caption strong {min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.coach-pick-caption span {flex:none;color:var(--ink2);font-size:.9rem}
+.coach-picker-form .coach-field,.coach-plan-controls .coach-field {
+  display:grid;gap:5px;min-width:0;margin:10px 0;color:var(--ink);font:600 15px/1.4 var(--font);
+}
+:is(.coach-picker-form,.coach-plan-controls) :is(input,select) {
+  width:100%;min-width:0;min-height:44px;padding:7px 10px;border:1px solid var(--muted);
+  border-radius:7px;background:var(--bg);color:var(--ink);font:400 16px/1.35 var(--font);
+}
+#coach-case-preview summary {min-height:44px;padding-inline:18px;align-content:center;cursor:pointer;font-size:15px}
+#coach-case-preview[open] > div {
+  position:absolute;inset:0 0 44px;overflow:auto;overscroll-behavior:contain;
+  color:var(--ink);background:var(--card);padding:clamp(12px,2vw,28px);
+}
+#coach-case-preview p {margin:0 0 8px;line-height:1.7}
+#coach-case-preview a {display:inline-block;min-height:44px;align-content:center}
+.coach-match-preview {position:relative;display:flex;flex-direction:column}
+@media (min-width:640px) { .coach-picker-frame {min-height:clamp(340px,44svh,555px)} }
+#coach-match-visual {flex:1;position:relative;display:grid;align-items:center;min-height:110px;background:var(--bg2)}
+#coach-match-visual picture,#coach-match-visual img {
+  position:absolute;inset:0;display:block;height:100%;width:100%;object-fit:cover;
+}
+#coach-match-visual p {max-height:24vh;overflow:auto;padding:12px 20px;margin:0;line-height:1.65}
+.coach-match-caption {padding:12px 18px;display:grid;gap:2px}
+.coach-match-caption strong {font:650 clamp(1rem,.82rem + .7vw,1.45rem)/1.4 var(--font)}
+.coach-match-caption span,.coach-plan-count,.coach-plan-controls .coach-status {color:var(--ink2);font-size:.94rem}
+.coach-plan-controls {min-width:0}
+.coach-plan-controls h2 {margin-bottom:16px}
+.coach-plan-select {align-items:end;flex-wrap:nowrap}
+.coach-plan-select .coach-field {flex:1;margin:0}
+.coach-plan-select button {flex:none}
+.coach-plan-tools {justify-content:start;margin-block:10px}
+.coach-plan-launch {margin-top:16px}
+.coach-plan-controls .coach-status {margin-top:8px}
+.coach-dialog {
+  width:min(760px,calc(100% - 32px));max-height:86vh;max-height:86svh;overflow:auto;
+  border:1px solid var(--line);border-radius:12px;padding:clamp(16px,3vw,32px);background:var(--card);color:var(--ink);box-shadow:var(--shadow);
+}
+.coach-dialog:modal {overscroll-behavior:contain}
+.coach-dialog::backdrop {background:rgb(0 0 0 / .58);overflow:hidden;overscroll-behavior:contain}
+.page-compare .coach-dialog .coach-shell {width:auto;max-width:none}
+.coach-dialog-top {display:flex;align-items:center;justify-content:space-between;gap:12px;margin:0 0 16px}
+.coach-dialog-top h2 {margin:0}
+.coach-dialog .coach-backups {padding-top:20px;border-top:1px solid var(--line)}
+.coach-dialog .coach-export h3,.coach-dialog .coach-backups h3 {margin:0 0 8px}
+.coach-dialog .coach-export label:has(:checked) {font-weight:650}
+.coach-dialog .coach-actions {margin-block:10px}
+#coach-dialog-status:empty {display:none}
+@media (max-width:1023px) {
+  .coach-planner .compare-catalog {grid-template-columns:1fr}
+  .coach-plan-controls {grid-column:1}
+}
+@media (max-width:639px) {
+  .page-compare #workspace.coach-picker-page > .wrap {padding-block:calc(var(--nav) + 12px) 28px}
+  .coach-picker-page .hero-text {gap:24px}
+  .coach-picker-page .hero__lead {margin-block-start:8px}
+  .coach-picker-page .btn-row {margin:8px 0 0}
+  .coach-picker-frame {grid-template-columns:1fr}
+  .coach-picker-form {padding:10px 12px}
+  .coach-picker-form .coach-field {margin:5px 0;gap:2px}
+  .coach-picker-form .coach-filters {gap:8px}
+  #coach-case-preview summary {font-size:.875rem;padding-inline:12px}
+  #coach-match-visual {min-height:clamp(90px,13vh,137px)}
+  #coach-match-visual p {max-height:120px;font-size:.94rem}
+  .coach-match-caption {padding:6px 12px}
+  .coach-plan-controls h2{margin-bottom:12px}
+  .coach-plan-controls .coach-field {margin-block:6px}
+  .coach-plan-tools,.coach-plan-launch {margin-block:8px}
+}
+@media print {
+  .page-compare .coach-planner,.page-compare .coach-dialog,
+  .page-compare .coach-dialog::backdrop {display:none!important}
+  html[data-coach-view="editor"] #workspace.coach-picker-page {width:auto;min-height:0}
+}

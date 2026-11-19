@@ -11,6 +11,14 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 from lib.compare import load_compare
 from lib.paths import SITE
+from lib.theme import inject_theme
+
+
+def test_theme_script_is_appended_to_the_outer_document():
+    export = '<script>const page = "<html><body>讲义</body></html>";</script>'
+    html = inject_theme(f"<html><head></head><body>{export}</body></html>")
+    assert export in html
+    assert html.index(export) < html.index("navigator.serviceWorker.register")
 
 
 def test_shipped_case_index_round_trips_all_records():

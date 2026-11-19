@@ -243,6 +243,7 @@ def portal_catalog(stats, bank_size):
                 ),
                 ("quiz.html", "考题与限时模考", f"{bank_size} 道题"),
                 ("compare.html", "裁判尺度对照课", "双案盲判与自由配对"),
+                ("compare.html#coach", "教练备课", "编排课单与课堂投屏"),
                 ("cheatsheet.html", "考点速查卡", f"{cheatsheet_count()} 张"),
                 ("search.html", "全站搜索", "判例与条文"),
             ],

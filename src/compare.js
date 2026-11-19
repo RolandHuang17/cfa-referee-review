@@ -52,12 +52,16 @@
     const shareButton = byId("copy-pair");
     if (shareButton) shareButton.onclick = share;
   }
-  async function share() {
+  function shareAddress() {
     const canonical = document.querySelector('link[rel="canonical"]');
     const local = location.protocol === "file:" || location.hostname === "localhost" ||
       location.hostname.endsWith(".localhost") || location.hostname === "[::1]" || /^127\./.test(location.hostname);
     const url = new URL(local && canonical ? canonical.href : location.href);
     url.search = "";
+    return url;
+  }
+  async function share() {
+    const url = shareAddress();
     url.hash = location.hash;
     const field = byId("share-label");
     try {
@@ -307,12 +311,14 @@
       <label class="compare-field">下次我会先看什么<textarea id="reflection" rows="4">${esc(a.reflection)}</textarea></label>
       <p class="compare-print-note" id="printed-reflection"></p></section>${statusBar()}
       <div class="compare-actions compare-noprint"><button type="button" id="print-review" class="compare-primary">打印复盘单</button>
+      <button type="button" class="compare-secondary" id="coach-from-pair">用这两案新建课单</button>
       <button type="button" id="redo" class="compare-secondary">重新练习</button></div>${historyMenu()}`);
     setupTabs();
     reportSave();
     bindHistory();
     byId("reflection").oninput = e => {a.reflection = e.target.value; save();};
     byId("print-review").onclick = () => window.print();
+    byId("coach-from-pair").onclick = () => coach.fromPair(lesson.cases.map(c=>c.id),lesson.title);
     byId("redo").onclick = () => {
       attempts.fresh(lesson.id);
       attempts.save();
@@ -446,11 +452,13 @@
       <h3>足协评议认定</h3><p>${esc(c.conclusion || "未单列评议结论，可查当期足协原文。")}</p>${source(c)}</article>`);
     shell(header(data.categories[cs[0].category]+" · 双案对读","自由配对","#free","重新选案") +
       `<div class="compare-actions compare-noprint"><button class="compare-secondary" id="swap-pair" type="button">交换两案</button>
+      <button type="button" class="compare-secondary" id="coach-from-pair">用这两案新建课单</button>
       <button id="print-review" type="button" class="compare-secondary">打印对照单</button></div>`+
       tabButtons()+`<div class="compare-grid">${panels.join("")}</div>
       <section class="compare-summary"><h2>现行规则参考</h2><p>${ruleLinks(data.rulesByCategory[cs[0].category])}</p></section>`);
     bindMedia();
     setupTabs();
+    byId("coach-from-pair").onclick = () => coach.fromPair(ids,data.categories[cs[0].category]+"对照课");
     byId("swap-pair").onclick = () => {location.hash = "pair-"+[...ids].reverse().join("~");};
     byId("print-review").onclick = () => window.print();
   }
@@ -464,6 +472,7 @@
   function renderRoute() {
     const hash = location.hash.slice(1);
     if (hash === "main") return;
+    coach.leave();
     stopMedia();
     const previous = route;
     route = hash;
@@ -480,6 +489,7 @@
       return;
     }
     if (hash === "free") {lesson=null; showPicker();}
+    else if (coach.handles(hash)) {lesson=null; coach.open(hash);}
     else if (hash.startsWith("lesson-")) {
       lesson = data.lessons.find(l=>l.id === hash.slice(7));
       if (lesson) { attempts.start(lesson.id); showLesson(); }
@@ -504,9 +514,10 @@
   window.addEventListener("hashchange",renderRoute);
   window.addEventListener("pagehide",stopMedia);
   window.addEventListener("beforeunload", e => {
-    if (attempts.store.pending.size) {e.preventDefault(); e.returnValue = "";}
+    if (attempts.store.pending.size || coach.hasPending()) {e.preventDefault(); e.returnValue = "";}
   });
   window.addEventListener("storage", e => {
+    if (!e.key || e.key.startsWith("cfa.coach.")) coach.storageChanged();
     if (!e.key?.startsWith("cfa.compare.") || !lesson) return;
     // Keep the form being edited. New records can be selected without a reload.
     const menu = byId("history-attempt");
@@ -532,7 +543,9 @@
   });
   window.addEventListener("afterprint",()=>tabsForSize());
   document.addEventListener("cfa:lite",()=>{
+    coach.updateMedia();
     if (lesson) showLesson(); else if (route.startsWith("pair-") && selectedPair.length) showPair(selectedPair);
   });
+  const coach = createCoachWorkspace({caseIndex,data,workspace,esc,matchTitle,citation,mediaBox,bindMedia,stopMedia,source,ruleLinks,shareURL:shareAddress});
   renderRoute();
 })();

@@ -7,6 +7,7 @@ Association's official referee reviews (2024–2026 seasons, 627 cases with vide
 re-organized by a unified teaching taxonomy, plus:
 
 - **Paired case lessons** (compare.html) — four two-case exercises with official CFA evidence, replayable observation clips and printable personal reviews. Pick any two cases in the same teaching category across the three seasons to read them side by side.
+- **[Coach lesson planner](site/compare.html#coach)** lets instructors order cases from all three seasons, write prompts, present one case at a time and reveal the CFA decision on demand. Share a discussion or review handout by link, standalone HTML or print. A separate JSON backup carries private teaching notes between devices.
 - **Per-team impact stats** (stats-2026/2025/2024.html) — every officially confirmed
   wrong call, score-correction analysis, both victim/beneficiary views.
 - **Official unified-caliber briefings** (scale.html) — 104 typical scenarios across

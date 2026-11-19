@@ -308,4 +308,8 @@ def inject_theme(html, meta=""):
     if meta:
         head_extra = f"{meta}\n{head_extra}"
     html = html.replace("</head>", head_extra + "</head>", 1)
-    return html.replace("</body>", f"{_TOGGLE_JS}{_SW_JS}</body>", 1)
+    # Inline exporters can contain another HTML document inside a script string.
+    document, closing, tail = html.rpartition("</body>")
+    if not closing:
+        return html
+    return f"{document}{_TOGGLE_JS}{_SW_JS}{closing}{tail}"

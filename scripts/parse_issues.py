@@ -48,6 +48,9 @@ ISSUE_URL = {
         21: "https://www.thecfa.cn/cppy/20260916/38169.html",
         22: "https://www.thecfa.cn/cppy/20260923/38210.html",
         23: "https://www.thecfa.cn/cppy/20261014/38283.html",
+        24: "https://www.thecfa.cn/cppy/20261028/38340.html",
+        25: "https://www.thecfa.cn/cppy/20261105/38390.html",
+        26: "https://www.thecfa.cn/cppy/20261111/38415.html",
     },
     "2025": {
         1: "https://www.thecfa.cn/zyls1/20250227/35667.html",
@@ -206,9 +209,9 @@ def parse_case_head(text: str):
             if m2:
                 home, away = m2.group(1), m2.group(2)
     minute = ""
-    m = re.search(r"比赛第\s*(\d+)\s*分钟", text)
+    m = re.search(r"比赛第\s*(\d+(?:\s*[+＋]\s*\d+)?)\s*分钟", text)
     if m:
-        minute = m.group(1)
+        minute = re.sub(r"\s+", "", m.group(1)).replace("＋", "+")
     return head, comp, rnd, home, away, minute
 
 
@@ -363,6 +366,15 @@ def parse_issue(html: str, n: int, url: str, seq: int):
         if re.search(r"评议组|对于此判例", text) or cur["conclusion"]:
             cur["conclusion"] += ("\n" if cur["conclusion"] else "") + text
     for c in issue_cases:
+        inline = re.search(
+            r"(?:对于此判例[，,：:]?\s*)?评议组(?:成员)?(?:一致|大多数成员|多数成员)?认为[，,：:]",
+            c["desc"],
+        )
+        if inline:
+            c["conclusion"] = c["desc"][inline.start() :] + (
+                "\\n" + c["conclusion"] if c["conclusion"] else ""
+            )
+            c["desc"] = c["desc"][: inline.start()].rstrip()
         c["conclusion"] = re.sub(
             r"中国足协将继续秉持.*$", "", c["conclusion"], flags=re.S
         ).strip()
@@ -384,6 +396,15 @@ def parse_issue(html: str, n: int, url: str, seq: int):
         "video_count": sum(len(c["videos"]) for c in issue_cases),
     }
     return issue, issue_cases, seq
+
+
+def recount_videos(data):
+    for issue in data["issues"]:
+        issue["video_count"] = sum(
+            len(case["video_files"])
+            for case in data["cases"]
+            if case["issue"] == issue["no"]
+        )
 
 
 def parse_season(season: str):
@@ -413,18 +434,21 @@ def parse_season(season: str):
         del c["videos"]
     # video_count 以去重后的 video_urls 为准（parse_issue 里按原始 videos
     # 计的只是中间值，跨协议重复会虚增）
-    for i in issues:
-        i["video_count"] = sum(
-            len(c["video_urls"]) for c in cases if c["issue"] == i["no"]
-        )
-    return {"season": season, "issues": issues, "cases": cases}
+    data = {"season": season, "issues": issues, "cases": cases}
+    recount_videos(data)
+    return data
 
 
 def main():
     import sys
 
     season = sys.argv[1] if len(sys.argv) > 1 else "2025"
-    data = parse_season(season)
+    if season == "2025":
+        from rebuild_cases import rebuild
+
+        data = rebuild(season)
+    else:
+        data = parse_season(season)
     out = DATA / f"cases-{season}.json"
     out.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     cases = data["cases"]

@@ -2,8 +2,8 @@
 
 [中文文档](README.md) · This is the concise English overview.
 
-A fully offline-capable static site that archives **all 82 issues of the Chinese Football
-Association's official referee reviews (2024–2026 seasons, 615 cases with video)**,
+A fully offline-capable static site that archives **all 85 issues of the Chinese Football
+Association's official referee reviews (2024–2026 seasons, 627 cases with video)**,
 re-organized by a unified teaching taxonomy, plus:
 
 - **Per-team impact stats** (stats-2026/2025/2024.html) — every officially confirmed
@@ -14,10 +14,10 @@ re-organized by a unified teaching taxonomy, plus:
   official IFAB traditional-Chinese PDF, with highlighting and per-chapter notes.
 - **International referee-review library** — official sources translated into Chinese:
   UEFA Clear Line (83 cases), IFAB VAR protocol (full text + FAQ), Spain's RFEF
-  Criterios Arbitrales, USA PRO weekly reviews (207 articles), CONMEBOL VAR cases,
+  Criterios Arbitrales, USA PRO weekly reviews (228 articles), CONMEBOL VAR cases,
   Croatia's HNS weekly analyses, plus a global directory of 23 official resources.
-- **Quiz mode** (quiz.html) — 816 questions with spaced repetition
-  (Leitner scheduler), wrong-answer book, and Anki TSV export.
+- **Quiz mode** (quiz.html) — 842 questions with spaced repetition
+  (Leitner scheduler), category-specific drills for weak topics, a wrong-answer book, and Anki TSV export.
 
 ## Key properties
 

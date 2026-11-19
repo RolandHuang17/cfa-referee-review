@@ -345,13 +345,10 @@ def fix_comp_2024(c):
     return ""
 
 
-def main():
-    import json
+def classify_data(data, *, apply_overrides=True):
     from collections import Counter
 
-    season = sys.argv[1] if len(sys.argv) > 1 else "2025"
-    path = DATA / f"cases-{season}.json"
-    data = json.loads(path.read_text(encoding="utf-8"))
+    season = data["season"]
     cases = data["cases"]
     table = {"2025": CLS_2025, "2024": CLS_2024, "2026": CLS_2026}[season]
     assert len(table) == len(cases), f"分类条目{len(table)} != 判例{len(cases)}"
@@ -435,8 +432,43 @@ def main():
     for cat, name in CATEGORY_NAMES.items():
         cnt = sum(1 for c in cases if c["category"] == cat)
         print(f"  {name}: {cnt}")
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
-    print(f"\n已写回 {path}")
+    if apply_overrides:
+        apply_case_overrides(data)
+    for issue in data["issues"]:
+        issue["parsed_wrong"] = sum(
+            c["referee_verdict"] == "wrong" for c in cases if c["issue"] == issue["no"]
+        )
+    return data
+
+
+def apply_case_overrides(data):
+    import json
+
+    path = DATA / "case-overrides.json"
+    if not path.exists():
+        return
+    table = json.loads(path.read_text(encoding="utf-8"))
+    cases = {str(c["seq"]): c for c in data["cases"]}
+    for seq, patch in table.get(data["season"], {}).items():
+        case = cases[seq]
+        if (case["issue"], case["no"]) != (patch["issue"], patch["no"]):
+            raise ValueError(f"人工校订判例身份变化: {data['season']}-{seq}")
+        for field, edit in patch["fields"].items():
+            if case.get(field) not in (edit["expected"], edit["value"]):
+                raise ValueError(f"人工校订原值变化: {data['season']}-{seq}/{field}")
+            case[field] = edit["value"]
+
+
+def main():
+    import json
+    from lib.atomic_json import write_json
+
+    season = sys.argv[1] if len(sys.argv) > 1 else "2025"
+    path = DATA / f"cases-{season}.json"
+    data = json.loads(path.read_text(encoding="utf-8"))
+    classify_data(data)
+    write_json(path, data)
+    print(f"已写回 {path}")
 
 
 if __name__ == "__main__":

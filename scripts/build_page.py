@@ -6,6 +6,8 @@
 """
 
 import json
+import re
+from lib.issue_notes import ISSUE_NOTES
 import sys
 from datetime import date
 
@@ -14,7 +16,7 @@ from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
 from lib.xlinks import resolve as resolve_xlinks
 
-from lib.paths import DATA, SITE
+from lib.paths import DATA, SITE, SRC
 from lib.site_stats import counts
 
 _COUNTS = counts()
@@ -96,30 +98,6 @@ CATEGORY_NOTES = {
     "other_program": "统一尺度要点：①VAR介入原则：仅限清晰明显的错漏判以及严重事件（红牌、点球、进球、认错人）；VAR查看≠介入，介入的标志是裁判员做出「电视信号」手势；VAR介入后裁判员可不回看而直接采纳结论，但仍须做出电视手势。②裁判员选位跑位影响判罚质量，虽不构成改判依据，但应持续改进。③耳麦通讯受干扰时，对讲机等备用通讯设备的使用符合VAR操作要求。④球队官员在技术区域外实施暴力行为可被红牌罚令出场。",
 }
 
-ISSUE_NOTES = {
-    "2026": {
-        3: "本期标题认定7例；合集另计入2例「申诉问题支持原判但漏判黄牌」的纪律处罚漏判（判例四、判例十五），官方标题口径未计入。",
-        4: "本期标题认定5例；合集另计入点球重罚程序错误与越位误判等纪律/程序类错误。",
-        5: "本期标题认定3例；合集另计入1例漏判黄牌与1例漏判越位进球。",
-        6: "本期标题认定6例；合集另计入1例漏判黄牌。",
-        7: "本期标题认定8例；合集另计入3例纪律处罚漏判与越位误判类错误。",
-        8: "本期标题认定5例；合集另计入1例漏判黄牌。",
-        10: "本期标题认定5例；合集另计入1例多余黄牌。",
-        11: "本期标题口径为「本轮中超无错漏判」（本期中超判例均支持原判）；合集另计入本期中甲/中乙错漏判6例。",
-        13: "本期标题认定5例；合集另计入1例多余黄牌。",
-        14: "本期标题认定2例；合集另计入1例漏判黄牌。",
-        16: "本期标题认定4例；合集另计入1例漏判黄牌。",
-        19: "本期标题认定3例；合集另计入1例多余黄牌。",
-        22: "本期标题口径为「本轮中超无错漏判」（本期无中超判例）；合集计入中甲/中乙错漏判2例。",
-    },
-    "2025": {
-        9: "本期标题认定6例，其中判例三为VAR越位划线错误（评议组对裁判员判定不予认定），本合集计入VAR错误统计。",
-        26: "本期判例七（头撞事件）当期未认定，第27期补充认定为漏判红牌；本合集将该错漏判随原判例计入第26期。",
-        27: "本期文章的认定1例为对第26期判例七的补充认定（已计入第26期）；本期新增判例二经评议为支持原判。",
-        31: "本期标题口径下判例四（红牌问题）不予认定；评议组同时认定申花10号动作构成非体育行为、应黄牌警告，本合集按口径将未出示黄牌计入错漏判（漏判黄牌）。",
-    },
-    "2024": {},
-}
 
 VERDICT_NAME = {"wrong": "错漏判", "correct": "支持原判", "pending": "不予认定"}
 # 教学分类 ↔ 规则章节 ↔ 尺度场景 互链（data/xlinks.json 策表解析产物，三季共用）
@@ -165,8 +143,45 @@ def build_paths(raw_cases):
 VAR_NAME = {"correct": "VAR正确", "wrong": "VAR错误", "none": ""}
 
 
+def rule_context(case, scores, editions, published):
+    match = re.search(r"第(\d+)轮", case.get("round", ""))
+    round_no = match.group(1) if match else "0"
+    key = "|".join(
+        (
+            case.get("comp", ""),
+            round_no,
+            normalize_team(case.get("home", "")),
+            normalize_team(case.get("away", "")),
+        )
+    )
+    record = scores.get(key, {})
+    day = record.get("date", "")
+    verified = bool(record.get("source")) and record["source"] != "待补"
+    try:
+        match_day = date.fromisoformat(day)
+        published_day = date.fromisoformat(
+            f"{published[:4]}-{published[4:6]}-{published[6:]}"
+        )
+        verified = (
+            verified and day == match_day.isoformat() and match_day <= published_day
+        )
+    except (ValueError, TypeError):
+        verified = False
+    if not verified:
+        return {"date": "", "edition": "", "source": ""}
+    applicable = [e for e in editions if e["effective"] <= day]
+    if not applicable:
+        return {"date": day, "edition": "", "source": ""}
+    return {"date": day, **applicable[-1]}
+
+
 def build_data(season):
     data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+    scores = json.loads(
+        (DATA / f"match-scores-{season}.json").read_text(encoding="utf-8")
+    )["scores"]
+    editions = json.loads((DATA / "rule-editions.json").read_text(encoding="utf-8"))
+    published = {i["no"]: i["date"] for i in data["issues"]}
     cases = []
     for c in data["cases"]:
         comp = COMP_ALIAS.get(c.get("comp", ""), c.get("comp", ""))
@@ -202,6 +217,9 @@ def build_data(season):
                 "video_urls": c["video_urls"],
                 "category": c["category"],
                 "tags": c.get("tags", []),
+                "rule_context": rule_context(
+                    c, scores, editions, published.get(c["issue"], "")
+                ),
                 "v": c["referee_verdict"],
                 "var": c["var_verdict"],
             }
@@ -250,6 +268,7 @@ HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>__TITLE__</title>
 <style>
@@ -600,9 +619,11 @@ __TOPBAR__
       <div class="notewrap" id="noteWrap" style="display:none">
         <div class="note-tools">
           <button class="ntbtn" id="btnNoteTime" title="在光标处插入当前视频时间标记（如 [12:34]，完整版有视频时可用）">⏱ 插入时间标记</button>
-          <span class="nstatus" id="noteStatus"></span>
+          <span class="nstatus" id="noteStatus" role="status"></span>
         </div>
         <textarea id="noteBox" placeholder="写下你的学习笔记…（自动保存；复盘时可用「⏱ 插入时间标记」记录视频时刻，预览中的 [时间] 可点击跳转）"></textarea>
+        <div id="noteCopies"></div><div role="status" id="writeStatus"></div>
+        <button type="button" class="btn" id="retryWrite" hidden>重试保存</button>
         <div class="note-view" id="noteView" style="display:none"></div>
       </div>
       <div class="fmlinks" id="dXlinks" style="display:none"></div>
@@ -670,6 +691,8 @@ __TOPBAR__
 </div>
 
 <script>
+__RECORDS_JS__
+__CALENDAR_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const CATS = DATA.categories;
@@ -689,12 +712,14 @@ const CFG = DATA.cfg;
 const FAV_KEY = CFG.favKey, NOTE_KEY = CFG.noteKey;
 const SEEN_KEY = CFG.seenKey, LAST_KEY = CFG.lastKey;
 const TAG_PRESETS = ["精选", "有疑问", "尺度标杆", "易错点", "课堂讨论"];
-let fav = {}, notes = {};
-try { fav = JSON.parse(localStorage.getItem(FAV_KEY) || "{}") || {}; } catch(_) { fav = {}; }
-try { notes = JSON.parse(localStorage.getItem(NOTE_KEY) || "{}") || {}; } catch(_) { notes = {}; }
-function persistFav() {
-  try { localStorage.setItem(FAV_KEY, JSON.stringify(fav));
-        localStorage.setItem(NOTE_KEY, JSON.stringify(notes)); } catch(_) {}
+const favStore = new LearningRecords(FAV_KEY);
+const noteStore = new LearningRecords(NOTE_KEY, true);
+let fav = favStore.read(), notes = noteStore.read();
+function persistFav(seq) {
+  const value = fav[seq];
+  favStore.put(seq, value ? {...value, ts: Date.now()} : null, favStore.base(seq));
+  fav = favStore.read();
+  showWriteStatus();
 }
 function isFav(seq) { return !!fav[seq]; }
 function hasNote(seq) { return !!(notes[seq] && notes[seq].text && notes[seq].text.trim()); }
@@ -718,17 +743,6 @@ function updateSeenUI(seq) {
   renderCats();
 }
 // 连续学习天数（跨页共享 cfa.streak：访问 season 页即记一天；quiz 出卷也记）
-function streakTouch() {
-  const d = new Date();
-  const today = d.toISOString().slice(0, 10);
-  const yesterday = new Date(d.getTime() - 86400000).toISOString().slice(0, 10);
-  let st = { last: "", days: 0 };
-  try { st = JSON.parse(localStorage.getItem("cfa.streak") || '{"last":"","days":0}') || st; } catch(_) {}
-  if (st.last === today) return;
-  st.days = st.last === yesterday ? (st.days || 0) + 1 : 1;
-  st.last = today;
-  try { localStorage.setItem("cfa.streak", JSON.stringify(st)); } catch(_) {}
-}
 function crest(team, h, mark) {
   const item = DATA.teams && DATA.teams[team];
   if (!item) return `<span class="team-badge" title="${esc(team)}：未登记">?</span>`;
@@ -1129,8 +1143,15 @@ function select(seq, scrollRow=true){
     const box = document.getElementById("dXlinks");
     if (xl && (xl.laws.length || xl.scale.length)){
       const parts = [];
+      const rule = c.rule_context || {};
+      const context = rule.edition
+        ? "已核比赛日期 " + rule.date + " · 执行版本参考 " + rule.edition
+        : (rule.date ? "比赛日期 " + rule.date + " · 适用版本待核" : "比赛当日适用规则版本待核");
+      parts.push('<span class="fml-k">' + esc(context) + '</span>');
+      if (rule.source) parts.push(`<a class="fml-link" href="${esc(rule.source)}" target="_blank" rel="noopener noreferrer">官方执行依据</a>`);
+
       if (xl.laws.length)
-        parts.push(`<span class="fml-k">关联规则</span>` + xl.laws.map(l=>
+        parts.push(`<span class="fml-k">现行规则 2026/27</span>` + xl.laws.map(l=>
           `<a class="fml-link" href="${esc(l.url)}">${IC.book}${esc(l.title)}</a>`).join(""));
       if (xl.scale.length)
         parts.push(`<span class="fml-k">尺度场景</span>` + xl.scale.map(s=>
@@ -1187,9 +1208,10 @@ function step(dir){
 // ---------- 收藏与笔记 ----------
 function toggleFav(seq){
   const c = bySeq[seq]; if(!c) return;
+  fav = favStore.read();
   if (isFav(seq)) delete fav[seq];
   else fav[seq] = {tags: [], ts: Date.now()};
-  persistFav();
+  persistFav(seq);
   renderFavUI(c); renderFavList();
   const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
   if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
@@ -1198,6 +1220,7 @@ function renderFavUI(c){
   const btn = document.getElementById("favBtn");
   if (!btn) return;
   btn.classList.toggle("on", isFav(c.seq));
+  btn.setAttribute("aria-pressed", String(isFav(c.seq)));
   btn.innerHTML = isFav(c.seq) ? `${IC["star-f"]} 已收藏` : `${IC.star} 收藏`;
   const box = document.getElementById("favTags");
   if (!isFav(c.seq)) { box.style.display = "none"; return; }
@@ -1211,12 +1234,14 @@ function renderFavUI(c){
     `<input id="customTag" placeholder="自定义标签"><button class="ftag" id="addTag">添加</button>`;
 }
 document.getElementById("favTags").addEventListener("click", e=>{
+  fav = favStore.read();
   const del = e.target.closest("[data-del]");
   if (del) {
     const c = bySeq[state.sel]; if(!c) return;
-    const arr = fav[c.seq]?.tags || [];
+    if (!fav[c.seq]) { renderFavUI(c); return; }
+    const arr = fav[c.seq].tags || [];
     fav[c.seq].tags = arr.filter(t=>t!==del.dataset.del);
-    persistFav(); renderFavUI(c); renderFavList();
+    persistFav(c.seq); renderFavUI(c); renderFavList();
     return;
   }
   if (e.target.id === "addTag") {
@@ -1227,7 +1252,7 @@ document.getElementById("favTags").addEventListener("click", e=>{
     if (!fav[c.seq]) fav[c.seq] = {tags:[], ts:Date.now()};
     fav[c.seq].tags = fav[c.seq].tags||[];
     if (!fav[c.seq].tags.includes(t)) fav[c.seq].tags.push(t);
-    persistFav(); renderFavUI(c); renderFavList();
+    persistFav(c.seq); renderFavUI(c); renderFavList();
     return;
   }
   const chip = e.target.closest(".ftag[data-tag]");
@@ -1238,7 +1263,7 @@ document.getElementById("favTags").addEventListener("click", e=>{
     const t = chip.dataset.tag;
     if (fav[c.seq].tags.includes(t)) fav[c.seq].tags = fav[c.seq].tags.filter(x=>x!==t);
     else fav[c.seq].tags.push(t);
-    persistFav(); renderFavUI(c); renderFavList();
+    persistFav(c.seq); renderFavUI(c); renderFavList();
   }
 });
 document.getElementById("favTags").addEventListener("keydown", e=>{
@@ -1251,13 +1276,8 @@ document.getElementById("dHead").addEventListener("click", e=>{
   if (e.target.closest("#favBtn")) toggleFav(state.sel);
 });
 function renderNoteUI(c){
-  flushNote();
-  const wrap = document.getElementById("noteWrap");
-  wrap.style.display = "block";
-  document.getElementById("noteBox").value = (notes[c.seq]&&notes[c.seq].text)||"";
-  document.getElementById("noteStatus").textContent =
-    hasNote(c.seq) ? "已保存" : "自动保存，无需手动确认";
-  renderNoteView();
+  document.getElementById("noteWrap").style.display = "block";
+  noteEditor.open(c.seq);
 }
 // ---------- 时间戳笔记：[mm:ss] 标记可点击跳转视频 ----------
 function fmtTs(sec){
@@ -1294,45 +1314,23 @@ document.getElementById("btnNoteTime").addEventListener("click", ()=>{
   box.focus(); box.setSelectionRange(np, np);
   box.dispatchEvent(new Event("input", {bubbles:true}));
 });
-let noteTimer = null;
-let pendingNote = null;  // 输入时冻结的 {seq, text}，防止切题后旧定时器读到新 textarea
-function saveNote(seq, text){
-  if (!seq) return;
-  if (text.trim()) notes[seq] = {text, ts: Date.now()};
-  else delete notes[seq];
-  persistFav();
+const noteEditor = new LearningNoteEditor(noteStore, {
+  input: "noteBox", status: "noteStatus", copies: "noteCopies",
+}, () => {
+  notes = noteStore.read();
+  showWriteStatus();
+  renderNoteView();
   renderFavList();
-  const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-  if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
-  if (state.sel === seq){
-    const d = new Date();
-    document.getElementById("noteStatus").textContent =
-      "已保存 " + String(d.getHours()).padStart(2,"0") + ":" + String(d.getMinutes()).padStart(2,"0");
-    renderNoteView();
-  }
-}
-function flushNote(){
-  if (noteTimer !== null){ clearTimeout(noteTimer); noteTimer = null; }
-  if (!pendingNote) return;
-  const p = pendingNote; pendingNote = null;
-  saveNote(p.seq, p.text);
-}
-document.getElementById("noteBox").addEventListener("input", ()=>{
-  const seq = state.sel; if(!seq) return;
-  if (pendingNote && pendingNote.seq !== seq) flushNote();
-  pendingNote = {seq, text: document.getElementById("noteBox").value};
-  document.getElementById("noteStatus").textContent = "正在保存…";
-  if (noteTimer !== null) clearTimeout(noteTimer);
-  noteTimer = setTimeout(()=>{
-    noteTimer = null;
-    const p = pendingNote; pendingNote = null;
-    if (p) saveNote(p.seq, p.text);
-  }, 800);
+  const seq = noteEditor.id;
+  const mark = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
+  if (mark) mark.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
 });
-window.addEventListener("pagehide", flushNote);
-document.addEventListener("visibilitychange", ()=>{
-  if (document.visibilityState === "hidden") flushNote();
-});
+const showWriteStatus = watchLearningWrites([noteStore, favStore], document.getElementById("retryWrite"),
+  document.getElementById("writeStatus"), () => {
+    fav = favStore.read();
+    if (bySeq[state.sel]) { noteEditor.open(state.sel); renderFavUI(bySeq[state.sel]); }
+  });
+function flushNote(){ noteEditor.flush(); }
 
 // ---------- 笔记汇总弹层：全季一览 + 笔记内搜索 + 点击跳判例 ----------
 function renderNotesView(){
@@ -1389,6 +1387,8 @@ document.getElementById("favList").addEventListener("click", e=>{
   applyFilter();
 });
 document.getElementById("btnExport").onclick = ()=>{
+  flushNote();
+  fav = favStore.read(); notes = noteStore.read();
   const blob = new Blob([JSON.stringify({fav, notes, exported: new Date().toISOString(), app:"cfa-referee-review-"+CFG.season}, null, 1)],
     {type:"application/json"});
   const a = document.createElement("a");
@@ -1403,19 +1403,28 @@ document.getElementById("importFile").addEventListener("change", e=>{
   const rd = new FileReader();
   rd.onload = () => {
     try {
+      flushNote();
       const d = JSON.parse(rd.result);
       if (d.app !== "cfa-referee-review-" + CFG.season) {
         alert("导入失败：这不是当前赛季导出的收藏与笔记文件"); return;
       }
       let n = 0;
-      for (const [s, v] of Object.entries(d.fav||{})) {
-        if (!fav[s] || (v.ts||0) > (fav[s].ts||0)) { fav[s] = v; n++; }
+      fav = favStore.read(); notes = noteStore.read();
+      for (const [s, v] of Object.entries(d.fav || {})) {
+        if (!bySeq[s] || !v || !Array.isArray(v.tags) || !v.tags.every(t => typeof t === "string")) continue;
+        if (!fav[s] || (v.ts || 0) > (fav[s].ts || 0)) {
+          favStore.put(s, {tags: v.tags, ts: Number(v.ts) || 0}, favStore.base(s)); n++;
+        }
       }
-      for (const [s, v] of Object.entries(d.notes||{})) {
-        if (!notes[s] || (v.ts||0) > (notes[s].ts||0)) { notes[s] = v; n++; }
+      for (const [s, raw] of Object.entries(d.notes || {})) {
+        const v = noteFromBackup(raw);
+        if (bySeq[s] && v && (!notes[s] || v.ts > (notes[s].ts || 0))) {
+          noteStore.put(s, v, noteStore.base(s)); n++;
+        }
       }
-      persistFav(); renderFavList(); applyFilter();
-      alert(`导入完成：合并了 ${n} 条记录`);
+      fav = favStore.read(); notes = noteStore.read(); showWriteStatus(); renderFavList(); applyFilter();
+      if (bySeq[state.sel]) { renderNoteUI(bySeq[state.sel]); renderFavUI(bySeq[state.sel]); }
+      alert((favStore.pending.size || noteStore.pending.size ? '已读入，部分记录待保存' : '导入完成') + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }
   };
   rd.readAsText(f, "utf-8");
@@ -1480,13 +1489,27 @@ document.getElementById("vswRow").addEventListener("click", e=>{
   applyRate();
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
-document.getElementById("btnSb").onclick = ()=>{
-  // 桌面端收起/展开侧栏; 窄屏(≤1080px)侧栏为抽屉,切换其开合
-  if (window.matchMedia && matchMedia("(max-width:1080px)").matches)
-    document.body.classList.toggle("sb-open");
-  else
+const sbButton = document.getElementById("btnSb");
+function closeSidebar(){
+  document.body.classList.remove("sb-open");
+  sbButton.setAttribute("aria-expanded", "false");
+  sbButton.focus();
+}
+sbButton.onclick = ()=>{
+  if (matchMedia("(max-width:1080px)").matches){
+    const open = document.body.classList.toggle("sb-open");
+    sbButton.setAttribute("aria-expanded", String(open));
+    if (open) document.getElementById("fSearch").focus();
+  } else {
     document.body.classList.toggle("sb-off");
+  }
 };
+document.addEventListener("keydown", e=>{
+  if (e.key === "Escape" && document.body.classList.contains("sb-open")){
+    e.preventDefault();
+    closeSidebar();
+  }
+});
 document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
 document.getElementById("btnTop").onclick = ()=>document.getElementById("detail").scrollTo({top:0,behavior:"smooth"});
 document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
@@ -1651,6 +1674,7 @@ const hasPen = t => (t||[]).includes("点球");
     <p><b>隐藏答案模式：</b>顶栏「隐藏答案」按钮开启（自动记忆，三赛季页共用）。开启后详情只显示比赛事件与申诉意见，评议组认定、判定徽章、分类要点与标签全部隐藏，列表中的判定圆点与判定文字也会隐去——先看视频自己判断，再点「显示本题答案」逐题揭示；切换判例后重新隐藏，适合自测式学习。判定筛选与统计总表仍可正常使用。</p>
     <p><b>视频播放：</b>完整版优先播放本地 videos 文件夹；在线访问（如 GitHub Pages）本地视频缺失时，会自动改用官方直链在线播放，离线用户不受任何影响。</p>
     <p><b>数据来源：</b>中国足球协会官方网站「裁判评议结果发布」栏目，${CFG.issueDesc}。每条判例附原文链接。</p>
+    <p>本页规则链接用于现行规则学习。历史比赛适用版本须结合比赛日期与赛事执行通知核对。</p>
     <p><b>期数口径注释：</b>${issNotes ? issNotes + "。" : ""}其余各期与官方标题认定数一致。</p>
     <p><b>离线使用：</b>将本页 HTML 与 videos 文件夹放在一起，双击即可离线学习；配套页面 <a href="${CFG.stats}" target="_blank">${CFG.stats}</a> 为各队得失盘点。</p>
     <p><b>声明：</b>本合集为教学研究用途，判罚认定权属于中国足协裁判委员会评议组。</p>`;
@@ -1658,7 +1682,7 @@ const hasPen = t => (t||[]).includes("点球");
 
 // ---------- 初始化 ----------
 syncEmptyState();
-streakTouch();
+touchStudyDay();
 renderPaths();
 document.getElementById("totalCount").textContent = DATA.cases.length;
 document.getElementById("seenCount").textContent = Object.keys(seen).length;
@@ -1760,6 +1784,12 @@ def build_season(season):
     }
     html = inject_theme(
         HTML.replace("__DATA__", data_js)
+        .replace(
+            "__RECORDS_JS__", (SRC / "learning-records.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__CALENDAR_JS__", (SRC / "study-calendar.js").read_text(encoding="utf-8")
+        )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)
         .replace("__TITLE__", cfg["title"])

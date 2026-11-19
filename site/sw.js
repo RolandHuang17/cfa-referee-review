@@ -1,53 +1,67 @@
 "use strict";
-// 裁判学习平台 Service Worker：在线版断网可读（file:// 离线用法不经此处）
-const VERSION = "202610262345";
-const CACHE = "cfa-site-" + VERSION;
-
-self.addEventListener("install", (e) => {
-  self.skipWaiting();
-  e.waitUntil(caches.open(CACHE).then((c) => c.addAll(["icon.svg"])).catch(() => {}));
-});
-
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) =>
-      Promise.all(keys.filter((k) => k !== CACHE).map((k) => caches.delete(k)))
-    ).then(() => self.clients.claim())
-  );
-});
-
-self.addEventListener("fetch", (e) => {
-  const req = e.request;
-  if (req.method !== "GET") return;
-  const url = new URL(req.url);
-  if (url.origin !== location.origin) return;      // 外域（官方视频/YouTube 等）不碰
-  if (url.pathname.includes("/videos/")) return;   // 本地视频目录不进缓存（约 30GB）
-  if (url.pathname.endsWith("feed.xml") || url.pathname.endsWith("sitemap.xml")) return;
-
-  if (req.mode === "navigate") {
-    // 页面：网络优先（保证发布后更新即时可见），断网回退缓存，再兜底到已存首页
-    e.respondWith(
-      fetch(req).then((resp) => {
-        const copy = resp.clone();
-        caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
-        return resp;
-      }).catch(() =>
-        caches.match(req).then((hit) => hit || caches.match("index.html"))
-      )
-    );
-    return;
-  }
-  // 静态资源：缓存优先 + 后台更新（队徽等小资源重复访问零请求）
-  e.respondWith(
-    caches.match(req).then((hit) => {
-      const net = fetch(req).then((resp) => {
-        if (resp.ok) {
-          const copy = resp.clone();
-          caches.open(CACHE).then((c) => c.put(req, copy)).catch(() => {});
+const VERSION = "9c7854c34e91ffbf";
+const SCOPE = new URL(self.registration.scope).pathname;
+const PREFIX = "cfa-site-" + encodeURIComponent(SCOPE) + "-";
+const CACHE = PREFIX + VERSION;
+const owned = (url) => {
+  const parsed = new URL(url);
+  return parsed.origin === location.origin && parsed.pathname.startsWith(SCOPE)
+    && !parsed.pathname.includes("/videos/");
+};
+self.addEventListener("install", e => {
+  e.waitUntil((async () => {
+    const cache = await caches.open(CACHE);
+    const keys = await caches.keys();
+    for (const key of keys.filter(k => k !== CACHE && (k.startsWith(PREFIX) || /^cfa-site-\d+$/.test(k)))){
+      const old = await caches.open(key);
+      for (const req of await old.keys()){
+        if (owned(req.url)){
+          const response = await old.match(req);
+          if (response && response.ok) await cache.put(req, response);
         }
-        return resp;
-      }).catch(() => hit);
-      return hit || net;
-    })
-  );
+      }
+    }
+    await cache.addAll(["index.html", "404.html", "icon.svg"]);
+    await self.skipWaiting();
+  })());
+});
+self.addEventListener("activate", e => {
+  e.waitUntil((async () => {
+    for (const key of await caches.keys()){
+      if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
+    }
+    await self.clients.claim();
+  })());
+});
+self.addEventListener("fetch", e => {
+  const req = e.request;
+  if (req.method !== "GET" || !owned(req.url)) return;
+  const url = new URL(req.url);
+  if (url.pathname.endsWith("feed.xml") || url.pathname.endsWith("sitemap.xml")) return;
+  async function network(cache){
+    const response = await fetch(req);
+    if (response.ok) await cache.put(req, response.clone());
+    return response;
+  }
+  if (req.mode === "navigate"){
+    e.respondWith((async () => {
+      const cache = await caches.open(CACHE);
+      try {
+        const response = await network(cache);
+        if (response.ok || response.status < 500) return response;
+      } catch (_) {}
+      // Static HTML reads its filters and search terms in the browser.
+      const saved = await cache.match(req, {ignoreSearch: url.pathname.endsWith(".html")});
+      return saved || (await cache.match("404.html")) ||
+        new Response("当前页面尚未离线保存，请联网后重试。", {status:503, headers:{"Content-Type":"text/plain;charset=utf-8"}});
+    })());
+  } else {
+    const update = caches.open(CACHE).then(cache => network(cache)).catch(() => undefined);
+    e.waitUntil(update);
+    e.respondWith((async () => {
+      const cache = await caches.open(CACHE);
+      return (await cache.match(req)) || (await update) ||
+        new Response("", {status:503});
+    })());
+  }
 });

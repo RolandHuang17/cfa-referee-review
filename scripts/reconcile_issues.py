@@ -11,11 +11,12 @@ import sys
 
 from lib.paths import DATA
 from lib.site_stats import SEASONS
+from lib.issue_notes import title_wrong_count
 
 
 def main(argv):
     seasons = argv or list(SEASONS)
-    total = 0
+    total = undisclosed = 0
     for season in seasons:
         data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         cases = data["cases"]
@@ -27,7 +28,13 @@ def main(argv):
                 for c in cases
                 if c["issue"] == no and c.get("referee_verdict") == "wrong"
             )
-            expected = issue.get("expected_wrong", 0)
+            expected = title_wrong_count(issue)
+            if expected is None:
+                undisclosed += 1
+                print(
+                    f"期{no:02d}  标题未披露  合集 wrong {actual}  {issue.get('title', '')[:70]}"
+                )
+                continue
             if actual == expected:
                 continue
             total += 1
@@ -35,7 +42,9 @@ def main(argv):
                 f"期{no:02d}  标题认定 {expected}  合集 wrong {actual}  "
                 f"{issue.get('title', '')[:70]}"
             )
-    print(f"\n差异 {total} 期（仅列出，需人工判断是否为口径差异）")
+    print(
+        f"\n明确数量差异 {total} 期；标题未披露数量 {undisclosed} 期（未披露不视为零，差异需按口径复核）"
+    )
     return 0
 
 

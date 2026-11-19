@@ -5,7 +5,7 @@ import shutil
 import subprocess
 import sys
 
-from lib.paths import ASSETS, IFAB_PDF, ROOT, SCRIPTS, SITE, SITE_ASSETS
+from lib.paths import ASSETS, ROOT, SCRIPTS, SITE, SITE_ASSETS
 
 
 def run(script, *args):
@@ -15,19 +15,12 @@ def run(script, *args):
 
 def main():
     SITE.mkdir(parents=True, exist_ok=True)
-    if IFAB_PDF.exists():
-        run("build_rules.py")
-    elif not (SITE / "rules.html").exists():
-        raise SystemExit(
-            "缺少规则 PDF，且 site/rules.html 不存在；请先运行 fetch_laws.py"
-        )
-    else:
-        print("未找到规则 PDF，保留仓库中的 site/rules.html")
+    run("build_rules.py", "--from-json")
     run("fetch_crests.py")
     run("build_portal.py")
     run("build_page.py")
     run("build_stats.py")
-    run("build_scale.py")
+    run("build_scale.py", "--from-json")
     run("build_uefa.py")
     run("build_rap.py")
     run("build_rfef.py")
@@ -40,9 +33,9 @@ def main():
     run("build_quiz.py")
     run("build_cheatsheet.py")
     run("build_search.py")
-    run("build_pwa.py")
     run("build_seo.py")
     run("build_feed.py")
+    run("build_pwa.py")
     if SITE_ASSETS.exists():
         shutil.rmtree(SITE_ASSETS)
     shutil.copytree(ASSETS, SITE_ASSETS)

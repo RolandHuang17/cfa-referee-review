@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 """安全HTTP模块：域名白名单 + HTTPS + DNS解析公网校验 + IP钉扎(防DNS rebinding) + 受限手动重定向"""
 
+from contextlib import closing
 import http.client
+import os
+import re
 import ipaddress
 import json
 import socket
@@ -186,71 +189,84 @@ def head_size(url: str, timeout=30):
 
 
 def download(url: str, dest: Path, headers=None, timeout=60, retries=5, progress=False):
-    """断点续传下载。返回 (status, final_size)。已完整则跳过。"""
-    import os
-
+    """已完整则跳过。仅在收到完整响应或服务端确认分片长度后原子发布。"""
     dest = Path(dest)
     dest.parent.mkdir(parents=True, exist_ok=True)
     tmp = dest.with_suffix(dest.suffix + ".part")
     if dest.exists() and not tmp.exists():
-        return 200, dest.stat().st_size  # 之前已完整下载
-    have = tmp.stat().st_size if tmp.exists() else 0
+        return 200, dest.stat().st_size
+    restart = False
+    last_error = None
     for attempt in range(1, retries + 1):
         try:
-            have = tmp.stat().st_size if tmp.exists() else 0
+            have = tmp.stat().st_size if tmp.exists() and not restart else 0
             h = dict(headers or {})
             if have:
                 h["Range"] = f"bytes={have}-"
             status, hdrs, resp, conn = safe_request(url, headers=h, timeout=timeout)
-            if status == 416:  # 已下载完整但未改名
-                resp.close()
-                conn.close()
-                size = tmp.stat().st_size  # 先取大小再改名，replace 后 tmp 不存在
-                os.replace(tmp, dest)
-                return 200, size
-            if status not in (200, 206):
-                resp.close()
-                conn.close()
-                raise RuntimeError(f"HTTP {status}")
-            if status == 200 and have:  # 服务器不支持Range，重下
-                have = 0
-                tmp.unlink(missing_ok=True)
-            total = None
-            cr = hdrs.get("content-range")
-            cl = hdrs.get("content-length")
-            if cr and "/" in cr:
-                total = (
-                    int(cr.rsplit("/", 1)[-1])
-                    if cr.rsplit("/", 1)[-1].isdigit()
-                    else None
-                )
-            elif cl:
-                total = int(cl) + (have if status == 206 else 0)
-            mode = "ab" if status == 206 and have else "wb"
-            done = 0 if mode == "wb" else have
-            with open(tmp, mode) as f:
-                while True:
-                    chunk = resp.read(1 << 17)
-                    if not chunk:
-                        break
-                    f.write(chunk)
-                    done += len(chunk)
-                    if progress and total:
-                        print(
-                            f"\r    {done / 1e6:.1f}/{total / 1e6:.1f}MB",
-                            end="",
-                            flush=True,
-                        )
-            resp.close()
-            conn.close()
-            if total and done != total:
-                raise RuntimeError(f"大小不符 {done}!={total}")
+            with closing(conn), closing(resp):
+                cr = hdrs.get("content-range", "").strip()
+                if status == 416:
+                    match = re.fullmatch(r"bytes \*/(\d+)", cr, re.I)
+                    if have and match and int(match[1]) == have:
+                        os.replace(tmp, dest)
+                        return 200, have
+                    restart = True
+                    raise RuntimeError("416 响应未确认分片完整，将重新请求整个文件")
+                if status not in (200, 206):
+                    raise RuntimeError(f"HTTP {status}")
+                size = hdrs.get("content-length")
+                total = int(size) if size is not None else None
+                if status == 206:
+                    match = re.fullmatch(r"bytes (\d+)-(\d+)/(\d+)", cr, re.I)
+                    if not match:
+                        restart = True
+                        raise RuntimeError("206 响应缺少有效的 Content-Range")
+                    start, end, full_size = map(int, match.groups())
+                    if (
+                        start != have
+                        or not start <= end < full_size
+                        or (total is not None and total != end - start + 1)
+                    ):
+                        restart = True
+                        raise RuntimeError("206 响应的区间与请求分片不一致")
+                    total = full_size
+                else:
+                    have = 0
+                restart = False
+                done = have
+                with tmp.open("ab" if have else "wb") as f:
+                    while chunk := resp.read(1 << 17):
+                        f.write(chunk)
+                        done += len(chunk)
+                        if progress and total:
+                            print(
+                                f"\r    {done / 1e6:.1f}/{total / 1e6:.1f}MB",
+                                end="",
+                                flush=True,
+                            )
+                if status == 206 and done != end + 1:
+                    restart = done > end + 1
+                    raise RuntimeError("206 响应的实际长度与声明区间不同")
+                if total is not None and done != total:
+                    restart = done > total
+                    raise RuntimeError(f"大小不符 {done}!={total}")
             os.replace(tmp, dest)
             if progress:
                 print()
             return 200, done
-        except Exception as e:  # noqa: BLE001
+        except (
+            OSError,
+            http.client.HTTPException,
+            RuntimeError,
+            SecurityError,
+            ValueError,
+        ) as exc:
+            last_error = exc
             if progress:
-                print(f"\n    重试{attempt}: {e}")
-            time.sleep(1.5 * attempt)
-    raise RuntimeError(f"下载失败(重试{retries}次): {url}")
+                print(f"\n    请求 {attempt} 失败: {exc}")
+            if attempt < retries:
+                time.sleep(1.5 * attempt)
+    raise RuntimeError(
+        f"下载失败(重试{retries}次): {url}: {last_error}"
+    ) from last_error

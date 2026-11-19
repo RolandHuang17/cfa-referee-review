@@ -19,7 +19,7 @@ import json
 from datetime import date
 
 from lib.crest_catalog import load_catalog, normalize_team
-from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE
+from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE, SRC
 from lib.seo import meta_tags
 from lib.site_stats import is_quiz_case, is_quiz_scale
 from lib.theme import icon, inject_theme, js_icons, topbar
@@ -239,6 +239,7 @@ def build_bank():
                     a["c"] = ans["c"]
                 if a:
                     item["ans"] = a
+                item["discipline_target"] = ans.get("discipline_target", "")
             bank.append(item)
     n_scale = 0
     if SCALE_JSON.exists():
@@ -345,6 +346,7 @@ HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
 <head>
 <meta charset="utf-8">
+<meta name="referrer" content="no-referrer">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>考题模式 · 裁判学习平台</title>
 <style>
@@ -479,12 +481,13 @@ __TOPBAR__
 <!-- 开始屏 -->
 <section id="scrStart">
   <h1 class="page-h">考题模式</h1>
-  <p class="page-sub">从三赛季评议判例与官方统一尺度场景中随机出题——先看视频做出你的判罚，再对照评议组认定算分。错题自动进错题本，记住你的错选，方便查缺补漏。</p>
+  <p class="page-sub">用赛季判例、尺度场景、VAR 协议和规则理论四类题目练习。作答后可以对照官方认定或条文，再复练错题。</p>
   <div class="panel">
     <div class="stat">
       <div><b>__N_CASE__</b><span>赛季判例</span></div>
       <div><b>__N_SCALE__</b><span>尺度场景</span></div>
       <div><b>__N_VAR__</b><span>VAR 协议题</span></div>
+      <div><b>__N_THEORY__</b><span>规则理论</span></div>
       <div><b id="nWrong">0</b><span>错题本</span></div>
       <div><b id="nStar">0</b><span>收藏错题</span></div>
     </div>
@@ -513,6 +516,9 @@ __TOPBAR__
         <button data-v="scale">尺度场景</button><button data-v="var">VAR 协议题</button>
         <button data-v="theory">规则理论</button>
       </div>
+    </div>
+    <div class="frow"><label class="flbl" for="categoryFilter">教学分类</label>
+      <select id="categoryFilter" class="btn"><option value="">全部分类</option></select>
     </div>
     <div class="frow"><span class="flbl">赛季</span>
       <div id="seasonChips"></div>
@@ -601,6 +607,7 @@ __TOPBAR__
 <button class="top-btn" id="btnTop">__I_UP__ 回到顶部</button>
 
 <script>
+__CALENDAR_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const CFG = DATA.cfg;
@@ -678,52 +685,57 @@ function recordStat(k, ok){
   qstats[k] = e;
   try { localStorage.setItem(STATS_KEY, JSON.stringify(qstats)); } catch(_) {}
 }
-function streakTouch(){
-  const d = new Date();
-  const today = d.toISOString().slice(0, 10);
-  const yesterday = new Date(d.getTime() - 86400000).toISOString().slice(0, 10);
-  let st = { last: "", days: 0 };
-  try { st = JSON.parse(localStorage.getItem("cfa.streak") || '{"last":"","days":0}') || st; } catch(_) {}
-  if (st.last === today) return;
-  st.days = st.last === yesterday ? (st.days || 0) + 1 : 1;
-  st.last = today;
-  try { localStorage.setItem("cfa.streak", JSON.stringify(st)); } catch(_) {}
-}
-
 // ---------- 考试计时（倒计时结束自动交卷；练习模式不启用） ----------
 let examTimer = null;
 function fmtMS(sec){
   const m = Math.floor(sec / 60), s = sec % 60;
   return `${m}:${String(s).padStart(2, "0")}`;
 }
+function checkDeadline(){
+  if (!round || !round.deadline || round.finished) return false;
+  round.left = Math.max(0, Math.ceil((round.deadline - Date.now()) / 1000));
+  document.getElementById("qScore").textContent = `⏳ 剩余 ${fmtMS(round.left)} · 超时自动交卷`;
+  if (round.left > 0) return false;
+  finishExam();
+  alert("时间到，自动交卷。");
+  return true;
+}
 function startTimer(totalSec){
   stopTimer();
   if (!totalSec) return;
-  round.left = totalSec;
-  examTimer = setInterval(()=>{
-    round.left--;
-    const el = document.getElementById("qScore");
-    if (el) el.textContent = `⏳ 剩余 ${fmtMS(Math.max(0, round.left))} · 超时自动交卷`;
-    if (round.left <= 0){
-      stopTimer();
-      // 超时前把当前题已点选但未提交的答案暂存，否则会按未答计 0 分
-      if (round.qs[round.i] && round.scores[round.i] == null)
-        round.answers[round.i] = currentAnswer();
-      alert("时间到，自动交卷。");
-      finishExam();
-    }
-  }, 1000);
+  round.deadline = Date.now() + totalSec * 1000;
+  examTimer = setInterval(checkDeadline, 1000);
+  checkDeadline();
 }
-function stopTimer(){ if (examTimer){ clearInterval(examTimer); examTimer = null; } }
+function stopTimer(){
+  clearInterval(examTimer);
+  examTimer = null;
+  if (round) round.deadline = null;
+}
+window.addEventListener("focus", checkDeadline);
+document.addEventListener("visibilitychange", () => { if (!document.hidden) checkDeadline(); });
+// Validate the deadline before an input event can change an expired exam's answers.
+for (const event of ["click", "keydown"]) {
+  document.addEventListener(event, e => {
+    if (round?.deadline && Date.now() >= round.deadline && checkDeadline()) {
+      e.preventDefault(); e.stopImmediatePropagation();
+    }
+  }, true);
+}
 
 // ---------- 答题卡进度点（考试模式：灰=未答 绿=已答 高亮=当前） ----------
+function hasAnswer(answer){
+  if (Array.isArray(answer)) return answer.length > 0;
+  if (answer && typeof answer === "object") return Object.values(answer).some(v => v != null);
+  return answer != null;
+}
 function updateDots(){
   const box = document.getElementById("examDots");
   if (!round || round.mode !== "exam"){ box.style.display = "none"; return; }
   box.style.display = "flex";
   box.innerHTML = round.qs.map((_, i)=>{
-    const cls = i === round.i ? "cur" : (round.answers[i] != null ? "done" : "");
-    return `<span class="edot ${cls}" data-i="${i}">${i + 1}</span>`;
+    const cls = i === round.i ? "cur" : (hasAnswer(round.answers[i]) ? "done" : "");
+    return `<button type="button" class="edot ${cls}" data-i="${i}" aria-label="第 ${i+1} 题"${i===round.i?' aria-current="step"':""}>${i + 1}</button>`;
   }).join("");
 }
 document.getElementById("examDots").addEventListener("click", e=>{
@@ -780,7 +792,7 @@ function renderAnalysis(){
     `<p><b>总作答：</b>${acc.reduce((s,a)=>s + a.n, 0)} 次（判例题）</p>` +
     acc.filter(a=>a.n).map(a=>
       `<p>${a.name}：<b>${Math.round(a.acc * 100)}%</b>（对 ${a.r} / 错 ${a.w}）${a.n < 5 ? " <small>（不足 5 次）</small>" : ""}</p>`).join("") +
-    (hint ? `<p class="rd-hint">⚠ 最薄弱：<b>${hint.name}</b>——建议在开始屏把题源/分类锁定该类，或到 season 页该分类下逐例复盘。</p>` : "");
+    (hint ? `<p class="rd-hint">⚠ 最薄弱：<b>${hint.name}</b></p><button type="button" class="btn" data-practice-cat="${esc(hint.id)}">复练此分类</button>` : "");
 }
 
 // ---------- 历史成绩（考试模式，保留最近 20 次） ----------
@@ -793,24 +805,33 @@ function recordHistory(got, max, n){
   try { localStorage.setItem(HIST_KEY, JSON.stringify(qhist)); } catch(_) {}
   renderHistory();
 }
+function examPassed(got, max){ return max > 0 && got * 100 >= max * 90; }
+function scorePercent(got, max){
+  if (!max) return "0";
+  const rate = got / max * 100;
+  const rounded = Number(rate.toFixed(1));
+  if (rounded === 90 && !examPassed(got, max)) return String(Math.floor(rate * 1000) / 1000);
+  return String(rounded);
+}
 function renderHistory(){
   const box = document.getElementById("histBox");
   if (!qhist.length){ box.style.display = "none"; return; }
   box.style.display = "";
-  const best = Math.max(...qhist.map(h => h.max ? Math.round(h.got / h.max * 100) : 0));
+  const best = Math.max(...qhist.map(h => h.max ? h.got / h.max : 0));
   box.querySelector("#histList").innerHTML = qhist.map(h=>{
-    const pct = h.max ? Math.round(h.got / h.max * 100) : 0;
+    const pct = scorePercent(h.got, h.max);
+    const isBest = (h.max ? h.got / h.max : 0) === best;
     const d = new Date(h.t), pad = x=>String(x).padStart(2, "0");
-    return `<div class="histrow ${pct === best ? "best" : ""}">
+    return `<div class="histrow ${isBest ? "best" : ""}">
       <span>${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}</span>
       <b>${h.got}/${h.max}</b><span>${h.n} 题</span>
-      <b class="${pct >= 90 ? "ok" : pct >= 60 ? "mid" : "bad"}">${pct}%</b>
-      ${pct === best ? "<i>最佳</i>" : ""}</div>`;
+      <b class="${examPassed(h.got, h.max) ? "ok" : "bad"}">${pct}%</b>
+      ${isBest ? "<i>最佳</i>" : ""}</div>`;
   }).join("");
 }
 
 // ---------- 开始屏状态 ----------
-const sel = {mode:"practice", count:10, src:"all", seasons:new Set(), range:"all", timer:"off"};
+const sel = {mode:"practice", count:10, src:"all", seasons:new Set(), cat:"", range:"all", timer:"off"};
 function renderSeasonChips(){
   const seasons = ["2026","2025","2024"];
   document.getElementById("seasonChips").innerHTML =
@@ -820,6 +841,7 @@ function renderSeasonChips(){
 function pool(){
   let list = DATA.bank;
   if (sel.src !== "all") list = list.filter(q=>q.t===sel.src);
+  if (sel.cat) list = list.filter(q=>q.t==="case" && q.cat===sel.cat);
   if (sel.seasons.size) list = list.filter(q=>sel.seasons.has(q.s));
   if (sel.range === "wrong") list = list.filter(q=>wrong[q.k]);
   if (sel.range === "star") list = list.filter(q=>wrong[q.k] && wrong[q.k].star);
@@ -845,7 +867,7 @@ function renderWbList(){
   const now = Date.now();
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
     const q = BANK[k]; if (!q) return "";
-    const yourTxt = e.t==="case" ? axisText(e.your) : (e.t==="var"||e.t==="theory") ? (q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
+    const yourTxt = e.t==="case" ? axisText(e.your) : (e.t==="var"||e.t==="theory") ? (e.your!=null && e.your!=="" && q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
     const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
     const dueTxt = e.done ? "已掌握" : (e.due||0)<=now ? "⏰ 复习到期" :
       `${Math.ceil(((e.due||0)-now)/86400000)} 天后复习`;
@@ -873,8 +895,10 @@ function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.rand
 function startRound(list){
   let qs = shuffle(list.slice());
   if (sel.count > 0) qs = qs.slice(0, sel.count);
+  if (!qs.length) return;
+  stopTimer();
   round = {qs, i:0, mode:sel.mode, answers:qs.map(()=>null), scores:qs.map(()=>null), locked:false};
-  streakTouch();
+  touchStudyDay();
   if (round.mode === "exam" && sel.timer !== "off")
     startTimer(qs.length * (sel.timer === "relaxed" ? 120 : 75));
   showScreen("quiz");
@@ -902,6 +926,7 @@ function renderQuestion(){
   document.getElementById("qProgress").textContent = `第 ${round.i+1} / ${round.qs.length} 题`;
   const gotSoFar = round.scores.filter(Boolean).reduce((s,x)=>s+x.got,0);
   document.getElementById("qScore").textContent = round.mode==="practice" ? `当前得分 ${gotSoFar}` : "考试模式 · 交卷后出分";
+  if (round.deadline && checkDeadline()) return;
   // 题头
   let head = "";
   if (q.t === "case"){
@@ -971,12 +996,12 @@ function renderQuestion(){
       axes.push(`<div class="axis"><div class="ah">② 正确的判罚决定 <small>1分</small></div><div class="optrow">` +
         R_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.r===v?"on":""}" data-axis="r" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
     if (q.ans && q.ans.c)
-      axes.push(`<div class="axis"><div class="ah">③ 纪律处分 <small>1分</small></div><div class="optrow">` +
+      axes.push(`<div class="axis"><div class="ah">③ 纪律处分${q.discipline_target?" · "+esc(q.discipline_target):""} <small>1分</small></div><div class="optrow">` +
         C_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.c===v?"on":""}" data-axis="c" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
     document.getElementById("qForm").innerHTML = axes.join("");
   } else if (q.t === "var"){
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">官方决定 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q.opts.map((o,i)=>`<button class="chip opt ${saved&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
+      q.opts.map((o,i)=>`<button class="chip opt ${saved!=null&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
   } else if (q.t === "theory"){
     // 选项按次打乱显示（题库文件中正确项均在首位）；saved 存的是原始下标，经 _disp 反查高亮
     if (!q._disp){
@@ -987,9 +1012,9 @@ function renderQuestion(){
       }
     }
     document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">正确条文 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q._disp.map((orig,i)=>`<button class="chip opt ${saved&&+saved===orig?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(q.opts[orig])}</button>`).join("") + `</div></div>`;
+      q._disp.map((orig,i)=>`<button class="chip opt ${saved!=null&&+saved===orig?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(q.opts[orig])}</button>`).join("") + `</div></div>`;
   } else {
-    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，无错选有漏选1分，有错选0分</small></div><div class="optrow">` +
+    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，部分正确且无错选1分，空答或错选0分</small></div><div class="optrow">` +
       q.dec.map((d,i)=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${i<9?`<span class="okn">${i+1}</span>`:""}${esc(d.label)}</button>`).join("") + `</div></div>`;
   }
   document.getElementById("ansGate").classList.add("on");
@@ -1052,7 +1077,7 @@ function scoreScale(q, selArr){
   const active = q.dec.filter(d=>d.active).map(d=>d.label);
   const fp = selArr.filter(x=>!active.includes(x));
   const miss = active.filter(x=>!selArr.includes(x));
-  const got = (!fp.length && !miss.length) ? 2 : (!fp.length ? 1 : 0);
+  const got = !selArr.length || !active.length || fp.length ? 0 : (miss.length ? 1 : 2);
   return {got, max:2, detail:[
     {name:"判罚决定", ok:got===2, yours:selArr.length?selArr.join("、"):"（未答）", right:active.join("、")||"（无）"},
     {name:"错选/漏选", ok:!fp.length, yours:fp.length?("错选 "+fp.join("、")):"无错选", right:miss.length?("漏选 "+miss.join("、")):"无漏选"}
@@ -1139,10 +1164,12 @@ function submitAnswer(){
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else finishExam();
 }
-function finishExam(){
+function finishExam(captureCurrent=true){
+  if (!round || round.finished) return;
+  round.finished = true;
   stopTimer();
   // 兜底：手动交卷/超时交卷前都暂存当前题答案，重复写入幂等
-  if (round.qs[round.i] && round.scores[round.i] == null)
+  if (captureCurrent && round.qs[round.i] && round.scores[round.i] == null)
     round.answers[round.i] = currentAnswer();
   let totalGot = 0, totalMax = 0;
   round.qs.forEach((q,i)=>{
@@ -1177,6 +1204,7 @@ function skipQuestion(){
     recordWrong(q, a, s);
   }
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
+  else if (round.mode === "exam") finishExam(false);
   else showResult();
 }
 function countUp(el, got, max){
@@ -1192,19 +1220,20 @@ function showResult(){
   stopVideo();
   const totalGot = round.scores.reduce((s,x)=>s+(x?x.got:0),0);
   const totalMax = round.scores.reduce((s,x)=>s+(x?x.max:0),0);
-  const pct = totalMax ? Math.round(totalGot/totalMax*100) : 0;
+  const pct = scorePercent(totalGot, totalMax);
+  const passed = examPassed(totalGot, totalMax);
   document.getElementById("rScore").textContent = `${totalGot} / ${totalMax}`;
   countUp(document.getElementById("rScore"), totalGot, totalMax);
   document.getElementById("rPct").textContent = `得分率 ${pct}%`;
   document.getElementById("rRate").textContent =
-    pct>=90 ? "优秀——尺度把握扎实，继续保持！" :
+    passed ? "优秀——尺度把握扎实，继续保持！" :
     pct>=75 ? "良好——注意复盘错题，堵上薄弱点。" :
-    pct>=60 ? "及格——建议把错题加入收藏反复练习。" :
+    pct>=60 ? "建议把错题加入收藏，按类别复习。" :
               "还需要加油——先从错题重练开始，逐类攻克。";
   // 模拟考及格线（90%）：考试模式才判定，练习模式不显示
   const passEl = document.getElementById("rPass");
   if (round.mode === "exam"){
-    passEl.innerHTML = pct >= 90
+    passEl.innerHTML = passed
       ? `<span class="passbadge ok">✓ 模拟考核通过（及格线 90%）</span>`
       : `<span class="passbadge no">未达及格线 90%——把错题重练一遍再来</span>`;
   } else passEl.innerHTML = "";
@@ -1236,7 +1265,7 @@ function showResult(){
     const missTxt = s.detail.filter(d=>!d.ok).map(d=>`${d.name}：正确 ${d.right}`).join("；");
     return `<div class="rrow" style="--i:${Math.min(i,12)}"><span class="rmark ${allOk?"hit":"miss"}">${allOk?"✓":s.got>0?"△":"✗"}</span>
       <div class="rmain"><div>${qTitle(q)}</div>
-      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(q.t==="var"||q.t==="theory")?(q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
+      <div class="rt">你的答案：${esc(q.t==="case"?axisText(a):(q.t==="var"||q.t==="theory")?(a!=null&&a!==""&&q.opts&&q.opts[+a])||"（未答）":(a||[]).join("、")||"（未答）")} ｜ 得分 ${s.got}/${s.max}${!allOk&&missTxt?` ｜ <span class="miss">${esc(missTxt)}</span>`:""}</div></div>
       <a class="btn wbbtn" href="${qLink(q)}">查看</a></div>`;
   }).join("");
   renderWbStats();
@@ -1253,7 +1282,13 @@ document.querySelectorAll(".seg").forEach(seg=>{
     if (id==="segMode") sel.mode = b.dataset.v;
     if (id==="segTimer") sel.timer = b.dataset.v;
     if (id==="segCount") sel.count = +b.dataset.v;
-    if (id==="segSrc") sel.src = b.dataset.v;
+    if (id==="segSrc") {
+      sel.src = b.dataset.v;
+      if (sel.src !== "case") {
+        sel.cat = "";
+        document.getElementById("categoryFilter").value = "";
+      }
+    }
     if (id==="segRange") sel.range = b.dataset.v;
     updatePoolTip();
   });
@@ -1354,7 +1389,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
 document.getElementById("qForm").addEventListener("click", e=>{
   const b = e.target.closest(".opt"); if (!b || round.locked) return;
   const q = round.qs[round.i];
-  if (q.t === "case" || q.t === "var"){   // 单选轴（var 的四选项也是单选）
+  if (q.t === "case" || q.t === "var" || q.t === "theory"){   // 单选轴
     const axis = b.dataset.axis;
     document.querySelectorAll(`#qForm .opt[data-axis="${axis}"]`).forEach(x=>x.classList.toggle("on", x===b));
   } else {
@@ -1430,6 +1465,7 @@ function pickOption(n){
 }
 document.addEventListener("keydown", e=>{
   const tag = (e.target.tagName||"").toLowerCase();
+  if (e.key === "Enter" && e.target.closest("button, a, summary")) return;
   if (tag==="input"||tag==="select"||tag==="textarea"){ if(e.key==="Escape") e.target.blur(); return; }
   // 开始屏 / 结果屏：Enter 开始 / 返回
   if (document.getElementById("scrStart").style.display !== "none"){
@@ -1474,6 +1510,25 @@ document.addEventListener("cfa:lite", ()=>{
     renderQuestion();
   }
 });
+const categoryFilter = document.getElementById("categoryFilter");
+CATS.forEach(([id, name]) => categoryFilter.add(new Option(name, id)));
+function chooseCategory(id) {
+  if (id && !CATS.some(([key]) => key === id)) return;
+  if (id) document.querySelector('#segSrc [data-v="case"]').click();
+  sel.cat = id;
+  categoryFilter.value = id;
+  updatePoolTip();
+}
+categoryFilter.addEventListener("change", () => chooseCategory(categoryFilter.value));
+document.getElementById("anaText").addEventListener("click", e => {
+  const button = e.target.closest("[data-practice-cat]");
+  if (!button) return;
+  chooseCategory(button.dataset.practiceCat);
+  document.getElementById("btnStart").focus();
+});
+const params = new URLSearchParams(location.search);
+if (params.has("cat")) chooseCategory(params.get("cat"));
+if (params.get("range") === "due") document.getElementById("btnDue").click();
 renderSeasonChips(); renderWbStats(); updatePoolTip(); renderAnalysis(); renderHistory();
 </script>
 </body>
@@ -1497,12 +1552,16 @@ def main():
     )
     html = inject_theme(
         HTML.replace("__DATA__", data_js)
+        .replace(
+            "__CALENDAR_JS__", (SRC / "study-calendar.js").read_text(encoding="utf-8")
+        )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)
         .replace("__I_UP__", icon("up", 14))
         .replace("__N_CASE__", str(data["meta"]["case"]))
         .replace("__N_SCALE__", str(data["meta"]["scale"]))
-        .replace("__N_VAR__", str(data["meta"]["var"])),
+        .replace("__N_VAR__", str(data["meta"]["var"]))
+        .replace("__N_THEORY__", str(data["meta"]["theory"])),
         meta=meta_tags("quiz.html"),
     )
     SITE.mkdir(parents=True, exist_ok=True)

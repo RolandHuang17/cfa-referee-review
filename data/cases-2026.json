@@ -18,7 +18,7 @@
    "date": "20260408",
    "summary": "4月7日晚，中国足协裁判委员会评议组进行了本赛季第二期（20260407期）裁判评议工作。本期主要评议5个判例，来自近期的中超、中甲、中乙联赛中相关俱乐部的申诉，以及1例受社会关注的判例。评议组认定其中4个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 4,
-   "parsed_wrong": 3,
+   "parsed_wrong": 4,
    "video_count": 5
   },
   {
@@ -38,7 +38,7 @@
    "date": "20260422",
    "summary": "4月21日晚，中国足协裁判委员会评议组进行了本赛季第四期（20260421期）裁判评议工作。本期共评议20个判例，来自近期的中超、中甲、中乙联赛中相关俱乐部的申诉。评议组认定其中5个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 5,
-   "parsed_wrong": 5,
+   "parsed_wrong": 7,
    "video_count": 20
   },
   {
@@ -48,7 +48,7 @@
    "date": "20260429",
    "summary": "4月28日晚，中国足协裁判委员会评议组进行了本赛季第五期（20260428期）裁判评议工作。本期共评议15个判例，来自近期的中超和中乙联赛中相关俱乐部的申诉。评议组认定其中3个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 3,
-   "parsed_wrong": 6,
+   "parsed_wrong": 5,
    "video_count": 15
   },
   {
@@ -68,7 +68,7 @@
    "date": "20260513",
    "summary": "5月12日晚，中国足协裁判委员会评议组进行了本赛季第七期（20260512期）裁判评议工作。本期共评议16个判例，来自近期的中超、中甲和中乙联赛中相关俱乐部的申诉。评议组认定其中8个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 8,
-   "parsed_wrong": 10,
+   "parsed_wrong": 11,
    "video_count": 16
   },
   {
@@ -78,7 +78,7 @@
    "date": "20260527",
    "summary": "5月26日晚，中国足协裁判委员会评议组进行了本赛季第八期（20260526期）裁判评议工作。本期主要评议14个判例，来自近期的中超、中甲、中乙及女超联赛中相关俱乐部的申诉。评议组认定其中5个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 5,
-   "parsed_wrong": 5,
+   "parsed_wrong": 6,
    "video_count": 14
   },
   {
@@ -88,7 +88,7 @@
    "date": "20260604",
    "summary": "6月2日晚，中国足协裁判委员会评议组进行了本赛季第九期（20260602期）裁判评议工作。本期共评议14个判例，来自近期的中超、中甲及中乙联赛中相关俱乐部的申诉。评议组认定其中3个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 3,
-   "parsed_wrong": 5,
+   "parsed_wrong": 3,
    "video_count": 14
   },
   {
@@ -98,7 +98,7 @@
    "date": "20260618",
    "summary": "6月16日晚，中国足协裁判委员会评议组进行了本赛季第十期（20260616期）裁判评议工作。本期共评议9个判例，来自近期的中甲、中乙联赛中相关俱乐部的申诉。评议组认定其中5个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 5,
-   "parsed_wrong": 5,
+   "parsed_wrong": 6,
    "video_count": 9
   },
   {
@@ -118,7 +118,7 @@
    "date": "20260708",
    "summary": "7月7日晚，中国足协裁判委员会评议组进行了本赛季第十二期（20260707期）裁判评议工作。本期共评议9个判例，来自近期的中超、中甲及女超联赛中相关俱乐部的申诉。评议组认定其中1个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 1,
-   "parsed_wrong": 0,
+   "parsed_wrong": 1,
    "video_count": 9
   },
   {
@@ -128,7 +128,7 @@
    "date": "20260716",
    "summary": "7月14日晚，中国足协裁判委员会评议组进行了本赛季第十三期（20260714期）裁判评议工作。本期共评议12个判例，来自近期的中超、中甲及中乙联赛中相关俱乐部的申诉。评议组认定其中5个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 5,
-   "parsed_wrong": 5,
+   "parsed_wrong": 6,
    "video_count": 12
   },
   {
@@ -138,7 +138,7 @@
    "date": "20260722",
    "summary": "7月21日，中国足协裁判委员会评议组进行了本赛季第十四期（20260721期）裁判评议工作。本期共评议6个判例，来自近期的中甲联赛和女超联赛中相关俱乐部的申诉，无中超申诉判例。评议组认定其中2个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 2,
+   "parsed_wrong": 3,
    "video_count": 6
   },
   {
@@ -148,7 +148,7 @@
    "date": "20260729",
    "summary": "7月28日晚，中国足协裁判委员会评议组进行了本赛季第十五期（20260728期）裁判评议工作。本期共评议8个判例，来自近期的中超、中甲和中乙联赛中相关俱乐部的申诉。评议组认定其中5个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 5,
-   "parsed_wrong": 3,
+   "parsed_wrong": 5,
    "video_count": 8
   },
   {
@@ -188,7 +188,7 @@
    "date": "20260826",
    "summary": "8月25日晚，中国足协裁判委员会评议组进行了2026年第十九期（20260825期）裁判评议工作。本期共评议7个判例，来自近期的中超、中甲和中乙联赛中相关俱乐部的申诉，其中包括受到社会关注的中超深圳新鹏城队员替换程序争议判例。评议组最终认定其中3例在主要判罚结果上存在裁判错漏判；裁判组在处理深圳新鹏城队替换队员过程中虽未违反规定，但在比赛管理和工作程序处理上存在不足。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 3,
-   "parsed_wrong": 2,
+   "parsed_wrong": 4,
    "video_count": 7
   },
   {
@@ -208,7 +208,7 @@
    "date": "20260916",
    "summary": "9月15日晚，中国足协裁判委员会评议组进行了2026年第二十一期（20260915期）裁判评议工作。本期共评议5个判例，来自近期的中甲和中乙联赛相关俱乐部的申诉。评议组最终认定其中2例在主要判罚决定上存在裁判错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 1,
+   "parsed_wrong": 2,
    "video_count": 5
   },
   {
@@ -230,6 +230,36 @@
    "expected_wrong": 1,
    "parsed_wrong": 1,
    "video_count": 3
+  },
+  {
+   "no": 24,
+   "title": "2026年第二十四期裁判评议认定2例错漏判",
+   "url": "https://www.thecfa.cn/cppy/20261028/38340.html",
+   "date": "20261028",
+   "summary": "10月27日晚，中国足协裁判委员会评议组进行了2026年第二十四期（20261027期）裁判评议工作。本期共评议4个判例，来自近期的中乙联赛中相关俱乐部的申诉，无中超、中甲俱乐部申诉。评议组最终认定其中2例在主要判罚决定上存在裁判错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
+   "expected_wrong": 2,
+   "parsed_wrong": 2,
+   "video_count": 4
+  },
+  {
+   "no": 25,
+   "title": "2026年第二十五期裁判评议认定2例错漏判",
+   "url": "https://www.thecfa.cn/cppy/20261105/38390.html",
+   "date": "20261105",
+   "summary": "11月3日晚，中国足协裁判委员会评议组进行了2026年第二十五期（20261103期）裁判评议工作。本期共评议7个判例，来自近期的中甲和中乙联赛中相关俱乐部的申诉。评议组最终认定其中2例在主要判罚决定上存在裁判错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
+   "expected_wrong": 2,
+   "parsed_wrong": 3,
+   "video_count": 7
+  },
+  {
+   "no": 26,
+   "title": "2026年第二十六期裁判评议认定1例错漏判",
+   "url": "https://www.thecfa.cn/cppy/20261111/38415.html",
+   "date": "20261111",
+   "summary": "11月10日晚，中国足协裁判委员会评议组进行了2026年第二十六期（20261110期）裁判评议工作。本期评议1个判例，来自近期的中甲联赛相关俱乐部的申诉。评议组最终认定该判例在主要判罚决定上存在裁判错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
+   "expected_wrong": 1,
+   "parsed_wrong": 1,
+   "video_count": 1
   }
  ],
  "cases": [
@@ -434,7 +464,7 @@
    "round": "第3轮",
    "home": "宁波俱乐部",
    "away": "无锡吴钩",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -494,7 +524,7 @@
    "round": "第5轮",
    "home": "青岛西海岸",
    "away": "辽宁铁人楠波湾",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -676,7 +706,7 @@
    "round": "第5轮",
    "home": "深圳新鹏城",
    "away": "云南玉昆",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_urls": [
@@ -918,7 +948,7 @@
    "round": "第3轮",
    "home": "厦门飞鹭",
    "away": "广东铭途",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -1130,7 +1160,7 @@
    "round": "第6轮",
    "home": "武汉三镇",
    "away": "成都蓉城",
-   "minute": "",
+   "minute": "45+5",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -1277,7 +1307,7 @@
    "round": "第5轮",
    "home": "南京城市",
    "away": "深圳青年人",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -1700,7 +1730,7 @@
    "round": "第7轮",
    "home": "上海海港",
    "away": "重庆铜梁龙",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -1790,7 +1820,7 @@
    "round": "第8轮",
    "home": "北京国安",
    "away": "天津津门虎",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -2094,7 +2124,7 @@
    "round": "第9轮",
    "home": "天津津门虎",
    "away": "武汉三镇",
-   "minute": "",
+   "minute": "90+14",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_urls": [
@@ -2333,7 +2363,7 @@
    "round": "第6轮",
    "home": "成都蓉城希拉谷",
    "away": "杭州临平吴越",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -2425,7 +2455,7 @@
    "round": "第6轮",
    "home": "广东铭途",
    "away": "江西庐山",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -2517,7 +2547,7 @@
    "round": "第11轮",
    "home": "青岛海牛",
    "away": "大连英博海发",
-   "minute": "",
+   "minute": "45+8",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -2581,7 +2611,7 @@
    "round": "第11轮",
    "home": "浙江俱乐部绿城",
    "away": "天津津门虎",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -2735,7 +2765,7 @@
    "round": "第7轮",
    "home": "杭州临平吴越",
    "away": "厦门飞鹭",
-   "minute": "",
+   "minute": "90+12",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -2826,7 +2856,7 @@
    "round": "第8轮",
    "home": "兰州陇原竞技",
    "away": "青岛红狮",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "pending",
    "var_verdict": "none",
    "video_urls": [
@@ -2947,7 +2977,7 @@
    "round": "第13轮",
    "home": "天津津门虎",
    "away": "河南俱乐部彩陶坊",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -3101,7 +3131,7 @@
    "round": "第13轮",
    "home": "辽宁铁人楠波湾",
    "away": "青岛海牛",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "correct",
    "var_verdict": "wrong",
    "video_urls": [
@@ -3131,7 +3161,7 @@
    "round": "第13轮",
    "home": "上海申花",
    "away": "武汉三镇",
-   "minute": "",
+   "minute": "45+7",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -3254,7 +3284,7 @@
    "round": "第9轮",
    "home": "石家庄功夫",
    "away": "梅州客家犀旺",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -3493,7 +3523,7 @@
    "round": "第10轮",
    "home": "广西恒宸",
    "away": "佛山南狮",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -3582,7 +3612,7 @@
    "round": "第10轮",
    "home": "梅州客家犀旺",
    "away": "定南赣联",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -3853,7 +3883,7 @@
    "round": "第11轮",
    "home": "南京城市",
    "away": "宁波俱乐部",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -3972,7 +4002,7 @@
    "round": "第11轮",
    "home": "广东铭途",
    "away": "杭州临平吴越",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -4126,7 +4156,7 @@
    "round": "第16轮",
    "home": "北京国安",
    "away": "武汉三镇",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -4310,7 +4340,7 @@
    "round": "第14轮",
    "home": "温州俱乐部",
    "away": "赣州瑞狮",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -4636,7 +4666,7 @@
    "round": "第9轮",
    "home": "上海盛丽女足",
    "away": "四川女足",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -4725,7 +4755,7 @@
    "round": "第18轮",
    "home": "成都蓉城",
    "away": "重庆铜梁龙",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -5117,7 +5147,7 @@
    "round": "第15轮",
    "home": "定南赣联",
    "away": "宁波俱乐部",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -5148,7 +5178,7 @@
    "round": "第15轮",
    "home": "定南赣联",
    "away": "宁波俱乐部",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -5177,7 +5207,7 @@
    "round": "第11轮",
    "home": "山东体彩女足",
    "away": "北京城建女足",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -5300,7 +5330,7 @@
    "round": "第16轮",
    "home": "石家庄功夫",
    "away": "南通支云",
-   "minute": "",
+   "minute": "45+4",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -5392,7 +5422,7 @@
    "round": "第18轮",
    "home": "兰州陇原竞技",
    "away": "上海赛更达",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "pending",
    "var_verdict": "none",
    "video_urls": [
@@ -5845,7 +5875,7 @@
    "round": "第16轮",
    "home": "兰州陇原竞技",
    "away": "泰安天贶",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -5874,7 +5904,7 @@
    "round": "第22轮",
    "home": "青岛海牛",
    "away": "上海申花",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [
@@ -6085,7 +6115,7 @@
    "round": "第22轮",
    "home": "山东泰山",
    "away": "天津津门虎",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_urls": [],
@@ -6173,7 +6203,7 @@
    "round": "第18轮",
    "home": "石家庄功夫",
    "away": "陕西联合",
-   "minute": "",
+   "minute": "90+9",
    "referee_verdict": "correct",
    "var_verdict": "wrong",
    "video_urls": [
@@ -6233,7 +6263,7 @@
    "round": "第20轮",
    "home": "泰安天贶",
    "away": "大连英博B队",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_urls": [
@@ -6535,7 +6565,7 @@
    "round": "第20轮",
    "home": "定南赣联",
    "away": "石家庄功夫",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_urls": [
@@ -7124,6 +7154,378 @@
    ],
    "referee_verdict_name": "错漏判",
    "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 24,
+   "no": 1,
+   "desc": "判例一：中乙联赛第26轮，厦门飞鹭VS泰安天贶。比赛第68分钟，厦门飞鹭16号队员进球，助理裁判员示意越位，裁判员判厦门飞鹭16号越位犯规，进球无效。",
+   "appeal": "厦门飞鹭俱乐部申诉意见认为：本方队员未处于越位位置，不存在越位犯规，进球应有效。",
+   "conclusion": "对于此判例，评议组一致认为：厦门飞鹭队员头顶球时，从视频中厦门飞鹭16号与对方队员的位置关系，以及与球的位置关系看，厦门飞鹭16号不处于越位位置，不存在越位犯规，后续进球应有效。助理裁判员判断错误，裁判员判厦门飞鹭16号越位犯规进球无效的决定错误。",
+   "seq": 229,
+   "match_info": "中乙联赛第26轮，厦门飞鹭VS泰安天贶",
+   "comp": "中乙联赛",
+   "round": "第26轮",
+   "home": "厦门飞鹭",
+   "away": "泰安天贶",
+   "minute": "68",
+   "referee_verdict": "wrong",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261028/1793179147269507.mp4"
+   ],
+   "video_files": [
+    "2026/i24c01-1.mp4"
+   ],
+   "category": "offside",
+   "category_name": "越位",
+   "tags": [
+    "越位误判",
+    "进球有效"
+   ],
+   "referee_verdict_name": "错漏判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 24,
+   "no": 2,
+   "desc": "判例二：中乙联赛第28轮，温州俱乐部德赛VS兰州陇原竞技天佑德。比赛第26分钟，兰州陇原竞技天佑德39号队员进球，裁判员判兰州陇原竞技天佑德40号队员在争抢球时犯规在先，后续39号进球无效。",
+   "appeal": "兰州陇原竞技俱乐部申诉意见认为：裁判员判进球无效错误。",
+   "conclusion": "对于此判例，评议组一致认为：温州俱乐部德赛19号队员在争抢中率先触球，兰州陇原竞技天佑德40号争抢中草率犯规踢到对方，并连带使球向球门方向运行，随后兰州陇原竞技天佑德39号的进球无效。裁判员判兰州陇原竞技天佑德40号犯规在先，后续该队进球无效的决定正确。",
+   "seq": 230,
+   "match_info": "中乙联赛第28轮，温州俱乐部德赛VS兰州陇原竞技天佑德",
+   "comp": "中乙联赛",
+   "round": "第28轮",
+   "home": "温州俱乐部德赛",
+   "away": "兰州陇原竞技天佑德",
+   "minute": "26",
+   "referee_verdict": "correct",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261028/1793179199757849.mp4"
+   ],
+   "video_files": [
+    "2026/i24c02-1.mp4"
+   ],
+   "category": "goal_decision",
+   "category_name": "进球判定与有利条款",
+   "tags": [
+    "草率犯规",
+    "进球无效"
+   ],
+   "referee_verdict_name": "支持原判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 24,
+   "no": 3,
+   "desc": "判例三：中乙联赛第28轮，温州俱乐部德赛VS兰州陇原竞技天佑德。比赛第31分钟，兰州陇原竞技天佑德4号队员进球，根据助理裁判员的协助，裁判员判兰州陇原竞技天佑德17号队员头顶球时，球已越过球门线离开比赛场地，后续进球无效。由温州俱乐部德赛踢球门球恢复比赛。",
+   "appeal": "兰州陇原竞技俱乐部申诉意见认为：本方进球应有效。",
+   "conclusion": "对于此判例，评议组一致认为：兰州陇原竞技天佑德17号头顶球时，从队员所处的位置以及身体姿态来看，球并未越出球门线，随后根据球在空中的旋转和运行路径看，球始终处于比赛场地内，后续进球应有效。助理裁判员当时并未处于最佳位置，判断错误；裁判员判球离开比赛场地在先、后续进球无效的决定错误。",
+   "seq": 231,
+   "match_info": "中乙联赛第28轮，温州俱乐部德赛VS兰州陇原竞技天佑德",
+   "comp": "中乙联赛",
+   "round": "第28轮",
+   "home": "温州俱乐部德赛",
+   "away": "兰州陇原竞技天佑德",
+   "minute": "31",
+   "referee_verdict": "wrong",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261028/1793179228543504.mp4"
+   ],
+   "video_files": [
+    "2026/i24c03-1.mp4"
+   ],
+   "category": "goal_decision",
+   "category_name": "进球判定与有利条款",
+   "tags": [
+    "球未出界",
+    "进球有效"
+   ],
+   "referee_verdict_name": "错漏判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 24,
+   "no": 4,
+   "desc": "判例四：中乙联赛第28轮，深圳二零二八VS大连可为。比赛第35分钟，深圳二零二八准备踢角球。在大连可为罚球区内，大连可为14号队员和深圳二零二八55号队员倒地，经VAR介入，裁判员在场回看后，向大连可为14号出示黄牌，向深圳二零二八55号出示红牌罚令出场。",
+   "appeal": "深圳二零二八俱乐部申诉意见认为：本方55号系在对方14号多次挑衅下做出保护自身安全的下意识隔离行为，不属于暴力行为，不应被出示红牌。",
+   "conclusion": "对于此判例，评议组一致认为：在踢角球前的比赛停止期间，大连可为14号通过踢、踩等方式挑衅对方队员，深圳二零二八55号随后挥拳报复击打大连可为14号，从其动作性质和意图来看，构成暴力行为，并非下意识隔离动作。裁判员以非体育行为原因，向大连可为14号出示黄牌，以及以暴力行为原因，向深圳二零二八55号出示红牌的决定均为正确。",
+   "seq": 232,
+   "match_info": "中乙联赛第28轮，深圳二零二八VS大连可为",
+   "comp": "中乙联赛",
+   "round": "第28轮",
+   "home": "深圳二零二八",
+   "away": "大连可为",
+   "minute": "35",
+   "referee_verdict": "correct",
+   "var_verdict": "correct",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261028/1793179323369699.mp4"
+   ],
+   "video_files": [
+    "2026/i24c04-1.mp4"
+   ],
+   "category": "sfp_vc",
+   "category_name": "严重犯规与暴力行为",
+   "tags": [
+    "暴力行为",
+    "报复",
+    "红牌",
+    "非体育行为黄牌"
+   ],
+   "referee_verdict_name": "支持原判",
+   "var_verdict_name": "VAR正确"
+  },
+  {
+   "issue": 25,
+   "no": 1,
+   "desc": "判例一：中甲联赛第29轮，广西恒宸VS无锡吴钩。比赛第39分钟，无锡吴钩19号队员进球，裁判员判进球有效。",
+   "appeal": "广西恒宸俱乐部申诉意见认为：对方进球队员越位犯规，进球应无效。",
+   "conclusion": "对于此判例，评议组一致认为：无锡吴钩队进攻中长传触球的时刻，其19号队员处于越位位置，随后19号射门进球，构成在越位位置干扰比赛的越位犯规，进球无效。助理裁判员判断失误，未示意越位，裁判员判无锡吴钩进球有效的决定错误，漏判越位犯规。",
+   "seq": 233,
+   "match_info": "中甲联赛第29轮，广西恒宸VS无锡吴钩",
+   "comp": "中甲联赛",
+   "round": "第29轮",
+   "home": "广西恒宸",
+   "away": "无锡吴钩",
+   "minute": "39",
+   "referee_verdict": "wrong",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869525983267.mp4"
+   ],
+   "video_files": [
+    "2026/i25c01-1.mp4"
+   ],
+   "category": "offside",
+   "category_name": "越位",
+   "tags": [
+    "漏判越位",
+    "干扰比赛",
+    "进球无效"
+   ],
+   "referee_verdict_name": "错漏判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 25,
+   "no": 2,
+   "desc": "判例二：中甲联赛第29轮，广西恒宸VS无锡吴钩。比赛第68分钟，裁判员判无锡吴钩2号队员在本方罚球区外对广西恒宸3号队员犯规，并出示黄牌警告。",
+   "appeal": "广西恒宸俱乐部申诉意见认为：应向对方2号出示红牌罚令出场。",
+   "conclusion": "对于此判例，评议组得出多数意见，并经国际足联裁判讲师确认，将此判例认定为：无锡吴钩2号队员的犯规动作接触对方身体的位置高度较高，但速度和强度不大，也未使用过分力量，未构成严重犯规，不应出示红牌，应视为鲁莽犯规并出示黄牌。裁判员判无锡吴钩2号犯规并出示黄牌的决定正确。",
+   "seq": 234,
+   "match_info": "中甲联赛第29轮，广西恒宸VS无锡吴钩",
+   "comp": "中甲联赛",
+   "round": "第29轮",
+   "home": "广西恒宸",
+   "away": "无锡吴钩",
+   "minute": "68",
+   "referee_verdict": "correct",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869564228268.mp4"
+   ],
+   "video_files": [
+    "2026/i25c02-1.mp4"
+   ],
+   "category": "sfp_vc",
+   "category_name": "严重犯规与暴力行为",
+   "tags": [
+    "鲁莽",
+    "黄牌",
+    "红牌不成立"
+   ],
+   "referee_verdict_name": "支持原判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 25,
+   "no": 3,
+   "desc": "判例三：中甲联赛第29轮，广西恒宸VS无锡吴钩。比赛第80分钟，无锡吴钩进球，裁判员判进球有效。",
+   "appeal": "广西恒宸俱乐部申诉意见认为：在进球前的争抢过程中，对方17号队员对本方7号犯规，应判罚犯规在先。",
+   "conclusion": "对于此判例，评议组首先一致认为：无锡吴钩17号手臂与广西恒宸7号有接触，但其力度未达到犯规程度，也未对后者处理球造成严重影响，属于比赛中可接受的接触，不构成犯规。其次评议组指出：在后续无锡吴钩远射时，球接触无锡吴钩17号身体，此时无锡吴钩有另一名队员处于越位位置。对此，评议组多数成员认为：无锡吴钩处于越位位置的队员并未构成阻挡广西恒宸守门员视线或影响其扑救能力的越位犯规。裁判员判无锡吴钩进球有效的决定正确。",
+   "seq": 235,
+   "match_info": "中甲联赛第29轮，广西恒宸VS无锡吴钩",
+   "comp": "中甲联赛",
+   "round": "第29轮",
+   "home": "广西恒宸",
+   "away": "无锡吴钩",
+   "minute": "80",
+   "referee_verdict": "correct",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869602959717.mp4"
+   ],
+   "video_files": [
+    "2026/i25c03-1.mp4"
+   ],
+   "category": "goal_decision",
+   "category_name": "进球判定与有利条款",
+   "tags": [
+    "正常接触",
+    "越位位置不干扰对方",
+    "进球有效"
+   ],
+   "referee_verdict_name": "支持原判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 25,
+   "no": 4,
+   "desc": "判例四：中乙联赛第29轮，兰州陇原竞技天佑德VS湖北青年星。比赛第24分钟，湖北青年星进攻中传中，将球传至兰州陇原竞技天佑德罚球区内，双方争抢后，兰州陇原竞技天佑德4号队员倒地，裁判员未判罚犯规。",
+   "appeal": "兰州陇原竞技俱乐部申诉意见认为：对方19号队员肘击本方4号队员，应向对方19号出示红牌罚令出场。",
+   "conclusion": "对于此判例，评议组首先一致认为：从现有视频看，湖北青年星19号并非故意挥臂使用肘部击打兰州陇原竞技天佑德4号头面部，不构成严重犯规。在俱乐部申诉的主要问题（红牌）上，裁判员判罚正确，并非红牌。其次，评议组多数成员认为：湖北青年星19号在争抢球时不合理使用手臂接触对方，且球在兰州陇原竞技天佑德4号触球范围内，湖北青年星19号构成鲁莽犯规，应出示黄牌。裁判员漏判湖北青年星19号犯规，漏判黄牌。",
+   "seq": 236,
+   "match_info": "中乙联赛第29轮，兰州陇原竞技天佑德VS湖北青年星",
+   "comp": "中乙联赛",
+   "round": "第29轮",
+   "home": "兰州陇原竞技天佑德",
+   "away": "湖北青年星",
+   "minute": "24",
+   "referee_verdict": "wrong",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869622879549.mp4"
+   ],
+   "video_files": [
+    "2026/i25c04-1.mp4"
+   ],
+   "category": "sfp_vc",
+   "category_name": "严重犯规与暴力行为",
+   "tags": [
+    "鲁莽",
+    "漏判犯规",
+    "漏判黄牌"
+   ],
+   "referee_verdict_name": "错漏判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 25,
+   "no": 5,
+   "desc": "判例五：中乙联赛第29轮，武汉三镇B队VS青岛红狮。比赛第26分钟，武汉三镇B队进攻中将球传至青岛红狮罚球区内，青岛红狮队员疑似手臂触球。裁判员未判罚手球犯规。",
+   "appeal": "武汉三镇俱乐部申诉意见认为：对方队员手球犯规，应判罚球点球。",
+   "conclusion": "对于此判例，评议组多数成员认为：青岛红狮队员在本方罚球区内手臂触球，并且手臂处于不自然位置。即使球先接触了身体，也并无明显变线和反弹，之后接触手臂应视为手球犯规，并判罚球点球。裁判员决定错误，漏判青岛红狮队员手球犯规，漏判罚球点球。",
+   "seq": 237,
+   "match_info": "中乙联赛第29轮，武汉三镇B队VS青岛红狮",
+   "comp": "中乙联赛",
+   "round": "第29轮",
+   "home": "武汉三镇B队",
+   "away": "青岛红狮",
+   "minute": "26",
+   "referee_verdict": "wrong",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869638816558.mp4"
+   ],
+   "video_files": [
+    "2026/i25c05-1.mp4"
+   ],
+   "category": "handball",
+   "category_name": "手球犯规",
+   "tags": [
+    "不自然位置",
+    "手球",
+    "漏判点球"
+   ],
+   "referee_verdict_name": "错漏判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 25,
+   "no": 6,
+   "desc": "判例六：中乙联赛第29轮，武汉三镇B队VS青岛红狮。比赛第90+5分钟，裁判员先判青岛红狮5号队员在本方罚球区内对武汉三镇B队12号犯规，由武汉三镇B队踢罚球点球。后经助理裁判员协助，裁判员最终改判武汉三镇B队12号越位犯规，取消罚球点球判罚，由青岛红狮踢间接任意球恢复比赛。",
+   "appeal": "武汉三镇俱乐部申诉意见认为：裁判员不应改判，应维持罚球点球判罚。",
+   "conclusion": "对于此判例，评议组一致认为：武汉三镇B队12号在本方触球时处于越位位置，随后形成了干扰对方的越位犯规，越位犯规发生在青岛红狮5号手臂接触武汉三镇B队12号之前，应判罚越位犯规在先。裁判员取消罚球点球，并判武汉三镇B队12号越位犯规的最终决定正确。",
+   "seq": 238,
+   "match_info": "中乙联赛第29轮，武汉三镇B队VS青岛红狮",
+   "comp": "中乙联赛",
+   "round": "第29轮",
+   "home": "武汉三镇B队",
+   "away": "青岛红狮",
+   "minute": "90+5",
+   "referee_verdict": "correct",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869702823656.mp4"
+   ],
+   "video_files": [
+    "2026/i25c06-1.mp4"
+   ],
+   "category": "offside",
+   "category_name": "越位",
+   "tags": [
+    "干扰对方",
+    "越位在先",
+    "取消点球"
+   ],
+   "referee_verdict_name": "支持原判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 25,
+   "no": 7,
+   "desc": "判例七：中乙联赛第29轮，武汉三镇B队VS青岛红狮。比赛第40分钟，裁判员先判青岛红狮6号队员在本方罚球区内对武汉三镇B队19号犯规，由武汉三镇B队踢罚球点球。后经与助理裁判员商议，裁判员取消罚球点球判罚，并坠球恢复比赛。",
+   "appeal": "武汉三镇俱乐部申诉意见认为：裁判员不应改判，应维持罚球点球判罚。",
+   "conclusion": "对于此判例，评议组一致认为：青岛红狮6号在防守中无犯规动作，武汉三镇B队19号与对方队员身体接触并倒地，双方的接触属于比赛中的正常接触，不构成犯规。裁判员取消罚球点球的最终决定正确。",
+   "seq": 239,
+   "match_info": "中乙联赛第29轮，武汉三镇B队VS青岛红狮",
+   "comp": "中乙联赛",
+   "round": "第29轮",
+   "home": "武汉三镇B队",
+   "away": "青岛红狮",
+   "minute": "40",
+   "referee_verdict": "correct",
+   "var_verdict": "none",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261105/1793869774722122.mp4"
+   ],
+   "video_files": [
+    "2026/i25c07-1.mp4"
+   ],
+   "category": "penalty_area",
+   "category_name": "罚球区内判罚（点球）",
+   "tags": [
+    "正常接触",
+    "取消点球",
+    "坠球"
+   ],
+   "referee_verdict_name": "支持原判",
+   "var_verdict_name": "未涉及"
+  },
+  {
+   "issue": 26,
+   "no": 1,
+   "desc": "判例一：中甲联赛第30轮，深圳青年人VS苏州东吴。比赛第42分钟，裁判员判深圳青年人16号队员在本方罚球区内对苏州东吴9号队员犯规，判罚球点球，并出示黄牌警告深圳青年人16号，经VAR介入，裁判员在场回看后，取消黄牌，改为向深圳青年人16号出示红牌罚令出场。",
+   "appeal": "深圳青年人俱乐部申诉意见认为：对方进攻中传球时，对方42号队员处于越位位置，并随后触球将球传给9号。应判对方42号越位犯规在先。另外本方16号对对方9号的犯规地点应为罚球区外，不应判罚球点球。",
+   "conclusion": "对于此判例，评议组一致认为：苏州东吴进攻队员触球时，其42号队员处于越位位置，之后深圳青年人队员被动触球，并非主动处理球，按照竞赛规则，应视为从防守队员折射，苏州东吴42号随后触球，构成在越位位置获利的越位犯规。应判苏州东吴42号越位犯规，由深圳青年人踢间接任意球恢复比赛。不应判罚后续的犯规事件，VAR也应以越位事件介入。裁判员判罚后续犯规、罚球点球和红牌的决定均为错误，VAR介入后续犯规事件错误。",
+   "seq": 240,
+   "match_info": "中甲联赛第30轮，深圳青年人VS苏州东吴",
+   "comp": "中甲联赛",
+   "round": "第30轮",
+   "home": "深圳青年人",
+   "away": "苏州东吴",
+   "minute": "42",
+   "referee_verdict": "wrong",
+   "var_verdict": "wrong",
+   "video_urls": [
+    "https://videooss.thecfa.cn/upload/video/20261111/1794367394509020.mp4"
+   ],
+   "video_files": [
+    "2026/i26c01-1.mp4"
+   ],
+   "category": "offside",
+   "category_name": "越位",
+   "tags": [
+    "折射",
+    "越位位置获利",
+    "错判点球",
+    "错判红牌",
+    "VAR介入错误"
+   ],
+   "referee_verdict_name": "错漏判",
+   "var_verdict_name": "VAR错误"
   }
  ]
 }

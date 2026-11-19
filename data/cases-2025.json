@@ -17,7 +17,7 @@
    "date": "20250305",
    "summary": "3月4日晚，中国足协裁判委员会评议组进行了本赛季第二期（20250304期）裁判评议工作。本期主要评议3个判例，均来自中超联赛，最终评议组认定其中有2例错漏判。\n本期评议会采用视频会议形式，邀请了中足联纪检人员和两名来自社会和媒体界的足球社会监督员列席旁听会议，采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 0,
+   "parsed_wrong": 2,
    "video_count": 3
   },
   {
@@ -87,7 +87,7 @@
    "date": "20250501",
    "summary": "4月29日晚，中国足协裁判委员会评议组进行了本赛季第九期（20250429期）裁判评议工作。本期评议共13个判例，分别来自近期的中超、中甲联赛，其中9例为俱乐部申诉，另有4例为社会关注度高的判例。最终评议组认定其中6个判例存在裁判错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 6,
-   "parsed_wrong": 7,
+   "parsed_wrong": 5,
    "video_count": 13
   },
   {
@@ -97,7 +97,7 @@
    "date": "20250507",
    "summary": "5月6日晚，中国足协裁判委员会评议组进行了本赛季第十期（20250506期）裁判评议工作。本期评议共7个判例，分别来自近期的中超、中甲和中乙联赛，且全部来自相关俱乐部的申诉。最终评议组认定其中3个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 3,
-   "parsed_wrong": 2,
+   "parsed_wrong": 3,
    "video_count": 7
   },
   {
@@ -117,7 +117,7 @@
    "date": "20250521",
    "summary": "5月20日晚，中国足协裁判委员会评议组进行了本赛季第十二期（20250520期）裁判评议工作。本期主要评议10个判例，分别来自近期的中超、中甲和中乙联赛相关俱乐部的申诉。最终评议组认定其中4个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 4,
-   "parsed_wrong": 3,
+   "parsed_wrong": 4,
    "video_count": 10
   },
   {
@@ -127,7 +127,7 @@
    "date": "20250604",
    "summary": "6月3日晚，中国足协裁判委员会评议组进行了本赛季第十三期（20250603期）裁判评议工作。本期共评议4个判例，分别来自近期的中甲联赛和全运会足球项目比赛中相关俱乐部或参赛队的申诉。最终评议组认定其中2个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 0,
+   "parsed_wrong": 2,
    "video_count": 4
   },
   {
@@ -137,7 +137,7 @@
    "date": "20250618",
    "summary": "6月17日晚，中国足协裁判委员会评议组进行了本赛季第十四期（20250617期）裁判评议工作。本期共评议12个判例，来自近期的中超、中甲、中乙、女超联赛以及全运会足球项目比赛中相关俱乐部或参赛队的申诉（11个），以及评议组本着统一判罚尺度、提高判罚质量的目的而评议的判例（1个，判例十二）。评议组认定其中2个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 1,
+   "parsed_wrong": 2,
    "video_count": 12
   },
   {
@@ -167,7 +167,7 @@
    "date": "20250709",
    "summary": "7月8日晚，中国足协裁判委员会评议组进行了本赛季第十七期（20250708期）裁判评议工作。本期评议7个判例，来自近期的中甲、中乙和女甲联赛中相关俱乐部的申诉。评议组认定其中2个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 1,
+   "parsed_wrong": 2,
    "video_count": 7
   },
   {
@@ -177,7 +177,7 @@
    "date": "20250718",
    "summary": "7月16日晚，中国足协裁判委员会评议组进行了本赛季第十八期（20250716期）裁判评议工作。本期评议8个判例，来自近期的中乙联赛和女甲联赛中相关俱乐部的申诉。评议组认定其中2个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 5,
+   "parsed_wrong": 2,
    "video_count": 8
   },
   {
@@ -187,7 +187,7 @@
    "date": "20250724",
    "summary": "7月22日晚，中国足协裁判委员会评议组进行了本赛季第十九期（20250722期）裁判评议工作。本期主要评议7个判例，来自近期的中甲、中乙和女超联赛中相关俱乐部的申诉。评议组认定其中3个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 3,
-   "parsed_wrong": 4,
+   "parsed_wrong": 3,
    "video_count": 7
   },
   {
@@ -227,7 +227,7 @@
    "date": "20250820",
    "summary": "8月19日晚，中国足协裁判委员会评议组进行了本赛季第二十三期（20250819期）裁判评议工作。本期共评议5个判例，来自近期的中超联赛、中甲联赛中相关俱乐部的申诉。评议组认定其中1个判例存在漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 1,
-   "parsed_wrong": 2,
+   "parsed_wrong": 1,
    "video_count": 5
   },
   {
@@ -257,8 +257,8 @@
    "date": "20250917",
    "summary": "9月16日晚，中国足协裁判委员会评议组进行了本赛季第二十六期（20250916期）裁判评议工作。本期共评议12个判例，分别来自近期的中超、中甲、中乙以及女超联赛中相关俱乐部的申诉。评议组认定其中3个判例存在错漏判。另有2个判例，评议组研究后决定提交国际足联裁判专家提出评议意见，再作出评议结论并于下一期向社会公布。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 3,
-   "parsed_wrong": 3,
-   "video_count": 12
+   "parsed_wrong": 4,
+   "video_count": 14
   },
   {
    "no": 27,
@@ -267,8 +267,8 @@
    "date": "20250924",
    "summary": "9月23日晚，中国足协裁判委员会评议组进行了本赛季第二十七期（20250923期）裁判评议工作。本期主要评议2个判例，来自近期的中乙联赛中相关俱乐部的申诉。评议组认定其中无错漏判。另有2个判例，评议组在第二十六期（20250916期）评议后征求了国际足联裁判专家意见后认定其中1个判例存在漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员和两名来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 1,
-   "parsed_wrong": 1,
-   "video_count": 4
+   "parsed_wrong": 0,
+   "video_count": 2
   },
   {
    "no": 28,
@@ -307,7 +307,7 @@
    "date": "20251029",
    "summary": "10月28日晚，中国足协裁判委员会评议组进行了本赛季第三十一期（20251028期）裁判评议工作。本期主要评议10个判例，分别来自近期的中超联赛以及全运会U18男子足球项目比赛中相关俱乐部或参赛队的申诉。评议组认定其中2个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 2,
-   "parsed_wrong": 2,
+   "parsed_wrong": 3,
    "video_count": 10
   },
   {
@@ -317,7 +317,7 @@
    "date": "20251105",
    "summary": "11月4日晚，中国足协裁判委员会评议组进行了本赛季第三十二期（20251104期）裁判评议工作。本期主要评议6个判例，分别来自近期的中超联赛、中甲联赛以及全运会U20男子足球项目比赛中相关俱乐部或参赛队的申诉。评议组认定其中4个判例在主要判罚决定上存在错漏判。\n本期评议会采用视频会议形式，邀请了中足联代表、中国足协纪检人员以及来自社会与媒体界的足球社会监督员列席旁听会议。会议采用评议组成员集体讨论和单独发表意见相结合的形式，得出评议结论如下：",
    "expected_wrong": 4,
-   "parsed_wrong": 5,
+   "parsed_wrong": 4,
    "video_count": 6
   }
  ],
@@ -334,7 +334,7 @@
    "round": "第一轮",
    "home": "上海申花",
    "away": "长春亚泰",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "wrong",
    "var_verdict": "correct",
    "video_files": [
@@ -424,7 +424,7 @@
    "round": "第2轮",
    "home": "成都蓉城",
    "away": "天津津门虎",
-   "minute": "",
+   "minute": "45+3",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_files": [
@@ -724,7 +724,7 @@
    "round": "第1轮",
    "home": "北京理工",
    "away": "无锡吴钩",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -814,7 +814,7 @@
    "round": "第2轮",
    "home": "陕西联合月亮泊",
    "away": "定南赣联",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -1138,7 +1138,7 @@
    "round": "第4轮",
    "home": "长春亚泰",
    "away": "武汉三镇",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -1286,7 +1286,7 @@
    "round": "第4轮",
    "home": "南京城市",
    "away": "上海嘉定汇龙",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -1347,7 +1347,7 @@
    "round": "第4轮",
    "home": "南京城市",
    "away": "上海嘉定汇龙",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -1464,7 +1464,7 @@
    "round": "第4轮",
    "home": "山东泰山B队",
    "away": "无锡吴钩",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -2059,7 +2059,7 @@
    "round": "第10轮",
    "home": "深圳新鹏城",
    "away": "天津津门虎",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -2394,7 +2394,7 @@
    "round": "第9轮",
    "home": "成都蓉城B队",
    "away": "贵州筑城竞技",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -2515,7 +2515,7 @@
    "round": "第9轮",
    "home": "大连鲲城",
    "away": "深圳青年人",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -2544,7 +2544,7 @@
    "round": "第9轮",
    "home": "陕西联合",
    "away": "南通支云",
-   "minute": "",
+   "minute": "90+2",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -2575,7 +2575,7 @@
    "round": "第9轮",
    "home": "陕西联合",
    "away": "南通支云",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -2635,7 +2635,7 @@
    "round": "第10轮",
    "home": "兰州陇原竞技",
    "away": "上海海港富盛经开",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -2782,7 +2782,7 @@
    "round": "第11轮",
    "home": "南通支云",
    "away": "定南赣联",
-   "minute": "",
+   "minute": "45+2",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -2842,7 +2842,7 @@
    "round": "第14轮",
    "home": "浙江俱乐部",
    "away": "上海海港",
-   "minute": "",
+   "minute": "90+1",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_files": [
@@ -3440,7 +3440,7 @@
    "round": "第10轮",
    "home": "广东省女足",
    "away": "辽宁沈北禾丰女足",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -3701,7 +3701,7 @@
    "round": "第16轮",
    "home": "广西恒宸",
    "away": "深圳二零二八",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -4029,7 +4029,7 @@
    "round": "第19轮",
    "home": "广东铭途",
    "away": "温州俱乐部中胤",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -4176,7 +4176,7 @@
    "round": "第8轮",
    "home": "同济海港女足",
    "away": "天津圣德女足",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "pending",
    "var_verdict": "none",
    "video_files": [
@@ -4414,7 +4414,7 @@
    "round": "第18轮",
    "home": "上海申花",
    "away": "河南俱乐部酒祖杜康",
-   "minute": "",
+   "minute": "45+7",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -4444,7 +4444,7 @@
    "round": "第18轮",
    "home": "上海申花",
    "away": "河南俱乐部酒祖杜康",
-   "minute": "",
+   "minute": "90+8",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -4474,7 +4474,7 @@
    "round": "第18轮",
    "home": "上海申花",
    "away": "河南俱乐部酒祖杜康",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -4536,7 +4536,7 @@
    "round": "第18轮",
    "home": "南通支云",
    "away": "南京城市",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -4567,7 +4567,7 @@
    "round": "第21轮",
    "home": "杭州临平吴越",
    "away": "无锡吴钩",
-   "minute": "",
+   "minute": "90+4",
    "referee_verdict": "pending",
    "var_verdict": "none",
    "video_files": [
@@ -4628,7 +4628,7 @@
    "round": "第21轮",
    "home": "湖北青年星",
    "away": "江西庐山",
-   "minute": "",
+   "minute": "90+7",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -4689,7 +4689,7 @@
    "round": "第21轮",
    "home": "赣州瑞狮",
    "away": "武汉三镇B队",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -4719,7 +4719,7 @@
    "round": "第21轮",
    "home": "广东铭途",
    "away": "昆明城星",
-   "minute": "",
+   "minute": "90+2",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -4749,7 +4749,7 @@
    "round": "第21轮",
    "home": "广东铭途",
    "away": "昆明城星",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -4867,7 +4867,7 @@
    "round": "第19轮",
    "home": "武汉三镇",
    "away": "长春亚泰",
-   "minute": "",
+   "minute": "45+7",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -5017,7 +5017,7 @@
    "round": "第19轮",
    "home": "辽宁铁人",
    "away": "广东广州豹",
-   "minute": "",
+   "minute": "90+16",
    "referee_verdict": "correct",
    "var_verdict": "wrong",
    "video_files": [
@@ -5227,7 +5227,7 @@
    "round": "第21轮",
    "home": "青岛西海岸",
    "away": "北京国安",
-   "minute": "",
+   "minute": "90+2",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -5286,7 +5286,7 @@
    "round": "第21轮",
    "home": "上海嘉定汇龙",
    "away": "苏州东吴",
-   "minute": "",
+   "minute": "45+4",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -5377,7 +5377,7 @@
    "round": "第22轮",
    "home": "长春亚泰",
    "away": "深圳新鹏城",
-   "minute": "",
+   "minute": "45+2",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -5468,7 +5468,7 @@
    "round": "第22轮",
    "home": "长春亚泰",
    "away": "深圳新鹏城",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -5529,7 +5529,7 @@
    "round": "第23轮",
    "home": "浙江俱乐部绿城",
    "away": "天津津门虎",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -5615,7 +5615,7 @@
    "round": "第23轮",
    "home": "云南玉昆",
    "away": "长春亚泰",
-   "minute": "",
+   "minute": "90+5",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -5678,7 +5678,7 @@
    "round": "第24轮",
    "home": "广西恒宸",
    "away": "山东泰山B队",
-   "minute": "",
+   "minute": "90+9",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -5980,7 +5980,7 @@
    "round": "第22轮",
    "home": "南通支云",
    "away": "苏州东吴",
-   "minute": "",
+   "minute": "90+2",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -6010,7 +6010,7 @@
    "round": "第25轮",
    "home": "昆明城星",
    "away": "泰安天贶",
-   "minute": "",
+   "minute": "90+8",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -6189,7 +6189,7 @@
    "round": "第24轮",
    "home": "佛山南狮",
    "away": "广西平果国晶",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "wrong",
    "var_verdict": "wrong",
    "video_files": [
@@ -6282,7 +6282,7 @@
    "round": "第24轮",
    "home": "上海嘉定汇龙",
    "away": "广东广州豹",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "none",
    "video_files": [
@@ -6673,7 +6673,7 @@
    "round": "第28轮",
    "home": "上海申花",
    "away": "大连英博",
-   "minute": "",
+   "minute": "45+1",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -6703,7 +6703,7 @@
    "round": "第28轮",
    "home": "上海申花",
    "away": "大连英博",
-   "minute": "",
+   "minute": "90+6",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -6734,7 +6734,7 @@
    "round": "第28轮",
    "home": "上海申花",
    "away": "大连英博",
-   "minute": "",
+   "minute": "90+16",
    "referee_verdict": "wrong",
    "var_verdict": "none",
    "video_files": [
@@ -6796,7 +6796,7 @@
    "round": "第28轮",
    "home": "青岛西海岸",
    "away": "成都蓉城",
-   "minute": "",
+   "minute": "90+3",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -6827,7 +6827,7 @@
    "round": "第28轮",
    "home": "青岛西海岸",
    "away": "成都蓉城",
-   "minute": "",
+   "minute": "90+10",
    "referee_verdict": "correct",
    "var_verdict": "correct",
    "video_files": [
@@ -7116,5 +7116,6 @@
    "referee_verdict_name": "支持原判",
    "var_verdict_name": "未涉及"
   }
- ]
+ ],
+ "season": "2025"
 }

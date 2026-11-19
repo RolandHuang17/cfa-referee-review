@@ -20,9 +20,12 @@ import re
 import sys
 import time
 
-from lib.safe_http import fetch_text
+from lib.atomic_json import write_json
+from lib.source_cache import SourceCache
 
 from lib.paths import HNS_CACHE, HNS_JSON
+
+CACHE_READER = SourceCache()
 
 LIST_URL = "https://hns.family/hns/suci"
 DELAY = (2.0, 4.0)
@@ -43,23 +46,9 @@ def clean(s: str) -> str:
 
 
 def fetch_url(url: str, minlen: int, slug: str) -> str:
-    HNS_CACHE.mkdir(parents=True, exist_ok=True)
-    cache_f = HNS_CACHE / f"{slug}.html"
-    if cache_f.exists() and cache_f.stat().st_size > minlen:
-        return cache_f.read_text(encoding="utf-8", errors="replace")
-    for wait in [0] + BACKOFFS:
-        if wait:
-            time.sleep(wait)
-        try:
-            st, txt = fetch_text(url, timeout=45, retries=2)
-            if st == 200 and len(txt) > minlen:
-                cache_f.write_text(txt, encoding="utf-8")
-                return txt
-            if st == 404:
-                return ""
-        except Exception:  # noqa: BLE001
-            pass
-    return ""
+    return CACHE_READER.read(
+        url, HNS_CACHE / f"{slug}.html", minlen, mutable=url == LIST_URL
+    )
 
 
 def parse_listing(html: str) -> list:
@@ -87,6 +76,10 @@ def parse_listing(html: str) -> list:
 def split_paras(chunk: str) -> list:
     """判例块 <p> 文本 → 行列表（"- " 前缀行拆为要点项）"""
     paras = []
+    if not re.match(r"\s*<p\b", chunk):
+        chunk = "<p>" + chunk
+    if not re.search(r"</p>\s*$", chunk):
+        chunk += "</p>"
     for m in re.finditer(r"<p[^>]*>(.*?)</p>", chunk, re.S):
         raw = re.sub(r"<[^>]+>", "\n", m.group(1))
         raw = htmllib.unescape(raw).replace("\xa0", " ")
@@ -106,7 +99,7 @@ def split_paras(chunk: str) -> list:
     return paras
 
 
-def parse_article(pid: str, html: str) -> dict | None:
+def parse_article(pid: str, html: str) -> dict:
     h1 = re.search(r"<h1[^>]*>(.*?)</h1>", html, re.S)
     title = clean(h1.group(1)) if h1 else ""
     if "analiza" not in title.lower():
@@ -123,7 +116,9 @@ def parse_article(pid: str, html: str) -> dict | None:
     # 逐判例切分
     marks = [
         (m.start(), m.end(), m.group(1))
-        for m in re.finditer(r"<p[^>]*>\s*<strong>\s*Situacija br\.\s*(\d+)", body)
+        for m in re.finditer(
+            r"(?:<p[^>]*>\s*)?<strong[^>]*>\s*Situacija br\.\s*(\d+)", body
+        )
     ]
     incidents = []
     for i, (s, hdr_end, no) in enumerate(marks):
@@ -159,13 +154,18 @@ def parse_article(pid: str, html: str) -> dict | None:
         elif re.search(r"predstavlja .{0,40}pogrešk", vtext, re.I):
             verdict = "incorrect"  # 构成清晰明显错误
         elif re.search(
-            r"podržava|ispravno primijenjeno|(?<!ne)ispravno|(?<!ne)ispravnom|(?<!ne)ispravna",
+            r"podržava|potvrđuje|suglasna|slaže|ispravno primijenjeno|(?<!ne)ispravno|(?<!ne)ispravnom|(?<!ne)ispravna",
             vtext,
             re.I,
         ):
             verdict = "correct"
         elif re.search(r"ne pokazuje .{0,40}pogrešk", vtext, re.I):
             verdict = "correct"  # 录像未显示清晰明显错误
+        expected = vtext.rsplit("Očekivana odluka:", 1)[-1]
+        if re.search(r"trebao biti opomenut|trebao biti isključen", expected):
+            verdict = "incorrect"
+        if "VAR" in vtext and re.search(r"pogrešk|nisu u skladu|ne očekuje", expected):
+            verdict = "other"  # 初判、最终判罚与 VAR 程序存在多层评价，正文分别说明。
         incidents.append(
             {
                 "no": int(no),
@@ -188,8 +188,25 @@ def parse_article(pid: str, html: str) -> dict | None:
     }
 
 
+def merge_round(previous, current):
+    """按判例编号合并，解析到部分正文时仍保留历史判例及视频。"""
+    merged = dict(previous)
+    merged.update({key: value for key, value in current.items() if value})
+    incidents = {item["no"]: dict(item) for item in previous.get("incidents", [])}
+    for item in current.get("incidents", []):
+        old = incidents.get(item["no"], {})
+        updated = dict(old)
+        updated.update({key: value for key, value in item.items() if value})
+        updated["videos"] = list(
+            dict.fromkeys(old.get("videos", []) + item.get("videos", []))
+        )
+        incidents[item["no"]] = updated
+    merged["incidents"] = sorted(incidents.values(), key=lambda item: item["no"])
+    return merged
+
+
 def parse_all():
-    prev = {}
+    prev, old = {}, {}
     if HNS_JSON.exists():
         try:
             old = json.loads(HNS_JSON.read_text(encoding="utf-8"))
@@ -209,7 +226,7 @@ def parse_all():
     for pid in SEED_IDS:
         if pid not in found:
             found[pid] = {"id": str(pid), "slug": "", "title": "", "date": ""}
-    rounds = []
+    rounds = dict(prev)
     for pid, meta in sorted(found.items(), key=lambda kv: -int(kv[0])):
         pid = str(pid)
         html = fetch_url(f"https://hns.family/vijesti/{pid}/", MIN_ART, pid)
@@ -218,31 +235,41 @@ def parse_all():
             continue
         r = parse_article(pid, html)
         if not r:
+            CACHE_READER.failed.add(f"https://hns.family/vijesti/{pid}/")
             print(f"⚠ 非判例分析文章，跳过: {pid}", flush=True)
             continue
         if not r["date"]:
             r["date"] = meta.get("date", "")
-        if pid in prev:  # 增量合并（字段级保底）
-            for k, v in prev[pid].items():
-                if not r.get(k) and v:
-                    r[k] = v
-        rounds.append(r)
+        if pid in prev:
+            if len(r["incidents"]) < len(prev[pid].get("incidents", [])):
+                CACHE_READER.failed.add(f"https://hns.family/vijesti/{pid}/")
+                print(f"⚠ {pid} 本次判例数减少，保留历史记录待回查", flush=True)
+            r = merge_round(prev[pid], r)
+        rounds[pid] = r
         print(
             f"  {pid} 「{r['title'][:46]}」 {r['date']} 判例 {len(r['incidents'])} 个 "
             f"视频 {sum(len(i['videos']) for i in r['incidents'])} 段",
             flush=True,
         )
-        time.sleep(2.0)
-    rounds.sort(key=lambda x: x.get("date") or "0000", reverse=True)
+        if not CACHE_READER.offline:
+            time.sleep(2.0)
+    rounds = sorted(
+        rounds.values(), key=lambda x: x.get("date") or "0000", reverse=True
+    )
     data = {
         "source": LIST_URL,
         "source_name": "克罗地亚足协 HNS《Sudačka analiza》逐轮判例分析（Sudačka komisija / Layec）",
-        "fetched": time.strftime("%Y-%m-%d"),
+        "fetched": time.strftime("%Y-%m-%d")
+        if lhtml
+        and parse_listing(lhtml)
+        and LIST_URL in CACHE_READER.verified
+        and not CACHE_READER.failed
+        else old.get("fetched", ""),
         "rounds": rounds,
     }
-    HNS_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    data["latest_content"] = max((r["date"] for r in rounds), default="")
+    if rounds:
+        write_json(HNS_JSON, data)
     n_inc = sum(len(r["incidents"]) for r in rounds)
     n_vid = sum(len(i["videos"]) for r in rounds for i in r["incidents"])
     verd = {}
@@ -257,7 +284,11 @@ def parse_all():
 
 def main():
     mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    global CACHE_READER
     if mode in ("fetch", "parse", "all"):
+        CACHE_READER = SourceCache(
+            offline=mode == "parse", refresh="--refresh" in sys.argv
+        )
         parse_all()
     else:
         raise SystemExit("用法: fetch_hns.py [fetch|parse|all]")

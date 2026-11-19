@@ -713,6 +713,58 @@ IMPACT = {
     ],
 }
 
+IMPACT.update(
+    {
+        229: [
+            {
+                "team": "厦门飞鹭",
+                "type": "denied_goal",
+                "note": "16号未处越位位置，后续进球应有效",
+            }
+        ],
+        231: [
+            {
+                "team": "兰州陇原竞技天佑德",
+                "type": "denied_goal",
+                "note": "球始终处于场地内，4号进球应有效",
+            }
+        ],
+        233: [
+            {
+                "team": "广西恒宸",
+                "type": "opp_goal_should_disallow",
+                "note": "无锡吴钩19号越位干扰比赛，进球应无效",
+            }
+        ],
+        236: [
+            {
+                "team": "兰州陇原竞技天佑德",
+                "type": "missed_yellow_opponent",
+                "note": "湖北青年星19号鲁莽使用手臂，漏判犯规及黄牌",
+            }
+        ],
+        237: [
+            {
+                "team": "武汉三镇B队",
+                "type": "missed_penalty",
+                "note": "青岛红狮队员手臂处于不自然位置，漏判手球点球",
+            }
+        ],
+        240: [
+            {
+                "team": "深圳青年人",
+                "type": "wrong_penalty_against",
+                "note": "苏州东吴42号越位在先，后续点球不应判罚",
+            },
+            {
+                "team": "深圳青年人",
+                "type": "wrong_red_self",
+                "note": "越位在先，后续16号红牌不应判罚",
+            },
+        ],
+    }
+)
+
 # 范围排除：女子赛事（与 2024/2025 口径一致），不做影响标注
 OUT_OF_SCOPE = {
     103: "女超",

@@ -32,11 +32,11 @@ SEASONS = ("2024", "2025", "2026")
 EXPECTED = {
     "2024": (160, 161, {"wrong": 60, "correct": 99, "pending": 1}),
     "2025": (227, 229, {"wrong": 83, "correct": 138, "pending": 6}),
-    "2026": (228, 227, {"wrong": 96, "correct": 123, "pending": 9}),
+    "2026": (240, 239, {"wrong": 102, "correct": 129, "pending": 9}),
 }
 # 考题模式题库基准：每季「有视频且有认定原文」的判例数 + 尺度场景数（改口径需同步）。
 # 注意 2024 第1期为"结论摘要"式文章，无认定原文的判例（如 seq3）本就不入判例池，属设计内
-EXPECTED_QUIZ = {"2024": 141, "2025": 227, "2026": 227}
+EXPECTED_QUIZ = {"2024": 156, "2025": 227, "2026": 239}
 # VAR 协议题基准：IFAB 协议 FAQ 全部 12 条（与 fetch_ifab.py 的 FAQ 集合一致）
 VAR_QUIZ_FAQ_IDS = {f"q{i}" for i in range(1, 13)}
 
@@ -192,7 +192,7 @@ def test_quiz_bank_pool():
                         for it in g.get("items", []):
                             dec = it.get("decision") or []
                             if (
-                                dec
+                                any(d.get("active") for d in dec)
                                 and not any(
                                     x.get("label") == "VAR 机制讲解" for x in dec
                                 )

@@ -45,7 +45,7 @@ def is_quiz_scale(item):
     """与 build_quiz 一致的尺度场景入池条件。"""
     decision = item.get("decision") or []
     return (
-        bool(decision)
+        any(d.get("active") for d in decision)
         and not any(x.get("label") == "VAR 机制讲解" for x in decision)
         and bool(item.get("video"))
     )

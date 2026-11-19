@@ -1,6 +1,6 @@
 {
  "version": 1,
- "generated": "2026-10-26",
+ "generated": "2026-11-14",
  "note": "考题答案库（判例轴）：r=判罚决定 c=纪律处分，取值见 rLabels/cLabels；auto=脚本起草，reviewed=人工已校对（quiz 页只对 reviewed 条目出②③问）",
  "rLabels": {
   "playon": "不犯规（比赛继续）",
@@ -62,9 +62,12 @@
   "2024-25": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "上海嘉定汇龙7号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240430/34273.html"
   },
   "2024-26": {
    "r": "playon",
@@ -262,9 +265,12 @@
   "2024-54": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "湖北青年星60号守门员",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240515/34422.html"
   },
   "2024-55": {
    "r": "directfk",
@@ -367,9 +373,12 @@
   "2024-69": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "廊坊荣耀之城9号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240612/34609.html"
   },
   "2024-70": {
    "r": "goal_valid",
@@ -499,9 +508,12 @@
   "2024-88": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "江苏无锡女足5号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240703/34717.html"
   },
   "2024-89": {
    "r": "goal_valid",
@@ -548,16 +560,22 @@
   "2024-95": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "泰安天贶11号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240717/34776.html"
   },
   "2024-96": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "海口名城60号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240717/34776.html"
   },
   "2024-97": {
    "r": "penalty",
@@ -631,8 +649,11 @@
   "2024-107": {
    "r": "penalty",
    "c": "none",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "无锡吴钩36号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20240725/34794.html"
   },
   "2024-108": {
    "r": null,
@@ -990,9 +1011,12 @@
   "2025-1": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "上海申花4号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20250227/35667.html"
   },
   "2025-2": {
    "r": null,
@@ -1444,9 +1468,12 @@
   "2025-67": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "深圳新鹏城9号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20250514/36471.html"
   },
   "2025-68": {
    "r": null,
@@ -1953,8 +1980,11 @@
   "2025-142": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "南通支云10号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/zyls1/20250730/36757.html"
   },
   "2025-144": {
    "r": null,
@@ -2259,16 +2289,22 @@
   "2025-187": {
    "r": "playon",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "high"
+   "conf": "high",
+   "discipline_target": "广东广州豹7号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20250917/36917.html"
   },
   "2025-188": {
    "r": null,
    "c": "red",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "low"
+   "conf": "low",
+   "discipline_target": "广东广州豹7号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20250917/36917.html"
   },
   "2025-189": {
    "r": "goal_valid",
@@ -2341,9 +2377,12 @@
   "2025-200": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "广东广州豹42号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20251001/36955.html"
   },
   "2025-201": {
    "r": "playon",
@@ -2397,9 +2436,12 @@
   "2025-208": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "重庆铜梁龙16号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20251008/36962.html"
   },
   "2025-209": {
    "r": "playon",
@@ -2502,9 +2544,12 @@
   "2025-225": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "上海嘉定汇龙9号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20251105/37055.html"
   },
   "2025-226": {
    "r": "goal_invalid",
@@ -2593,9 +2638,12 @@
   "2026-11": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "成都蓉城10号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260415/37566.html"
   },
   "2026-12": {
    "r": "goal_valid",
@@ -2814,9 +2862,12 @@
   "2026-47": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "深圳新鹏城36号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260429/37600.html"
   },
   "2026-48": {
    "r": "playon",
@@ -2842,9 +2893,12 @@
   "2026-51": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "天津津门虎5号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260429/37600.html"
   },
   "2026-52": {
    "r": "playon",
@@ -2856,9 +2910,12 @@
   "2026-53": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "重庆铜梁龙38号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260429/37600.html"
   },
   "2026-54": {
    "r": "playon",
@@ -2982,9 +3039,12 @@
   "2026-71": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "low"
+   "conf": "low",
+   "discipline_target": "青岛红狮32号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260506/37623.html"
   },
   "2026-72": {
    "r": "goal_invalid",
@@ -3017,9 +3077,12 @@
   "2026-76": {
    "r": "goal_valid",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "青岛海牛28号守门员",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260513/37665.html"
   },
   "2026-77": {
    "r": "goal_valid",
@@ -3086,8 +3149,11 @@
   "2026-87": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "湖北青年星8号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260513/37665.html"
   },
   "2026-88": {
    "r": "penalty",
@@ -3120,9 +3186,12 @@
   "2026-92": {
    "r": "playon",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "上海海港31号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260527/37734.html"
   },
   "2026-93": {
    "r": "directfk",
@@ -3251,8 +3320,11 @@
   },
   "2026-112": {
    "c": "red",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "山西崇德荣海38号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260604/37755.html"
   },
   "2026-113": {
    "r": null,
@@ -3396,7 +3468,8 @@
    "c": "red",
    "auto": true,
    "reviewed": true,
-   "conf": "low"
+   "conf": "low",
+   "discipline_target": "定南赣联10号队员"
   },
   "2026-134": {
    "r": "directfk",
@@ -3576,8 +3649,11 @@
   "2026-159": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "延边龙鼎37号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260722/37975.html"
   },
   "2026-160": {
    "r": "playon",
@@ -3624,9 +3700,12 @@
   "2026-166": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "云南玉昆34号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260729/38010.html"
   },
   "2026-167": {
    "r": "playon",
@@ -3721,9 +3800,12 @@
   "2026-181": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "南京城市9号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260806/38045.html"
   },
   "2026-182": {
    "r": null,
@@ -3791,16 +3873,22 @@
   "2026-192": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "辽宁铁人楠波湾3号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260812/38063.html"
   },
   "2026-193": {
    "r": null,
    "c": "yellow",
-   "auto": true,
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "重庆铜梁龙27号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260812/38063.html"
   },
   "2026-195": {
    "r": "playon",
@@ -3860,10 +3948,13 @@
   },
   "2026-203": {
    "r": null,
-   "c": "yellow",
-   "auto": true,
+   "c": "none",
+   "auto": false,
    "reviewed": true,
-   "conf": "medium"
+   "conf": "medium",
+   "discipline_target": "云南玉昆8号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象；原文明确不应出示黄牌，原答案yellow改为none",
+   "review_source": "https://www.thecfa.cn/cppy/20260819/38072.html"
   },
   "2026-204": {
    "r": "goal_invalid",
@@ -3889,8 +3980,11 @@
   "2026-208": {
    "r": "directfk",
    "c": "red",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "定南赣联16号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260826/38088.html"
   },
   "2026-209": {
    "r": "directfk",
@@ -3993,8 +4087,11 @@
   "2026-223": {
    "r": "directfk",
    "c": "yellow",
-   "auto": true,
-   "reviewed": true
+   "auto": false,
+   "reviewed": true,
+   "discipline_target": "广西恒宸18号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20260923/38210.html"
   },
   "2026-224": {
    "r": "penalty",
@@ -4014,7 +4111,10 @@
    "c": "yellow",
    "auto": false,
    "reviewed": true,
-   "conf": "high"
+   "conf": "high",
+   "discipline_target": "上海申花10号",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "review_source": "https://www.thecfa.cn/cppy/20251029/37036.html"
   },
   "2026-226": {
    "r": "goal_invalid",
@@ -4036,6 +4136,200 @@
    "auto": false,
    "reviewed": true,
    "conf": "high"
+  },
+  "2024-4": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "c": "yellow"
+  },
+  "2024-5": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_invalid"
+  },
+  "2024-6": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "playon"
+  },
+  "2024-7": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "directfk",
+   "c": "red"
+  },
+  "2024-8": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "playon"
+  },
+  "2024-9": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_invalid"
+  },
+  "2024-10": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "directfk",
+   "c": "red"
+  },
+  "2024-11": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "playon"
+  },
+  "2024-12": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "directfk",
+   "c": "yellow"
+  },
+  "2024-13": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "playon"
+  },
+  "2024-14": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "playon"
+  },
+  "2024-15": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "playon"
+  },
+  "2024-16": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "directfk",
+   "c": "red"
+  },
+  "2024-17": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "penalty",
+   "c": "yellow"
+  },
+  "2024-18": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "directfk",
+   "c": "red"
+  },
+  "2026-229": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_valid"
+  },
+  "2026-230": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_invalid"
+  },
+  "2026-231": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_valid"
+  },
+  "2026-232": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "c": "red",
+   "discipline_target": "深圳二零二八55号队员"
+  },
+  "2026-233": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_invalid"
+  },
+  "2026-234": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "directfk",
+   "c": "yellow"
+  },
+  "2026-235": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "goal_valid"
+  },
+  "2026-236": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核处分对象",
+   "r": "directfk",
+   "c": "yellow",
+   "discipline_target": "湖北青年星19号",
+   "review_source": "https://www.thecfa.cn/cppy/20261105/38390.html"
+  },
+  "2026-237": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "penalty"
+  },
+  "2026-238": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "indirectfk"
+  },
+  "2026-240": {
+   "auto": false,
+   "reviewed": true,
+   "conf": "high",
+   "review_note": "2026-11-14 对照归档中的逐例评议认定复核",
+   "r": "indirectfk",
+   "c": "none"
   }
  }
 }

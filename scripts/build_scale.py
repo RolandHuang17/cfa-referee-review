@@ -8,16 +8,21 @@
 判罚为 decision 编号(官方图卡 decision_N.png: 1=不犯规 2=间接任意球 3=直接任意球 4=罚球点球)
 + level(Y/R/N 牌; 越位系为 干扰对方/获得利益), 见 extract_season_2024。
 视频复制到 site/videos/scale/{year}/, 海报到 assets/scale/{year}-*.png。
-原包路径见 PACKAGES; 不在仓库内(第三方库会被安全钩子拦截), 缺失时复用已提取的 data/scale.json。
+默认从现有 JSON 离线渲染。传 --extract 重新提取并验证素材后发布。原包路径见 PACKAGES; 不在仓库内(第三方库会被安全钩子拦截), 缺失时复用已提取的 data/scale.json。
 """
 
+import argparse
 import json
+import os
+import tempfile
 import re
 import shutil
 import xml.etree.ElementTree as ET
 from pathlib import Path
 from urllib.parse import unquote
 
+from lib.atomic_json import write_json
+from lib.source_snapshot import require_coverage
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
@@ -136,7 +141,7 @@ def _varrule24(var: str, rule: str) -> str:
     return "；".join(dict.fromkeys(parts))  # 去重保序
 
 
-def extract_season_2024(year: str, pkg: Path):
+def extract_season_2024(year: str, pkg: Path, media):
     hits = sorted(pkg.glob("medias/chinese/xml")) + sorted(
         pkg.glob("*/medias/chinese/xml")
     )
@@ -150,15 +155,13 @@ def extract_season_2024(year: str, pkg: Path):
         xml_dir.glob("*.xml"), key=lambda p: int(p.stem) if p.stem.isdigit() else 999
     ):
         if xf.stat().st_size > D24_MAX_XML:
-            print(f"跳过 {xf.name}: 体积超限")
-            continue
+            raise ValueError(f"{xf.name}: XML 体积超限")
         meta_p = textos_dir / f"{xf.stem}_textos.txt"
         cat = _parse_textos(meta_p).get("subtitulo", "") if meta_p.exists() else ""
         try:
             root = _parse_xml24(_read_flex(xf))
         except (ET.ParseError, ValueError) as e:
-            print(f"跳过 {xf.name}: XML 解析失败 {e}")
-            continue
+            raise ValueError(f"{xf.name}: XML 解析失败") from e
         qs = list(root.iter("pregunta"))
         if not qs:
             continue
@@ -177,8 +180,7 @@ def extract_season_2024(year: str, pkg: Path):
                 alt = flv_dir / Path(flv).name.lower() if flv else None
                 src = alt if (alt and alt.exists()) else None
             if src is None:
-                print(f"跳过 2024 {hl_id}: 视频缺失({flv})")
-                continue
+                raise ValueError(f"2024 {hl_id}: 视频缺失({flv})")
             decision = (q.findtext("decision") or "").strip()
             level = (q.findtext("level") or "").strip()
             if cat == "视频助理裁判" and not decision and not level:
@@ -187,8 +189,7 @@ def extract_season_2024(year: str, pkg: Path):
                 matrix = _matrix24(
                     decision, level, offside=(decision.lower() == "y" or cat == "越位")
                 )
-            (SCALE_VIDEOS / year).mkdir(parents=True, exist_ok=True)
-            shutil.copy2(src, SCALE_VIDEOS / year / f"highlights-{hl_id}.mp4")
+            media.append((src, SCALE_VIDEOS / year / f"highlights-{hl_id}.mp4"))
             if cat not in groups:
                 groups[cat] = {"name": cat, "items": []}
                 order[cat] = len(order)
@@ -325,7 +326,7 @@ def sanitize_placeholders(data):
     return data
 
 
-def extract_season(year: str, pkg: Path):
+def extract_season(year: str, pkg: Path, media):
     cats = []
     cat_root = pkg / "files" / "categories"
     for cat_dir in sorted(p for p in cat_root.iterdir() if p.is_dir()):
@@ -343,14 +344,7 @@ def extract_season(year: str, pkg: Path):
                 if series == "var" and re.match(r"^场景 \d+$", gkey):
                     gkey = "视频助理裁判"
                     item["title"] = f"VAR 场景 {p.stem}"
-                (SCALE_VIDEOS / year).mkdir(parents=True, exist_ok=True)
-                (SCALE_POSTERS).mkdir(parents=True, exist_ok=True)
-                src_mp4 = series_dir / f"{p.stem}.mp4"
-                src_png = series_dir / f"{p.stem}.png"
-                if src_mp4.exists():
-                    shutil.copy2(src_mp4, files[0])
-                if src_png.exists():
-                    shutil.copy2(src_png, files[1])
+                media.extend(zip((p.with_suffix(".mp4"), p.with_suffix(".png")), files))
                 if gkey not in groups:
                     groups[gkey] = {"name": gkey, "items": []}
                     order.append(gkey)
@@ -367,26 +361,20 @@ def extract_season(year: str, pkg: Path):
     return {"sections": cats}
 
 
-def legacy_migrate():
-    """旧 v1 数据/文件迁移到按年分目录结构"""
-    if SCALE_JSON.exists():
-        d = json.loads(SCALE_JSON.read_text(encoding="utf-8"))
-        # 仅当是旧版单季结构（不含任何赛季键）才整体迁移，防止只重提单季数据时误删
-        if not (set(d.keys()) & {"2024", "2025", "2026"}):
-            SCALE_JSON.unlink()
-    for flat in SCALE_VIDEOS.glob("*.mp4"):  # 旧平铺 2026 视频 → 2026/
-        (SCALE_VIDEOS / "2026").mkdir(parents=True, exist_ok=True)
-        flat.rename(SCALE_VIDEOS / "2026" / f"highlights-{flat.stem}.mp4")
-    # 旧海报拍平为 {year}- 前缀（含历史遗留的年份子目录）
-    for old in list(SCALE_POSTERS.glob("fouls-misconduct-*.png")):
-        old.rename(SCALE_POSTERS / f"2026-{old.name}")
-    for sub in ("2026", "2025"):
-        d = SCALE_POSTERS / sub
-        if d.is_dir():
-            for f in d.iterdir():
-                name = f.name if f.name.startswith(sub) else f"{sub}-{f.name}"
-                f.rename(SCALE_POSTERS / name)
-            d.rmdir()
+def copy_media(source, destination):
+    """同目录临时文件在拷贝完成后替换；失败时原文件仍可播放。"""
+    if destination.is_file():
+        old, new = destination.stat(), source.stat()
+        if old.st_size == new.st_size and old.st_mtime_ns == new.st_mtime_ns:
+            return
+    destination.parent.mkdir(parents=True, exist_ok=True)
+    with tempfile.NamedTemporaryFile(dir=destination.parent, delete=False) as stream:
+        temporary = Path(stream.name)
+    try:
+        shutil.copy2(source, temporary)
+        os.replace(temporary, destination)
+    finally:
+        temporary.unlink(missing_ok=True)
 
 
 # 分组排序（同组按场景名聚合）
@@ -563,11 +551,11 @@ __TOPBAR__
   }, true);
   // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
   // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
-  (function(){
+  function restoreHash(){
     var h = decodeURIComponent(location.hash || "").slice(1);
     if (!h) return;
     var season = null, isCard = false;
-    if (/^s\d{4}$/.test(h)) season = h.slice(1);
+    if (/^s\d{4}(?:-|$)/.test(h)) { season = h.slice(1, 5); isCard = h.length > 5; }
     else if (/^h\d{4}-/.test(h)) { season = h.slice(1, 5); isCard = true; }
     else return;
     var t = Array.prototype.filter.call(tabs, function(x){ return x.dataset.season === season; })[0];
@@ -577,7 +565,9 @@ __TOPBAR__
       var target = document.getElementById(h);
       if (target) requestAnimationFrame(function(){ target.scrollIntoView({block: "start"}); });
     }
-  })();
+  }
+  restoreHash();
+  window.addEventListener("hashchange", restoreHash);
 })();
 </script>
 </body>
@@ -618,6 +608,8 @@ def build_page(data):
                     extra = ""
                     if h["note"]:
                         extra += f'  <p class="hnote">{h["note"]}</p>\n'
+                    if not any(d["active"] for d in h["decision"]):
+                        extra += '<p class="hnote">官方材料未提供本场景的判罚矩阵，供观看讨论。</p>'
                     if h["reason"]:
                         extra += f'  <p class="hreason">Reason: {h["reason"]}</p>\n'
                     if h.get("varrule"):
@@ -667,28 +659,62 @@ def build_page(data):
     print(f"生成 {SITE / 'scale.html'}（{'/'.join(seasons)} 共 {n} 例）")
 
 
-def main():
-    legacy_migrate()
-    data = {}
-    if SCALE_JSON.exists():
-        d = json.loads(SCALE_JSON.read_text(encoding="utf-8"))
-        data = {k: v for k, v in d.items() if isinstance(v, dict) and "sections" in v}
-    for year, pkg in PACKAGES.items():
-        if pkg.exists():
-            data[year] = (
-                extract_season_2024(year, pkg)
-                if year == "2024"
-                else extract_season(year, pkg)
-            )
-        elif year not in data:
-            print(f"跳过 {year}: 原包缺失且无已提取数据")
-    data = sanitize_placeholders(data)
-    for year in data:  # 组排序
-        for sec in data[year]["sections"]:
-            sec["groups"] = sort_groups(sec["groups"])
-    SCALE_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
+def scene_keys(season):
+    return [
+        (section["key"], item["series"], item["id"])
+        for section in season.get("sections", [])
+        for group in section["groups"]
+        for item in group["items"]
+    ]
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description="构建官方统一判罚尺度宣讲页")
+    mode = parser.add_mutually_exclusive_group()
+    mode.add_argument("--from-json", action="store_true", help="从已有快照构建（默认）")
+    mode.add_argument(
+        "--extract", action="store_true", help="显式从在位的原包提取并校验后发布"
     )
+    args = parser.parse_args(argv)
+    previous = (
+        json.loads(SCALE_JSON.read_text(encoding="utf-8"))
+        if SCALE_JSON.exists()
+        else {}
+    )
+    data = {
+        year: value for year, value in previous.items() if year in SCALE_SOURCE_URLS
+    }
+    if not args.extract:
+        if not data or data.keys() != previous.keys():
+            raise ValueError("缺少按年归档的尺度快照，请从完整原包运行 --extract")
+        build_page(data)
+        return
+
+    media = []
+    available = [year for year, pkg in PACKAGES.items() if pkg.is_dir()]
+    if not available:
+        raise ValueError("未找到可提取的原包")
+    if previous and not data and "2026" not in available:
+        raise ValueError("旧版单季快照迁移需要完整的 2026 原包")
+    for year in available:
+        extract = extract_season_2024 if year == "2024" else extract_season
+        candidate = extract(year, PACKAGES[year], media)
+        keys = scene_keys(candidate)
+        require_coverage(scene_keys(data.get(year, {})), keys, f"{year} 尺度场景")
+        if len(keys) != len(set(keys)):
+            raise ValueError(f"{year} 原包中存在重复场景")
+        for section in candidate["sections"]:
+            section["groups"] = sort_groups(section["groups"])
+        data[year] = candidate
+
+    for source, _ in media:
+        if not source.is_file() or not source.stat().st_size:
+            raise ValueError(f"原包素材缺失或为空: {source}")
+    for source, destination in media:
+        copy_media(source, destination)
+    data = sanitize_placeholders(data)
+    if data != previous:
+        write_json(SCALE_JSON, data)
     build_page(data)
 
 

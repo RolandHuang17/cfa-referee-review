@@ -18,9 +18,12 @@ import re
 import sys
 import time
 import zlib
+from lib.source_snapshot import SnapshotReads, publish
 from lib.safe_http import safe_request
 
 from lib.paths import UEFA_CACHE, UEFA_JSON
+
+READS = SnapshotReads()
 
 BASE = "https://www.uefa.com"
 START = BASE + "/running-competitions/refereeing/clear-line/"
@@ -153,26 +156,29 @@ def fetch_all():
         ],
         set(),
     )
+    incomplete = []
     while queue:
         url = queue.pop(0)
         if url in seen:
             continue
         seen.add(url)
         cache_f = UEFA_CACHE / f"{slug_of(url)}.html"
-        if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
-            print(f"缓存命中: {cache_f.name}", flush=True)
-            page = cache_f.read_text(encoding="utf-8", errors="replace")
-        else:
+        page = READS.cached(url, cache_f, MIN_BODY)
+        if page is None:
             print(f"抓取: {url}", flush=True)
             page = fetch_with_backoff(url)
             if not page:
                 print(f"  抓取失败（重跑本脚本可续）: {url}", flush=True)
+                if slug_of(url) not in {"red-cards", "penalties"}:
+                    incomplete.append(url)
                 continue
-            cache_f.write_text(page, encoding="utf-8")
+            READS.store(url, cache_f, page)
             time.sleep(random.uniform(*DELAY))
         for u in clear_line_links(page):
             if u not in seen:
                 queue.append(u)
+    if incomplete:
+        raise ValueError(f"UEFA 抓取不完整: {incomplete[0]}")
     print(f"fetch 完成，缓存页数: {len(list(UEFA_CACHE.glob('*.html')))}", flush=True)
 
 
@@ -262,6 +268,15 @@ def parse_page_meta(page: str) -> dict:
     return {"name_en": name_en, "intro": " ".join(paras[:2]), "criteria": criteria}
 
 
+def identities(data):
+    for group in data.get("groups", []):
+        for item in group["items"]:
+            yield group["key"], "video", item["id"]
+        for i, block in enumerate(group["criteria"]):
+            for j, _ in enumerate(block["items"]):
+                yield group["key"], "criterion", i, j
+
+
 def parse_all():
     groups = []
     for f in sorted(UEFA_CACHE.glob("*.html")):
@@ -284,23 +299,28 @@ def parse_all():
                 "items": items,
             }
         )
+    expected = {slug.rsplit("/", 1)[-1] for slug in SEED_SLUGS} - {
+        "red-cards",
+        "penalties",
+    }
+    if expected - {group["key"] for group in groups}:
+        raise ValueError("UEFA 缓存缺少完整判例组")
     order = {k: i for i, k in enumerate(GROUP_ORDER)}
     groups.sort(key=lambda g: order.get(g["key"], 99))
     data = {
         "source": START,
         "source_name": "UEFA Clear Line 官方判例库",
-        "fetched": time.strftime("%Y-%m-%d"),
         "groups": groups,
     }
-    UEFA_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    publish(UEFA_JSON, data, identities, checked=READS.checked)
     n = sum(len(g["items"]) for g in groups)
     print(f"parse 完成: {len(groups)} 组 / {n} 例 → {UEFA_JSON}", flush=True)
 
 
 def main():
-    mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    global READS
+    mode = next((arg for arg in sys.argv[1:] if not arg.startswith("--")), "all")
+    READS = SnapshotReads(offline=mode == "parse", refresh="--refresh" in sys.argv)
     if mode in ("fetch", "all"):
         fetch_all()
     if mode in ("parse", "all"):

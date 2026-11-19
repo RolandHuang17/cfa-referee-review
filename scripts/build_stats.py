@@ -19,6 +19,7 @@ from lib.seo import meta_tags
 from lib.team_names import normalize_name
 from lib.theme import inject_theme, js_icons, topbar
 
+from lib.issue_notes import ISSUE_NOTES, title_wrong_count
 from lib.paths import DATA, SITE
 from lib.site_stats import counts
 
@@ -68,6 +69,7 @@ TYPE_LABEL = {
     "wrong_yellow_self": "错判本队黄牌",
     "wrong_foul_called_self": "错判犯规",
     "wrong_offside_self": "误判越位",
+    "missed_offside_opponent": "漏判对方越位",
     "missed_foul_called": "漏判犯规（漏吹）",
 }
 TYPE_LABEL_BENEFIT = {
@@ -81,6 +83,7 @@ TYPE_LABEL_BENEFIT = {
     "wrong_yellow_self": "对方被错罚黄牌（获益）",
     "wrong_foul_called_self": "对方被错判犯规",
     "wrong_offside_self": "对方被误判越位",
+    "missed_offside_opponent": "漏判本队越位（获益）",
     "missed_foul_called": "漏判本队犯规（获益）",
 }
 LEAGUE_SHORT = {
@@ -106,6 +109,7 @@ TYPE_ORDER = [
     "wrong_foul_called_self",
     "missed_foul_called",
     "wrong_offside_self",
+    "missed_offside_opponent",
 ]
 
 
@@ -181,6 +185,8 @@ def build_matches(impact, scores, cmap):
             else:
                 a_c += df
                 h_c += do
+        if min(h_c, a_c) < 0:
+            raise ValueError(f"{key} 修正后比分为负数，请复核比分及进球影响标注")
         m["corrected_score"] = (h_c, a_c)
         act_res = result_of(m["score"]["h"], m["score"]["a"])
         cor_res = result_of(h_c, a_c)
@@ -196,6 +202,7 @@ def build_matches(impact, scores, cmap):
                 "wrong_foul_called_self",
                 "missed_foul_called",
                 "wrong_offside_self",
+                "missed_offside_opponent",
             )
             for i in m["items"]
         )
@@ -244,7 +251,7 @@ def team_stats(matches, view):
                 team,
                 {
                     "leagues": set(),
-                    "cases": 0,
+                    "case_seqs": set(),
                     "matches": set(),
                     "types": {},
                     "result": {
@@ -260,7 +267,7 @@ def team_stats(matches, view):
                 },
             )
             t["leagues"].add(LEAGUE_SHORT[m["league"]])
-            t["cases"] += 1
+            t["case_seqs"].add(it["seq"])
             t["matches"].add(key)
             t["types"][it["type"]] = t["types"].get(it["type"], 0) + 1
             if it["type"] in GOAL_DELTA:
@@ -286,6 +293,7 @@ def team_stats(matches, view):
                 }
             )
     for t in teams.values():
+        t["cases"] = len(t.pop("case_seqs"))
         t["leagues"] = sorted(t["leagues"])
         t["n_matches"] = len(t["matches"])
         del t["matches"]
@@ -325,13 +333,36 @@ def build_trends(cases, issues):
     return {"issues": rows, "cats": cats}
 
 
+def issue_counts_table(season):
+    data = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
+    counts = {r["no"]: r for r in build_trends(data["cases"], data["issues"])["issues"]}
+    rows = []
+    for issue in data["issues"]:
+        n = issue["no"]
+        official = title_wrong_count(issue)
+        scope = "中超" if "中超无" in issue["title"] else "标题披露范围"
+        note = ISSUE_NOTES.get(season, {}).get(n, "")
+        rows.append(
+            f'<tr><td><a href="season-{season}.html#case-{next(c["seq"] for c in data["cases"] if c["issue"] == n)}">第{n}期</a></td>'
+            f"<td>{official if official is not None else '未披露'}（{scope}）</td>"
+            f"<td>{counts[n]['wrong']}</td><td>{counts[n]['var']}</td><td>{note or '按原文逐例记录'}</td></tr>"
+        )
+    return (
+        "<details><summary>逐期数量与官方标题口径对照</summary>"
+        "<p>主裁与 VAR 分别统计。公开评议由申诉和选取的典型判例构成，覆盖范围随期目变化。</p>"
+        '<div style="overflow-x:auto"><table><thead><tr><th>期目</th><th>官方标题</th><th>合集主裁</th><th>VAR</th><th>说明</th></tr></thead><tbody>'
+        + "".join(rows)
+        + "</tbody></table></div></details>"
+    )
+
+
 def _svg_issue_trend(rows):
     """逐期错漏判柱状 + VAR 错误折线叠加（构建期 SVG，颜色走 CSS 变量适配明暗）。"""
     if not rows:
         return ""
     w, h, pad_l, pad_b, pad_t = 720, 210, 34, 26, 14
     n = len(rows)
-    ymax = max(4, max(r["wrong"] for r in rows))
+    ymax = max(4, max(max(r["wrong"], r["var"]) for r in rows))
     inner_w, inner_h = w - pad_l - 12, h - pad_b - pad_t
     step = inner_w / n
     bw = max(4, min(26, step * 0.62))
@@ -352,7 +383,7 @@ def _svg_issue_trend(rows):
     pts = []
     for i, r in enumerate(rows):
         x = pad_l + step * (i + 0.5)
-        y = pad_t + inner_h * (1 - min(r["var"], ymax) / ymax)
+        y = pad_t + inner_h * (1 - r["var"] / ymax)
         pts.append(f"{x:.1f},{y:.1f}")
     if any(r["var"] for r in rows):
         parts.append(f'<polyline points="{" ".join(pts)}" class="ts-var"/>')
@@ -368,7 +399,7 @@ def _svg_issue_trend(rows):
             )
         if r["var"]:
             parts.append(
-                f'<circle cx="{x:.1f}" cy="{pad_t + inner_h * (1 - min(r["var"], ymax) / ymax):.1f}" '
+                f'<circle cx="{x:.1f}" cy="{pad_t + inner_h * (1 - r["var"] / ymax):.1f}" '
                 'r="3" class="ts-var-dot"><title>第'
                 f"{r['no']}期 VAR 错误 {r['var']} 例</title></circle>"
             )
@@ -434,6 +465,16 @@ def build_data(season):
     matches = build_matches(impact, scores, cmap)
     victims = team_stats(matches, "victim")
     benefits = team_stats(matches, "benefit")
+    # 同一队跨联赛参赛时，筛选后的例数、事项、赛果和排序均取所选联赛。
+    for league in sorted({LEAGUE_SHORT[m["league"]] for m in matches.values()}):
+        subset = {
+            key: m for key, m in matches.items() if LEAGUE_SHORT[m["league"]] == league
+        }
+        for view, teams in (("victim", victims), ("benefit", benefits)):
+            for team, filtered in team_stats(subset, view).items():
+                if len(teams[team]["leagues"]) > 1:
+                    del filtered["detail"]
+                    teams[team].setdefault("byLeague", {})[league] = filtered
     catalog = load_catalog()
     teams = {item["name"]: item for item in catalog.values()}
 
@@ -491,7 +532,7 @@ def build_data(season):
             for t, s in m["status"].items()
             if s == "possible"
         ),
-        "teams": len(victims),
+        "teams": len(set(victims) | set(benefits)),
     }
     type_counts = {}
     for m in matches.values():
@@ -666,8 +707,8 @@ __TOPBAR__
   <details class="trends" open>
     <summary>📈 趋势概览（合集全部判例口径，含女足/全运会——与下方得失盘点的男子职业联赛口径不同）</summary>
     <div class="tr-box">
-      <div class="tr-h">逐期错漏判数量与 VAR 错误<span class="tr-sub">柱=该期官方认定错漏判数 · 折线/圆点=其中 VAR 错误数 · 悬停查看明细</span></div>
-      __TREND_ISSUES__
+      <div class="tr-h">逐期错漏判数量与 VAR 错误<span class="tr-sub">柱=合集逐例复核的主裁错漏判数 · 折线/圆点=独立统计的 VAR 错误数 · 悬停查看明细</span></div>
+      __TREND_ISSUES__\n      __ISSUE_COUNTS__
     </div>
     <div class="tr-box">
       <div class="tr-h">教学分类 × 判定分布<span class="tr-sub">横条=该分类三赛季判例总量中的错漏判/支持原判/不予认定构成</span></div>
@@ -726,7 +767,7 @@ const TC = {
   "missed_penalty":"tc-pen","wrong_penalty_against":"tc-pen",
   "missed_red_opponent":"tc-red","wrong_red_self":"tc-red",
   "missed_yellow_opponent":"tc-yellow","wrong_yellow_self":"tc-yellow",
-  "wrong_foul_called_self":"tc-foul","missed_foul_called":"tc-foul","wrong_offside_self":"tc-foul"};
+  "wrong_foul_called_self":"tc-foul","missed_foul_called":"tc-foul","wrong_offside_self":"tc-foul","missed_offside_opponent":"tc-foul"};
 const RS = {
   changed:['r-changed','结果或被改变'],
   possible:['r-possible','存在影响可能'],
@@ -783,7 +824,7 @@ function renderTeam(name, t, idx){
     <div class="thead" role="button" tabindex="0" aria-label="展开或收起该队明细">
       <h3>${crest}${esc(name)}</h3>
       <span class="lg">${t.leagues.join(" / ")}</span>
-      <span class="tot">错漏判 ${t.cases} 例 · ${t.n_matches} 场</span>
+      <span class="tot">错漏判 ${t.cases} 例 · ${t.detail.length} 项 · ${t.n_matches} 场</span>
       <span class="arrow">${IC["chev-d"]}</span>
     </div>
     <div class="tchips">${chips}</div>
@@ -792,21 +833,15 @@ function renderTeam(name, t, idx){
   </div>`;
 }
 
-function applyLg(){
-  let any = false;
-  document.querySelectorAll("#teamList .teamcard").forEach(c=>{
-    const lgs = JSON.parse(c.dataset.lg || "[]");
-    const teamOn = !curLg || lgs.includes(curLg);
-    c.style.display = teamOn ? "" : "none";
-    c.querySelectorAll(".drow").forEach(r=>{
-      r.style.display = (!curLg || r.dataset.lg === curLg) ? "" : "none";
-    });
-    if (teamOn) any = true;
-  });
-  document.getElementById("noResult").style.display = any ? "none" : "block";
-}
 function render(){
-  const data = DATA[curView];
+  const data = {};
+  for (const [name, team] of Object.entries(DATA[curView])){
+    if (curLg && !team.leagues.includes(curLg)) continue;
+    const summary = curLg && team.byLeague && team.byLeague[curLg];
+    data[name] = summary
+      ? {...summary, detail:team.detail.filter(row=>row.league === curLg)}
+      : team;
+  }
   const names = Object.keys(data).sort((a,b)=>{
     const A=data[a], B=data[b];
     return (B.swing*1000+B.cases) - (A.swing*1000+A.cases) || a.localeCompare(b);
@@ -817,7 +852,7 @@ function render(){
   document.querySelectorAll("#teamList .teamcard").forEach(c=>{
     if (open.has(c.dataset.name)) c.classList.add("open");
   });
-  applyLg();
+  document.getElementById("noResult").style.display = names.length ? "none" : "block";
 }
 
 document.getElementById("btnVictim").onclick = e=>{
@@ -838,8 +873,11 @@ document.getElementById("btnTop").onclick = ()=>scrollTo({top:0,behavior:'smooth
 document.querySelectorAll(".lg-chip").forEach(b=>{
   b.onclick = ()=>{
     curLg = b.dataset.lg;
-    document.querySelectorAll(".lg-chip").forEach(x=>x.classList.toggle('on', x===b));
-    applyLg();
+    document.querySelectorAll(".lg-chip").forEach(x=>{
+      x.classList.toggle("on", x===b);
+      x.setAttribute("aria-pressed", String(x===b));
+    });
+    render();
   };
 });
 
@@ -895,6 +933,7 @@ def build_season(season):
         .replace("__BUILT__", date.today().isoformat())
         .replace("__TREND_ISSUES__", trend_issues_svg)
         .replace("__TREND_CATS__", trend_cats_svg)
+        .replace("__ISSUE_COUNTS__", issue_counts_table(season))
     )
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / cfg["out"]

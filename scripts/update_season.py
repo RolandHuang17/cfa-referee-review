@@ -7,11 +7,9 @@
   python scripts/update_season.py 2026 --dry-run      # 只打印将执行的命令序列，不运行
   python scripts/update_season.py 2026 --discover     # 全流程前先跑 enum_issues 探测新期 URL
 
-顺序是硬约束：fix_issue27_merge 必须在 classify 之前（拆分结构），classify 末尾含
-赛季特判，改了前面步骤后必须 build_all 收尾——单脚本锁死顺序即防漏步错位。
-人工环节不属于本脚本（跑完后按末尾提示补做）：比分查证、pending 判定复核、视频下载。
-新期接入仍需先人工把 URL 写入 fetch_issues.ISSUES 与 parse_issues.ISSUE_URL 两处
-（--discover 可先探测）；两表一致性由 tests/test_integrity.py 断言。
+重建入口先在内存中解析、拆分第27期补充认定、分类并应用带原值检查的人工校订，
+全部成功后原子写入 cases JSON。后续顺序是 impact→目录→构建→测试。
+人工环节包括比分查证、需领域复核的判罚与视频核验。新期目前仍需同步两处 URL 表。
 
 安全说明：传给子进程的脚本名与参数全部来自下面的字面量步骤表；命令行输入只用于
 在三个常量表之间做 == 选择（choices 白名单 + 二次校验），不进入任何执行参数。
@@ -37,25 +35,17 @@ DISCOVER_STEP = ("enum_issues.py", [], "探测新期 URL（人工核对后写入
 # 三赛季步骤表：全部字面量；顺序 = AGENTS.md 数据管线，勿调换
 _STEPS_2024 = [
     ("fetch_issues.py", ["2024"], "抓取官方页面存档"),
-    ("parse_issues.py", ["2024"], "解析 → cases JSON"),
-    ("classify_cases.py", ["2024"], "教学分类与结论复核"),
+    ("rebuild_cases.py", ["2024"], "解析/拆分/分类/人工校订（候选验证后写入）"),
     ("make_impact_2024.py", [], "错漏判影响标注"),
 ] + _TAIL
 _STEPS_2025 = [
     ("fetch_issues.py", ["2025"], "抓取官方页面存档"),
-    ("parse_issues.py", ["2025"], "解析 → cases JSON"),
-    (
-        "fix_issue27_merge.py",
-        [],
-        "拆分第27期内嵌的第26期补充认定（必须在 classify 前）",
-    ),
-    ("classify_cases.py", ["2025"], "教学分类与结论复核"),
+    ("rebuild_cases.py", ["2025"], "解析/拆分/分类/人工校订（候选验证后写入）"),
     ("make_impact.py", [], "错漏判影响标注"),
 ] + _TAIL
 _STEPS_2026 = [
     ("fetch_issues.py", ["2026"], "抓取官方页面存档"),
-    ("parse_issues.py", ["2026"], "解析 → cases JSON"),
-    ("classify_cases.py", ["2026"], "教学分类与结论复核"),
+    ("rebuild_cases.py", ["2026"], "解析/拆分/分类/人工校订（候选验证后写入）"),
     ("make_impact_2026.py", [], "错漏判影响标注"),
 ] + _TAIL
 TABLE = {"2024": _STEPS_2024, "2025": _STEPS_2025, "2026": _STEPS_2026}

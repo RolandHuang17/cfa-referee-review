@@ -1,13 +1,330 @@
 {
  "source": "https://proreferees.com/category/inside-video-review/",
  "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
- "fetched": "2026-10-26",
+ "fetched": "2026-11-14",
  "ussf": {
   "videos": "https://www.ussoccer.com/refereeing/videos",
   "learning": "https://learning.ussoccer.com/referee",
   "refereeing": "https://www.ussoccer.com/refereeing"
  },
  "articles": [
+  {
+   "title": "Inside Video Review: MLS #33 + #34",
+   "url": "https://proreferees.com/2026/11/07/2026-inside-video-review-mls-33-34/",
+   "date": "2026-11-07",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "MLS",
+   "round": "33+34",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=BuzT8iV_wgM"
+   ]
+  },
+  {
+   "title": "VAR a Fondo: MLS #33 + #34",
+   "url": "https://proreferees.com/2026/11/07/2026-var-a-fondo-mls-33-34/",
+   "date": "2026-11-07",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "vaf",
+   "league": "MLS",
+   "round": "33+34",
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=Wu56GgWsrA4"
+   ]
+  },
+  {
+   "title": "Inside Video Review: NWSL #27",
+   "url": "https://proreferees.com/2026/11/07/2026-inside-video-review-nwsl-27/",
+   "date": "2026-11-07",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "NWSL",
+   "round": "27",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=iugg6q9os9o"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: MLS Matchday 34",
+   "url": "https://proreferees.com/2026/11/07/2026-the-definitive-angle-mls-matchday-34/",
+   "date": "2026-11-07",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "MLS",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=AsanjL_aW3s",
+    "https://www.youtube.com/watch?v=a8SUijfGgEc",
+    "https://www.youtube.com/watch?v=_sH_PUf6rmg",
+    "https://www.youtube.com/watch?v=M4JTLu4rOnI",
+    "https://www.youtube.com/watch?v=N5drY39-6zQ",
+    "https://www.youtube.com/watch?v=T2UZ4UyYX1I"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: MLS Matchday 33",
+   "url": "https://proreferees.com/2026/11/07/2026-the-definitive-angle-mls-matchday-33/",
+   "date": "2026-11-07",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "MLS",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=rIQcsp0qqyg",
+    "https://www.youtube.com/watch?v=MhaZl24XGoY",
+    "https://www.youtube.com/watch?v=CsUvnWptbVk",
+    "https://www.youtube.com/watch?v=Yk6D8voAJ4s",
+    "https://www.youtube.com/watch?v=rVxTIi6GS2U",
+    "https://www.youtube.com/watch?v=EWpFwhTQFEs"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: NWSL Week 27",
+   "url": "https://proreferees.com/2026/11/07/2026-the-definitive-angle-nwsl-week-27/",
+   "date": "2026-11-07",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "NWSL",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=89jQWuFev0g"
+   ]
+  },
+  {
+   "title": "Inside Video Review: MLS #32",
+   "url": "https://proreferees.com/2026/10/31/2026-inside-video-review-mls-32/",
+   "date": "2026-10-31",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "MLS",
+   "round": "32",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=MdWkD5dR7rY"
+   ]
+  },
+  {
+   "title": "VAR a Fondo: MLS #32",
+   "url": "https://proreferees.com/2026/10/31/2026-var-a-fondo-mls-32/",
+   "date": "2026-10-31",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "vaf",
+   "league": "MLS",
+   "round": "32",
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=ze3jce5ZLhw"
+   ]
+  },
+  {
+   "title": "Inside Video Review: NWSL #26",
+   "url": "https://proreferees.com/2026/10/31/2026-inside-video-review-nwsl-26/",
+   "date": "2026-10-31",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "NWSL",
+   "round": "26",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=P0nFF0oLdVY"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: MLS Matchday 32",
+   "url": "https://proreferees.com/2026/10/31/2026-the-definitive-angle-mls-matchday-32/",
+   "date": "2026-10-31",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "MLS",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=AmRLHsMPzjQ",
+    "https://www.youtube.com/watch?v=B_08ZKsOgIE",
+    "https://www.youtube.com/watch?v=y68FWpybANI"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: NWSL Week 26",
+   "url": "https://proreferees.com/2026/10/31/2026-the-definitive-angle-nwsl-week-26/",
+   "date": "2026-10-31",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "NWSL",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=LELgjx2LWUQ",
+    "https://www.youtube.com/watch?v=Pt3dQ57jUv4"
+   ]
+  },
+  {
+   "title": "Inside Video Review: MLS #30 + #31",
+   "url": "https://proreferees.com/2026/10/24/2026-inside-video-review-mls-30-31/",
+   "date": "2026-10-24",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "MLS",
+   "round": "30+31",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=L22v4-dpWBE"
+   ]
+  },
+  {
+   "title": "VAR a Fondo: MLS #30 + #31",
+   "url": "https://proreferees.com/2026/10/24/2026-var-a-fondo-mls-30-31/",
+   "date": "2026-10-24",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "vaf",
+   "league": "MLS",
+   "round": "30+31",
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=xCcWdFNf2Nk"
+   ]
+  },
+  {
+   "title": "Inside Video Review: NWSL #23 to #25",
+   "url": "https://proreferees.com/2026/10/24/2026-inside-video-review-nwsl-23-to-25/",
+   "date": "2026-10-24",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "NWSL",
+   "round": "23",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=XeFJA3CU1m8"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: MLS Matchday 31",
+   "url": "https://proreferees.com/2026/10/24/2026-the-definitive-angle-mls-matchday-31/",
+   "date": "2026-10-24",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "MLS",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=J6k123WMmtc",
+    "https://www.youtube.com/watch?v=f32KrBD6Khw",
+    "https://www.youtube.com/watch?v=b2JVsZ5eOKY",
+    "https://www.youtube.com/watch?v=WevaJfaXUs8"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: MLS Matchday 30",
+   "url": "https://proreferees.com/2026/10/24/2026-the-definitive-angle-mls-matchday-30/",
+   "date": "2026-10-24",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "MLS",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=JVNCttFU_JY",
+    "https://www.youtube.com/watch?v=8VHo8u5Knik",
+    "https://www.youtube.com/watch?v=SFJDLNxV408",
+    "https://www.youtube.com/watch?v=olJEeQvbqAA",
+    "https://www.youtube.com/watch?v=D26KqTcbmwA"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: NWSL Week 25",
+   "url": "https://proreferees.com/2026/10/24/2026-the-definitive-angle-nwsl-week-25/",
+   "date": "2026-10-24",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "NWSL",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=0o5nSJRvXcs",
+    "https://www.youtube.com/watch?v=5j61N8F0LTQ"
+   ]
+  },
+  {
+   "title": "Inside Video Review: MLS #29",
+   "url": "https://proreferees.com/2026/10/17/2026-inside-video-review-mls-29/",
+   "date": "2026-10-17",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "ivr",
+   "league": "MLS",
+   "round": "29",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=bxMaaeoZS6Q"
+   ]
+  },
+  {
+   "title": "VAR a Fondo: MLS #29",
+   "url": "https://proreferees.com/2026/10/17/2026-var-a-fondo-mls-29/",
+   "date": "2026-10-17",
+   "series": "ivr",
+   "series_name": "Inside Video Review（VAR 评析·英）",
+   "kind": "vaf",
+   "league": "MLS",
+   "round": "29",
+   "lang": "es",
+   "videos": [
+    "https://www.youtube.com/watch?v=5RgjEtpWCvw"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: MLS Matchday 29",
+   "url": "https://proreferees.com/2026/10/17/2026-the-definitive-angle-mls-matchday-29/",
+   "date": "2026-10-17",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "MLS",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=p2mif1oumL0",
+    "https://www.youtube.com/watch?v=C_HOWD7Gpho",
+    "https://www.youtube.com/watch?v=_lCVUzu2GrE"
+   ]
+  },
+  {
+   "title": "The Definitive Angle: NWSL Week 24",
+   "url": "https://proreferees.com/2026/10/10/2026-the-definitive-angle-nwsl-week-24/",
+   "date": "2026-10-10",
+   "series": "angle",
+   "series_name": "The Definitive Angle（文字判例）",
+   "kind": "angle",
+   "league": "NWSL",
+   "round": "",
+   "lang": "en",
+   "videos": [
+    "https://www.youtube.com/watch?v=LPhX_Xphypg"
+   ]
+  },
   {
    "title": "Inside Video Review: MLS #28",
    "url": "https://proreferees.com/2026/10/03/2026-inside-video-review-mls-28/",
@@ -3106,5 +3423,6 @@
     "https://www.youtube.com/watch?v=DS7TFsl6Yb4"
    ]
   }
- ]
+ ],
+ "latest_content": "2026-11-07"
 }

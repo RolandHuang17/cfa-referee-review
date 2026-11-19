@@ -1,0 +1,262 @@
+{
+ "note": "2025 历史精修，依据提交 5f6d3e8 与原始官方归档的全字段差异保留。expected 为现行解析/拆分/分类产物；原值变化须重新对照官方原文。",
+ "2025": {
+  "11": {
+   "issue": 3,
+   "no": 6,
+   "source": "https://www.thecfa.cn/zyls1/20250319/35769.html",
+   "fields": {
+    "home": {
+     "expected": "",
+     "value": "南京城市"
+    },
+    "away": {
+     "expected": "",
+     "value": "大连鲲城"
+    }
+   }
+  },
+  "48": {
+   "issue": 9,
+   "no": 4,
+   "source": "https://www.thecfa.cn/zyls1/20250501/35914.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "84": {
+   "issue": 13,
+   "no": 4,
+   "source": "https://www.thecfa.cn/zyls1/20250604/36545.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "95": {
+   "issue": 14,
+   "no": 11,
+   "source": "https://www.thecfa.cn/zyls1/20250618/36597.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "102": {
+   "issue": 15,
+   "no": 6,
+   "source": "https://www.thecfa.cn/zyls1/20250625/36616.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "103": {
+   "issue": 15,
+   "no": 7,
+   "source": "https://www.thecfa.cn/zyls1/20250625/36616.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "106": {
+   "issue": 15,
+   "no": 10,
+   "source": "https://www.thecfa.cn/zyls1/20250625/36616.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "107": {
+   "issue": 15,
+   "no": 11,
+   "source": "https://www.thecfa.cn/zyls1/20250625/36616.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "126": {
+   "issue": 18,
+   "no": 4,
+   "source": "https://www.thecfa.cn/zyls1/20250718/36707.html",
+   "fields": {
+    "conclusion": {
+     "expected": "对于此判例，评议组一致认为：从现有视频看，该犯规发生的地点在罚球区外，应判罚直接任意球，裁判员判罚球点球的决定错误。",
+     "value": "杭州临平吴越俱乐部在申诉中提及本队队员犯规地点在罚球区外。\n对于此判例，评议组一致认为：从现有视频看，该犯规发生的地点在罚球区外，应判罚直接任意球，裁判员判罚球点球的决定错误。"
+    }
+   }
+  },
+  "128": {
+   "issue": 18,
+   "no": 6,
+   "source": "https://www.thecfa.cn/zyls1/20250718/36707.html",
+   "fields": {
+    "conclusion": {
+     "expected": "对于此判例，评议组一致认为：从现有视频的角度看，基本可以判断山东泰山B队49号队员在本方队员传中时处于越位位置，随后射门得分，属于在越位位置干扰比赛的越位犯规，进球无效。裁判员判进球有效的决定错误，漏判攻方越位犯规。",
+     "value": "杭州临平吴越俱乐部在申诉中提及对方49号队员在越位位置回接射门进球。\n对于此判例，评议组一致认为：从现有视频的角度看，基本可以判断山东泰山B队49号队员在本方队员传中时处于越位位置，随后射门得分，属于在越位位置干扰比赛的越位犯规，进球无效。裁判员判进球有效的决定错误，漏判攻方越位犯规。"
+    }
+   }
+  },
+  "131": {
+   "issue": 19,
+   "no": 1,
+   "source": "https://www.thecfa.cn/zyls1/20250724/36722.html",
+   "fields": {
+    "conclusion": {
+     "expected": "对于此判例，评议组一致认为：南通支云23号队员倒地铲球时手臂有不自然扩大的附加动作，构成手球犯规。裁判员在与第四官员商议后判罚手球犯规以及罚球点球的决定正确、合规。",
+     "value": "南通支云俱乐部在申诉中质疑第四官员协助以及裁判员改判的结果。\n对于此判例，评议组一致认为：南通支云23号队员倒地铲球时手臂有不自然扩大的附加动作，构成手球犯规。裁判员在与第四官员商议后判罚手球犯规以及罚球点球的决定正确、合规。"
+    }
+   }
+  },
+  "212": {
+   "issue": 31,
+   "no": 1,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "213": {
+   "issue": 31,
+   "no": 2,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "214": {
+   "issue": 31,
+   "no": 3,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "215": {
+   "issue": 31,
+   "no": 4,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "216": {
+   "issue": 31,
+   "no": 5,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "217": {
+   "issue": 31,
+   "no": 6,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "218": {
+   "issue": 31,
+   "no": 7,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "219": {
+   "issue": 31,
+   "no": 8,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "中超联赛"
+    }
+   }
+  },
+  "220": {
+   "issue": 31,
+   "no": 9,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "221": {
+   "issue": 31,
+   "no": 10,
+   "source": "https://www.thecfa.cn/cppy/20251029/37036.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "226": {
+   "issue": 32,
+   "no": 5,
+   "source": "https://www.thecfa.cn/cppy/20251105/37055.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  },
+  "227": {
+   "issue": 32,
+   "no": 6,
+   "source": "https://www.thecfa.cn/cppy/20251105/37055.html",
+   "fields": {
+    "comp": {
+     "expected": "",
+     "value": "全运会"
+    }
+   }
+  }
+ }
+}

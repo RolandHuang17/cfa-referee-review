@@ -32,9 +32,12 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from urllib.parse import quote
 
-from lib.safe_http import fetch_text
+from lib.atomic_json import write_json
+from lib.source_cache import SourceCache
 
 from lib.paths import WEEKLY_CACHE, WEEKLY_JSON
+
+CACHE_READER = SourceCache()
 
 DELAY = (1.5, 3.0)  # 请求间隔礼貌延时（非安全用途）
 BACKOFFS = [20, 60]
@@ -372,22 +375,9 @@ def parse_rss(txt: str) -> list:
 def fetch_url(url: str, minlen: int) -> str:
     slug = re.sub(r"[^a-z0-9-]", "_", url.split("youtube.com/")[-1])[:120] or "x"
     cache_f = WEEKLY_CACHE / f"{slug}.txt"
-    WEEKLY_CACHE.mkdir(parents=True, exist_ok=True)
-    if cache_f.exists() and cache_f.stat().st_size > minlen:
-        return cache_f.read_text(encoding="utf-8", errors="replace")
-    for wait in [0] + BACKOFFS:
-        if wait:
-            time.sleep(wait)
-        try:
-            st, txt = fetch_text(url, headers=ACCEPT_LANG, timeout=45, retries=2)
-            if st == 200 and len(txt) > minlen:
-                cache_f.write_text(txt, encoding="utf-8")
-                return txt
-            if st == 404:
-                return ""
-        except Exception:  # noqa: BLE001
-            pass
-    return ""
+    return CACHE_READER.read(
+        url, cache_f, minlen, mutable="/watch?" not in url, headers=ACCEPT_LANG
+    )
 
 
 def merge(dst: dict, src: dict):
@@ -491,7 +481,8 @@ def collect(show: dict) -> list:
                     eps[it["id"]] = item
                     hit += 1
             print(f"  listing p{n}: {len(items)} 卡 / 命中 +{hit}", flush=True)
-            time.sleep(random.uniform(*DELAY))
+            if not CACHE_READER.offline:
+                time.sleep(random.uniform(*DELAY))
         out = list(eps.values())
         for e in out:
             e["show"] = show["key"]
@@ -520,7 +511,8 @@ def collect(show: dict) -> list:
                 eps[e["id"]] = dict(e)
                 hit += 1
         print(f"  rss …{fu[-42:]}: {len(entries)} 条 / 命中 +{hit}", flush=True)
-        time.sleep(random.uniform(*DELAY))
+        if not CACHE_READER.offline:
+            time.sleep(random.uniform(*DELAY))
 
     pages = [
         f"https://www.youtube.com/playlist?list={p}" for p in show.get("playlists", [])
@@ -557,7 +549,8 @@ def collect(show: dict) -> list:
                 eps[vid] = item
                 hit += 1
         print(f"  page …{pu[-48:]}: 回补 {len(found)} / 命中 +{hit}", flush=True)
-        time.sleep(random.uniform(*DELAY))
+        if not CACHE_READER.offline:
+            time.sleep(random.uniform(*DELAY))
 
     out = list(eps.values())
     for e in out:
@@ -570,7 +563,7 @@ def collect(show: dict) -> list:
 
 
 def parse_all():
-    prev = {}
+    prev, old = {}, {}
     if WEEKLY_JSON.exists():
         try:
             old = json.loads(WEEKLY_JSON.read_text(encoding="utf-8"))
@@ -581,16 +574,36 @@ def parse_all():
             }
         except Exception:  # noqa: BLE001
             prev = {}
-    episodes, shows = {}, {}
+    episodes, shows = dict(prev), dict(old.get("shows", {}))
+    statuses = dict(old.get("source_status", {}))
     for show in SOURCES:
         print(f"[{show['key']}] {show['name']}", flush=True)
+        verified_before = set(CACHE_READER.verified)
+        failed_before = set(CACHE_READER.failed)
         got = collect(show)
+        success = (
+            bool(got)
+            and bool(CACHE_READER.verified - verified_before)
+            and not (CACHE_READER.failed - failed_before)
+        )
+        status = dict(statuses.get(show["key"], {}))
+        if success:
+            status["checked"] = time.strftime("%Y-%m-%d")
+        status["state"] = (
+            "checked"
+            if success
+            else ("cached" if CACHE_READER.offline else "unavailable")
+        )
+        status["latest_content"] = max(
+            (e.get("date", "") for e in got), default=status.get("latest_content", "")
+        )
+        statuses[show["key"]] = status
         newn = 0
         for e in got:
             if e["id"] in prev:
                 merge(e, prev[e["id"]])
             if e["id"] in episodes:
-                merge(episodes[e["id"]], e)
+                episodes[e["id"]] = e
             else:
                 episodes[e["id"]] = e
                 newn += 1
@@ -609,19 +622,22 @@ def parse_all():
             ),
         }
         print(f"[{show['key']}] 共 {len(got)} 期（净增 {newn}）", flush=True)
-        time.sleep(random.uniform(*DELAY))
+        if not CACHE_READER.offline:
+            time.sleep(random.uniform(*DELAY))
     data = {
         "source": "https://www.youtube.com",
         "source_name": "全球周更评议节目判例索引（YouTube 官方频道/播放列表元数据）",
-        "fetched": time.strftime("%Y-%m-%d"),
+        "fetched": time.strftime("%Y-%m-%d")
+        if statuses and all(s.get("state") == "checked" for s in statuses.values())
+        else old.get("fetched", ""),
+        "source_status": statuses,
         "shows": shows,
         "episodes": sorted(
             episodes.values(), key=lambda x: x.get("date") or "0000-00-00", reverse=True
         ),
     }
-    WEEKLY_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    if data["episodes"]:
+        write_json(WEEKLY_JSON, data)
     per_show = {}
     for e in data["episodes"]:
         per_show[e["show"]] = per_show.get(e["show"], 0) + 1
@@ -664,10 +680,10 @@ def fill_dates():
         print(
             f"  [{i + 1}/{len(todo)}] {vid}: {e.get('date') or '仍无日期'}", flush=True
         )
-        time.sleep(random.uniform(*DELAY))
-    WEEKLY_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+        if not CACHE_READER.offline:
+            time.sleep(random.uniform(*DELAY))
+    if data["episodes"]:
+        write_json(WEEKLY_JSON, data)
     total = len(data.get("episodes", []))
     exact = sum(1 for e in data["episodes"] if e.get("date_src") == "exact")
     print(f"dates 完成: 新补 {fixed} 条，全库精确日期 {exact}/{total}", flush=True)
@@ -722,6 +738,10 @@ def main():
         fill_dates()
         return
     if mode in ("fetch", "parse", "all"):
+        global CACHE_READER
+        CACHE_READER = SourceCache(
+            offline=mode == "parse", refresh="--refresh" in sys.argv
+        )
         parse_all()
     else:
         raise SystemExit("用法: fetch_weekly.py [fetch|parse|all|dates|discover]")

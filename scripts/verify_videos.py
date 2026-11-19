@@ -1,91 +1,79 @@
 # -*- coding: utf-8 -*-
-"""下载完成后的最终校验：
-1. 改名第27期文章遗留的两个视频文件（i27c02-2/3 -> i26c02-2/i26c07-2）
-2. 核对每个视频文件大小与服务器Content-Length一致
-3. 报告缺失/损坏文件（可重跑 download_videos_parallel.py 补齐）
-"""
+"""校验本地判例视频大小，区分缺失、不符与远端不可核验。"""
 
+import argparse
 import json
-import sys
 
+from lib.atomic_json import write_json
+from lib.paths import DATA, LOCAL_LOGS, SITE_VIDEOS
 from lib.safe_http import head_size
 
-from lib.paths import DATA, LOCAL_LOGS, SITE_VIDEOS
 
-SEASON = sys.argv[1] if len(sys.argv) > 1 else "2025"
-VID = SITE_VIDEOS / SEASON
-
-
-def rename_legacy():
+def rename_legacy(directory):
+    """只迁移 2025 第 27 期拆分遗留文件；保留重名副本供人工核对。"""
     pairs = {"i27c02-2.mp4": "i26c02-2.mp4", "i27c02-3.mp4": "i26c07-2.mp4"}
     for old, new in pairs.items():
-        o, n = VID / old, VID / new
-        if o.exists() and not n.exists():
-            o.rename(n)
-            print(f"改名 {old} -> {new}")
-        elif o.exists() and n.exists():
-            if o.stat().st_size == n.stat().st_size:
-                o.unlink()
-                print(f"删除重复 {old}")
+        source, target = directory / old, directory / new
+        if source.exists():
+            if target.exists():
+                print(f"保留并存文件 {old} 与 {new}，请人工核对")
             else:
-                print(f"警告: {old} 与 {new} 并存且大小不同，请人工检查")
+                source.rename(target)
+                print(f"改名 {old} -> {new}")
 
 
-def main():
-    rename_legacy()
-    data = json.loads((DATA / f"cases-{SEASON}.json").read_text(encoding="utf-8"))
-    need = {}
-    for c in data["cases"]:
-        for f in c["video_files"]:
-            need.setdefault(f, c["seq"])
-    missing, size_mismatch, ok = [], [], 0
-    for f in sorted(need):
-        p = (
-            VID / f.split("/", 1)[-1]
-        )  # video_files 自带 "2025/"、"2024/" 前缀，去掉避免双拼
-        if not p.exists():
-            missing.append(f)
+def verify(data, directory):
+    files = {}
+    for case in data["cases"]:
+        if len(case["video_files"]) != len(case["video_urls"]):
+            raise ValueError(f"判例 {case['seq']} 的文件与 URL 数量不同")
+        for name, url in zip(case["video_files"], case["video_urls"]):
+            if files.setdefault(name, url) != url:
+                raise ValueError(f"同一视频文件对应多个来源: {name}")
+    result = {"ok": 0, "missing": [], "mismatch": [], "unverified": []}
+    for name, url in sorted(files.items()):
+        path = directory / name
+        if not path.is_file():
+            result["missing"].append(name)
             continue
-        remote = head_size(
-            "https://videooss.thecfa.cn/upload/video/" + _remote_path(data, f)
-        )
-        local = p.stat().st_size
-        if remote and remote != local:
-            size_mismatch.append((f, local, remote))
-        elif remote is None:
-            print(f"  ? {f}: 无法获取远端大小(本地{local / 1e6:.1f}MB)")
-            ok += 1
+        local = path.stat().st_size
+        remote = head_size(url)
+        if remote is None:
+            result["unverified"].append(name)
+            print(f"  ? {name}: 无法获取远端大小（本地 {local} 字节）")
+        elif remote != local or local == 0:
+            result["mismatch"].append((name, local, remote))
         else:
-            print(f"  √ {f} {local / 1e6:.1f}MB")
-            ok += 1
-    print(f"\n校验完成: 完整{ok} 缺失{len(missing)} 大小不符{len(size_mismatch)}")
-    if missing:
-        print("缺失:", missing)
-        print("-> 重跑 scripts/download_videos_parallel.py 可补齐")
-    if size_mismatch:
-        print("大小不符:", size_mismatch)
-        print("-> 删除对应 .mp4 后重跑下载脚本修复")
-    LOCAL_LOGS.mkdir(parents=True, exist_ok=True)
-    (LOCAL_LOGS / "verify_result.json").write_text(
-        json.dumps(
-            {"missing": missing, "mismatch": size_mismatch, "ok": ok},
-            ensure_ascii=False,
-            indent=1,
-        ),
-        encoding="utf-8",
+            result["ok"] += 1
+    return result
+
+
+def main(argv=None):
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument(
+        "season", nargs="?", choices=("2024", "2025", "2026"), default="2025"
     )
-
-
-def _remote_path(data, fname):
-    """从当前赛季数据反查视频URL路径"""
-    for c in data["cases"]:
-        if fname in c["video_files"]:
-            i = c["video_files"].index(fname)
-            return c["video_urls"][i].replace(
-                "https://videooss.thecfa.cn/upload/video/", ""
-            )
-    raise KeyError(fname)
+    parser.add_argument(
+        "--migrate-legacy", action="store_true", help="迁移 2025 年的旧视频文件名"
+    )
+    args = parser.parse_args(argv)
+    if args.migrate_legacy:
+        if args.season != "2025":
+            parser.error("旧文件名迁移仅适用于 2025 赛季")
+        rename_legacy(SITE_VIDEOS / args.season)
+    data = json.loads((DATA / f"cases-{args.season}.json").read_text(encoding="utf-8"))
+    result = verify(data, SITE_VIDEOS)
+    result["season"] = args.season
+    log = LOCAL_LOGS / "verify_result.json"
+    write_json(log, result)
+    print(
+        f"完整 {result['ok']}，缺失 {len(result['missing'])}，大小不符 {len(result['mismatch'])}，"
+        f"未核验 {len(result['unverified'])}。清单见 {log}"
+    )
+    if result["missing"] or result["mismatch"]:
+        return 1
+    return 2 if result["unverified"] else 0
 
 
 if __name__ == "__main__":
-    main()
+    raise SystemExit(main())

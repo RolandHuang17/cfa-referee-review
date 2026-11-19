@@ -11,7 +11,8 @@ if hasattr(sys.stdout, "reconfigure"):
     sys.stdout.reconfigure(errors="replace")
 
 from lib import safe_http as S
-from lib.paths import CRESTS_DIR, TEAMS_JSON
+from lib.crest_candidates import collect
+from lib.paths import TEAMS_JSON
 
 S.ALLOWED_HOSTS |= {
     "zh.wikipedia.org",
@@ -154,52 +155,18 @@ def image_url(host, title):
     return None
 
 
+def lookup(team):
+    picked = commons_candidates(team) or enwiki_candidates(team)
+    if picked:
+        host, title, source = picked
+        url = image_url(host, title)
+        if url:
+            return url, source
+    return None
+
+
 def main():
-    payload = json.loads(TEAMS_JSON.read_text(encoding="utf-8"))
-    updated = 0
-    for item in payload["teams"].values():
-        if item.get("status") == "verified":
-            continue
-        picked = None
-        try:
-            picked = commons_candidates(item["name"]) or enwiki_candidates(item["name"])
-        except Exception as exc:
-            print(f"SKIP {item['name']}: {exc}")
-            continue
-        if not picked:
-            print(f"SKIP {item['name']}: no candidate")
-            continue
-        try:
-            host, title, source = picked
-            url = image_url(host, title)
-            if not url or not url.startswith("https://"):
-                continue
-            filename = f"{item['slug']}.png"
-            dest = CRESTS_DIR / filename
-            _, size = S.download(url, dest, timeout=20, retries=1)
-            if size < 1500:
-                dest.unlink(missing_ok=True)
-                print(f"SKIP {item['name']}: too small")
-                continue
-            item.update(
-                {
-                    "path": f"assets/crests/{filename}",
-                    "status": "verified",
-                    "source_url": source,
-                    "source_type": "wikipedia-image",
-                }
-            )
-            updated += 1
-            print(f"OK {item['name']} <- {title}")
-        except Exception as exc:
-            print(f"SKIP {item['name']}: {exc}")
-        TEAMS_JSON.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-        )
-    TEAMS_JSON.write_text(
-        json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
-    )
-    print(f"第二轮自动补充完成: 新增 {updated} 个候选(待人工目检)")
+    collect(TEAMS_JSON, lookup)
 
 
 if __name__ == "__main__":

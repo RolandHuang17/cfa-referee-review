@@ -13,14 +13,16 @@ FAQ 为独立 Q&A 容器（问题 h2 + 折叠答案 p，共 ~12 条）。解析�
 """
 
 import html as htmllib
-import json
 import re
 import sys
 import time
 
+from lib.source_snapshot import SnapshotReads, publish
 from lib.safe_http import fetch_text
 
 from lib.paths import IFAB_CACHE, IFAB_JSON
+
+READS = SnapshotReads()
 
 URL = "https://www.theifab.com/laws/latest/video-assistant-referee-var-protocol/"
 # VAR 协议页之外的官方配套协议/指南页（2026/27 新规与统一尺度材料，人工核对）
@@ -104,15 +106,16 @@ def fetch_page(url: str = URL) -> str:
         or "page"
     )
     cache_f = IFAB_CACHE / f"{slug}.html"
-    if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
-        return cache_f.read_text(encoding="utf-8", errors="replace")
+    cached = READS.cached(url, cache_f, MIN_BODY)
+    if cached is not None:
+        return cached
     for wait in [0] + BACKOFFS:
         if wait:
             time.sleep(wait)
         try:
             st, txt = fetch_text(url, timeout=45, retries=2)
             if st == 200 and len(txt) > MIN_BODY:
-                cache_f.write_text(txt, encoding="utf-8")
+                READS.store(url, cache_f, txt)
                 return txt
         except Exception:  # noqa: BLE001
             pass
@@ -257,6 +260,18 @@ def parse_extra(page_id: str, url: str, html: str) -> dict:
     return {"id": page_id, "url": url, "h": h, "blocks": blocks, "faq": faq}
 
 
+def identities(data):
+    for group in ("sections", "extras"):
+        for section in data.get(group, []):
+            for block in section["blocks"]:
+                for index, _ in enumerate(block["items"]):
+                    yield group, section["id"], block["h"], index
+            for faq in section.get("faq", []):
+                yield group, section["id"], "faq", faq["id"]
+    for faq in data.get("faq", []):
+        yield "faq", faq["id"]
+
+
 def parse_all():
     html = fetch_page()
     if not html:
@@ -277,31 +292,27 @@ def parse_all():
     for page_id, url in EXTRA_PAGES:
         ehtml = fetch_page(url)
         if not ehtml:
-            print(f"⚠ 配套页抓取失败，跳过: {page_id}")
-            continue
+            raise ValueError(f"配套页抓取失败: {page_id}")
         ex = parse_extra(page_id, url, ehtml)
         if not ex["blocks"]:
-            print(f"⚠ 配套页解析为空，跳过: {page_id}")
-            continue
+            raise ValueError(f"配套页解析为空: {page_id}")
         n_it = sum(len(b["items"]) for b in ex["blocks"])
         print(
             f"  extra {page_id}: 「{ex['h'][:44]}」 {len(ex['blocks'])} 子块 / {n_it} 条 / FAQ {len(ex['faq'])}",
             flush=True,
         )
         extras.append(ex)
-        time.sleep(2.0)
+        if not READS.offline:
+            time.sleep(2.0)
     data = {
         "source": URL,
         "source_name": "IFAB《Laws of the Game》— Video Assistant Referee (VAR) protocol & FAQs",
-        "fetched": time.strftime("%Y-%m-%d"),
         "sections": sections,
         "faq": faq,
         "links": LINKS,
         "extras": extras,
     }
-    IFAB_JSON.write_text(
-        json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-    )
+    publish(IFAB_JSON, data, identities, checked=READS.checked)
     n_items = sum(len(b["items"]) for s in sections for b in s["blocks"])
     print(
         f"parse 完成: {len(sections)} 节 / {sum(len(s['blocks']) for s in sections)} 子节 / "
@@ -311,7 +322,9 @@ def parse_all():
 
 
 def main():
-    mode = sys.argv[1] if len(sys.argv) > 1 else "all"
+    global READS
+    mode = next((arg for arg in sys.argv[1:] if not arg.startswith("--")), "all")
+    READS = SnapshotReads(offline=mode == "parse", refresh="--refresh" in sys.argv)
     if mode in ("fetch", "parse", "all"):
         parse_all()
     else:

@@ -9,11 +9,12 @@
 - 竞赛规则 24 章（html 剥标签全文，锚点直达章节）
 - 统一尺度 104 例（note+决定矩阵，锚点直达场景卡）
 - 国际资料：UEFA 判例 / IFAB FAQ / weekly 期目 / CONMEBOL / RFEF / HNS / PRO 文章
-  （weekly 长官方说明截断 240 字符，控制索引体量）
+  （索引保留当前入库的全部官方说明与译注）
 """
 
 import json
 import re
+from lib.law_blocks import anchored_section
 
 from lib.paths import (
     CONMEBOL_JSON,
@@ -44,9 +45,6 @@ GROUPS = [
     ("intl", "国际资料"),
 ]
 
-TEXT_CAP = 1500  # 单文档全文上限（字符）
-WEEKLY_DESC_CAP = 240
-
 
 def _read(path):
     return json.loads(path.read_text(encoding="utf-8")) if path.exists() else {}
@@ -68,7 +66,7 @@ def build_docs():
     docs = []
 
     def add(g, label, title, url, text):
-        text = re.sub(r"\s+", " ", text or "").strip()[:TEXT_CAP]
+        text = re.sub(r"\s+", " ", text or "").strip()
         if title and url:
             docs.append([g, label, title, url, (text or title).lower()])
 
@@ -116,15 +114,11 @@ def build_docs():
             "cheatsheet.html",
             " ".join(parts),
         )
-    # 竞赛规则
-    for s in _load_laws():
-        add(
-            "law",
-            "竞赛规则",
-            s["title"],
-            f"rules.html#{s['id']}",
-            _strip(s.get("html")),
-        )
+    # 规则段落与页面生成使用相同锚点。
+    for section in _load_laws():
+        _, blocks = anchored_section(section)
+        for anchor, text in blocks:
+            add("law", "竞赛规则", section["title"], f"rules.html#{anchor}", text)
     # 统一尺度场景
     scale = _read(SCALE_JSON)
     for year, ydata in scale.items():
@@ -180,10 +174,10 @@ def build_docs():
                 "intl",
                 "IFAB",
                 f"IFAB 协议 · {sec.get('h', '')}",
-                "ifab.html",
+                f"ifab.html#{sec['id']}",
                 " ".join(parts),
             )
-    # weekly 期目（官方说明截断）
+    # weekly 期目（题名、译注和当前入库的完整说明）
     weekly, wzh = _read(WEEKLY_JSON), _read(WEEKLY_ZH_JSON)
     shows = weekly.get("shows", {})
     for e in weekly.get("episodes", []):
@@ -193,8 +187,8 @@ def build_docs():
             "intl",
             "周更节目",
             f"{show.get('name', e.get('show', ''))} · {e.get('title', '')[:80]}",
-            "weekly.html",
-            f"{note} {e.get('desc', '')[:WEEKLY_DESC_CAP]}",
+            f"weekly.html#ep-{e['id']}",
+            f"{note} {e.get('desc', '')}",
         )
     # CONMEBOL
     con, czh = _read(CONMEBOL_JSON), _read(CONMEBOL_ZH_JSON)
@@ -204,7 +198,7 @@ def build_docs():
             "intl",
             "CONMEBOL",
             f"{c.get('comp_cn') or c.get('comp', '')} · {c.get('match', '')}",
-            "conmebol.html",
+            c.get("url", "conmebol.html"),
             f"{zh} {c.get('situacion_es', '')} {c.get('estadio', '')}",
         )
     # RFEF（判例情形中文）
@@ -219,7 +213,7 @@ def build_docs():
                     "intl",
                     "RFEF",
                     f"{it.get('id', '')} · {(zh or it.get('situation_es', ''))[:60]}",
-                    "rfef.html",
+                    f"rfef.html#r-{it['id']}",
                     f"{zh} {it.get('situation_es', '')}",
                 )
     # HNS（判例中文正文）
@@ -240,7 +234,7 @@ def build_docs():
                 "intl",
                 "HNS",
                 f"{r.get('title', '')[:50]} · 判例{inc.get('no', '')}",
-                "hns.html",
+                f"hns.html#hns-{r['id']}-{inc['no']}",
                 paras,
             )
     # PRO 文章（外链官方页）
@@ -305,7 +299,7 @@ __TOPBAR__
 const DOCS = __DOCS__;
 const GROUPS = __GROUPS__;
 const IC = __ICONS__;
-let cur = "all", q = "";
+let cur = "all", q = "", limit = 60;
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
 function rex(kw){ return new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"); }
 function renderBar(){
@@ -314,7 +308,7 @@ function renderBar(){
   const si = document.getElementById("q");
   ["input","search"].forEach(ev=>si.addEventListener(ev, ()=>{
     q = (si.value||"").trim().toLowerCase();
-    render();
+    limit = 60; render();
   }));
   // 深链预填：search.html?q=关键词（404 页搜索框 / 外部链接入口）
   const qp = new URLSearchParams(location.search).get("q");
@@ -332,7 +326,7 @@ function renderChips(){
 }
 document.getElementById("schips").addEventListener("click", e=>{
   const b = e.target.closest("[data-g]"); if(!b) return;
-  cur = b.dataset.g; renderChips(); render();
+  cur = b.dataset.g; limit = 60; renderChips(); render();
 });
 function snippet(text, kw){
   const i = text.toLowerCase().indexOf(kw);
@@ -351,15 +345,16 @@ function render(){
     return;
   }
   const gname = Object.fromEntries(GROUPS);
-  box.innerHTML = hits.slice(0, 60).map(d=>{
+  box.innerHTML = hits.slice(0, limit).map(d=>{
     const ext = /^https?:/.test(d[3]) ? ' target="_blank" rel="noopener noreferrer"' : '';
     const title = kw ? esc(d[2]).replace(rex(kw), m=>"<mark>"+m+"</mark>") : esc(d[2]);
     return `<a class="sr" href="${esc(d[3])}"${ext}>
       <div class="t1"><span class="gl">${gname[d[0]]||d[0]} · ${esc(d[1])}</span>${title}</div>
       <div class="t2">${kw ? snippet(d[4], kw) : esc(d[4].slice(0,110)) + (d[4].length>110?"…":"")}</div>
     </a>`;
-  }).join("") + (hits.length>60 ? `<div class="sempty">仅显示前 60 条，输入更具体的关键词缩小范围</div>` : "");
+  }).join("") + (hits.length>limit ? '<button class="btn" id="moreResults">继续显示（已显示 '+limit+' / '+hits.length+'）</button>' : "");
 }
+document.getElementById("sres").addEventListener("click", e=>{ if(e.target.id==="moreResults"){limit += 60; render();} });
 document.addEventListener("keydown", e=>{
   const t=(e.target.tagName||"").toLowerCase();
   if(t==="input"||t==="textarea")return;

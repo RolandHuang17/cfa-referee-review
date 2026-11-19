@@ -104,11 +104,12 @@ def topbar(
     sb_btn=False,
     help_btn=False,
     lite_btn=False,
+    portal=False,
 ):
     """统一顶栏：导航分「赛季 / 工具 / 国际评议」三组下拉（点击展开，Esc/外点关闭），
     ≤1080px 收进汉堡按钮 + 全量导航抽屉。active=当前页 href;right=页面临有控件(搜索框等)HTML;
     sb_btn=侧栏开关(#btnSb, season 页用);help_btn=说明按钮(#btnHelp, season 页用);
-    lite_btn=轻量版开关(#btnLite, season/scale 页用;门户用自带的分段控件)。"""
+    lite_btn=轻量版开关(#btnLite, season/scale 页用)；portal=首页导航，含跳转正文和训练入口。"""
     season_items = [(f"season-{s}.html", f"{s}赛季评议", "film") for s in seasons]
     season_items.append((stats, "得失盘点", "chart"))
     groups = [
@@ -143,35 +144,41 @@ def topbar(
     for gname, items in groups:
         gcur = any(href == active for href, _, _ in items)
         links = "".join(
-            f'<a class="tbtn{" cur" if href == active else ""}" role="menuitem" href="{href}">'
+            f'<a class="tbtn{" cur" if href == active else ""}" href="{href}">'
             f"{icon(ic)}<span>{label}</span></a>"
             for href, label, ic in items
         )
         nav += (
             f'<div class="navgrp{" cur" if gcur else ""}">'
-            f'<button class="tbtn grp-btn" type="button" aria-haspopup="true" aria-expanded="false">'
+            f'<button class="tbtn grp-btn" type="button" aria-expanded="false">'
             f"<span>{gname}</span>{icon('chev-d', 12)}</button>"
-            f'<div class="navpop" role="menu">{links}</div></div>'
+            f'<div class="navpop">{links}</div></div>'
         )
-    drawer = '<div class="navdrawer" id="navDrawer" aria-label="全站导航">'
+    drawer = (
+        '<dialog class="navdrawer" id="navDrawer" aria-labelledby="navTitle">'
+        '<div class="navd-head"><b id="navTitle">站点导航</b>'
+        '<button type="button" id="navClose" class="btn" autofocus>关闭导航</button></div>'
+        '<nav aria-label="全部页面">'
+    )
     for gname, items in groups:
         drawer += f'<div class="navd-h">{gname}</div>' + "".join(
             f'<a class="navd-i{" cur" if href == active else ""}" href="{href}">'
             f"{icon(ic, 15)}<span>{label}</span></a>"
             for href, label, ic in items
         )
-    drawer += "</div>"
+    drawer += "</nav></dialog>"
     sb = (
         (
             f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
-            f"{icon('menu')}</button>"
+            f"{icon('sliders')}</button>"
         )
         if sb_btn
         else ""
     )
+    menu_class = "tbtn menu-toggle" if portal else "tbtn"
     navb = (
-        '<button class="tbtn" id="btnNav" title="站点导航" aria-label="打开站点导航">'
-        + icon("compass")
+        f'<button class="{menu_class}" id="btnNav" title="站点导航" aria-label="站点导航" aria-expanded="false" aria-controls="navDrawer">'
+        + icon("menu")
         + "</button>"
     )
     lite_b = (
@@ -196,10 +203,22 @@ def topbar(
         '<span class="when-light">' + icon("moon") + "</span></button>"
     )
     sub = f'<span class="brand-sub">{brand_sub}</span>' if brand_sub else ""
+    current = ' aria-current="page"' if portal else ""
+    brand = (
+        f'<a class="brand" href="index.html"{current}>{icon("shield", 19)}'
+        f"<b>裁判学习平台</b>{sub}</a>"
+    )
+    desktop_nav = f'<nav class="nav" aria-label="站点导航">{nav}</nav>'
+    if portal:
+        return (
+            '<a class="skip-link" href="#main">跳到学习内容 <span lang="en">Skip to content</span></a>'
+            '<header class="topbar nav portal-nav"><div class="wrap">'
+            f'{brand}{desktop_nav}<div class="top-right">{theme_btn}{navb}'
+            '<a class="tbtn training-link" href="quiz.html">考题训练</a></div></div>'
+            f"{drawer}</header>"
+        )
     return (
-        f'<header class="topbar">{sb}{navb}'
-        f'<a class="brand" href="index.html">{icon("shield", 19)}<b>裁判学习平台</b>{sub}</a>'
-        f'<nav class="nav" aria-label="站点导航">{nav}</nav>'
+        f'<header class="topbar">{sb}{navb}{brand}{desktop_nav}'
         f'<div class="top-right">{right}{lite_b}{help_b}{theme_btn}</div></header>'
         + drawer
     )
@@ -236,19 +255,43 @@ _TOGGLE_JS = (
     "var open=!!t&&g===t.parentElement&&!g.classList.contains('open');"
     "g.classList.toggle('open',open);"
     "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});"
-    "var nb=e.target.closest&&e.target.closest('#btnNav');"
-    "if(nb){document.body.classList.toggle('nav-open');return;}"
-    "if(document.body.classList.contains('nav-open')"
-    "&&!(e.target.closest&&e.target.closest('.navdrawer')))"
-    "document.body.classList.remove('nav-open');"
-    "if(e.target.closest&&e.target.closest('.navdrawer a'))"
-    "document.body.classList.remove('nav-open');});"
-    "document.addEventListener('keydown',function(e){"
-    "if(e.key!=='Escape')return;"
-    "document.querySelectorAll('.navgrp.open').forEach(function(g){"
-    "g.classList.remove('open');"
-    "var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded','false');});"
-    "document.body.classList.remove('nav-open');});</script>"
+    "});"
+    r"""
+    (function(){
+      const trigger = document.getElementById("btnNav");
+      const drawer = document.getElementById("navDrawer");
+      if (!trigger || !drawer) return;
+      trigger.addEventListener("click", () => {
+        if (drawer.open) {
+          drawer.close();
+          return;
+        }
+        drawer.showModal();
+        trigger.setAttribute("aria-expanded", "true");
+      });
+      drawer.addEventListener("close", () => {
+        trigger.setAttribute("aria-expanded", "false");
+        if (trigger.getClientRects().length) trigger.focus();
+      });
+      document.getElementById("navClose").addEventListener("click", () => drawer.close());
+      drawer.addEventListener("click", e => {
+        if (e.target.closest("a") || (e.target === drawer && e.clientX > drawer.getBoundingClientRect().right))
+          drawer.close();
+      });
+      matchMedia("(min-width:1081px)").addEventListener("change", e => {
+        if (e.matches && drawer.open) drawer.close();
+      });
+      document.addEventListener("keydown", e => {
+        if (e.key !== "Escape") return;
+        for (const group of document.querySelectorAll(".navgrp.open")){
+          const button = group.querySelector(".grp-btn");
+          group.classList.remove("open");
+          button.setAttribute("aria-expanded", "false");
+          button.focus();
+        }
+      });
+    })();
+    </script>"""
 )
 
 # PWA Service Worker 注册（仅在线 http(s)；file:// 双击离线用法静默跳过，见 build_pwa.py）

@@ -143,7 +143,9 @@ def build_page(data, zh):
             for e in yitems:
                 vid = e.get("id", "")
                 note = zh_items.get(vid, {}).get("note", "")
-                desc = e.get("desc") or ""
+                desc = "\n".join(
+                    line.rstrip() for line in (e.get("desc") or "").splitlines()
+                ).strip()
                 meta = []
                 d = e.get("date")
                 if d:
@@ -158,11 +160,17 @@ def build_page(data, zh):
                 lang = LANG_LABEL.get(e.get("lang") or shows[key].get("lang"), "")
                 if lang:
                     meta.append(lang)
-                blob = search_blob(e.get("title", ""), note, desc[:400])
+                blob = " ".join(
+                    search_blob(e.get("title", ""), note, desc[:400]).split()
+                )
                 inner = (
                     f'<div class="t"><b>{esc(e.get("title", ""))}</b>'
                     f'<div class="meta">{esc(" · ".join(meta))}</div>'
                 )
+                if not desc:
+                    inner += (
+                        '<div class="meta">已收录题名与中文译注 · 官方说明待回查</div>'
+                    )
                 if note:
                     inner += f'<div class="note">{esc(note)}</div>'
                 if desc:
@@ -174,7 +182,7 @@ def build_page(data, zh):
                 is_video = "youtube.com" in (e.get("url") or "")
                 go_lbl = "官方观看" if is_video else "官方文章"
                 rows += (
-                    f'<div class="ecard" data-search="{blob}">{inner}'
+                    f'<div class="ecard" id="ep-{esc(vid)}" data-search="{blob}">{inner}'
                     f'<a class="go" href="{esc(e.get("url", ""))}" target="_blank" '
                     f'rel="noopener noreferrer">{icon("play", 11)} {go_lbl}</a></div>'
                 )

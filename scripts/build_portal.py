@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
-"""生成门户首页 index.html：三入口（2024/2025评议/竞赛规则）+ 得失盘点快捷入口
-纯静态单文件离线可用；数据计数从 data/*.json 读取；视觉走 data-cfa-theme 设计系统
-"""
+"""构建离线裁判学习门户，内联判例、资料目录、个人学习记录与两张图片。"""
 
+import base64
 import json
-from datetime import date
+import shutil
+from html import escape
 
 from lib.seo import jsonld_dataset, jsonld_website, meta_tags
 from lib.site_stats import cheatsheet_count, counts
 from lib.theme import inject_theme, icon, topbar
 
 from lib.paths import (
+    ASSETS,
     DATA,
     CONMEBOL_JSON,
     IFAB_JSON,
@@ -21,6 +22,7 @@ from lib.paths import (
     RFEF_JSON,
     SCALE_JSON,
     SITE,
+    SRC,
     UEFA_JSON,
     WEEKLY_JSON,
     HNS_JSON,
@@ -52,21 +54,18 @@ def load_stats():
     }
 
 
-def build_today_pool():
-    """今日判例池：有视频且有认定原文的判例（与 quiz 判例池同口径），
-    每条只留链接与展示所需的最小字段，页面端按日期确定性轮换。"""
+def build_study_index():
+    """首页恢复任意判例；有视频及认定原文的记录可供每日轮换。"""
     pool = []
     for season in ("2026", "2025", "2024"):
         d = json.loads((DATA / f"cases-{season}.json").read_text(encoding="utf-8"))
         for c in d["cases"]:
-            if not (c.get("video_files") and (c.get("conclusion") or "").strip()):
-                continue
             pool.append(
                 [
                     season,
                     c["seq"],
                     c.get("comp", ""),
-                    c.get("round", ""),
+                    bool(c.get("video_files") and (c.get("conclusion") or "").strip()),
                     c.get("home", ""),
                     c.get("away", ""),
                     c["issue"],
@@ -208,562 +207,153 @@ def load_hns_stats():
     return {"rounds": rounds, "incs": incs, "vids": vids}
 
 
-HTML = r"""<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>裁判学习一站式平台 · 足协评议合集与竞赛规则</title>
-<style>
-/* ===== portal 页专属布局 (颜色/组件来自 data-cfa-theme 设计系统) ===== */
-.hero-bg{background:
-   radial-gradient(1100px 460px at 82% -8%, rgba(77,159,255,.14), transparent 60%),
-   radial-gradient(900px 420px at -8% 108%, rgba(87,201,133,.08), transparent 55%)}
-.wrap{max-width:1120px;margin:0 auto;padding:40px 20px 56px}
-.hero{text-align:center;margin-bottom:38px}
-.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;
-  letter-spacing:2.5px;color:var(--brand);margin-bottom:14px}
-.hero .eyebrow::before,.hero .eyebrow::after{content:"";width:28px;height:1px;background:var(--brand);opacity:.5}
-.hero h1{margin:0 0 12px;font-family:var(--font-display);font-size:36px;line-height:1.45;letter-spacing:.5px;font-weight:700}
-.hero h1 em{font-style:normal;color:var(--brand)}
-.hero p{margin:0 auto;color:var(--muted);font-size:15.5px;max-width:660px}
-.hero .sub{margin-top:12px;font-size:13px;color:var(--faint)}
+def portal_catalog(stats, bank_size):
+    """Render every destination as a usable offline link within its subject shelf."""
+    seasons = ("2026", "2025", "2024")
+    shelves = [
+        (
+            "domestic",
+            "国内赛季评议",
+            [
+                (
+                    f"season-{y}.html",
+                    f"{y} 赛季评议",
+                    f"{stats[y]['issues']} 期 · {stats[y]['n']} 判例",
+                )
+                for y in seasons
+            ],
+        ),
+        (
+            "teams",
+            "各队得失盘点",
+            [
+                (f"stats-{y}.html", f"{y} 各队得失", f"{stats[y]['wrong']} 个错漏判")
+                for y in seasons
+            ],
+        ),
+        (
+            "study",
+            "规则与练习",
+            [
+                ("rules.html", "足球竞赛规则", f"{stats['rules']['sections']} 章"),
+                (
+                    "scale.html",
+                    "统一判罚尺度",
+                    f"{load_scale_stats()['scenes']} 个场景",
+                ),
+                ("quiz.html", "考题与限时模考", f"{bank_size} 道题"),
+                ("cheatsheet.html", "考点速查卡", f"{cheatsheet_count()} 张"),
+                ("search.html", "全站搜索", "判例与条文"),
+            ],
+        ),
+        (
+            "europe",
+            "欧洲判例与协议",
+            [
+                ("uefa.html", "UEFA Clear Line", f"{load_uefa_stats()['cases']} 判例"),
+                ("rap.html", "UEFA RAP 训练包", f"{load_rap_stats()['editions']} 期"),
+                (
+                    "rfef.html",
+                    "西班牙判罚标准手册",
+                    f"{load_rfef_stats()['items']} 判例",
+                ),
+                ("hns.html", "克罗地亚逐轮分析", f"{load_hns_stats()['incs']} 判例"),
+                (
+                    "ifab.html",
+                    "IFAB 视频助理裁判协议",
+                    f"{load_ifab_stats()['faq']} 个常见问题",
+                ),
+            ],
+        ),
+        (
+            "world",
+            "美洲与全球评议",
+            [
+                ("pro.html", "美国 PRO 评议", f"{load_pro_stats()['arts']} 篇"),
+                (
+                    "conmebol.html",
+                    "南美 VAR 判例",
+                    f"{load_conmebol_stats()['cases']} 判例",
+                ),
+                ("weekly.html", "全球周更评议", f"{load_weekly_stats()['eps']} 期"),
+                ("intl.html", "国际评议资源导航", f"{load_intl_stats()['res']} 项"),
+            ],
+        ),
+    ]
+    options = []
+    groups = []
+    arrow = icon("right", 15)
+    for number, (key, title, links) in enumerate(shelves):
+        group_id = f"shelf-{key}"
+        options.append(f'<option value="{group_id}">{escape(title)}</option>')
+        entries = "".join(
+            f'<li><a href="{href}"><strong>{escape(label)}</strong>'
+            f"<small>{escape(detail)}</small>{arrow}</a></li>"
+            for href, label, detail in links
+        )
+        hidden = " hidden" if number else ""
+        groups.append(
+            f'<ul class="shelf-list" id="{group_id}" aria-label="{escape(title)}"{hidden}>{entries}</ul>'
+        )
+    return "".join(options), "".join(groups)
 
-/* 浏览模式分段开关（完整版/轻量版，记忆于 localStorage cfa.lite） */
-.mode-pick{margin:-16px 0 30px;display:flex;flex-direction:column;align-items:center;gap:10px}
-.mp-label{font-size:11.5px;font-weight:700;letter-spacing:2.5px;color:var(--muted)}
-.mp-switch{display:inline-flex;gap:6px;background:var(--card);border:1px solid var(--line);border-radius:999px;padding:5px}
-.mp-switch button{display:flex;flex-direction:column;align-items:center;gap:1px;padding:8px 24px;
-  border-radius:999px;border:1px solid transparent;background:none;cursor:pointer;
-  font-family:inherit;font-size:14px;font-weight:700;color:var(--ink2);transition:.15s}
-.mp-switch button span{font-size:11.5px;font-weight:400;color:var(--muted)}
-.mp-switch button:hover{border-color:var(--brand);color:var(--brand)}
-.mp-switch button.on{background:var(--brand-strong);border-color:var(--brand-strong);color:var(--on-brand)}
-.mp-switch button.on span{color:var(--on-brand);opacity:.82}
-.mp-desc{margin:0;font-size:12.5px;color:var(--muted);max-width:720px;text-align:center;line-height:1.7}
 
-/* 今日判例条（按日期确定性轮换，链接直达判例卡） */
-.today{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin:-10px 0 26px;padding:12px 18px;
-  border:1px solid var(--brand);border-radius:var(--r-lg);background:var(--card);text-decoration:none;
-  animation:fadeUp .5s var(--ease) backwards;animation-delay:.06s}
-.today:hover{transform:translateY(-2px);box-shadow:var(--shadow)}
-.today b{flex:none;padding:3px 11px;border-radius:999px;background:var(--brand-strong);
-  color:var(--on-brand);font-size:12.5px;letter-spacing:1px}
-.today .tc-m{color:var(--ink);font-size:14px;font-weight:600}
-.today .tc-go{margin-left:auto;color:var(--brand);font-size:13px;font-weight:600}
+def inline_asset(name, mime):
+    content = (ASSETS / "portal" / name).read_bytes()
+    return f"data:{mime};base64," + base64.b64encode(content).decode("ascii")
 
-/* 我的学习（本地汇总：足迹/连续天数/到期复习/收藏，无数据整卡隐藏） */
-.mystudy{margin:0 0 26px;padding:16px 20px;border:1px dashed var(--line);border-radius:var(--r-lg);
-  background:var(--card2)}
-.ms-h{display:flex;align-items:center;gap:7px;font-size:13px;font-weight:700;color:var(--ink2);
-  margin-bottom:10px;letter-spacing:.5px}
-.ms-h .ic{color:var(--brand)}
-.ms-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px}
-.ms-grid a,.ms-cell{display:flex;flex-direction:column;align-items:center;gap:3px;padding:10px 8px;
-  border-radius:var(--r-md);text-decoration:none}
-.ms-grid a{background:var(--card);border:1px solid var(--line);transition:.15s}
-.ms-grid a:hover{border-color:var(--brand);transform:translateY(-2px)}
-.ms-grid b{font-family:var(--font-display);font-size:24px;color:var(--brand);font-variant-numeric:tabular-nums}
-.ms-grid span{font-size:12px;color:var(--muted)}
 
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
-.ecard{position:relative;display:flex;flex-direction:column;text-decoration:none;
-  background:var(--card);border:1px solid var(--line);border-radius:var(--r-lg);
-  padding:22px 22px 18px;overflow:hidden;color:var(--ink);
-  transition:transform .16s ease, border-color .16s ease, box-shadow .16s ease}
-.ecard:hover{transform:translateY(-4px);border-color:var(--brand);box-shadow:var(--shadow)}
-.ecard .icon{width:42px;height:42px;border-radius:var(--r-md);display:flex;align-items:center;
-  justify-content:center;background:var(--info-bg);color:var(--brand)}
-.ecard.c-rules .icon{background:var(--amber-bg);color:var(--amber)}
-.ecard.c-2024 .icon{background:var(--green-bg);color:var(--green)}
-.ecard h2{margin:13px 0 4px;font-family:var(--font-display);font-size:19.5px;letter-spacing:.3px}
-.ecard .desc{margin:0;color:var(--muted);font-size:13.5px;min-height:64px;line-height:1.7}
-.ecard .nums{display:flex;gap:20px;margin-top:15px;padding-top:13px;border-top:1px dashed var(--line)}
-.ecard .nums div b{display:block;font-family:var(--font-display);font-size:22px;font-weight:700;color:var(--brand);font-variant-numeric:tabular-nums}
-.ecard.c-rules .nums div b{color:var(--amber)}
-.ecard.c-2024 .nums div b{color:var(--green)}
-.ecard.c-2026 .nums div b{color:var(--red)}
-.ecard .nums div span{font-size:12px;color:var(--muted)}
-.ecard .go{margin-top:14px;font-size:13px;color:var(--brand);font-weight:600;display:flex;align-items:center;gap:5px}
-.ecard::after{content:"";position:absolute;inset:0;
-  background:linear-gradient(120deg,transparent 30%,rgba(148,178,214,.08) 48%,transparent 62%);
-  transform:translateX(-100%);transition:.5s}
-.ecard:hover::after{transform:translateX(100%)}
-/* 入场级联 (backwards 填充: 结束后释放 transform, 不锁 hover 抬升) */
-.hero{animation:fadeUp .45s var(--ease) backwards}
-.mode-pick{animation:fadeUp .45s var(--ease) 80ms backwards}
-.ecard{animation:fadeUp .5s var(--ease) backwards;animation-delay:calc(var(--i,0)*60ms + 120ms)}
-.steps{animation:fadeUp .45s var(--ease) 480ms backwards}
-
-.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:16px}
-.steps div{display:grid;grid-template-columns:40px 1fr;column-gap:10px;align-items:center;
-  padding:14px 16px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card)}
-.steps b{grid-row:span 2;color:var(--brand);font-size:21px;font-variant-numeric:tabular-nums}
-.steps span{font-weight:700;color:var(--ink)}
-.steps small{color:var(--muted);font-size:12.5px}
-
-.aux{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:14px}
-.aux a{display:flex;align-items:center;gap:14px;text-decoration:none;color:var(--ink);
-  background:var(--card);border:1px solid var(--line);border-radius:var(--r-md);padding:16px 20px;
-  transition:border-color .15s, transform .15s}
-.aux a:hover{border-color:var(--brand);transform:translateY(-2px)}
-.aux .ai{width:36px;height:36px;border-radius:var(--r-sm);display:flex;align-items:center;
-  justify-content:center;background:var(--info-bg);color:var(--brand);flex:none}
-.aux b{display:block;font-size:15px}
-.aux span{font-size:12.5px;color:var(--muted)}
-.aux .arr{margin-left:auto;color:var(--faint)}
-
-.feats{display:flex;flex-wrap:wrap;gap:9px;justify-content:center;margin:38px 0 0}
-.feat{display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--ink2);
-  background:var(--card);border:1px solid var(--line);border-radius:999px;padding:6px 15px}
-.feat .ic{color:var(--brand)}
-.foot{margin-top:40px;text-align:center;color:var(--faint);font-size:12.5px;line-height:2}
-.foot a{color:var(--brand);text-decoration:none}
-@media (max-width:960px){ .grid{grid-template-columns:1fr} .aux{grid-template-columns:1fr}
-  .steps{grid-template-columns:1fr} .hero h1{font-size:25px} .wrap{padding-top:26px} }
-</style>
-</head>
-<body class="page-portal hero-bg">
-__TOPBAR__
-
-<div class="wrap">
-  <section class="hero">
-    <div class="eyebrow">中国足协裁判评议 · 教学整理</div>
-    <h1>判例合集 <em>统一尺度</em> 与最新竞赛规则</h1>
-    <p>按新裁判统一尺度教学重组的官方评议判例全集，配判罚视频、影响统计与最新版竞赛规则，全部内容可离线使用。</p>
-    <div class="sub">数据来源：中国足球协会官网「裁判评议」栏目 · IFAB《足球竞赛规则》2026-27</div>  </section>
-
-  <a class="today" id="todayCase" href="#" style="display:none"></a>
-
-  <section class="mode-pick">
-    <div class="mp-label">浏览模式</div>
-    <div class="mp-switch" role="group" aria-label="浏览模式切换">
-      <button type="button" id="modeFull" aria-pressed="false">完整版<span>含视频 · 适合本地离线</span></button>
-      <button type="button" id="modeLite" aria-pressed="false">轻量版<span>纯文字+官方链接 · 适合在线浏览</span></button>
-    </div>
-    <p class="mp-desc" id="modeDesc"></p>
-  </section>
-
-  <section class="mystudy" id="myStudy" style="display:none">
-    <div class="ms-h">__I_TARGET__ 我的学习</div>
-    <div class="ms-grid">
-      <a href="season-2026.html" id="msFoot"><b>0</b><span>已看判例</span></a>
-      <div class="ms-cell"><b id="msStreak">1</b><span>连续学习天数</span></div>
-      <a href="quiz.html" id="msDue"><b>0</b><span>到期复习</span></a>
-      <div class="ms-cell"><b id="msFav">0</b><span>收藏判例</span></div>
-    </div>
-  </section>
-
-  <section class="grid">
-    <a class="ecard c-2026" style="--i:0" href="season-2026.html">
-      <div class="icon">__I_FILM__</div>
-      <h2>2026赛季评议</h2>
-      <p class="desc">进行中的最新赛季，已收录 __N26_ISSUES__ 期评议，随官方发布持续更新。</p>
-      <div class="nums">
-        <div><b>__N26__</b><span>判例</span></div>
-        <div><b>__W26__</b><span>错漏判</span></div>
-        <div><b>__V26__</b><span>视频</span></div>
-      </div>
-      <div class="go">进入学习 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-2025" style="--i:1" href="season-2025.html">
-      <div class="icon">__I_FILM__</div>
-      <h2>2025赛季评议</h2>
-      <p class="desc">最新赛季全部 __N25_ISSUES__ 期评议，含第27期对第26期的补充认定合并，分类与判定均经人工复核。</p>
-      <div class="nums">
-        <div><b>__N25__</b><span>判例</span></div>
-        <div><b>__W25__</b><span>错漏判</span></div>
-        <div><b>__V25__</b><span>视频</span></div>
-      </div>
-      <div class="go">进入学习 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-2024" style="--i:2" href="season-2024.html">
-      <div class="icon">__I_FILM__</div>
-      <h2>2024赛季评议</h2>
-      <p class="desc">上赛季全部 __N24_ISSUES__ 期评议（含三大球运动会判例），同样的教学分类与收藏笔记体系。</p>
-      <div class="nums">
-        <div><b>__N24__</b><span>判例</span></div>
-        <div><b>__W24__</b><span>错漏判</span></div>
-        <div><b>__V24__</b><span>视频</span></div>
-      </div>
-      <div class="go">进入学习 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-rules" style="--i:3" href="rules.html">
-      <div class="icon">__I_BOOK__</div>
-      <h2>足球竞赛规则 2026-27</h2>
-      <p class="desc">IFAB 官方最新版全文（简体中文），支持划词高亮、章节笔记、全文搜索——备赛案头工具。</p>
-      <div class="nums">
-        <div><b>__NRL__</b><span>章节</span></div>
-        <div><b>__NLAW__</b><span>规则正文</span></div>
-        <div><b>__I_NOTE__</b><span>可标注</span></div>
-      </div>
-      <div class="go">打开规则 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-scale" style="--i:4" href="scale.html">
-      <div class="icon">__I_SHIELD__</div>
-      <h2>统一判罚尺度宣讲</h2>
-      <p class="desc">中国足协官方《统一判罚尺度》2024–2026 三季：__S_SCENES__ 例典型场景视频、官方说明与判罚决定对照。</p>
-      <div class="nums">
-        <div><b>__S_SCENES__</b><span>场景</span></div>
-        <div><b>__S_GROUPS__</b><span>分组</span></div>
-        <div><b>__S_VIDEOS__</b><span>视频</span></div>
-      </div>
-      <div class="go">进入学习 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-uefa" style="--i:5" href="uefa.html">
-      <div class="icon">__I_PLAY__</div>
-      <h2>欧足联判例库</h2>
-      <p class="desc">UEFA 官方 Clear Line：__U_CASES__ 例真实比赛场景与官方解释（英文原文），逐例跳转官方视频页。</p>
-      <div class="nums">
-        <div><b>__U_CASES__</b><span>判例</span></div>
-        <div><b>__U_GROUPS__</b><span>分组</span></div>
-        <div><b>__I_EXT_S__</b><span>官方视频</span></div>
-      </div>
-      <div class="go">进入学习 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-rap" style="--i:6" href="rap.html">
-      <div class="icon">__I_TARGET__</div>
-      <h2>UEFA RAP 训练包</h2>
-      <p class="desc">欧足联每年两期的「看片段→自己判→对官方答案」判例训练包：__RA_EDS__ 期索引（__RA_ONLINE__ 期 Nextaur 在线）与训练方法指南。</p>
-      <div class="nums">
-        <div><b>__RA_EDS__</b><span>期索引</span></div>
-        <div><b>__RA_ONLINE__</b><span>在线期</span></div>
-        <div><b>__I_EXT_S__</b><span>免费注册</span></div>
-      </div>
-      <div class="go">查看指南 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-rfef" style="--i:7" href="rfef.html">
-      <div class="icon">__I_GLOBE__</div>
-      <h2>西班牙判罚标准</h2>
-      <p class="desc">RFEF/CTA《Criterios Arbitrales》2026/27：__RF_ITEMS__ 条判罚尺度配官方判例视频，中文译制、可切西语原文。</p>
-      <div class="nums">
-        <div><b>__RF_SECS__</b><span>专题</span></div>
-        <div><b>__RF_ITEMS__</b><span>判例</span></div>
-        <div><b>__RF_VIDS__</b><span>视频</span></div>
-      </div>
-      <div class="go">进入学习 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-pro" style="--i:8" href="pro.html">
-      <div class="icon">__I_FLAG__</div>
-      <h2>美国评议</h2>
-      <p class="desc">美国 PRO（MLS/NWSL）周更 VAR 评析全量索引：Inside Video Review / VAR a Fondo / The Definitive Angle，附 USSF 视频入口指南。</p>
-      <div class="nums">
-        <div><b>__P_ARTS__</b><span>篇索引</span></div>
-        <div><b>__P_MLS__</b><span>MLS</span></div>
-        <div><b>__P_NWSL__</b><span>NWSL</span></div>
-      </div>
-      <div class="go">进入索引 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-intl" style="--i:9" href="intl.html">
-      <div class="icon">__I_COMPASS__</div>
-      <h2>国际评议导航</h2>
-      <p class="desc">全球官方评议节目、VAR 音频与课程测验导航（4 组 __I_RES__ 项）：语言、频率、形态与注意事项一页掌握。</p>
-      <div class="nums">
-        <div><b>__I_RES__</b><span>资源</span></div>
-        <div><b>__I_ORGS__</b><span>机构</span></div>
-        <div><b>__I_LANG__</b><span>语言</span></div>
-      </div>
-      <div class="go">查看导航 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-cmem" style="--i:10" href="conmebol.html">
-      <div class="icon">__I_PLAY2__</div>
-      <h2>南美 VAR 判例</h2>
-      <p class="desc">CONMEBOL《Situación de Análisis VAR》：世预赛/解放者杯/南美杯逐案 VAR 判例（比赛 · 情境 · 分钟），附官方分析与视频链接。</p>
-      <div class="nums">
-        <div><b>__C_CASES__</b><span>判例</span></div>
-        <div><b>__C_COMPS__</b><span>赛事</span></div>
-        <div><b>__I_EXT_S__</b><span>官方视频</span></div>
-      </div>
-      <div class="go">进入判例 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-hns" style="--i:11" href="hns.html">
-      <div class="icon">__I_CHECK__</div>
-      <h2>克罗地亚评议</h2>
-      <p class="desc">克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名）：逐判例「认定正确/错误」+ 技术考量 + 官方视频，中文全译。</p>
-      <div class="nums">
-        <div><b>__H_ROUNDS__</b><span>轮次</span></div>
-        <div><b>__H_INCS__</b><span>判例</span></div>
-        <div><b>__H_VIDS__</b><span>视频</span></div>
-      </div>
-      <div class="go">进入判例 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-weekly" style="--i:12" href="weekly.html">
-      <div class="icon">__I_TV__</div>
-      <h2>周更评议节目</h2>
-      <p class="desc">全球七档官方评议节目的结构化期目索引（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯）：官方说明原文 + 中文译注，逐期跳官方观看。</p>
-      <div class="nums">
-        <div><b>__W_SHOWS__</b><span>节目</span></div>
-        <div><b>__W_EPS__</b><span>期目</span></div>
-        <div><b>__W_LANGS__</b><span>语言</span></div>
-      </div>
-      <div class="go">进入索引 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-ifab" style="--i:13" href="ifab.html">
-      <div class="icon">__I_FILE__</div>
-      <h2>IFAB 统一尺度</h2>
-      <p class="desc">IFAB《Laws of the Game》VAR 协议官方全文中文译制：原则 / 可回看判定 / 实务 / 程序四节 + 官方 FAQ 判例，可切英文原文。</p>
-      <div class="nums">
-        <div><b>__IF_SECS__</b><span>章节</span></div>
-        <div><b>__IF_ITEMS__</b><span>条款</span></div>
-        <div><b>__IF_FAQ__</b><span>FAQ 判例</span></div>
-      </div>
-      <div class="go">进入阅读 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-quiz" style="--i:14" href="quiz.html">
-      <div class="icon">__I_QUIZ__</div>
-      <h2>考题模式</h2>
-      <p class="desc">__Q_TOTAL__ 道题随机出卷（判例 __Q_CASES__ + 尺度场景 __Q_SCALE__ + IFAB 协议 __Q_VAR__ + 规则理论 __Q_THEORY__）：判例先看视频做判罚，理论题刷规则条文，限时模考、间隔复习与 Anki 导出齐备。</p>
-      <div class="nums">
-        <div><b>__Q_TOTAL__</b><span>题库</span></div>
-        <div><b>__Q_CASES__</b><span>判例</span></div>
-        <div><b>__Q_THEORY__</b><span>规则理论</span></div>
-      </div>
-      <div class="go">开始答题 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-quiz" style="--i:15" href="search.html">
-      <div class="icon">__I_SEARCH_P__</div>
-      <h2>全站搜索</h2>
-      <p class="desc">一次搜遍三赛季判例、竞赛规则全文、统一尺度场景与国际评议资料——输入「手球」「越位」「DOGSO」等关键词直达对应判例与规则章节。</p>
-      <div class="nums">
-        <div><b>__TOTAL_CASES__</b><span>判例全文</span></div>
-        <div><b>__S_SCENES__</b><span>尺度场景</span></div>
-      </div>
-      <div class="go">开始搜索 __I_RIGHT__</div>
-    </a>
-    <a class="ecard c-rules" style="--i:16" href="cheatsheet.html">
-      <div class="icon">__I_FILE__</div>
-      <h2>考点速查卡</h2>
-      <p class="desc">考前一夜的 __N_CARDS__ 张卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步、重新开始方式与 2026/27 新规——手机翻卡，打印即讲义。</p>
-      <div class="nums">
-        <div><b>__N_CARDS__</b><span>速查卡</span></div>
-        <div><b>A4</b><span>打印讲义</span></div>
-      </div>
-      <div class="go">翻开速查卡 __I_RIGHT__</div>
-    </a>
-  </section>
-
-  <section class="steps">
-    <div><b>01</b><span>选择赛季</span><small>打开 2026 / 2025 / 2024 评议合集</small></div>
-    <div><b>02</b><span>筛选判例</span><small>按赛事、球队、期数、分类和判定查找</small></div>
-    <div><b>03</b><span>复盘记录</span><small>观看视频、收藏并记录学习笔记</small></div>
-  </section>
-
-  <section class="aux">
-    <a href="stats-2026.html">
-      <div class="ai">__I_CHART__</div>
-      <div><b>2026 各队得失盘点</b><span>错漏判影响统计（赛季进行中，比分逐步补齐）</span></div>
-      <div class="arr">__I_RIGHT__</div>
-    </a>
-    <a href="stats-2025.html">
-      <div class="ai">__I_CHART__</div>
-      <div><b>2025 各队得失盘点</b><span>错漏判影响统计：哪队受损、损失了什么</span></div>
-      <div class="arr">__I_RIGHT__</div>
-    </a>
-    <a href="stats-2024.html">
-      <div class="ai">__I_CHART__</div>
-      <div><b>2024 各队得失盘点</b><span>错漏判影响统计：中超 / 中甲 / 中乙 / 足协杯</span></div>
-      <div class="arr">__I_RIGHT__</div>
-    </a>
-  </section>
-
-  <div class="feats">
-    <span class="feat">__I_PLAY__ __VTOTAL__段官方判罚视频</span>
-    <span class="feat">__I_SHIELD__ 教学分类 + 统一尺度要点</span>
-    <span class="feat">__I_STAR__ 收藏多标签</span>
-    <span class="feat">__I_NOTE__ 判例笔记</span>
-    <span class="feat">__I_SEARCH__ 全文搜索</span>
-    <span class="feat">__I_DOWN__ 完全离线可用</span>
-  </div>
-
-  <div class="foot">
-    <p>本站为裁判员教学研究用途 · 判罚认定权属于中国足协裁判委员会评议组 · 规则文本版权归 IFAB，译文使用须遵守 <a href="NOTICE.md">版权声明</a></p>
-    <p>构建于 __BUILT__ · 打开本目录即可离线使用，视频请放在 videos/ 文件夹 · 纯在线访问（如 GitHub Pages）无需下载视频，选上方「轻量版」即可</p>
-  </div>
-</div>
-<script>
-(function(){
-  var lite = false;
-  try { lite = localStorage.getItem("cfa.lite") === "1"; } catch(_) {}
-  var full = document.getElementById("modeFull"), lit = document.getElementById("modeLite"),
-      desc = document.getElementById("modeDesc");
-  var DESC_ON = "已选轻量版：评议与统一尺度各页无视频窗口，判例详情为纯文字阅读 + 笔记区，并提供官方评议页与官方视频直链链接（新标签页在线播放）。",
-      DESC_OFF = "已选完整版：判例详情内嵌视频播放器（本地需有 videos/ 视频文件夹；在线访问时本地视频缺失会自动改用官方直链在线播放）。";
-  function sync(){
-    full.classList.toggle("on", !lite);
-    lit.classList.toggle("on", lite);
-    full.setAttribute("aria-pressed", lite ? "false" : "true");
-    lit.setAttribute("aria-pressed", lite ? "true" : "false");
-    desc.textContent = lite ? DESC_ON : DESC_OFF;
-  }
-  function set(v){
-    lite = v;
-    try { localStorage.setItem("cfa.lite", v ? "1" : "0"); } catch(_) {}
-    if (v) document.documentElement.dataset.lite = "1";
-    else document.documentElement.removeAttribute("data-lite");
-    sync();
-  }
-  full.addEventListener("click", function(){ set(false); });
-  lit.addEventListener("click", function(){ set(true); });
-  sync();
-})();
-</script>
-<script>
-// ---------- 今日判例（按日期确定性轮换）与「我的学习」汇总（localStorage 跨页读取） ----------
-(function(){
-  var POOL = __TODAY_POOL__;
-  var d = new Date();
-  var day = Math.floor(Date.UTC(d.getFullYear(), d.getMonth(), d.getDate()) / 86400000);
-  var it = POOL[day % POOL.length];
-  if (it){
-    var el = document.getElementById("todayCase");
-    var vs = it[5] ? (it[4] + " vs " + it[5]) : ("第" + it[6] + "期");
-    el.href = "season-" + it[0] + ".html#case-" + it[1];
-    el.innerHTML = "<b>今日判例</b><span class=\"tc-m\">" + it[2].replace("联赛","") + (it[3]||"") +
-      " · " + vs + " · " + it[8] + "</span><span class=\"tc-go\">去看视频做判断 →</span>";
-    el.style.display = "";
-  }
-  // 我的学习（任一有数据才显示）
-  function n(key){ try { return Object.keys(JSON.parse(localStorage.getItem(key) || "{}") || {}).length; } catch(_) { return 0; } }
-  var foot = n("cfa2026.seen") + n("cfa2025.seen") + n("cfa2024.seen");
-  var fav = n("cfa2026.fav") + n("cfa2025.fav") + n("cfa2024.fav");
-  var due = 0;
-  try {
-    var w = JSON.parse(localStorage.getItem("cfa.quiz.wrong") || "{}") || {};
-    var now = Date.now();
-    for (var k in w) if (!w[k].done && (w[k].due || 0) <= now) due++;
-  } catch(_) {}
-  var streak = 0;
-  try { streak = (JSON.parse(localStorage.getItem("cfa.streak") || "{}") || {}).days || 0; } catch(_) {}
-  if (foot || due || fav){
-    var box = document.getElementById("myStudy");
-    box.style.display = "";
-    document.querySelector("#msFoot b").textContent = foot;
-    document.getElementById("msStreak").textContent = Math.max(1, streak);
-    document.querySelector("#msDue b").textContent = due;
-    document.getElementById("msFav").textContent = fav;
-  }
-})();
-</script>
-</body>
-</html>
-"""
+def js_value(value):
+    return json.dumps(value, ensure_ascii=False, separators=(",", ":")).replace(
+        "</", "<\\/"
+    )
 
 
 def main():
-    s = load_stats()
-    sc = load_scale_stats()
-    u = load_uefa_stats()
-    ra = load_rap_stats()
-    rf = load_rfef_stats()
-    pro = load_pro_stats()
-    intl = load_intl_stats()
-    cm = load_conmebol_stats()
-    wk = load_weekly_stats()
-    ifab = load_ifab_stats()
-    hns = load_hns_stats()
-    from build_quiz import build_bank  # 与 quiz 页同一题库口径
+    from build_quiz import build_bank
 
-    bank, _, _, _, _ = build_bank()
-    q_case = sum(1 for b in bank if b["t"] == "case")
-    q_scale = sum(1 for b in bank if b["t"] == "scale")
-    q_var = sum(1 for b in bank if b["t"] == "var")
-    q_theory = sum(1 for b in bank if b["t"] == "theory")
-    today_pool = build_today_pool()
-    tb = topbar(
-        active="index.html",
-        stats="stats-2026.html",
-        brand_sub="评议 · 规则 · 尺度统一",
-        seasons=("2024", "2025", "2026"),
-    )
-    subs = {
-        "__I_FILM__": icon("film", 20),
-        "__I_BOOK__": icon("book", 20),
-        "__I_CHART__": icon("chart", 17),
-        "__I_RIGHT__": icon("right", 13),
-        "__I_NOTE__": icon("note", 15),
-        "__I_STAR__": icon("star", 13),
-        "__I_SEARCH__": icon("search", 13),
-        "__I_DOWN__": icon("download", 13),
-        "__I_PLAY__": icon("play", 12),
-        "__I_SHIELD__": icon("shield", 13),
-        "__I_QUIZ__": icon("quiz", 20),
-        "__I_SEARCH_P__": icon("search", 20),
-        "__I_EXT_S__": icon("external", 15),
-        "__I_TARGET__": icon("target", 20),
-        "__I_GLOBE__": icon("globe", 20),
-        "__I_FLAG__": icon("flag", 20),
-        "__I_COMPASS__": icon("compass", 20),
-        "__I_PLAY2__": icon("play", 20),
-        "__I_TV__": icon("tv", 20),
-        "__I_FILE__": icon("file-text", 20),
-        "__I_CHECK__": icon("check", 20),
+    options, groups = portal_catalog(load_stats(), len(build_bank()[0]))
+    sample_data = json.loads((DATA / "cases-2026.json").read_text(encoding="utf-8"))
+    sample = next(case for case in sample_data["cases"] if case["seq"] == 183)
+    html = (SRC / "portal.html").read_text(encoding="utf-8")
+    content = {
+        "__PORTAL_CSS__": (SRC / "portal.css").read_text(encoding="utf-8"),
+        "__TOPBAR__": topbar(active="index.html", stats="stats-2026.html", portal=True),
+        "__TOTAL__": str(counts()["cases"]),
+        "__GROUPS__": groups,
+        "__OPTIONS__": options,
+        "__CASE_PHOTO__": inline_asset("case-study.webp", "image/webp"),
+        "__REF_PHOTO__": inline_asset("referee-match.webp", "image/webp"),
+        "__REF_MOBILE_PHOTO__": inline_asset("referee-match-small.webp", "image/webp"),
+        "__STUDY_CALENDAR__": (SRC / "study-calendar.js").read_text(encoding="utf-8"),
+        "__LEARNING_RECORDS__": (SRC / "learning-records.js").read_text(
+            encoding="utf-8"
+        ),
+        "__PORTAL_JS__": (SRC / "portal.js").read_text(encoding="utf-8"),
+        "__STUDY_INDEX__": js_value(build_study_index()),
+        "__SAMPLE_REVIEW__": js_value(sample["conclusion"]),
+        "__PORTAL_EFFECT__": (SRC / "portal-liquid.js").read_text(encoding="utf-8"),
+        "__LIQUID_MODULE__": inline_asset(
+            "moments/liquid-hover/moment.js", "text/javascript"
+        ),
+        "__MOTION_HELPERS__": inline_asset("moments/lib.js", "text/javascript"),
+        "__ARROW__": icon("right", 16),
+        "__BOOK__": icon("book", 22),
+        "__SEARCH__": icon("search", 20),
     }
+    for token, value in content.items():
+        html = html.replace(token, value)
     html = inject_theme(
-        HTML.replace("__TOPBAR__", tb)
-        .replace(
-            "__TODAY_POOL__",
-            json.dumps(today_pool, ensure_ascii=False, separators=(",", ":")).replace(
-                "</", "<\\/"
-            ),
-        )
-        .replace("__N26__", str(s["2026"]["n"]))
-        .replace("__W26__", str(s["2026"]["wrong"]))
-        .replace("__V26__", str(s["2026"]["videos"]))
-        .replace("__N26_ISSUES__", str(s["2026"]["issues"]))
-        .replace(
-            "__VTOTAL__",
-            str(s["2026"]["videos"] + s["2025"]["videos"] + s["2024"]["videos"]),
-        )
-        .replace("__N25__", str(s["2025"]["n"]))
-        .replace("__W25__", str(s["2025"]["wrong"]))
-        .replace("__V25__", str(s["2025"]["videos"]))
-        .replace("__N25_ISSUES__", str(s["2025"]["issues"]))
-        .replace("__N24__", str(s["2024"]["n"]))
-        .replace("__W24__", str(s["2024"]["wrong"]))
-        .replace("__V24__", str(s["2024"]["videos"]))
-        .replace("__N24_ISSUES__", str(s["2024"]["issues"]))
-        .replace("__NRL__", str(s["rules"]["sections"]))
-        .replace("__NLAW__", str(s["rules"]["laws"]))
-        .replace("__S_SCENES__", str(sc["scenes"]))
-        .replace("__S_GROUPS__", str(sc["groups"]))
-        .replace("__S_VIDEOS__", str(sc["videos"]))
-        .replace("__TOTAL_CASES__", str(counts()["cases"]))
-        .replace("__N_CARDS__", str(cheatsheet_count()))
-        .replace("__U_CASES__", str(u["cases"]))
-        .replace("__U_GROUPS__", str(u["groups"]))
-        .replace("__RA_EDS__", str(ra["editions"]))
-        .replace("__RA_ONLINE__", str(ra["online"]))
-        .replace("__RF_SECS__", str(rf["secs"]))
-        .replace("__RF_ITEMS__", str(rf["items"]))
-        .replace("__RF_VIDS__", str(rf["vids"]))
-        .replace("__P_ARTS__", str(pro["arts"]))
-        .replace("__P_MLS__", str(pro["mls"]))
-        .replace("__P_NWSL__", str(pro["nwsl"]))
-        .replace("__I_RES__", str(intl["res"]))
-        .replace("__I_ORGS__", str(intl["orgs"]))
-        .replace("__I_LANG__", "7")
-        .replace("__C_CASES__", str(cm["cases"]))
-        .replace("__C_COMPS__", str(cm["comps"]))
-        .replace("__W_SHOWS__", str(wk["shows"]))
-        .replace("__W_EPS__", str(wk["eps"]))
-        .replace("__W_LANGS__", str(wk["langs"]))
-        .replace("__IF_SECS__", str(ifab["secs"]))
-        .replace("__IF_ITEMS__", str(ifab["items"]))
-        .replace("__IF_FAQ__", str(ifab["faq"]))
-        .replace("__H_ROUNDS__", str(hns["rounds"]))
-        .replace("__H_INCS__", str(hns["incs"]))
-        .replace("__H_VIDS__", str(hns["vids"]))
-        .replace("__Q_TOTAL__", str(q_case + q_scale + q_var + q_theory))
-        .replace("__Q_CASES__", str(q_case))
-        .replace("__Q_SCALE__", str(q_scale))
-        .replace("__Q_VAR__", str(q_var))
-        .replace("__Q_THEORY__", str(q_theory))
-        .replace("__BUILT__", date.today().isoformat()),
+        html,
         meta=meta_tags("index.html", extra_jsonld=[jsonld_website(), jsonld_dataset()]),
     )
-    for k, v in subs.items():
-        html = html.replace(k, v)
     SITE.mkdir(parents=True, exist_ok=True)
+    # A direct portal build also refreshes the four local enhancement files.
+    shutil.copytree(
+        ASSETS / "portal" / "moments",
+        SITE / "assets" / "portal" / "moments",
+        dirs_exist_ok=True,
+    )
     out = SITE / "index.html"
     out.write_text(html, encoding="utf-8")
     print(f"生成 {out}  ({len(html.encode('utf-8')) / 1024:.0f} KB)")

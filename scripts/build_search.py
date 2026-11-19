@@ -117,6 +117,13 @@ def build_docs():
         "compare.html#free",
         "尺度对照课 自由配对 跨赛季 判例比较",
     )
+    add(
+        "case",
+        "教练备课",
+        "教练备课 · 课单、投屏与学员讲义",
+        "compare.html#coach",
+        "裁判尺度对照课 教练备课 自选判例 编排课单 课堂讨论 投屏 学员讲义 打印 分享",
+    )
     # 考点速查卡（卡面 + 翻面全文可搜）
     cheatsheet = _read(DATA / "cheatsheet.json")
     for card in cheatsheet.get("cards", []):

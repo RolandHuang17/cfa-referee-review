@@ -79,11 +79,21 @@ def main():
     template = (SRC / "compare.html").read_text(encoding="utf-8")
     script = "\n".join(
         (SRC / file).read_text(encoding="utf-8")
-        for file in ("learning-records.js", "compare-records.js", "compare.js")
+        for file in (
+            "learning-records.js",
+            "compare-records.js",
+            "coach-handout.js",
+            "coach-model.js",
+            "coach.js",
+            "compare.js",
+        )
     )
     content = {
         "__TOPBAR__": topbar(active="compare.html", portal=True),
-        "__CSS__": (SRC / "compare.css").read_text(encoding="utf-8"),
+        "__CSS__": "\n".join(
+            (SRC / name).read_text(encoding="utf-8")
+            for name in ("compare.css", "coach.css")
+        ),
         "__SCRIPTS__": script,
         "__DATA__": js_value(data),
         "__PORTAL_EFFECT__": (SRC / "portal-liquid.js").read_text(encoding="utf-8"),

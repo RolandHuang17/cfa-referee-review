@@ -12,7 +12,9 @@ fail-collecting：每个 check 把问题攒进局部 list 再一次性 assert，
 import json
 import re
 import sys
+from html.parser import HTMLParser
 from pathlib import Path
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 # 插 scripts/ 而不是 scripts/lib/，让 import 写成 from lib.crest_catalog import ...，
@@ -106,24 +108,28 @@ def test_season_case_counts():
     _finish(problems)
 
 
+class PageLinks(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.targets = []
+
+    def handle_starttag(self, tag, attrs):
+        self.targets.extend(v for k, v in attrs if k in {"href", "src"} and v)
+
+
 def test_internal_links_resolve():
     problems = []
     for path in SITE.glob("*.html"):
-        for target in re.findall(
-            r"(?:href|src)=\"([^\"]+)\"", path.read_text(encoding="utf-8")
-        ):
-            if (
-                target.startswith(
-                    ("#", "http://", "https://", "data:", "mailto:", "//", "/")
-                )
-                or "${" in target
-            ):
+        links = PageLinks()
+        links.feed(path.read_text(encoding="utf-8"))
+        links.close()
+        for target in links.targets:
+            url = urlsplit(target)
+            if url.scheme or url.netloc or url.path.startswith("/"):
                 continue
-            if target.startswith("videos/"):
+            stem = unquote(url.path)
+            if stem.startswith("videos/"):
                 continue  # 视频为本地 gitignored 资产，线上按需提供
-            stem = target.split("#", 1)[0]
-            if "?" in stem:
-                continue  # 带 query 的链接不经文件系统解析
             if stem and not (path.parent / stem).resolve().exists():
                 problems.append(f"{path.name} 引用了不存在的路径: {target}")
     _finish(problems)

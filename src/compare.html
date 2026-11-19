@@ -60,7 +60,11 @@ __TOPBAR__
   <h1>自由配对</h1><p>启用 JavaScript 后，可从同一教学分类选择两个判例并排阅读。</p>
   <nav aria-label="判例阅读"><a href="search.html">搜索判例原文</a><a href="compare.html">返回课程目录</a></nav>
 </div></section>
-<div id="workspace" hidden></div>
+<section class="compare-route-fallback" id="coach"><div class="wrap">
+  <h1>教练备课</h1><p>启用 JavaScript 后，可以选择课堂判例、安排讲解顺序并投屏。你也可以直接查找判例原文。</p>
+  <nav aria-label="备课资料"><a href="search.html">查找教学判例</a><a href="compare.html">返回课程目录</a></nav>
+</div></section>
+<section id="workspace" hidden></section>
 </main>
 <footer id="lessons" class="closing compare-library" data-compare-entry aria-labelledby="lessonTitle"><div class="wrap">
   <div class="compare-catalog">
@@ -72,12 +76,74 @@ __TOPBAR__
         <li><a href="#lesson-contact-intensity"><strong>动作强度</strong><span>都踩到脚踝，纪律处分看什么？</span><i aria-hidden="true">↗</i></a></li>
         <li><a href="#lesson-penalty-contact"><strong>罚球区接触</strong><span>罚球区内倒地，是谁造成的？</span><i aria-hidden="true">↗</i></a></li>
       </ul>
-      <a class="btn compare-primary" href="#free">选择两个判例</a>
+      <div class="compare-actions">
+        <a class="btn compare-primary" href="#free">选择两个判例</a>
+        <a class="compare-jump" href="#coach">教练备课 <span aria-hidden="true">↗</span></a>
+      </div>
     </div>
     <figure class="frame compare-ref-photo" data-moment="liquid-hover"><picture><source media="(max-width:520px)" srcset="__REF_MOBILE_PHOTO__" width="450" height="298"><img src="__REF_PHOTO__" width="768" height="509" alt="乌干达青少年足球赛场上，裁判伸臂示意比赛方向" loading="lazy" decoding="async"></picture></figure>
   </div>
   <div class="compare-legal"><span>判例及比赛画面来自中国足协裁判评议。</span><div><a href="NOTICE.md">版权声明</a><a href="https://commons.wikimedia.org/wiki/File:Referee_at_a_football_game.jpg" target="_blank" rel="noopener">摄影 · Samson Ssemakadde</a></div></div>
 </div></footer>
+<template id="coach-editor-layout">
+  <div class="wrap"><div class="hero-text">
+    <div class="hero__c">
+      <h1 id="compare-title" tabindex="-1">教练备课</h1>
+      <p class="hero__lead">从 <span id="coach-case-total"></span> 个中国足协判例中选案，编排一堂裁判讨论课。</p>
+      <div class="btn-row"><button class="btn compare-primary" type="button" id="coach-add">加入课单</button>
+        <a class="compare-jump" href="#coach-plan" id="coach-arrange">进入编排 <span aria-hidden="true">↓</span></a></div>
+    </div>
+    <div class="app-frame hero__window coach-picker-frame" data-ui="case-picker" aria-label="课堂判例选择器">
+      <div class="coach-picker-form">
+        <div class="coach-pick-caption"><strong id="coach-current"></strong><span id="coach-result-count" role="status"></span></div>
+        <div class="coach-filters">
+          <label class="coach-field">教学分类<select id="coach-category"><option value="">全部分类</option></select></label>
+          <label class="coach-field">赛季<select id="coach-year"><option value="">全部赛季</option></select></label>
+        </div>
+        <label class="coach-field">搜索球队或期次<input type="search" id="coach-filter" placeholder="球队名、第 3 期或 2026-1"></label>
+        <label class="coach-field">匹配的判例<select id="coach-pick"></select></label>
+      </div>
+      <div class="coach-match-preview"><div id="coach-match-visual"></div>
+        <div class="coach-match-caption"><strong id="coach-match"></strong><span id="coach-citation"></span></div>
+        <details id="coach-case-preview"><summary>查看比赛事件与出处</summary><div tabindex="0" role="region" aria-label="所选比赛事件与出处"></div></details></div>
+    </div>
+  </div></div>
+  <footer class="closing compare-library coach-planner" id="coach-plan" aria-labelledby="coach-plan-heading"><div class="wrap">
+    <div class="compare-catalog"><div class="compare-list coach-plan-controls">
+      <h2 id="coach-plan-heading" tabindex="-1">编排课单</h2>
+      <div class="coach-plan-select">
+        <label class="coach-field">本机课单<select id="coach-choose"></select></label>
+        <button class="compare-secondary" type="button" id="coach-new">新建课单</button>
+      </div>
+      <label class="coach-field">课单标题<input id="coach-title" maxlength="100"></label>
+      <p class="coach-plan-count" id="coach-length"></p>
+      <div class="coach-plan-tools"><button class="compare-secondary" type="button" id="coach-edit-items">编辑判例与顺序</button>
+        <button class="compare-secondary" type="button" id="coach-tools-open">讲义与备份</button></div>
+      <div class="coach-plan-launch"><button type="button" class="btn compare-primary" id="coach-present">进入投屏讨论</button></div>
+      <div class="coach-status"><span role="status" id="coach-status"></span>
+        <button class="compare-secondary" type="button" id="coach-retry" hidden>重试保存</button></div>
+    </div></div>
+    <div class="compare-legal"><a href="compare.html">返回尺度对照课</a><a href="https://commons.wikimedia.org/wiki/File:Referee_at_a_football_game.jpg" target="_blank" rel="noopener">摄影 · Samson Ssemakadde</a></div>
+  </div></footer>
+  <dialog class="coach-dialog" id="coach-outline-dialog" aria-labelledby="coach-outline-label"><div class="coach-shell">
+    <header class="coach-dialog-top"><h2 id="coach-outline-label">编辑判例与顺序</h2><button type="button" data-coach-close>关闭</button></header>
+    <p id="coach-empty">先在选案区加入判例，再写下课堂问题。</p>
+    <ol class="coach-cases" id="coach-items"></ol>
+    <button class="coach-secondary" type="button" id="coach-undo" hidden>撤销移除</button>
+  </div></dialog>
+  <dialog class="coach-dialog" id="coach-tools-dialog" aria-labelledby="coach-tools-label"><div class="coach-shell">
+    <header class="coach-dialog-top"><h2 id="coach-tools-label">讲义与备份</h2><button type="button" data-coach-close>关闭</button></header>
+    <section class="coach-export"><h3>学员讲义</h3><label><input type="checkbox" id="coach-review"> 加入足协认定和出处（复盘版）</label>
+      <div class="coach-actions"><button class="coach-secondary" id="coach-preview" type="button">预览与打印</button>
+        <button class="coach-secondary" id="coach-download" type="button">下载离线讲义</button>
+        <button class="coach-secondary" id="coach-link" type="button">复制学员链接</button></div>
+      <label id="coach-share-label" class="coach-field" hidden>学员链接<input id="coach-share-text" type="text" readonly></label></section>
+    <section class="coach-backups"><h3>教练备份</h3><p>备份包含私人备注，可在另一台设备上继续备课。</p>
+      <div class="coach-actions"><button type="button" class="coach-secondary" id="coach-backup">下载备份</button>
+        <label class="coach-field">导入备份副本<input type="file" id="coach-import" accept=".json,application/json"></label></div></section>
+    <p id="coach-dialog-status" role="status"></p>
+  </div></dialog>
+</template>
 <script id="compare-data" type="application/json">__DATA__</script>
 <script>__SCRIPTS__</script>
 <script type="module">__PORTAL_EFFECT__</script>

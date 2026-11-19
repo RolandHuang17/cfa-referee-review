@@ -23,7 +23,7 @@
 - `site/ifab.html` IFAB《Laws of the Game》VAR 协议与统一尺度（官方全文中文译制：4 节 92 条款 + 12 条官方 FAQ + 8 个配套协议页 173 条款，中英原文开关）
 - `site/hns.html` 克罗地亚足协《Sudačka analiza》逐轮判例分析（Layec 署名逐判例「认定正确/错误」+ 每判例官方视频直链，判例级中文全译；收录随每周新轮自动生长）
 - `site/quiz.html` 考题模式（842 题四题源随机出卷：三赛季判例 622 + 统一尺度场景 96 + IFAB VAR 协议 12 + 规则理论 112——理论题全部从 laws.json 条文撰写并附出处引文，选项按次打乱）：判罚决定/纪律处分/复核结论作答判分；错题本 + Leitner 间隔复习 + Anki TSV 导出；限时模考（75s/120s 每题倒计时、超时自动交卷、及格线 90%、历史成绩）；逐题作答历史 + 10 分类正确率雷达薄弱点分析
-- `site/compare.html` 尺度对照课（四组八案精编盲判、同类自由配对、个人复盘与打印；编辑 `data/compare-lessons.json` 后运行 `python scripts/build_compare.py`）。
+- `site/compare.html` 尺度对照课（四组八案精编盲判、同类自由配对、个人复盘与打印、教练自选课单及学员讲义；备课与分享在 `src/coach*.js`，编辑 `data/compare-lessons.json` 后运行 `python scripts/build_compare.py`）。
 - `site/cheatsheet.html` 考点速查卡（九张：手球考量链/犯规三档/DOGSO·SPA/VAR 介入/红黄牌速查/点球程序/越位三步/重新开始方式/2026-27 新规——卡面速记+翻面细则，手机 3D 翻卡 + 打印单页讲义；data/cheatsheet.json 策表）
 
 全站内置**轻量版浏览模式**（门户开关或顶栏「轻量版」按钮切换，localStorage 记忆）：纯文字+官方链接、无视频窗口，专为纯在线访问（GitHub Pages、不想下载视频的裁判）设计的笔记本式界面；不开即为完整版（内嵌视频，离线学习用）。

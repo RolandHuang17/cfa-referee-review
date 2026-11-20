@@ -13,6 +13,7 @@ import re
 from urllib.parse import urlsplit
 
 from lib.atomic_json import write_json, write_text
+from lib.official_urls import official_url
 from lib.paths import DUTCHREF_CACHE, RAP_JSON
 from lib.safe_http import fetch_text
 
@@ -71,7 +72,10 @@ def discover(page):
         ):
             continue
         url = html.unescape(block["url"]).strip()
-        parts = urlsplit(url)
+        try:
+            parts = urlsplit(url)
+        except ValueError:
+            continue
         if (
             parts.scheme not in ("http", "https")
             or not parts.hostname
@@ -103,16 +107,16 @@ def read_index(offline):
 
 
 def platform(url, label, reviewed_downloads):
-    parts = urlsplit(url)
-    if (
-        parts.hostname in {"nextaur.com", "www.nextaur.com"}
-        and parts.scheme == "https"
-        and parts.path.rstrip("/").split("/")[:2] == ["", "uefa"]
+    parts = official_url(url, {"nextaur.com", "www.nextaur.com"})
+    # Only publish already normalized paths in the UEFA organisation. Unfamiliar
+    # encodings and alternate routes remain in the local review queue.
+    if parts is not None and re.fullmatch(
+        r"/uefa(?:/[A-Za-z0-9_~-][A-Za-z0-9._~-]*)*/?", parts.path
     ):
         return "nextaur"
     if (
-        parts.hostname in DOWNLOAD_HOSTS
-        and url in reviewed_downloads
+        url in reviewed_downloads
+        and urlsplit(url).hostname in DOWNLOAD_HOSTS
         and re.search(r"\b(download|PC|MAC)\b", label, re.I)
     ):
         return "download"

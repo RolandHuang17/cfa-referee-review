@@ -27,6 +27,22 @@ def test_edition_key(text, key):
     assert fetch_rap.edition_key(text) == key
 
 
+@pytest.mark.parametrize(
+    "url,allowed",
+    [
+        ("https://nextaur.com/uefa/", True),
+        ("https://NEXTAUR.com:443/uefa", True),
+        ("https://www.nextaur.com/uefa/lessons/2027-1", True),
+        ("https://nextaur.com:8443/uefa/", False),
+        ("https://nextaur.com/other-club/", False),
+        ("https://nextaur.com/uefa/../other-club/", False),
+        ("https://example.org/uefa/", False),
+    ],
+)
+def test_nextaur_uses_the_approved_origin_and_organisation(url, allowed):
+    assert (fetch_rap.platform(url, "Nextaur", set()) == "nextaur") is allowed
+
+
 def test_cached_index_refresh_and_failed_parse(tmp_path, monkeypatch):
     monkeypatch.setattr(fetch_rap, "DUTCHREF_CACHE", tmp_path)
     monkeypatch.setattr(fetch_rap, "MIN_BODY", 20)

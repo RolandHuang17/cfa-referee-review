@@ -229,6 +229,7 @@ def build_docs():
                         c.get("comp_cn") or c.get("comp"),
                         c.get("match") or c.get("title"),
                         f"发布 {c['date']}" if c.get("date") else "",
+                        "文章详情待核" if c.get("detail_status") == "pending" else "",
                     ),
                 )
             ),

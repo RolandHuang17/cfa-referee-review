@@ -1,0 +1,204 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "CONMEBOL 官方文章与逐案详情",
+  "description": "文章详情待核仅适用于首版四个已证实的缓存身份冲突。文章发布日期和标题对阵保留，待核记录的比赛详情与视频留空。",
+  "type": "object",
+  "required": [
+    "source",
+    "source_name",
+    "fetched",
+    "cases"
+  ],
+  "properties": {
+    "source": {
+      "type": "string",
+      "minLength": 1
+    },
+    "source_name": {
+      "type": "string",
+      "minLength": 1
+    },
+    "fetched": {
+      "type": "string"
+    },
+    "cases": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "url",
+          "title",
+          "date",
+          "match",
+          "situacion_norm"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "date": {
+            "type": "string",
+            "minLength": 1
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https://www\\.conmebol\\.com/noticias/[^\\s?#]+/$"
+          },
+          "match": {
+            "type": "string",
+            "minLength": 1
+          },
+          "comp": {
+            "type": "string"
+          },
+          "comp_cn": {
+            "type": "string"
+          },
+          "excerpt_es": {
+            "type": "string"
+          },
+          "fecha": {
+            "type": "string"
+          },
+          "ciudad": {
+            "type": "string"
+          },
+          "estadio": {
+            "type": "string"
+          },
+          "situacion_es": {
+            "type": "string"
+          },
+          "minuto": {
+            "type": "string"
+          },
+          "youtube": {
+            "type": "string",
+            "pattern": "^(?:$|https://www\\.youtube\\.com/watch\\?v=[A-Za-z0-9_-]{11}$)"
+          },
+          "situacion_norm": {
+            "type": "string",
+            "minLength": 1
+          },
+          "detail_status": {
+            "enum": [
+              "pending"
+            ]
+          },
+          "unrelated_cache_url": {
+            "type": "string",
+            "pattern": "^https://www\\.conmebol\\.com/noticias/[^\\s?#]+/$"
+          }
+        },
+        "allOf": [
+          {
+            "if": {
+              "required": [
+                "detail_status"
+              ]
+            },
+            "then": {
+              "required": [
+                "unrelated_cache_url",
+                "fecha",
+                "ciudad",
+                "estadio",
+                "situacion_es",
+                "minuto",
+                "youtube"
+              ],
+              "properties": {
+                "fecha": {
+                  "enum": [
+                    ""
+                  ]
+                },
+                "ciudad": {
+                  "enum": [
+                    ""
+                  ]
+                },
+                "estadio": {
+                  "enum": [
+                    ""
+                  ]
+                },
+                "situacion_es": {
+                  "enum": [
+                    ""
+                  ]
+                },
+                "minuto": {
+                  "enum": [
+                    ""
+                  ]
+                },
+                "youtube": {
+                  "enum": [
+                    ""
+                  ]
+                },
+                "situacion_norm": {
+                  "enum": [
+                    "other"
+                  ]
+                }
+              },
+              "oneOf": [
+                {
+                  "properties": {
+                    "url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil/"
+                    },
+                    "unrelated_cache_url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil-2/"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-deportivo-tachira/"
+                    },
+                    "unrelated_cache_url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-lanus/"
+                    },
+                    "unrelated_cache_url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/"
+                    }
+                  }
+                },
+                {
+                  "properties": {
+                    "url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-atletico-goianiense-vs-nacional/"
+                    },
+                    "unrelated_cache_url": {
+                      "const": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-atletico-goianiense-vs-sao-paulo/"
+                    }
+                  }
+                }
+              ]
+            },
+            "else": {
+              "not": {
+                "required": [
+                  "unrelated_cache_url"
+                ]
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

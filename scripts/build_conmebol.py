@@ -9,6 +9,7 @@
 
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
+from lib.conmebol_evidence import evidence_problems
 
 from lib.pagelib import (
     article_anchor,
@@ -86,7 +87,7 @@ __TOPBAR__
   <div class="wrap">
     <h1>南美足联 VAR 判例</h1>
     <div class="sub">CONMEBOL《Situación de Análisis VAR》：世预赛（南美区）/ 解放者杯 / 南美杯 / 优胜者杯逐案 VAR 判例分析（比赛 · 情境 · 分钟）· 官方视频为 YouTube 链接 · 版权归 CONMEBOL 所有</div>
-    <div class="src-banner">__I_EXTERNAL__ 每案附官方分析文章与判例视频链接；__SOURCE_LINK__</div>
+    <div class="src-banner">__I_EXTERNAL__ 每案可查官方分析文章，已核实的录像另附视频链接。__SOURCE_LINK__</div>
     __SEARCHBAR__
   </div>
 </header>
@@ -109,19 +110,26 @@ __FILTER_JS__
 
 
 def build_page(data, zh=None):
+    problems = evidence_problems(data)
+    if problems:
+        raise ValueError(problems[0])
     cases = data.get("cases", [])
     zcases = (zh or {}).get("cases", {})
     used = set()
     for c in cases:
         z = zcases.get(c.get("url", ""))
-        if z and z.get("situation"):
+        c.pop("situacion_zh", None)
+        if c.get("situacion_es") and z and z.get("situation"):
             c["situacion_zh"] = z["situation"]
             used.add(c.get("url", ""))
     for k in zcases:
         if k not in used:
             print(f"⚠ conmebol-zh cases 键不在 conmebol.json 中（疑似过期）: {k[:80]}")
     comps = sorted({c.get("comp") for c in cases if c.get("comp")})
-    sits = sorted({c.get("situacion_norm") for c in cases if c.get("situacion_norm")})
+    classified = [c for c in cases if c.get("detail_status") != "pending"]
+    sits = sorted(
+        {c.get("situacion_norm") for c in classified if c.get("situacion_norm")}
+    )
     comp_chips = "".join(
         f'<button class="chip" data-f="{esc(k)}">{esc(COMP_CN.get(k, k))} '
         f"<b>{sum(1 for c in cases if c.get('comp') == k)}</b></button>"
@@ -129,7 +137,7 @@ def build_page(data, zh=None):
     )
     sit_chips = "".join(
         f'<button class="chip" data-f="{esc(k)}">{esc(SIT_LABEL.get(k, k))} '
-        f"<b>{sum(1 for c in cases if c.get('situacion_norm') == k)}</b></button>"
+        f"<b>{sum(1 for c in classified if c.get('situacion_norm') == k)}</b></button>"
         for k in sits
     )
     secs = ""
@@ -140,13 +148,20 @@ def build_page(data, zh=None):
     ):
         rows = ""
         for c in ycases:
-            kinds = " ".join(filter(None, [c.get("comp"), c.get("situacion_norm")]))
+            pending = c.get("detail_status") == "pending"
+            kinds = " ".join(
+                filter(
+                    None, [c.get("comp"), "" if pending else c.get("situacion_norm")]
+                )
+            )
             norm = c.get("situacion_norm", "other")
-            badge = SIT_BADGE.get(norm, "info")
-            label = SIT_LABEL.get(norm, "判例")
+            badge = "pending" if pending else SIT_BADGE.get(norm, "info")
+            label = "文章详情待核" if pending else SIT_LABEL.get(norm, "判例")
+            source_title = f'<p lang="es">{esc(c["title"])}</p>' if pending else ""
             meta = "".join(
                 f'<span class="chip">{esc(v)}</span>'
                 for v in (
+                    f"文章发布 {c['date']}" if pending else "",
                     c.get("fecha", ""),
                     c.get("minuto", "") and c["minuto"] + "′",
                     c.get("ciudad", ""),
@@ -181,6 +196,8 @@ def build_page(data, zh=None):
                 )
             blob = search_blob(
                 c.get("match") or c.get("title"),
+                c.get("title") if pending else "",
+                c.get("date") if pending else "",
                 c.get("fecha"),
                 c.get("ciudad"),
                 c.get("estadio"),
@@ -192,6 +209,7 @@ def build_page(data, zh=None):
             rows += f"""<article class="ccard" id="{article_anchor(c["url"])}" tabindex="-1" data-kinds="{esc(kinds)}" data-search="{blob}">
   <div class="chead"><span class="cmatch">{esc(c.get("match") or c["title"])}</span>
     <span class="badge {badge}">{esc(label)}</span></div>
+{source_title}
   <div class="cinfo">{meta}{es_sit}</div>
   <div class="clinks">{links}</div>
 </article>"""

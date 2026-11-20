@@ -15,6 +15,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
 from lib.jsonschema_lite import validate  # noqa: E402
+from lib.conmebol_evidence import evidence_problems  # noqa: E402
 from lib.paths import DATA, ROOT  # noqa: E402
 
 SCHEMAS = ROOT / "schemas"
@@ -25,6 +26,7 @@ PAIRS = [
     ("impact.schema.json", [f"impact-{s}.json" for s in ("2024", "2025", "2026")]),
     ("quiz-answers.schema.json", ["quiz-answers.json"]),
     ("weekly.schema.json", ["weekly.json"]),
+    ("conmebol.schema.json", ["conmebol.json"]),
 ]
 
 
@@ -43,6 +45,8 @@ def validate_all():
                 continue
             data = json.loads(data_path.read_text(encoding="utf-8"))
             found = validate(data, schema, path=data_name)
+            if data_name == "conmebol.json" and not found:
+                found.extend(evidence_problems(data))
             problems += found[:20]  # 单文件最多报 20 条，避免刷屏淹没别的信号
             if len(found) > 20:
                 problems.append(f"{data_name}: ……另有 {len(found) - 20} 处问题")

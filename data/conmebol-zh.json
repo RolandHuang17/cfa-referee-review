@@ -92,17 +92,11 @@
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-internacional-vs-melgar/": {
    "situation": "红牌"
   },
-  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-deportivo-tachira/": {
-   "situation": "越位"
-  },
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-melgar-vs-internacional/": {
    "situation": "红牌"
   },
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-sao-paulo-vs-ceara/": {
    "situation": "场上回看（OFR）"
-  },
-  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-lanus/": {
-   "situation": "越位"
   },
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-deportivo-tachira-vs-santos/": {
    "situation": "进球判定"
@@ -124,9 +118,6 @@
   },
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-chile-vs-uruguay/": {
    "situation": "非手球"
-  },
-  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil/": {
-   "situation": "点球判罚"
   },
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-colombia-vs-bolivia/": {
    "situation": "进球判定"
@@ -151,6 +142,24 @@
   },
   "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-ecuador-vs-brasil/": {
    "situation": "红牌"
+  }
+ },
+ "pending_note": "pending_cases 保留 2026-10-06 的原译稿。previous_article_url 指向旧缓存实际所属的文章，previous_situacion_es 是当时译稿参考的标签。核对本篇正文后再登记现行译文。",
+ "pending_cases": {
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil/": {
+   "situation": "点球判罚",
+   "previous_situacion_es": "Penal",
+   "previous_article_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil-2/"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-deportivo-tachira/": {
+   "situation": "越位",
+   "previous_situacion_es": "Fuera de Juego",
+   "previous_article_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/"
+  },
+  "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-lanus/": {
+   "situation": "越位",
+   "previous_situacion_es": "Fuera de Juego",
+   "previous_article_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/"
   }
  }
 }

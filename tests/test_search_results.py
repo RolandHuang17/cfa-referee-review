@@ -38,6 +38,11 @@ def test_round_names_and_publication_dates_survive_indexing(indexed):
         assert case["title"] in row[4]
         if case.get("date"):
             assert "发布 " + case["date"] in row[2]
+        if case.get("detail_status") == "pending":
+            assert "文章详情待核" in row[2]
+            assert row[4].strip() == case["title"]
+        else:
+            assert "文章详情待核" not in row[2]
 
 
 def test_repeated_law_text_has_distinct_readable_locations(indexed):

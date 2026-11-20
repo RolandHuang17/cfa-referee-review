@@ -10,11 +10,14 @@
 """
 
 import html as htmllib
+import hashlib
 import random
 import re
 import time
 import sys
+from html.parser import HTMLParser
 
+from lib.conmebol_evidence import DETAIL_FIELDS, UNRELATED_CACHE, evidence_problems
 from lib.source_snapshot import SnapshotReads, publish
 from lib.safe_http import fetch_text
 
@@ -73,24 +76,61 @@ def norm_situation(s: str) -> str:
     return SITUATIONS.get(" ".join((s or "").casefold().split()), "other")
 
 
-def fetch_page(url: str, min_body: int = 0) -> str:
-    """带缓存的抓取；min_body 缺省用列表页阈值，文章页可调低。"""
-    min_body = min_body or MIN_BODY
+class PageIdentity(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.canonical = set()
+        self.og = set()
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "link" and "canonical" in (attrs.get("rel") or "").lower().split():
+            self.canonical.add((attrs.get("href") or "").rstrip("/"))
+        if tag == "meta" and attrs.get("property") == "og:url":
+            self.og.add((attrs.get("content") or "").rstrip("/"))
+
+
+def belongs_to(page, url):
+    head = PageIdentity()
+    head.feed(page.partition("</head>")[0])
+    # 列表第 2–5 页有逐页 canonical，但 og:url 统一标注栏目首页。
+    markers = (
+        (head.canonical or head.og)
+        if url.startswith(COLUMN)
+        else head.canonical | head.og
+    )
+    return markers == {url.rstrip("/")}
+
+
+def cache_path(url):
+    return CONMEBOL_CACHE / (hashlib.sha256(url.encode("utf-8")).hexdigest() + ".html")
+
+
+def legacy_cache_path(url):
     slug = (
         re.sub(r"[^a-z0-9-]", "_", url.split("conmebol.com/")[-1].strip("/"))[:80]
         or "col1"
     )
-    cache_f = CONMEBOL_CACHE / f"{slug}.html"
+    return CONMEBOL_CACHE / f"{slug}.html"
+
+
+def fetch_page(url: str, min_body: int = 0) -> str:
+    """按完整 URL 缓存；旧文件只读，正文身份必须与所请求的来源一致。"""
+    min_body = min_body or MIN_BODY
+    cache_f = cache_path(url)
+    for path in (cache_f, legacy_cache_path(url)):
+        cached = READS.cached(url, path, min_body)
+        if cached and belongs_to(cached, url):
+            return cached
+    if READS.offline:
+        return ""
     CONMEBOL_CACHE.mkdir(parents=True, exist_ok=True)
-    cached = READS.cached(url, cache_f, min_body)
-    if cached is not None:
-        return cached
     for i, wait in enumerate([0] + BACKOFFS):
         if wait:
             time.sleep(wait)
         try:
             st, txt = fetch_text(url, timeout=45, retries=2)
-            if st == 200 and len(txt) > min_body:
+            if st == 200 and len(txt) > min_body and belongs_to(txt, url):
                 READS.store(url, cache_f, txt)
                 return txt
         except Exception:  # noqa: BLE001
@@ -188,6 +228,15 @@ def enrich(c: dict) -> dict:
     的第一个 YouTube embed。"""
     page = fetch_page(c["url"], MIN_ART)
     if not page:
+        if READS.offline and c["url"] in UNRELATED_CACHE:
+            c.update(dict.fromkeys(DETAIL_FIELDS, ""))
+            c.update(
+                match=c["title"].rsplit(":", 1)[-1].strip(),
+                situacion_norm="other",
+                detail_status="pending",
+                unrelated_cache_url=UNRELATED_CACHE[c["url"]],
+            )
+            return c
         raise ValueError(f"判例文章不可用: {c['url']}")
     text = clean(page)
     # 球队词序列：大写开头词 + 西语连词小写词（de/del/la/...），防吞前文句子
@@ -226,6 +275,8 @@ def enrich(c: dict) -> dict:
 def identities(data):
     for case in data.get("cases", []):
         yield case["url"], "case"
+        if case.get("detail_status") != "pending":
+            yield case["url"], "article"
         for field in ("youtube", "situacion_es", "fecha", "minuto"):
             if case.get(field):
                 yield case["url"], field
@@ -290,6 +341,9 @@ def main():
         "source_name": "CONMEBOL《Situación de Análisis VAR》逐案判例",
         "cases": cases,
     }
+    problems = evidence_problems(data)
+    if problems:
+        raise ValueError(problems[0])
     publish(CONMEBOL_JSON, data, identities, checked=READS.checked)
     print(f"parse 完成: {len(cases)} 案 {comp_map} → {CONMEBOL_JSON}", flush=True)
 

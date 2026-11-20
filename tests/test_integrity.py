@@ -600,21 +600,12 @@ def test_uefa_rfef_conmebol_zh_aligned():
         problems.append(f"rfef-zh sections 键不在 rfef.json 中（疑似过期）: {k}")
     for k in sorted(set(zitems) - src_items - src_vids):
         problems.append(f"rfef-zh items 键不在 rfef.json 中（疑似过期）: {k}")
-    # --- CONMEBOL：按 url 键，有官方情境的案子必须有中文（镜像 build_conmebol 回退警告）---
+    # CONMEBOL 逐事件覆盖：原稿须和本篇原词吻合，未译只容许显式登记的单个事件。
+    from lib.conmebol_evidence import translation_problems
+
     con = json.loads((DATA / "conmebol.json").read_text(encoding="utf-8"))
     czh = json.loads((DATA / "conmebol-zh.json").read_text(encoding="utf-8"))
-    zcases = czh.get("cases", {})
-    applied = set()
-    for c in con.get("cases", []):
-        url = c.get("url", "")
-        if (zcases.get(url) or {}).get("situation"):
-            applied.add(url)
-        elif c.get("situacion_es"):
-            problems.append(f"conmebol-zh 缺情境译文（构建时会回退西语）: {url[:70]}")
-    for k in sorted(set(zcases) - applied):
-        problems.append(
-            f"conmebol-zh cases 键未生效（源无此案或译文缺 situation）: {k[:70]}"
-        )
+    problems.extend(translation_problems(con, czh))
     _finish(problems)
     print("uefa/rfef/conmebol 译文层与源数据对齐")
 

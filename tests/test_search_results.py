@@ -10,6 +10,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 
 import build_search
+from lib.conmebol_evidence import event_anchor, event_rows
 from lib.pagelib import article_anchor
 
 
@@ -54,3 +55,28 @@ def test_repeated_law_text_has_distinct_readable_locations(indexed):
     repeats = [titles for titles in groups.values() if len(titles) > 1]
     assert repeats
     assert all(len(titles) == len(set(titles)) for titles in repeats)
+
+
+def test_multi_incident_articles_reach_the_described_video(indexed):
+    cases = json.loads(build_search.CONMEBOL_JSON.read_bytes())["cases"]
+    targets = {row[3] for row in indexed.values() if row[1] == "CONMEBOL 判例时刻"}
+    expected = set()
+    for case in cases:
+        events = event_rows(case)
+        if len(events) < 2:
+            continue
+        for event in events:
+            href = "conmebol.html#" + event_anchor(case["url"], event)
+            expected.add(href)
+            row = indexed[href]
+            assert case["match"] in row[2] and case["title"] in row[4]
+            if event.get("minuto"):
+                assert event["minuto"] + "′" in row[2]
+            for video in event["videos"]:
+                if video.get("title"):
+                    assert " ".join(video["title"].split()) in row[4]
+    assert targets == expected
+    lanus = next(c for c in cases if c["url"].endswith("valle-vs-lanus/"))
+    for minute, video in (("60", "ONE6TOLhbIY"), ("85", "Kq9pP_NKwe4")):
+        href = "conmebol.html#" + article_anchor(lanus["url"]) + "-" + video
+        assert minute + "′" in indexed[href][2]

@@ -6,6 +6,7 @@ import json
 import shutil
 from html import escape
 
+from lib.conmebol_evidence import event_rows
 from lib.seo import jsonld_dataset, jsonld_website, meta_tags
 from lib.scale_quiz_ids import LEGACY_SCALE_IDS
 from lib.site_stats import cheatsheet_count, counts
@@ -153,14 +154,14 @@ def load_intl_stats():
 
 
 def load_conmebol_stats():
-    """南美 VAR 判例数字从 data/conmebol.json 计算（案数/赛事数）。"""
-    cases = 0
-    comps = set()
-    if CONMEBOL_JSON.exists():
-        d = json.loads(CONMEBOL_JSON.read_text(encoding="utf-8"))
-        cases = len(d.get("cases", []))
-        comps = {c.get("comp") for c in d["cases"] if c.get("comp")}
-    return {"cases": cases, "comps": len(comps)}
+    """分别计数官方文章与正文中的判例时刻。"""
+    data = json.loads(CONMEBOL_JSON.read_bytes()) if CONMEBOL_JSON.exists() else {}
+    cases = data.get("cases", [])
+    return {
+        "cases": len(cases),
+        "comps": len({c["comp"] for c in cases if c.get("comp")}),
+        "events": sum(len(event_rows(c)) for c in cases),
+    }
 
 
 def load_weekly_stats():
@@ -211,6 +212,7 @@ def load_hns_stats():
 def portal_catalog(stats, bank_size):
     """Render every destination as a usable offline link within its subject shelf."""
     seasons = ("2026", "2025", "2024")
+    south_america = load_conmebol_stats()
     shelves = [
         (
             "domestic",
@@ -276,7 +278,7 @@ def portal_catalog(stats, bank_size):
                 (
                     "conmebol.html",
                     "南美 VAR 判例",
-                    f"{load_conmebol_stats()['cases']} 判例",
+                    f"{south_america['cases']} 篇 · {south_america['events']} 个时刻",
                 ),
                 ("weekly.html", "全球周更评议", f"{load_weekly_stats()['eps']} 期"),
                 ("intl.html", "国际评议资源导航", f"{load_intl_stats()['res']} 项"),

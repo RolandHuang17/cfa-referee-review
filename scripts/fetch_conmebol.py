@@ -11,6 +11,7 @@
 
 import html as htmllib
 import hashlib
+import json
 import random
 import re
 import time
@@ -217,18 +218,143 @@ def parse_case(c: dict) -> dict:
     }
 
 
-YT_RE = re.compile(r"(?:youtube\.com/embed/|youtu\.be/)([\w-]{11})")
-FIELD_STOP = r"(?=\s*(?:Fecha|Ciudad|Estadio|Situaci[oó]n|Minuto)\s*:|$)"
+EMBED_RE = re.compile(
+    r"https://(?:www\.)?youtube\.com/embed/([A-Za-z0-9_-]{11})(?:[?#].*)?$"
+)
+FIELD_RE = re.compile(
+    r"(Fecha|Ciudad|Estadio|Situación|Situacion|Tópico|Minuto)\s*:\s*(.*)", re.I
+)
+MINUTE_RE = re.compile(r"\d+(?:\s*\+\s*\d+)?[′’']?")
+
+
+class ArticleBody(HTMLParser):
+    """读取 WordPress 文章正文中的字段和 iframe，保持 DOM 顺序。"""
+
+    separators = {"p", "li", "ul", "h2", "h3", "h4", "br", "div", "figure", "iframe"}
+
+    def __init__(self):
+        super().__init__()
+        self.depth = 0
+        self.parts = []
+        self.buffer = []
+
+    def flush(self):
+        part = " ".join("".join(self.buffer).split())
+        if part:
+            self.parts.append(part)
+        self.buffer.clear()
+
+    def handle_starttag(self, tag, attrs):
+        attrs = dict(attrs)
+        if tag == "div":
+            if self.depth:
+                self.depth += 1
+            elif attrs.get("data-widget_type") == "theme-post-content.default":
+                self.depth = 1
+        if self.depth:
+            if tag in self.separators:
+                self.flush()
+            if tag == "iframe":
+                match = EMBED_RE.fullmatch(attrs.get("src") or "")
+                if match:
+                    self.parts.append(
+                        {
+                            "url": "https://www.youtube.com/watch?v=" + match[1],
+                            "title": (attrs.get("title") or "").strip(),
+                        }
+                    )
+
+    def handle_data(self, data):
+        if self.depth:
+            self.buffer.append(data)
+
+    def handle_endtag(self, tag):
+        if self.depth and tag in self.separators:
+            self.flush()
+            if tag == "div":
+                self.depth -= 1
+
+
+def article_details(page, case):
+    body = ArticleBody()
+    body.feed(page)
+    meta, events = {}, []
+    event = None
+    last_text, lang = "", ""
+    for part in body.parts:
+        if isinstance(part, dict):
+            if event is None or "minuto" not in event:
+                raise ValueError(f"视频在情境或分钟之前: {case['url']}")
+            event["videos"].append({**part, "lang": lang})
+            lang = ""
+            continue
+        field = FIELD_RE.fullmatch(part)
+        if field:
+            key, value = field[1].lower(), field[2].strip()
+            if key in ("fecha", "ciudad", "estadio"):
+                if key in meta and meta[key] != value:
+                    raise ValueError(f"同一文章出现不同 {key}: {case['url']}")
+                meta[key] = value
+                if key == "fecha" and re.search(r"\bvs[.\s-]", last_text, re.I):
+                    meta["match"] = last_text
+            elif key == "minuto":
+                if not event or "minuto" in event:
+                    raise ValueError(f"分钟无法对应情境: {case['url']}")
+                if MINUTE_RE.fullmatch(value):
+                    event["minuto"] = re.sub(r"\s+", "", value).rstrip("′’'")
+                elif MINUTE_RE.fullmatch(event["situacion_es"]) and value:
+                    # 两篇原文把标签和值交叉写入。原样列出，不替编辑部交换值。
+                    event["source_fields"] = {
+                        "situacion_es": event["situacion_es"],
+                        "minuto": value,
+                    }
+                    event.update(situacion_es="", situacion_norm="other", minuto="")
+                else:
+                    raise ValueError(f"不能解析文章分钟: {case['url']}")
+            else:
+                event = {
+                    "situacion_es": value,
+                    "situacion_norm": norm_situation(value),
+                    "videos": [],
+                }
+                events.append(event)
+                lang = ""
+        elif part.rstrip(":").upper() in ("ESP", "POR"):
+            lang = {"ESP": "es", "POR": "pt"}[part.rstrip(":").upper()]
+        last_text = part
+    if not events or any("minuto" not in e or not e["videos"] for e in events):
+        raise ValueError(f"文章情境、分钟与视频未能逐一配对: {case['url']}")
+    for event in events:
+        stated = event["minuto"] or (
+            event["source_fields"]["situacion_es"].rstrip("′’'")
+        )
+        for video in event["videos"]:
+            minute_title = re.search(
+                r"\bminuto\s+(\d+(?:\s*\+\s*\d+)?)", video["title"], re.I
+            )
+            if minute_title and sum(map(int, minute_title[1].split("+"))) != sum(
+                map(int, stated.split("+"))
+            ):
+                raise ValueError(f"正文分钟和同段视频标题不一致: {case['url']}")
+    if not meta.get("match"):
+        meta["match"] = case["title"].rsplit(":", 1)[-1].strip()
+    first = events[0]
+    return {
+        **meta,
+        "situacion_es": first["situacion_es"],
+        "situacion_norm": first["situacion_norm"],
+        "minuto": first["minuto"],
+        "youtube": first["videos"][0]["url"],
+        "events": events,
+    }
 
 
 def enrich(c: dict) -> dict:
-    """抓案例文章页：列表摘要缺字段时（2023-24 旧案为通用文案），从正文提取。
-    正文字段各自独立成段（<p><strong>Fecha:</strong> 17-10-2023</p>…），且页面头部
-    可能有无关的嵌入组件——故全页剥标签后取「最后一组」完整字段，视频取字段区之后
-    的第一个 YouTube embed。"""
+    """逐篇读取文章，按官方正文顺序将同段录像附到各情境。"""
     page = fetch_page(c["url"], MIN_ART)
     if not page:
         if READS.offline and c["url"] in UNRELATED_CACHE:
+            c.pop("events", None)
             c.update(dict.fromkeys(DETAIL_FIELDS, ""))
             c.update(
                 match=c["title"].rsplit(":", 1)[-1].strip(),
@@ -238,37 +364,9 @@ def enrich(c: dict) -> dict:
             )
             return c
         raise ValueError(f"判例文章不可用: {c['url']}")
-    text = clean(page)
-    # 球队词序列：大写开头词 + 西语连词小写词（de/del/la/...），防吞前文句子
-    # （re.I 会让 am/pm 这类时间尾巴伪装成球队词，故整体大小写敏感）
-    W = r"(?:[A-ZÁÉÍÓÚÑ][A-Za-zÁÉÍÓÚÑáéíóúüÜ'()-]*|de|del|la|el|los|las|y|do|das|di|e)"
-    ms = list(
-        re.finditer(
-            r"((?:" + W + r"\s*){1,5}vs\.?\s(?:" + W + r"\s*){1,4})"
-            r"[Ff]echa\s*:\s*([\d/.-]+)"
-            r"\s*[Cc]iudad\s*:\s*(.*?)\s*[Ee]stadio\s*:\s*(.*?)\s*[Ss]ituaci[oó]n\s*:\s*(.*?)"
-            r"\s*[Mm]inuto\s*:\s*([\d+]+)",
-            text,
-        )
-    )
-    if ms:
-        m = ms[-1]
-        c.update(
-            {
-                "match": clean(m.group(1)) or c.get("match", ""),
-                "fecha": m.group(2),
-                "ciudad": clean(m.group(3)),
-                "estadio": clean(m.group(4)),
-                "situacion_es": clean(m.group(5)),
-                "minuto": _clean_minute(m.group(6)),
-            }
-        )
-    embeds = list(YT_RE.finditer(page))
-    if embeds:
-        pos = page.rfind("Minuto")
-        cand = [m for m in embeds if m.start() > pos] or embeds
-        c["youtube"] = "https://www.youtube.com/watch?v=" + cand[0].group(1)
-    c["situacion_norm"] = norm_situation(c.get("situacion_es", ""))
+    c.update(article_details(page, c))
+    c.pop("detail_status", None)
+    c.pop("unrelated_cache_url", None)
     return c
 
 
@@ -277,6 +375,9 @@ def identities(data):
         yield case["url"], "case"
         if case.get("detail_status") != "pending":
             yield case["url"], "article"
+        for event in case.get("events", []):
+            for video in event["videos"]:
+                yield case["url"], video["url"]
         for field in ("youtube", "situacion_es", "fecha", "minuto"):
             if case.get(field):
                 yield case["url"], field
@@ -341,6 +442,10 @@ def main():
         "source_name": "CONMEBOL《Situación de Análisis VAR》逐案判例",
         "cases": cases,
     }
+    if CONMEBOL_JSON.exists():
+        history = json.loads(CONMEBOL_JSON.read_bytes()).get("source_history")
+        if history:
+            data["source_history"] = history
     problems = evidence_problems(data)
     if problems:
         raise ValueError(problems[0])

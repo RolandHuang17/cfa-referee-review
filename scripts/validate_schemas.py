@@ -47,6 +47,11 @@ def validate_all():
             found = validate(data, schema, path=data_name)
             if data_name == "conmebol.json" and not found:
                 found.extend(evidence_problems(data))
+                found.extend(
+                    f"{case['url']} 已核文章缺少 events"
+                    for case in data["cases"]
+                    if "events" not in case and case.get("detail_status") != "pending"
+                )
             problems += found[:20]  # 单文件最多报 20 条，避免刷屏淹没别的信号
             if len(found) > 20:
                 problems.append(f"{data_name}: ……另有 {len(found) - 20} 处问题")

@@ -17,7 +17,26 @@
    "situacion_norm": "penalty",
    "minuto": "44",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=7pZrl8bIgxI"
+   "youtube": "https://www.youtube.com/watch?v=7pZrl8bIgxI",
+   "events": [
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=7pZrl8bIgxI",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | BOLIVIA vs. BRASIL | MINUTO 44 | OFR - PENAL",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=PmCyOKPYsQo",
+       "title": "ELIMINATÓRIAS 2026 | REVISÃO VAR | BOLÍVIA x BRASIL | MINUTO 44 | OFR - PENALTI",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "44"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Venezuela vs Perú",
@@ -33,7 +52,26 @@
    "situacion_norm": "no_penalty",
    "minuto": "90+1",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=cqIswbOpZ_I"
+   "youtube": "https://www.youtube.com/watch?v=cqIswbOpZ_I",
+   "events": [
+    {
+     "situacion_es": "No penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=cqIswbOpZ_I",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | VENEZUELA vs. PERÚ | MINUTO 90+1",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=M5sEidna2j8",
+       "title": "ELIMINATÓRIAS 2026 | REVISÃO VAR | VENEZUELA x PERU | MINUTO 90+1",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "90+1"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Uruguay vs. Argentina",
@@ -49,7 +87,26 @@
    "situacion_norm": "red_card",
    "minuto": "95",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=rnPFXVLpwUI"
+   "youtube": "https://www.youtube.com/watch?v=rnPFXVLpwUI",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=rnPFXVLpwUI",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | URUGUAY vs. ARGENTINA | MINUTO 95",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=ugtnRB37-4g",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | URUGUAY vs. ARGENTINA | MINUTO 95",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "95"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Brasil vs. Colombia",
@@ -61,11 +118,47 @@
    "fecha": "20-03-2025",
    "ciudad": "Brasilia",
    "estadio": "Mané Garrincha",
-   "situacion_es": "No penal",
-   "situacion_norm": "no_penalty",
-   "minuto": "90",
+   "situacion_es": "No gol",
+   "situacion_norm": "no_goal",
+   "minuto": "61",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=wKO51YOqyQA"
+   "youtube": "https://www.youtube.com/watch?v=A7_pr7gFnU8",
+   "events": [
+    {
+     "situacion_es": "No gol",
+     "situacion_norm": "no_goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=A7_pr7gFnU8",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | BRASIL vs. COLOMBIA | MINUTO 61",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=2A9VGWZU42Q",
+       "title": "ELIMINATÓRIAS 2026 | REVISÃO VAR | BRASIL x COLÔMBIA | MINUTO 61",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "61"
+    },
+    {
+     "situacion_es": "No penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=wKO51YOqyQA",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | BRASIL vs. COLOMBIA | MINUTO 92",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=zjSYZg9lHZw",
+       "title": "ELIMINATÓRIAS 2026 | REVISÃO DE VAR | BRASIL vs. COLÔMBIA | MINUTO 92",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "90+2"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Colombia vs. Argentina",
@@ -81,7 +174,26 @@
    "situacion_norm": "ofr_penalty",
    "minuto": "53",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=uJr0R3ESprI"
+   "youtube": "https://www.youtube.com/watch?v=uJr0R3ESprI",
+   "events": [
+    {
+     "situacion_es": "On Field Review – Penal",
+     "situacion_norm": "ofr_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=uJr0R3ESprI",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | COLOMBIA vs. ARGENTINA | MINUTO 53",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=GhTqzjsfD5A",
+       "title": "ELIMINATÓRIAS 2026 | REVISÃO VAR | COLÔMBIA x ARGENTINA | MINUTO 53",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "53"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Perú vs. Colombia",
@@ -97,7 +209,26 @@
    "situacion_norm": "offside",
    "minuto": "24",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=pkov90o3wBE"
+   "youtube": "https://www.youtube.com/watch?v=pkov90o3wBE",
+   "events": [
+    {
+     "situacion_es": "Fuera de juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=pkov90o3wBE",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PERÚ vs. COLOMBIA | MINUTO 24",
+       "lang": "es"
+      },
+      {
+       "url": "https://www.youtube.com/watch?v=UH0Hgj52Ew8",
+       "title": "ELIMINATÓRIAS 2026 | REVISÃO VAR | PERU x COLÔMBIA | MINUTO 24",
+       "lang": "pt"
+      }
+     ],
+     "minuto": "24"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – CONMEBOL Recopa: LDU vs. Fluminense",
@@ -105,15 +236,29 @@
    "date": "23/02/2024",
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "conmebol-recopa",
-   "match": "LDU vs. Fluminense",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "match": "Liga de Quito vs- Fluminense",
+   "fecha": "22-02-2024",
+   "ciudad": "Quito",
+   "estadio": "Rodrigo Paz Delgado",
+   "situacion_es": "Gol",
+   "situacion_norm": "goal",
+   "minuto": "92",
    "comp_cn": "南美优胜者杯（Recopa）",
-   "youtube": "https://www.youtube.com/watch?v=vp1PB4b24ls"
+   "youtube": "https://www.youtube.com/watch?v=vp1PB4b24ls",
+   "events": [
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=vp1PB4b24ls",
+       "title": "RECOPA | REVISIÓN VAR | LDU VS FLUMINENSE | MINUTO 90+2",
+       "lang": ""
+      }
+     ],
+     "minuto": "92"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Paraguay vs. Colombia",
@@ -129,7 +274,45 @@
    "situacion_norm": "no_penalty",
    "minuto": "4",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=mflaS7sW0r8"
+   "youtube": "https://www.youtube.com/watch?v=UcaxWXRrTgw",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=UcaxWXRrTgw",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PARAGUAY vs. COLOMBIA | MINUTO 4",
+       "lang": ""
+      }
+     ],
+     "minuto": "4"
+    },
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=Eclofe13LfE",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PARAGUAY vs. COLOMBIA | MINUTO 9",
+       "lang": ""
+      }
+     ],
+     "minuto": "9"
+    },
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=mflaS7sW0r8",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PARAGUAY vs. COLOMBIA | MINUTO 18",
+       "lang": ""
+      }
+     ],
+     "minuto": "18"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Chile vs. Paraguay",
@@ -145,7 +328,33 @@
    "situacion_norm": "red_card",
    "minuto": "41",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=pPCiQ74_aEc"
+   "youtube": "https://www.youtube.com/watch?v=pzdWGKM7BYE",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=pzdWGKM7BYE",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | CHILE vs PARAGUAY | MINUTO 41",
+       "lang": ""
+      }
+     ],
+     "minuto": "41"
+    },
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=pPCiQ74_aEc",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | CHILE vs PARAGUAY | MINUTO 86",
+       "lang": ""
+      }
+     ],
+     "minuto": "86"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Bolivia vs. Perú",
@@ -161,7 +370,21 @@
    "situacion_norm": "no_penalty",
    "minuto": "90",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=bRtHUuWFzsI"
+   "youtube": "https://www.youtube.com/watch?v=bRtHUuWFzsI",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=bRtHUuWFzsI",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | BOLIVIA vs PERÚ | MINUTO 90",
+       "lang": ""
+      }
+     ],
+     "minuto": "90"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Paraguay vs. Bolivia",
@@ -177,7 +400,21 @@
    "situacion_norm": "offside",
    "minuto": "61",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=p9wXYdEA4VA"
+   "youtube": "https://www.youtube.com/watch?v=p9wXYdEA4VA",
+   "events": [
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=p9wXYdEA4VA",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PARAGUAY vs. BOLIVIA | MINUTO 61",
+       "lang": ""
+      }
+     ],
+     "minuto": "61"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Ecuador vs. Colombia",
@@ -193,7 +430,21 @@
    "situacion_norm": "offside",
    "minuto": "62",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=b1vZb4riI0s"
+   "youtube": "https://www.youtube.com/watch?v=b1vZb4riI0s",
+   "events": [
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=b1vZb4riI0s",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | ECUADOR vs. COLOMBIA | MINUTO 62",
+       "lang": ""
+      }
+     ],
+     "minuto": "62"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Perú vs. Argentina",
@@ -209,7 +460,21 @@
    "situacion_norm": "offside",
    "minuto": "56",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=TLcIFphtFe8"
+   "youtube": "https://www.youtube.com/watch?v=TLcIFphtFe8",
+   "events": [
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=TLcIFphtFe8",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PERÚ vs. ARGENTINA | MINUTO 56",
+       "lang": ""
+      }
+     ],
+     "minuto": "56"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Colombia vs. Uruguay",
@@ -225,7 +490,33 @@
    "situacion_norm": "goal",
    "minuto": "51",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=Rw1yVbm5Ai0"
+   "youtube": "https://www.youtube.com/watch?v=IvqAV_aeQDU",
+   "events": [
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=IvqAV_aeQDU",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | COLOMBIA vs. URUGUAY | MINUTO 51",
+       "lang": ""
+      }
+     ],
+     "minuto": "51"
+    },
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=Rw1yVbm5Ai0",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | COLOMBIA vs. URUGUAY | MINUTO 85",
+       "lang": ""
+      }
+     ],
+     "minuto": "85"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Bolivia vs. Argentina",
@@ -241,7 +532,21 @@
    "situacion_norm": "red_card",
    "minuto": "35",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=6Q1aLtuxiQA"
+   "youtube": "https://www.youtube.com/watch?v=6Q1aLtuxiQA",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=6Q1aLtuxiQA",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | BOLIVIA vs. ARGENTINA | MINUTO 35",
+       "lang": ""
+      }
+     ],
+     "minuto": "35"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Venezuela vs. Paraguay",
@@ -257,7 +562,33 @@
    "situacion_norm": "penalty",
    "minuto": "90",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=UxWLlQU4Aio"
+   "youtube": "https://www.youtube.com/watch?v=nUt2wrxpllI",
+   "events": [
+    {
+     "situacion_es": "Mano penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=nUt2wrxpllI",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | VENEZUELA vs. PARAGUAY | MINUTO 90",
+       "lang": ""
+      }
+     ],
+     "minuto": "90"
+    },
+    {
+     "situacion_es": "No gol – Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=UxWLlQU4Aio",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | VENEZUELA vs. PARAGUAY | MINUTO 78",
+       "lang": ""
+      }
+     ],
+     "minuto": "78"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Ecuador vs. Uruguay",
@@ -273,7 +604,21 @@
    "situacion_norm": "no_penalty",
    "minuto": "97",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=G-d_1wQBvbk"
+   "youtube": "https://www.youtube.com/watch?v=G-d_1wQBvbk",
+   "events": [
+    {
+     "situacion_es": "No penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=G-d_1wQBvbk",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | ECUADOR vs. URUGUAY | MINUTO 97",
+       "lang": ""
+      }
+     ],
+     "minuto": "97"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Brasil vs. Bolivia",
@@ -289,7 +634,21 @@
    "situacion_norm": "penalty",
    "minuto": "13",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=QU3hFP4INk4"
+   "youtube": "https://www.youtube.com/watch?v=QU3hFP4INk4",
+   "events": [
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=QU3hFP4INk4",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | BRASIL vs. BOLIVIA | MINUTO 13",
+       "lang": ""
+      }
+     ],
+     "minuto": "13"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Uruguay vs. Chile",
@@ -305,7 +664,21 @@
    "situacion_norm": "no_penalty",
    "minuto": "70",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=_7FgHuICQaE"
+   "youtube": "https://www.youtube.com/watch?v=_7FgHuICQaE",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=_7FgHuICQaE",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | URUGUAY vs. CHILE | MINUTO 70",
+       "lang": ""
+      }
+     ],
+     "minuto": "70"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Paraguay vs. Perú",
@@ -321,7 +694,21 @@
    "situacion_norm": "other",
    "minuto": "27",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=I1PCphejLFk"
+   "youtube": "https://www.youtube.com/watch?v=I1PCphejLFk",
+   "events": [
+    {
+     "situacion_es": "Mano no sancionable",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=I1PCphejLFk",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | PARAGUAY vs. PERÚ | MINUTO 27",
+       "lang": ""
+      }
+     ],
+     "minuto": "27"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR – Eliminatorias Sudamericanas: Colombia vs. Venezuela",
@@ -337,7 +724,21 @@
    "situacion_norm": "no_penalty",
    "minuto": "47",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=6BS1qT8CX5Y"
+   "youtube": "https://www.youtube.com/watch?v=6BS1qT8CX5Y",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=6BS1qT8CX5Y",
+       "title": "ELIMINATORIAS 2026 | REVISIÓN VAR | COLOMBIA vs. VENEZUELA | MINUTO 47",
+       "lang": ""
+      }
+     ],
+     "minuto": "47"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR: CONMEBOL Sudamericana: Emelec vs. Deportivo Cuenca",
@@ -353,7 +754,21 @@
    "situacion_norm": "other",
    "minuto": "32",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=vTSM5ILAGSo"
+   "youtube": "https://www.youtube.com/watch?v=vTSM5ILAGSo",
+   "events": [
+    {
+     "situacion_es": "No Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=vTSM5ILAGSo",
+       "title": "Sudamericana | Revisión VAR | Emelec vs Cuenca | Minuto 32",
+       "lang": ""
+      }
+     ],
+     "minuto": "32"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR: CONMEBOL Sudamericana: Blooming vs. Atlético Palma Flor",
@@ -369,7 +784,21 @@
    "situacion_norm": "other",
    "minuto": "85",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=LVqlxfJkKL4"
+   "youtube": "https://www.youtube.com/watch?v=LVqlxfJkKL4",
+   "events": [
+    {
+     "situacion_es": "No Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=LVqlxfJkKL4",
+       "title": "Sudamericana | Revisión VAR | Blooming vs Palma Flor | Minuto 85",
+       "lang": ""
+      }
+     ],
+     "minuto": "85"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR: CONMEBOL Sudamericana: Estudiantes de Mérida vs. Deportivo Táchira",
@@ -385,7 +814,21 @@
    "situacion_norm": "other",
    "minuto": "13",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=se6Nbbj63WE"
+   "youtube": "https://www.youtube.com/watch?v=se6Nbbj63WE",
+   "events": [
+    {
+     "situacion_es": "Error de identidad",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=se6Nbbj63WE",
+       "title": "Sudamericana | Revisión VAR | Estudiantes de Mérida vs Deportivo Táchira | Minuto 13",
+       "lang": ""
+      }
+     ],
+     "minuto": "13"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR: CONMEBOL Sudamericana: Cesar Vallejo vs. Binacional",
@@ -401,7 +844,21 @@
    "situacion_norm": "no_offside",
    "minuto": "1",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=1haBd4cgoBw"
+   "youtube": "https://www.youtube.com/watch?v=1haBd4cgoBw",
+   "events": [
+    {
+     "situacion_es": "No fuera de juego",
+     "situacion_norm": "no_offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=1haBd4cgoBw",
+       "title": "Sudamericana | Revisión VAR | Cesar Vallejo vs Binacional | Minuto 1",
+       "lang": ""
+      }
+     ],
+     "minuto": "1"
+    }
+   ]
   },
   {
    "title": "Situación de Análisis VAR: CONMEBOL Sudamericana: Defensor Sporting vs. Danubio",
@@ -417,7 +874,21 @@
    "situacion_norm": "no_goal",
    "minuto": "76",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=hBtUHb2awek"
+   "youtube": "https://www.youtube.com/watch?v=hBtUHb2awek",
+   "events": [
+    {
+     "situacion_es": "No Gol",
+     "situacion_norm": "no_goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=hBtUHb2awek",
+       "title": "Sudamericana | Revisión VAR | Defensor Sporting vs Danubio | Minuto 76",
+       "lang": ""
+      }
+     ],
+     "minuto": "76"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Audax Italiano vs. Universidad Católica",
@@ -433,7 +904,21 @@
    "situacion_norm": "other",
    "minuto": "5",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=hypqAqeEH6I"
+   "youtube": "https://www.youtube.com/watch?v=hypqAqeEH6I",
+   "events": [
+    {
+     "situacion_es": "No Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=hypqAqeEH6I",
+       "title": "Sudamericana | Revisión VAR | Audax Italiano vs Universidad Católica | Minuto 5",
+       "lang": ""
+      }
+     ],
+     "minuto": "5"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Tacuary vs. General Caballero",
@@ -449,7 +934,21 @@
    "situacion_norm": "red_card",
    "minuto": "19",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=HaC9modQS2Q"
+   "youtube": "https://www.youtube.com/watch?v=HaC9modQS2Q",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=HaC9modQS2Q",
+       "title": "Sudamericana | Revisión VAR | Tacuary vs General Caballero | Minuto 19",
+       "lang": ""
+      }
+     ],
+     "minuto": "19"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: River Plate vs. Peñarol",
@@ -458,14 +957,28 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
    "match": "River Plate vs. Peñarol",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "07-03-2023",
+   "ciudad": "Maldonado",
+   "estadio": "Estadio Domingo Burgueño Miguel",
+   "situacion_es": "Penal",
+   "situacion_norm": "penalty",
+   "minuto": "12",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=285OcbMwx5M"
+   "youtube": "https://www.youtube.com/watch?v=285OcbMwx5M",
+   "events": [
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=285OcbMwx5M",
+       "title": "Sudamericana | Revisión VAR | River Plate vs Peñarol | Minuto 12",
+       "lang": ""
+      }
+     ],
+     "minuto": "12"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Recopa: Flamengo vs. IDV",
@@ -481,7 +994,21 @@
    "situacion_norm": "no_penalty",
    "minuto": "20",
    "comp_cn": "南美优胜者杯（Recopa）",
-   "youtube": "https://www.youtube.com/watch?v=qfZzutbouf0"
+   "youtube": "https://www.youtube.com/watch?v=qfZzutbouf0",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=qfZzutbouf0",
+       "title": "Recopa | Revisión VAR | Flamengo vs IDV | Minuto 20",
+       "lang": ""
+      }
+     ],
+     "minuto": "20"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Melgar vs. Independiente del Valle",
@@ -497,7 +1024,21 @@
    "situacion_norm": "offside",
    "minuto": "43",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=lWGtEBppPNo"
+   "youtube": "https://www.youtube.com/watch?v=lWGtEBppPNo",
+   "events": [
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=lWGtEBppPNo",
+       "title": "Sudamericana | Revisión VAR | Melgar vs IDV | Minuto 43",
+       "lang": ""
+      }
+     ],
+     "minuto": "43"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Atlético Goianiense vs. São Paulo",
@@ -506,14 +1047,28 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
    "match": "Atlético Goianiense vs. São Paulo",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "01-09-2022",
+   "ciudad": "Goiânia",
+   "estadio": "Serra Dourada",
+   "situacion_es": "Tarjeta Roja",
+   "situacion_norm": "red_card",
+   "minuto": "39",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=TiL3fX_oKpU"
+   "youtube": "https://www.youtube.com/watch?v=TiL3fX_oKpU",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=TiL3fX_oKpU",
+       "title": "Sudamericana | Revisión VAR | Atlético Goianiense vs Sao Paulo | Minuto 39",
+       "lang": ""
+      }
+     ],
+     "minuto": "39"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Internacional vs. Melgar",
@@ -529,7 +1084,21 @@
    "situacion_norm": "red_card",
    "minuto": "73",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=hYeLE2xqhh4"
+   "youtube": "https://www.youtube.com/watch?v=hYeLE2xqhh4",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=hYeLE2xqhh4",
+       "title": "Sudamericana | Revisión VAR | Internacional vs Melgar | Minuto 73",
+       "lang": ""
+      }
+     ],
+     "minuto": "73"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Independiente del Valle vs. Deportivo Táchira",
@@ -538,16 +1107,28 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
    "match": "Independiente del Valle vs. Deportivo Táchira",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "09-08-2022",
+   "ciudad": "Quito",
+   "estadio": "Rodrigo Paz Delgado",
+   "situacion_es": "No Penal",
+   "situacion_norm": "no_penalty",
+   "minuto": "89",
    "comp_cn": "南美杯",
-   "youtube": "",
-   "detail_status": "pending",
-   "unrelated_cache_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/"
+   "youtube": "https://www.youtube.com/watch?v=gnue9xzWApw",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=gnue9xzWApw",
+       "title": "Sudamericana | Revisión VAR | IDV vs Deportivo Táchira | Minuto 89",
+       "lang": ""
+      }
+     ],
+     "minuto": "89"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Atlético Goianiense vs. Nacional",
@@ -555,17 +1136,29 @@
    "date": "10/08/2022",
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
-   "match": "Atlético Goianiense vs. Nacional",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "match": "Goianiense vs Nacional",
+   "fecha": "09-08-2022",
+   "ciudad": "Goiania",
+   "estadio": "Serra Dourada",
+   "situacion_es": "Tarjeta Roja",
+   "situacion_norm": "red_card",
+   "minuto": "91",
    "comp_cn": "南美杯",
-   "youtube": "",
-   "detail_status": "pending",
-   "unrelated_cache_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-atletico-goianiense-vs-sao-paulo/"
+   "youtube": "https://www.youtube.com/watch?v=6wAFK299Me0",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=6wAFK299Me0",
+       "title": "Sudamericana | Revisión VAR | Goianiense vs Nacional | Minuto 91",
+       "lang": ""
+      }
+     ],
+     "minuto": "91"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Melgar vs. Internacional",
@@ -581,7 +1174,21 @@
    "situacion_norm": "red_card",
    "minuto": "65",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=2GGFN-QXLQU"
+   "youtube": "https://www.youtube.com/watch?v=2GGFN-QXLQU",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=2GGFN-QXLQU",
+       "title": "Sudamericana | Revisión VAR | Melgar vs Internacional | Minuto 65",
+       "lang": ""
+      }
+     ],
+     "minuto": "65"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: São Paulo vs. Ceará",
@@ -589,7 +1196,7 @@
    "date": "04/08/2022",
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
-   "match": "Paulo vs. Ceará",
+   "match": "São Paulo vs. Ceará",
    "fecha": "03-08-2022",
    "ciudad": "São Paulo",
    "estadio": "Morumbi",
@@ -597,7 +1204,21 @@
    "situacion_norm": "other",
    "minuto": "76",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=cyATCbb3puI"
+   "youtube": "https://www.youtube.com/watch?v=cyATCbb3puI",
+   "events": [
+    {
+     "situacion_es": "OFR",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=cyATCbb3puI",
+       "title": "Sudamericana | Revisión VAR | Sao Paulo vs Ceará | Minuto 76",
+       "lang": ""
+      }
+     ],
+     "minuto": "76"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Independiente del Valle vs. Lanús",
@@ -606,16 +1227,40 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
    "match": "Independiente del Valle vs. Lanús",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "30-06-2022",
+   "ciudad": "Quito",
+   "estadio": "Olímpico Atahualpa",
+   "situacion_es": "Gol",
+   "situacion_norm": "goal",
+   "minuto": "60",
    "comp_cn": "南美杯",
-   "youtube": "",
-   "detail_status": "pending",
-   "unrelated_cache_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-melgar/"
+   "youtube": "https://www.youtube.com/watch?v=ONE6TOLhbIY",
+   "events": [
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=ONE6TOLhbIY",
+       "title": "Sudamericana | Revisión VAR | IDV vs Lanús | Minuto 60",
+       "lang": ""
+      }
+     ],
+     "minuto": "60"
+    },
+    {
+     "situacion_es": "Error de Identidad",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=Kq9pP_NKwe4",
+       "title": "Sudamericana | Revisión VAR | IDV vs Lanús | Minuto 85",
+       "lang": ""
+      }
+     ],
+     "minuto": "85"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Universidad Católica vs. São Paulo",
@@ -624,14 +1269,40 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "sudamericana",
    "match": "Universidad Católica vs. São Paulo",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "30-06-2022",
+   "ciudad": "Santiago",
+   "estadio": "San Carlos de Apoquindo",
+   "situacion_es": "Tarjeta Roja",
+   "situacion_norm": "red_card",
+   "minuto": "71",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=O8O9Eulc9So"
+   "youtube": "https://www.youtube.com/watch?v=9dU-7sgtWXY",
+   "events": [
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=9dU-7sgtWXY",
+       "title": "Sudamericana | Revisión VAR | Universidad Católica vs Sao Paulo | Minuto 71",
+       "lang": ""
+      }
+     ],
+     "minuto": "71"
+    },
+    {
+     "situacion_es": "Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=O8O9Eulc9So",
+       "title": "Sudamericana | Revisión VAR | Universidad Católica vs Sao Paulo | Minuto 83",
+       "lang": ""
+      }
+     ],
+     "minuto": "83"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Deportivo Táchira vs. Santos",
@@ -647,7 +1318,21 @@
    "situacion_norm": "goal",
    "minuto": "80",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=-wr3bty7Y3M"
+   "youtube": "https://www.youtube.com/watch?v=-wr3bty7Y3M",
+   "events": [
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=-wr3bty7Y3M",
+       "title": "Sudamericana | Revisión VAR | Deportivo Táchira vs Santos | Minuto 80",
+       "lang": ""
+      }
+     ],
+     "minuto": "80"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: The Strongest vs. Ceará",
@@ -663,7 +1348,21 @@
    "situacion_norm": "other",
    "minuto": "81",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=CG4tMa1I4oM"
+   "youtube": "https://www.youtube.com/watch?v=CG4tMa1I4oM",
+   "events": [
+    {
+     "situacion_es": "Gol – No Gol",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=CG4tMa1I4oM",
+       "title": "Sudamericana | Revisión VAR | The Strongest vs Ceará | Minuto 81",
+       "lang": ""
+      }
+     ],
+     "minuto": "81"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Sudamericana: Colo Colo vs. Internacional",
@@ -679,7 +1378,21 @@
    "situacion_norm": "other",
    "minuto": "88",
    "comp_cn": "南美杯",
-   "youtube": "https://www.youtube.com/watch?v=BJ-dfEKiwVc"
+   "youtube": "https://www.youtube.com/watch?v=BJ-dfEKiwVc",
+   "events": [
+    {
+     "situacion_es": "Mano APP",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=BJ-dfEKiwVc",
+       "title": "Sudamericana | Revisión VAR | Colo Colo vs Internacional | Minuto 88",
+       "lang": ""
+      }
+     ],
+     "minuto": "88"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Venezuela vs. Colombia",
@@ -695,7 +1408,33 @@
    "situacion_norm": "no_goal",
    "minuto": "14",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=WJE1ElXjjqo"
+   "youtube": "https://www.youtube.com/watch?v=WH-F65JSKbQ",
+   "events": [
+    {
+     "situacion_es": "No Gol",
+     "situacion_norm": "no_goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=WH-F65JSKbQ",
+       "title": "Eliminatorias | Revisión VAR | Venezuela vs Colombia | Minuto 14",
+       "lang": ""
+      }
+     ],
+     "minuto": "14"
+    },
+    {
+     "situacion_es": "Penal – OFR",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=WJE1ElXjjqo",
+       "title": "Eliminatorias | Revisión VAR | Venezuela vs Colombia | Minuto 43",
+       "lang": ""
+      }
+     ],
+     "minuto": "43"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Perú vs. Paraguay",
@@ -711,7 +1450,33 @@
    "situacion_norm": "other",
    "minuto": "78",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=e0IR3tXs9xs"
+   "youtube": "https://www.youtube.com/watch?v=vkQQZj4O7ZM",
+   "events": [
+    {
+     "situacion_es": "No Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=vkQQZj4O7ZM",
+       "title": "Eliminatorias | Revisión VAR | Perú vs Paraguay | Minuto 78",
+       "lang": ""
+      }
+     ],
+     "minuto": "78"
+    },
+    {
+     "situacion_es": "No Falta",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=e0IR3tXs9xs",
+       "title": "Eliminatorias | Revisión VAR | Perú vs Paraguay  Minuto 82",
+       "lang": ""
+      }
+     ],
+     "minuto": "82"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Ecuador vs. Argentina",
@@ -727,7 +1492,33 @@
    "situacion_norm": "other",
    "minuto": "56",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=AIZi37r6pII"
+   "youtube": "https://www.youtube.com/watch?v=ZoGl-ZJf95g",
+   "events": [
+    {
+     "situacion_es": "Juego Temerario",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=ZoGl-ZJf95g",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Argentina | Minuto 56",
+       "lang": ""
+      }
+     ],
+     "minuto": "56"
+    },
+    {
+     "situacion_es": "Penal – OFR",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=AIZi37r6pII",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Argentina | Minuto 89",
+       "lang": ""
+      }
+     ],
+     "minuto": "89"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Chile vs. Uruguay",
@@ -743,7 +1534,21 @@
    "situacion_norm": "other",
    "minuto": "70",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=9v6hGmgsndY"
+   "youtube": "https://www.youtube.com/watch?v=9v6hGmgsndY",
+   "events": [
+    {
+     "situacion_es": "No Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=9v6hGmgsndY",
+       "title": "Eliminatorias | Revisión VAR | Chile vs Uruguay | Minuto 70",
+       "lang": ""
+      }
+     ],
+     "minuto": "70"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Bolivia vs. Brasil",
@@ -752,16 +1557,28 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "eliminatorias",
    "match": "Bolivia vs. Brasil",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
+   "fecha": "29-03-2022",
+   "ciudad": "La Paz",
+   "estadio": "Hernando Siles",
+   "situacion_es": "Posible Penal",
    "situacion_norm": "other",
-   "minuto": "",
+   "minuto": "62",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "",
-   "detail_status": "pending",
-   "unrelated_cache_url": "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil-2/"
+   "youtube": "https://www.youtube.com/watch?v=0iotrWLgAJ0",
+   "events": [
+    {
+     "situacion_es": "Posible Penal",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=0iotrWLgAJ0",
+       "title": "Eliminatorias | Revisión VAR | Bolivia vs Brasil | Minuto 62",
+       "lang": ""
+      }
+     ],
+     "minuto": "62"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Colombia vs. Bolivia",
@@ -777,7 +1594,33 @@
    "situacion_norm": "goal",
    "minuto": "71",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=o6OeGEhUGhs"
+   "youtube": "https://www.youtube.com/watch?v=UpaBbR11PnI",
+   "events": [
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=UpaBbR11PnI",
+       "title": "Eliminatorias | Revisión VAR | Colombia vs Bolivia | Minuto 71",
+       "lang": ""
+      }
+     ],
+     "minuto": "71"
+    },
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=o6OeGEhUGhs",
+       "title": "Eliminatorias | Revisión VAR | Colombia vs Bolivia | Minuto 92",
+       "lang": ""
+      }
+     ],
+     "minuto": "92"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Brasil vs. Chile",
@@ -793,7 +1636,45 @@
    "situacion_norm": "penalty",
    "minuto": "41",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=Czsmvvs4988"
+   "youtube": "https://www.youtube.com/watch?v=KtFNWigXZkM",
+   "events": [
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=KtFNWigXZkM",
+       "title": "Eliminatorias | Revisión VAR | Brasil vs Chile | Minuto 41",
+       "lang": ""
+      }
+     ],
+     "minuto": "41"
+    },
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=BIUM4rO5xbc",
+       "title": "Eliminatorias | Revisión VAR | Brasil vs Chile | Minuto 46",
+       "lang": ""
+      }
+     ],
+     "minuto": "46"
+    },
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=Czsmvvs4988",
+       "title": "Eliminatorias | Revisión VAR | Brasil vs Chile | Minuto 67",
+       "lang": ""
+      }
+     ],
+     "minuto": "67"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Paraguay vs. Ecuador",
@@ -802,14 +1683,32 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "eliminatorias",
    "match": "Paraguay vs. Ecuador",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
+   "fecha": "24-03-2022",
+   "ciudad": "Ciudad del Este",
+   "estadio": "Antonio Aranda",
    "situacion_es": "",
    "situacion_norm": "other",
    "minuto": "",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=UlFG9-LVm1E"
+   "youtube": "https://www.youtube.com/watch?v=UlFG9-LVm1E",
+   "events": [
+    {
+     "situacion_es": "",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=UlFG9-LVm1E",
+       "title": "Eliminatorias | Revisión VAR | Paraguay vs Ecuador | Minuto 80",
+       "lang": ""
+      }
+     ],
+     "source_fields": {
+      "situacion_es": "80′",
+      "minuto": "Penal"
+     },
+     "minuto": ""
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Uruguay vs. Perú",
@@ -825,7 +1724,21 @@
    "situacion_norm": "no_goal",
    "minuto": "91",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=KW1AEy-I1n0"
+   "youtube": "https://www.youtube.com/watch?v=KW1AEy-I1n0",
+   "events": [
+    {
+     "situacion_es": "No Gol",
+     "situacion_norm": "no_goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=KW1AEy-I1n0",
+       "title": "Eliminatorias | Revisión VAR | Uruguay vs Perú | Minuto 91",
+       "lang": ""
+      }
+     ],
+     "minuto": "91"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Recopa: Palmeiras vs. Athletico Paranaense",
@@ -834,14 +1747,64 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "conmebol-recopa",
    "match": "Palmeiras vs. Athletico Paranaense",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "02/03/2022",
+   "ciudad": "Sao Paulo",
+   "estadio": "Allianz Parque",
+   "situacion_es": "No Penal",
+   "situacion_norm": "no_penalty",
+   "minuto": "29",
    "comp_cn": "南美优胜者杯（Recopa）",
-   "youtube": "https://www.youtube.com/watch?v=fMhnnDsCDw0"
+   "youtube": "https://www.youtube.com/watch?v=IwxAWLa_G8Y",
+   "events": [
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=IwxAWLa_G8Y",
+       "title": "RECOPA | Revisión VAR | Palmeiras vs Athletico Paranaense | Minuto 29",
+       "lang": ""
+      }
+     ],
+     "minuto": "29"
+    },
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=_ETKfgZvqKM",
+       "title": "RECOPA | Revisión VAR | Palmeiras vs Athletico Paranaense | Minuto 50",
+       "lang": ""
+      }
+     ],
+     "minuto": "50"
+    },
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=01ZP7tNvl30",
+       "title": "RECOPA | Revisión VAR | Palmeiras vs Athletico Paranaense | Minuto 89",
+       "lang": ""
+      }
+     ],
+     "minuto": "89"
+    },
+    {
+     "situacion_es": "Expulsiones",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=fMhnnDsCDw0",
+       "title": "RECOPA | Revisión VAR | Palmeiras vs Athletico Paranaense | Minuto 90",
+       "lang": ""
+      }
+     ],
+     "minuto": "90"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR CONMEBOL Recopa: Athletico Paranaense vs. Palmeiras",
@@ -850,14 +1813,52 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "conmebol-recopa",
    "match": "Athletico Paranaense vs. Palmeiras",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
-   "situacion_norm": "other",
-   "minuto": "",
+   "fecha": "23/02/2022",
+   "ciudad": "Curitiba",
+   "estadio": "Arena da Baixada",
+   "situacion_es": "No fuera de juego",
+   "situacion_norm": "no_offside",
+   "minuto": "19",
    "comp_cn": "南美优胜者杯（Recopa）",
-   "youtube": "https://www.youtube.com/watch?v=xdKOpyvp_WY"
+   "youtube": "https://www.youtube.com/watch?v=O9FBrdOGnqU",
+   "events": [
+    {
+     "situacion_es": "No fuera de juego",
+     "situacion_norm": "no_offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=O9FBrdOGnqU",
+       "title": "RECOPA | Revisión VAR | Athletico Paranaense vs Palmeiras | Minuto 19",
+       "lang": ""
+      }
+     ],
+     "minuto": "19"
+    },
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=I99sYkXqI0E",
+       "title": "RECOPA | Revisión VAR | Athletico Paranaense vs Palmeiras | Minuto 27",
+       "lang": ""
+      }
+     ],
+     "minuto": "27"
+    },
+    {
+     "situacion_es": "Penal",
+     "situacion_norm": "penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=xdKOpyvp_WY",
+       "title": "RECOPA | Revisión VAR | Athletico Paranaense vs Palmeiras | Minuto 90",
+       "lang": ""
+      }
+     ],
+     "minuto": "90"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Bolivia vs. Chile",
@@ -873,7 +1874,33 @@
    "situacion_norm": "other",
    "minuto": "74",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=A6sm-7B8HRo"
+   "youtube": "https://www.youtube.com/watch?v=8YXDJiypy2A",
+   "events": [
+    {
+     "situacion_es": "No mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=8YXDJiypy2A",
+       "title": "Eliminatorias | Revisión VAR | Bolivia vs Chile | Minuto 74",
+       "lang": ""
+      }
+     ],
+     "minuto": "74"
+    },
+    {
+     "situacion_es": "No mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=A6sm-7B8HRo",
+       "title": "Eliminatorias | Revisión VAR | Bolivia vs Chile | Minuto 96",
+       "lang": ""
+      }
+     ],
+     "minuto": "96"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Uruguay vs. Venezuela",
@@ -889,7 +1916,33 @@
    "situacion_norm": "other",
    "minuto": "49",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=usdakO9PwVA"
+   "youtube": "https://www.youtube.com/watch?v=JzycK4VMwdk",
+   "events": [
+    {
+     "situacion_es": "Invasión en el área penal",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=JzycK4VMwdk",
+       "title": "Eliminatorias | Revisión VAR | Uruguay vs Venezuela | Minuto 49",
+       "lang": ""
+      }
+     ],
+     "minuto": "49"
+    },
+    {
+     "situacion_es": "OFR",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=usdakO9PwVA",
+       "title": "Eliminatorias | Revisión VAR | Uruguay vs Venezuela | Minuto 46",
+       "lang": ""
+      }
+     ],
+     "minuto": "46"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Perú vs. Ecuador",
@@ -898,14 +1951,32 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "eliminatorias",
    "match": "Perú vs. Ecuador",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
+   "fecha": "01-02-2022",
+   "ciudad": "Lima",
+   "estadio": "Nacional",
    "situacion_es": "",
    "situacion_norm": "other",
    "minuto": "",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=2rvE11IJ6t8"
+   "youtube": "https://www.youtube.com/watch?v=2rvE11IJ6t8",
+   "events": [
+    {
+     "situacion_es": "",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=2rvE11IJ6t8",
+       "title": "Eliminatorias | Revisión VAR | Perú vs Ecuador | Minuto 68",
+       "lang": ""
+      }
+     ],
+     "source_fields": {
+      "situacion_es": "68′",
+      "minuto": "Gol"
+     },
+     "minuto": ""
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Brasil vs. Paraguay",
@@ -914,14 +1985,40 @@
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "eliminatorias",
    "match": "Brasil vs. Paraguay",
-   "fecha": "",
-   "ciudad": "",
-   "estadio": "",
-   "situacion_es": "",
+   "fecha": "01-02-2022",
+   "ciudad": "Belo Horizonte",
+   "estadio": "Mineirao",
+   "situacion_es": "Mano Inmediatez",
    "situacion_norm": "other",
-   "minuto": "",
+   "minuto": "2",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=EL3d8p63Ihk"
+   "youtube": "https://www.youtube.com/watch?v=UZV1dJze-D4",
+   "events": [
+    {
+     "situacion_es": "Mano Inmediatez",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=UZV1dJze-D4",
+       "title": "Eliminatorias | Revisión VAR | Brasil vs Paraguay | Minuto 2",
+       "lang": ""
+      }
+     ],
+     "minuto": "2"
+    },
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=EL3d8p63Ihk",
+       "title": "Eliminatorias | Revisión VAR | Brasil vs Paraguay | Minuto 88",
+       "lang": ""
+      }
+     ],
+     "minuto": "88"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Colombia vs. Perú",
@@ -937,7 +2034,21 @@
    "situacion_norm": "offside",
    "minuto": "70",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=B5o98oThMuY"
+   "youtube": "https://www.youtube.com/watch?v=B5o98oThMuY",
+   "events": [
+    {
+     "situacion_es": "Fuera de Juego",
+     "situacion_norm": "offside",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=B5o98oThMuY",
+       "title": "Eliminatorias | Revisión VAR | Colombia vs Perú | Minuto 70",
+       "lang": ""
+      }
+     ],
+     "minuto": "70"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Paraguay vs. Uruguay",
@@ -953,7 +2064,45 @@
    "situacion_norm": "other",
    "minuto": "40",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=qp1E2t-37QI"
+   "youtube": "https://www.youtube.com/watch?v=WgXwe-WUDes",
+   "events": [
+    {
+     "situacion_es": "No Mano",
+     "situacion_norm": "other",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=WgXwe-WUDes",
+       "title": "Eliminatorias | Revisión VAR | Paraguay vs Uruguay | Minuto 40",
+       "lang": ""
+      }
+     ],
+     "minuto": "40"
+    },
+    {
+     "situacion_es": "Gol",
+     "situacion_norm": "goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=EnN9khZdtlU",
+       "title": "Eliminatorias | Revisión VAR | Paraguay vs Uruguay | Minuto 50",
+       "lang": ""
+      }
+     ],
+     "minuto": "50"
+    },
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=qp1E2t-37QI",
+       "title": "Eliminatorias | Revisión VAR | Paraguay vs Uruguay | Minuto 94",
+       "lang": ""
+      }
+     ],
+     "minuto": "94"
+    }
+   ]
   },
   {
    "title": "Situación de análisis VAR Eliminatorias Sudamericanas: Ecuador vs. Brasil",
@@ -961,7 +2110,7 @@
    "date": "28/01/2022",
    "excerpt_es": "Compartimos este material de carácter didáctico que sirve como aclaración y descripción de situaciones relacionadas al fútbol, basadas en el",
    "comp": "eliminatorias",
-   "match": "las Eliminatorias Sudamericanas Ecuador vs. Brasil",
+   "match": "Ecuador vs. Brasil",
    "fecha": "27-01-2022",
    "ciudad": "Quito",
    "estadio": "Rodrigo Paz Delgado",
@@ -969,7 +2118,81 @@
    "situacion_norm": "red_card",
    "minuto": "10",
    "comp_cn": "世界杯预选赛（南美区）",
-   "youtube": "https://www.youtube.com/watch?v=gfWsavnRE2s"
+   "youtube": "https://www.youtube.com/watch?v=Ah7NsYUKQvk",
+   "events": [
+    {
+     "situacion_es": "Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=Ah7NsYUKQvk",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Brasil | Minuto 10",
+       "lang": ""
+      }
+     ],
+     "minuto": "10"
+    },
+    {
+     "situacion_es": "No Gol",
+     "situacion_norm": "no_goal",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=OBhhjRW1qEw",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Brasil | Minuto 48",
+       "lang": ""
+      }
+     ],
+     "minuto": "48"
+    },
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=QW6Qu3A8lbA",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Brasil | Minuto 25",
+       "lang": ""
+      }
+     ],
+     "minuto": "25"
+    },
+    {
+     "situacion_es": "No Penal",
+     "situacion_norm": "no_penalty",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=qVpsJXf1vvI",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Brasil | Minuto 52",
+       "lang": ""
+      }
+     ],
+     "minuto": "52"
+    },
+    {
+     "situacion_es": "Tarjeta Roja",
+     "situacion_norm": "red_card",
+     "videos": [
+      {
+       "url": "https://www.youtube.com/watch?v=gfWsavnRE2s",
+       "title": "Eliminatorias | Revisión VAR | Ecuador vs Brasil | Minuto 93",
+       "lang": ""
+      }
+     ],
+     "minuto": "93"
+    }
+   ]
+  }
+ ],
+ "source_history": [
+  {
+   "date": "2026-11-20",
+   "method": "HTTP 200，文章 canonical 与 og:url 均等于各自的官方列表 URL（忽略尾斜线）。SHA-256 为当日官方 HTML 原始响应字节。其余 56 篇按本机历史归档核对。",
+   "article_sha256": {
+    "https://www.conmebol.com/noticias/situacion-de-analisis-var-eliminatorias-sudamericanas-bolivia-vs-brasil/": "506c88e547c241a626dc5da0f7d3a29b4fdbe6175ba87bde4877a1b4d139771a",
+    "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-deportivo-tachira/": "a618f521b26926d26968db661bbd98d1e3add22878d9281f7934974cfd5ba6b2",
+    "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-independiente-del-valle-vs-lanus/": "ef84f2ae90aa9106fb1d157df2b50bc84e7bcc0a089de28b8427b8538622550a",
+    "https://www.conmebol.com/noticias/situacion-de-analisis-var-conmebol-sudamericana-atletico-goianiense-vs-nacional/": "31f03db9716577c125581fc943c0cbf6d0aebaac3d6b3d02b0184590de417430"
+   }
   }
  ]
 }

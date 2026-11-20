@@ -14,6 +14,7 @@ import argparse
 import json
 import sys
 
+from lib.conmebol_evidence import event_anchor, event_rows, event_translation
 from lib.ifab_content import documents, version_inputs
 from lib.translation_versions import fingerprint
 from lib.uefa_content import apply_zh, criterion_version
@@ -164,14 +165,13 @@ def coverage():
 
     con, czh = source(CONMEBOL_JSON), translation(CONMEBOL_ZH_JSON)
     for case in con.get("cases", []):
-        if case.get("situacion_es"):
-            key = case["url"]
-            rows.add(
-                "conmebol-zh",
-                "情境描述",
-                key,
-                czh.get("cases", {}).get(key, {}).get("situation"),
-            )
+        url = case["url"]
+        for event in event_rows(case):
+            if event.get("situacion_es"):
+                key = f"{url} · {event_anchor(url, event)} · {event['situacion_es']}"
+                rows.add(
+                    "conmebol-zh", "情境描述", key, event_translation(url, event, czh)
+                )
 
     weekly, wzh = source(WEEKLY_JSON), translation(WEEKLY_ZH_JSON)
     for ep in weekly.get("episodes", []):

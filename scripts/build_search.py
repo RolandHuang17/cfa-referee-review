@@ -16,6 +16,7 @@ import json
 import re
 from collections import Counter
 from lib.ifab_content import search_rows as ifab_search_rows
+from lib.conmebol_evidence import event_anchor, event_rows, event_translation
 from lib.law_blocks import anchored_section
 from lib.pagelib import article_anchor
 from lib.pages import PAGE_FILES
@@ -218,7 +219,33 @@ def build_docs():
     # CONMEBOL
     con, czh = _read(CONMEBOL_JSON), _read(CONMEBOL_ZH_JSON)
     for c in con.get("cases", []):
-        zh = (czh.get("cases", {}).get(c.get("url", "")) or {}).get("situation", "")
+        url = c["url"]
+        match = c.get("match") or c["title"]
+        events = event_rows(c)
+        details = [c["title"], c.get("estadio", "")]
+        for event in events:
+            translated = event_translation(url, event, czh)
+            situation = event.get("situacion_es", "")
+            minute = event.get("minuto", "")
+            video_titles = [v.get("title", "") for v in event["videos"]]
+            terms = [translated, situation, *video_titles]
+            if len(events) == 1:
+                details.extend(terms)
+                if minute:
+                    details.append(f"{minute}′")
+                continue
+            title_parts = [
+                match,
+                f"{minute}′" if minute else "",
+                translated or situation or next(filter(None, video_titles), ""),
+            ]
+            add(
+                "intl",
+                "CONMEBOL 判例时刻",
+                " · ".join(filter(None, title_parts)),
+                f"conmebol.html#{event_anchor(url, event)}",
+                " ".join([c["title"], *terms]),
+            )
         add(
             "intl",
             "CONMEBOL",
@@ -227,14 +254,14 @@ def build_docs():
                     None,
                     (
                         c.get("comp_cn") or c.get("comp"),
-                        c.get("match") or c.get("title"),
+                        match,
                         f"发布 {c['date']}" if c.get("date") else "",
                         "文章详情待核" if c.get("detail_status") == "pending" else "",
                     ),
                 )
             ),
-            f"conmebol.html#{article_anchor(c['url'])}",
-            f"{c.get('title', '')} {zh} {c.get('situacion_es', '')} {c.get('estadio', '')}",
+            f"conmebol.html#{article_anchor(url)}",
+            " ".join(details),
         )
     # RFEF（判例情形中文）
     rfef, rzh = _read(RFEF_JSON), _read(RFEF_ZH_JSON)

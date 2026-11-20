@@ -40,7 +40,17 @@ def sample(tmp_path):
     (tmp_path / "scripts/lib").mkdir(parents=True)
     (tmp_path / "data").mkdir()
     shutil.copy2(ROOT / SCRIPT, tmp_path / SCRIPT)
-    for name in ("paths", "ifab_content", "uefa_content", "translation_versions"):
+    (tmp_path / "src").mkdir()
+    shutil.copy2(ROOT / "src/theme.css", tmp_path / "src/theme.css")
+    for name in (
+        "paths",
+        "ifab_content",
+        "uefa_content",
+        "translation_versions",
+        "conmebol_evidence",
+        "pagelib",
+        "theme",
+    ):
         rel = f"scripts/lib/{name}.py"
         shutil.copy2(ROOT / rel, tmp_path / rel)
     for layer in ("uefa", "ifab", "weekly", "hns", "conmebol", "rfef"):
@@ -62,8 +72,16 @@ def counts(text):
 def test_real_cli_covers_published_translations_and_protected_sections():
     text = cli(ROOT, "-v").stdout
     rows = counts(text)
-    assert rows and all(done == total for done, total in rows.values())
-    assert "有缺口" not in text and "全部译文层覆盖完整" in text
+    assert rows and all(
+        done == total
+        for (layer, _), (done, total) in rows.items()
+        if layer != "conmebol-zh"
+    )
+    con = read(ROOT, "conmebol.json")["cases"]
+    total = sum(bool(e["situacion_es"]) for c in con for e in c["events"])
+    pending = read(ROOT, "conmebol-zh.json")["untranslated"]
+    assert rows["conmebol-zh", "情境描述"] == (total - len(pending), total)
+    assert all(anchor in text and label in text for anchor, label in pending.items())
     groups = read(ROOT, "uefa.json")["groups"]
     assert rows["uefa-zh", "判例标题"][0] == sum(len(g["items"]) for g in groups)
     assert rows["uefa-zh", "准则块"][0] == sum(len(g["criteria"]) for g in groups)
@@ -133,17 +151,18 @@ def test_verbose_prints_every_missing_key_in_source_order_and_full_urls(sample):
     for key in keys:
         del zh["items"][key]
     write(sample, "weekly-zh.json", zh)
-    case = next(
-        c for c in read(sample, "conmebol.json")["cases"] if c.get("situacion_es")
-    )
-    conzh = read(sample, "conmebol-zh.json")
-    del conzh["cases"][case["url"]]
-    write(sample, "conmebol-zh.json", conzh)
+    # 真实南美待译与本次人为制造的八个周更缺口应全部逐项显示。
+    pending = read(sample, "conmebol-zh.json")["untranslated"]
     text = cli(sample, "-v").stdout
     assert text == cli(sample, "-v").stdout
-    assert [
-        line.strip() for line in text.splitlines() if line.startswith("    缺译")
-    ] == ["缺译  " + key for key in [case["url"], *keys]]
+    lines = [line.strip() for line in text.splitlines() if line.startswith("    缺译")]
+    assert lines[-len(keys) :] == ["缺译  " + key for key in keys]
+    con_lines = lines[: -len(keys)]
+    assert len(con_lines) == len(pending)
+    assert all(
+        any(anchor in line and label in line for line in con_lines)
+        for anchor, label in pending.items()
+    )
     n = len(weekly["episodes"])
     assert counts(text)["weekly-zh", "期目译注"] == (n - len(keys), n)
 

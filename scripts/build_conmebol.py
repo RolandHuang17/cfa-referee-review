@@ -9,7 +9,12 @@
 
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
-from lib.conmebol_evidence import evidence_problems
+from lib.conmebol_evidence import (
+    event_anchor,
+    event_rows,
+    event_translation,
+    evidence_problems,
+)
 
 from lib.pagelib import (
     article_anchor,
@@ -76,7 +81,7 @@ __SEARCH_CSS__
 .ccard .go{display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:999px;
   border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
   font-size:12px;font-weight:600;text-decoration:none;white-space:nowrap}
-.ccard .go:hover{background:var(--brand-strong);color:var(--on-brand)}
+.case-event{margin-top:12px;padding-block:10px;border-top:1px solid var(--line);scroll-margin-block-start:calc(var(--top-h) + 12px)}.case-event:target{outline:2px solid var(--brand);outline-offset:3px}.event-copy{color:var(--ink2);line-height:1.6}.event-copy strong{margin-inline-end:.4em}.article-title{color:var(--muted);font-size:13px}.ccard .go{max-width:100%;white-space:normal;overflow-wrap:anywhere}.ccard .go:hover{background:var(--brand-strong);color:var(--on-brand)}
 @media (max-width:760px){.chead .badge{margin-left:0}}
 </style>
 </head>
@@ -99,7 +104,7 @@ __TOPBAR__
   </div>
   __SECTIONS__
   <p class="empty" id="emptyTip">没有匹配的判例——换个关键词或筛选试试。</p>
-  <p class="foot">判例内容版权归 CONMEBOL 所有；本页收录结构化元数据与官方链接（来源 conmebol.com，核对日期 __CHECKED__）。情境已中文译制（conmebol-zh 译制层），官方西语原文保留标注，以原文为准。</p>
+  <p class="foot">判例内容版权归 CONMEBOL 所有；本页收录结构化元数据与官方链接（来源 conmebol.com，全索引核对日期 __CHECKED__）。情境保留官方西语；已有可核译名时并列显示中文。</p>
 </div>
 <script>
 __FILTER_JS__
@@ -109,36 +114,65 @@ __FILTER_JS__
 """
 
 
+def render_event(url, event, zh):
+    eid = event_anchor(url, event)
+    raw = event.get("source_fields")
+    if raw:
+        heading = "官方字段标注不一致"
+        detail = f'<span lang="es">Situación: {esc(raw["situacion_es"])} · Minuto: {esc(raw["minuto"])}</span>'
+    else:
+        translated = event_translation(url, event, zh)
+        heading = " · ".join(
+            filter(None, [event["minuto"] + "′" if event["minuto"] else "", translated])
+        )
+        detail = (
+            f'<span lang="es">{esc(event["situacion_es"])}</span>'
+            if event["situacion_es"]
+            else ""
+        )
+    links = []
+    for video in event["videos"]:
+        lang = {"es": " · 西语", "pt": " · 葡语"}.get(video["lang"], "")
+        title = video["title"] or "判例视频"
+        # 来源字段交叉时展示录像原题，观众可独立核对。
+        link_text = title if raw else f"判例视频{lang}"
+        accessible_name = (
+            f"{link_text} · {title}" if video["title"] and not raw else link_text
+        )
+        links.append(
+            f'<a class="go" href="{esc(video["url"])}" target="_blank" rel="noopener noreferrer" '
+            f'title="{esc(title)}" aria-label="{esc(accessible_name)}">{icon("play", 11)} {esc(link_text)}</a>'
+        )
+    target = f' id="{esc(eid)}" tabindex="-1"' if eid != article_anchor(url) else ""
+    return (
+        f'<div class="case-event"{target}><div class="event-copy"><strong>{esc(heading)}</strong> '
+        f'{detail}</div><div class="clinks">{"".join(links)}</div></div>'
+    )
+
+
 def build_page(data, zh=None):
     problems = evidence_problems(data)
     if problems:
         raise ValueError(problems[0])
     cases = data.get("cases", [])
-    zcases = (zh or {}).get("cases", {})
-    used = set()
-    for c in cases:
-        z = zcases.get(c.get("url", ""))
-        c.pop("situacion_zh", None)
-        if c.get("situacion_es") and z and z.get("situation"):
-            c["situacion_zh"] = z["situation"]
-            used.add(c.get("url", ""))
-    for k in zcases:
-        if k not in used:
-            print(f"⚠ conmebol-zh cases 键不在 conmebol.json 中（疑似过期）: {k[:80]}")
-    comps = sorted({c.get("comp") for c in cases if c.get("comp")})
-    classified = [c for c in cases if c.get("detail_status") != "pending"]
-    sits = sorted(
-        {c.get("situacion_norm") for c in classified if c.get("situacion_norm")}
-    )
-    comp_chips = "".join(
-        f'<button class="chip" data-f="{esc(k)}">{esc(COMP_CN.get(k, k))} '
-        f"<b>{sum(1 for c in cases if c.get('comp') == k)}</b></button>"
-        for k in comps
-    )
-    sit_chips = "".join(
-        f'<button class="chip" data-f="{esc(k)}">{esc(SIT_LABEL.get(k, k))} '
-        f"<b>{sum(1 for c in classified if c.get('situacion_norm') == k)}</b></button>"
-        for k in sits
+    zh = zh or {}
+    comps = sorted({c["comp"] for c in cases if c.get("comp")})
+    kinds_by_url = {
+        c["url"]: set(e["situacion_norm"] for e in event_rows(c)) for c in cases
+    }
+
+    # Delimit tokens on both sides so "penalty" cannot match "no_penalty".
+    def chips(values, label, count):
+        return "".join(
+            f'<button class="chip" data-f="|{esc(key)}|">{esc(label.get(key, key))} '
+            f"<b>{count(key)}</b></button>"
+            for key in values
+        )
+
+    comp_chips = chips(comps, COMP_CN, lambda k: sum(c.get("comp") == k for c in cases))
+    sits = sorted({key for values in kinds_by_url.values() for key in values})
+    sit_chips = chips(
+        sits, SIT_LABEL, lambda k: sum(k in values for values in kinds_by_url.values())
     )
     secs = ""
     for y, ycases in group_by_year(
@@ -148,71 +182,72 @@ def build_page(data, zh=None):
     ):
         rows = ""
         for c in ycases:
+            url = c["url"]
             pending = c.get("detail_status") == "pending"
-            kinds = " ".join(
-                filter(
-                    None, [c.get("comp"), "" if pending else c.get("situacion_norm")]
-                )
+            events = event_rows(c)
+            kinds = (
+                "|"
+                + "|".join(filter(None, [c.get("comp"), *sorted(kinds_by_url[url])]))
+                + "|"
             )
             norm = c.get("situacion_norm", "other")
-            badge = "pending" if pending else SIT_BADGE.get(norm, "info")
-            label = "文章详情待核" if pending else SIT_LABEL.get(norm, "判例")
-            source_title = f'<p lang="es">{esc(c["title"])}</p>' if pending else ""
+            badge = (
+                "pending"
+                if pending
+                else SIT_BADGE.get(norm, "info")
+                if len(events) == 1
+                else "info"
+            )
+            label = (
+                "文章详情待核"
+                if pending
+                else f"{len(events)} 个情境"
+                if len(events) > 1
+                else SIT_LABEL.get(norm, "判例")
+            )
+            title_match = c["title"].rsplit(":", 1)[-1].strip()
+            source_title = (
+                f'<p class="article-title">官方文章标题 · <span lang="es">{esc(c["title"])}</span></p>'
+                if pending or title_match.casefold() != c["match"].casefold()
+                else ""
+            )
             meta = "".join(
                 f'<span class="chip">{esc(v)}</span>'
                 for v in (
                     f"文章发布 {c['date']}" if pending else "",
-                    c.get("fecha", ""),
-                    c.get("minuto", "") and c["minuto"] + "′",
-                    c.get("ciudad", ""),
-                    c.get("estadio", ""),
-                    COMP_CN.get(c.get("comp", ""), ""),
+                    c.get("fecha"),
+                    c.get("ciudad"),
+                    c.get("estadio"),
+                    COMP_CN.get(c.get("comp")),
                 )
                 if v
             )
-            if c.get("situacion_zh"):
-                es_sit = f'<span class="chip">情境：{esc(c["situacion_zh"])}</span>'
-                if c.get("situacion_es") and c["situacion_es"].lower() != label.lower():
-                    es_sit += f'<span class="chip" title="官方西语原文">原文: {esc(c["situacion_es"])}</span>'
-            else:
-                if c.get("situacion_es"):
-                    print(
-                        f"⚠ conmebol-zh 缺该案情境译制，回退西语: {c.get('url', '')[:70]}"
-                    )
-                es_sit = (
-                    f'<span class="chip" title="官方原文">Situación: {esc(c["situacion_es"])}</span>'
-                    if c.get("situacion_es")
-                    and c["situacion_es"].lower() != label.lower()
-                    else ""
+            details = "".join(render_event(url, e, zh) for e in events)
+            words = []
+            for e in events:
+                words.extend(
+                    [e["minuto"], e["situacion_es"], event_translation(url, e, zh)]
                 )
-            links = (
-                f'<a class="go" href="{esc(c["url"])}" target="_blank" rel="noopener noreferrer">'
-                f"{icon('note', 11)} 官方分析</a>"
-            )
-            if c.get("youtube"):
-                links += (
-                    f'<a class="go" href="{esc(c["youtube"])}" target="_blank" '
-                    f'rel="noopener noreferrer">{icon("play", 11)} 判例视频</a>'
-                )
+                words.extend(e.get("source_fields", {}).values())
+                words.extend(v["title"] for v in e["videos"])
             blob = search_blob(
-                c.get("match") or c.get("title"),
-                c.get("title") if pending else "",
-                c.get("date") if pending else "",
+                c.get("match"),
+                c["title"],
+                c.get("date"),
                 c.get("fecha"),
                 c.get("ciudad"),
                 c.get("estadio"),
-                COMP_CN.get(c.get("comp", ""), ""),
-                c.get("situacion_zh"),
-                c.get("situacion_es"),
+                COMP_CN.get(c.get("comp")),
                 label,
+                *words,
             )
-            rows += f"""<article class="ccard" id="{article_anchor(c["url"])}" tabindex="-1" data-kinds="{esc(kinds)}" data-search="{blob}">
+            rows += f"""<article class="ccard" id="{article_anchor(url)}" tabindex="-1" data-kinds="{esc(kinds)}" data-search="{blob}">
   <div class="chead"><span class="cmatch">{esc(c.get("match") or c["title"])}</span>
     <span class="badge {badge}">{esc(label)}</span></div>
-{source_title}
-  <div class="cinfo">{meta}{es_sit}</div>
-  <div class="clinks">{links}</div>
+  {source_title}<div class="cinfo">{meta}</div>{details}
+  <div class="clinks"><a class="go" href="{esc(url)}" target="_blank" rel="noopener noreferrer">{icon("note", 11)} 官方分析</a></div>
 </article>"""
+
         secs += (
             f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>'
             f'{len(ycases)} 案</small></h3><div id="ybody-{esc(y)}">{rows}</div>'

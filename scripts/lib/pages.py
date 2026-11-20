@@ -133,8 +133,8 @@ PAGES = [
     {
         "file": "conmebol.html",
         "title": "南美 CONMEBOL VAR 判例",
-        "desc": "南美足联《Situación de Análisis VAR》60 案：比赛情境、官方分析"
-        "与判例视频链接，情境中文译制。",
+        "desc": "南美足联《Situación de Análisis VAR》逐场文章与比赛时刻，含官方视频、"
+        "西语情境及已核中文译名。",
         "priority": "0.6",
         "changefreq": "monthly",
     },

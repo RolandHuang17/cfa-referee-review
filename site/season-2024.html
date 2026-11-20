@@ -801,6 +801,8 @@ class LearningRecords {
     this.obsolete = new Map();
     this.unreadable = new Map();
     this.readFailed = false;
+    this.legacyBlocked = false;
+    this.legacyTimes = new Map();
   }
   validValue(value) {
     if (!value || typeof value !== "object" || Array.isArray(value)) return false;
@@ -808,9 +810,28 @@ class LearningRecords {
       (value.conflicts === undefined || (Array.isArray(value.conflicts) &&
         value.conflicts.every(copy => copy && typeof copy.text === "string"))));
   }
+  legacyEntry(id, value, unreadable = this.unreadable) {
+    const at = Number.isSafeInteger(value.ts) ? value.ts : 0;
+    // Timestamp ties are possible between two old writers. Give different text
+    // a stable identity without duplicating a long note in the storage key.
+    let hash = 2166136261;
+    for (let i = 0; i < value.text.length; i++) hash = Math.imul(hash ^ value.text.charCodeAt(i), 16777619);
+    let name = this.prefix + encodeURIComponent(id) + ".legacy-" + at + "-" + (hash >>> 0).toString(36);
+    while (unreadable.has(name)) name += ".copy";
+    return {name, id, at, value, parents:[]};
+  }
+  saveLegacy({name, ...entry}) { localStorage.setItem(name, JSON.stringify(entry)); }
+  observed(id) {
+    const versions = this.versions.get(id);
+    if (versions?.length) return versions;
+    const old = this.records[id];
+    return this.notes && old?.text ? [this.legacyEntry(id, old)] : [];
+  }
   scan() {
     const unreadable = new Map();
     const records = Object.create(null);
+    const legacyTimes = new Map();
+    let legacyBlocked = false;
     const aggregate = localStorage.getItem(this.key);
     if (aggregate !== null) {
       try {
@@ -820,6 +841,7 @@ class LearningRecords {
         for (const [id, value] of Object.entries(raw)) {
           if (!this.validValue(value)) { unreadable.set(this.key, aggregate); continue; }
           records[this.listKey ? this.listKey(value) : id] = value;
+          if (this.notes && Number.isSafeInteger(value.ts)) legacyTimes.set(id, value.ts);
         }
       } catch (_) { unreadable.set(this.key, aggregate); }
     }
@@ -850,11 +872,23 @@ class LearningRecords {
       const items = candidates.filter(entry => !superseded.has(entry.name));
       versions.set(id, items);
       items.sort((a, b) => b.at - a.at || b.name.localeCompare(a.name));
+      // Old pages still edit the aggregate directly. Promote a later, distinct
+      // edit to its own revision before any tab republishes the compatibility snapshot.
+      const old = records[id];
+      if (this.notes && items.length && old?.text && Number.isSafeInteger(old.ts) && old.ts >= items[0].at &&
+          !items.some(item => item.previousLegacyTS === old.ts || item.value?.text === old.text)) {
+        const revision = this.legacyEntry(id, old, unreadable);
+        try { this.saveLegacy(revision); }
+        catch (_) { legacyBlocked = true; } // The aggregate and normal JSON export still contain the edit.
+        items.unshift(revision);
+      }
       const values = items.map(item => item.value);
       const value = this.notes ? this.mergeNoteVersions(values) : values[0];
       if (value) records[id] = value;
       else delete records[id];
     }
+    this.legacyTimes = legacyTimes;
+    this.legacyBlocked = legacyBlocked;
     this.unreadable = unreadable;
     this.readFailed = false;
     this.obsolete = obsolete;
@@ -881,8 +915,7 @@ class LearningRecords {
     for (const [id, op] of this.pending) {
       let value = op.value;
       if (this.notes) {
-        const siblings = (this.versions.get(id) || [])
-          .filter(entry => entry.name !== op.name && !op.parents.includes(entry.name));
+        const siblings = this.observed(id).filter(entry => entry.name !== op.name && !op.parents.includes(entry.name));
         value = this.mergeNoteVersions([value, ...siblings.map(entry => entry.value)]);
       }
       if (value) out[id] = value;
@@ -891,7 +924,7 @@ class LearningRecords {
     return out;
   }
   base(id, all = false) {
-    const versions = this.versions.get(String(id)) || [];
+    const versions = this.observed(String(id));
     if (!this.notes || all) return versions.map(v => v.name);
     const primary = versions.find(v => v.value && v.value.text) || versions[0];
     return primary ? [primary.name] : [];
@@ -917,13 +950,25 @@ class LearningRecords {
     const completed = [];
     try {
       this.scan();
+      if (this.legacyBlocked) return false;
       for (const id of ids) {
         const op = this.pending.get(id);
         if (!op) continue;
         try {
           if (!op.stored) {
+            // A legacy-only row may have changed after the editor opened and
+            // before its very first versioned save. Keep that unseen revision too.
+            if (this.notes && !this.versions.has(id)) {
+              const old = this.observed(id)[0];
+              if (old && !op.parents.includes(old.name)) this.saveLegacy(old);
+            }
             op.parents = [...new Set([...op.parents, ...(this.obsolete.get(id) || [])])];
-            localStorage.setItem(op.name, JSON.stringify({id, at:op.at, value:op.value, parents:op.parents}));
+            const entry = {id, at:op.at, value:op.value, parents:op.parents};
+            // An imported note may have been dated ahead of this device. Do not
+            // mistake its old mirror for a fresh edit while replacing or deleting it.
+            const previousTime = this.legacyTimes.get(id);
+            if (previousTime >= op.at) entry.previousLegacyTS = previousTime;
+            localStorage.setItem(op.name, JSON.stringify(entry));
             op.stored = true;
           }
           for (const parent of op.parents) if (!this.unreadable.has(parent)) localStorage.removeItem(parent);
@@ -932,6 +977,7 @@ class LearningRecords {
       }
       // Include other tabs' durable revisions and publish the old-format snapshot once.
       this.scan();
+      if (this.legacyBlocked) return false;
       if (!this.unreadable.has(this.key) && ids.some(id => this.pending.get(id)?.stored))
         localStorage.setItem(this.key, JSON.stringify(this.listKey ? Object.values(this.records) : this.records));
       for (const id of completed) this.pending.delete(id);
@@ -1022,7 +1068,7 @@ class LearningNoteEditor {
       this.timer = setTimeout(() => this.flush(), 800);
     });
     window.addEventListener("storage", e => {
-      if (!this.id || !e.key?.startsWith(store.prefix + encodeURIComponent(this.id) + ".")) return;
+      if (!this.id || (e.key !== store.key && !e.key?.startsWith(store.prefix + encodeURIComponent(this.id) + "."))) return;
       const note = store.read()[this.id];
       this.showCopies(note);
       if (!this.timer && !store.pending.has(this.id) && (note?.text || "") !== this.input.value) {

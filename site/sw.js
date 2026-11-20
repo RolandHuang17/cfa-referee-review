@@ -1,5 +1,5 @@
 "use strict";
-const VERSION = "78176b73c74faeab";
+const VERSION = "1c00006aa8b9ce76";
 const SCOPE = new URL(self.registration.scope).pathname;
 const PREFIX = "cfa-site-" + encodeURIComponent(SCOPE) + "-";
 const CACHE = PREFIX + VERSION;

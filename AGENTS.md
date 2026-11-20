@@ -6,9 +6,9 @@
 
 「裁判学习一站式平台」：抓取中国足协官网 **2024+2025+2026 三个赛季全部 85 期裁判评议**（2025：32期227判例229视频；2024：27期160判例161视频；2026：赛季进行中，已收26期240判例239视频），按新裁判统一尺度教学分类重组，生成为**完全离线的静态网页**（双击 index.html 即可用，无需任何服务），附带各队得失盘点统计页（stats-2026/2025/2024.html）、官方《统一判罚尺度》宣讲页（scale.html，2024–2026 三季 104 例场景视频+判罚决定）、欧足联 Clear Line 判例库（uefa.html，UEFA 官方判例中文译制——中文为主、英文原文可切换，逐例官方视频链接）与竞赛规则 2026-27 简体版（rules.html，由 IFAB 官方繁体 PDF 自动转换，支持划词高亮与章节笔记）。
 
-核心交付物是 `site/` 下的**二十三个自包含 HTML 文件**（CSS/JS/数据全部内联）+ 发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js / 404.html）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
+核心交付物是 `site/` 下的 **22 个学习页面和 1 个 404 页面**，以及发现层/PWA 附属文件（feed.xml / sitemap.xml / robots.txt / manifest.webmanifest / sw.js）+ `site/videos/` 本地视频文件夹（按赛季分子目录）：
 - `site/index.html` 门户首页（判例研习、分类资料目录、个人学习进度与浏览模式开关）
-- `site/search.html` 全站统一搜索（构建期内联 3400+ 份可搜文档：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
+- `site/search.html` 全站统一搜索（构建期内联检索文档，当前快照共 3,778 份：三赛季判例 desc/appeal/conclusion、规则章节全文、尺度场景、国际资料标题与要点；中文子串匹配 + 四分组过滤 + 命中高亮）
 - `site/season-2026.html` / `season-2025.html` / `season-2024.html` 各赛季判例合集
 - `site/stats-2026.html` / `stats-2025.html` / `stats-2024.html` 各队得失盘点（顶部「趋势概览」构建期 SVG：逐期错漏判/VAR 错误趋势 + 教学分类×判定分布）
 - `site/rules.html` 竞赛规则（划词高亮/章节笔记/导出导入）
@@ -16,7 +16,7 @@
 - `site/uefa.html` 欧足联 Clear Line 判例库（中文译制+英文原文开关+逐例官方视频链接；视频受 token 门禁不本地化，页面纯链接模式）
 - `site/rap.html` UEFA RAP 判例训练包导航页（训练方法说明 + 23 期索引：Nextaur 在线期与历史下载包分区，纯指南页不收录判例内容）
 - `site/rfef.html` 西班牙 CTA《Criterios Arbitrales》判罚标准手册（RFEF 官方手册中文译制 + 西语原文开关 + 本地化判例视频，缺失时回退官方直链）
-- `site/conmebol.html` 南美 VAR 判例（CONMEBOL《Situación de Análisis VAR》60 案：比赛/日期/城市/球场/情境/分钟 + 官方 YouTube 判例视频链接；列表页+文章页双级抓取）
+- `site/conmebol.html` 南美 VAR 判例（CONMEBOL《Situación de Análisis VAR》60 篇文章、88 个判例时刻、95 段官方视频。按时刻展示情境、分钟和可选视频语言）
 - `site/intl.html` 全球评议资源导航（4 组 23 项：官方周更节目/文章、YouTube 频道型、VAR 音频透明化、官方课程与测验；已在 weekly.html 建立索引的节目特别标注并互链；人工策展 intl.json）
 - `site/pro.html` 美国 PRO 评议索引（MLS/NWSL 周更 VAR 评析全量 228 篇：Inside Video Review / VAR a Fondo / The Definitive Angle，纯链接索引）+ USSF 视频入口指南
 - `site/weekly.html` 全球周更评议节目判例库（苏格兰/土耳其/日本/英格兰/墨西哥/阿根廷/俄罗斯七档 YouTube 官方节目 + 乌克兰 UAF 文章型源，结构化期目索引 246 期：官方说明原文 + 中文译注层全覆盖，逐期跳官方页）
@@ -154,7 +154,7 @@ python scripts/fetch_hns.py [all]             # 12.19 (新轮发布时) 抓 HNS�
                                               #     hns.family/hns/suci 栏目最新数篇 + SEED_IDS 历史种子，增量合并
 python scripts/build_hns.py                   # 12.20 生成 hns.html（hns.json + hns-zh.json 判例级译制层）
 python scripts/build_cheatsheet.py            # 12.20b 生成 cheatsheet.html（data/cheatsheet.json 策表 → 翻卡+打印讲义）
-python scripts/build_search.py                # 12.21 生成 search.html（全站统一搜索，~1500 份文档内联）
+python scripts/build_search.py                # 12.21 生成 search.html（全站统一搜索，运行时输出各分组实际文档数）
 python scripts/build_pwa.py                   # 12.22 生成 manifest.webmanifest + icon.svg + sw.js（在线版离线）
 python scripts/build_seo.py                   # 12.23 生成 sitemap.xml + robots.txt + 404.html（页面清单来自 lib/pages.py）
 python scripts/build_feed.py                  # 12.24 生成 feed.xml（Atom 订阅：三赛季各取最新 8 期）
@@ -245,13 +245,14 @@ python tests/test_integrity.py                # 收尾：完整性断言（也�
 
 ### conmebol.json（南美 VAR 判例，fetch_conmebol.py 产物，提交进仓库）
 - `{source, source_name, fetched, cases[]}`；`cases[]{title, url, date, excerpt_es, comp, comp_cn, match, fecha, ciudad, estadio, situacion_es, situacion_norm, minuto, youtube}`
-- 双级抓取：Elementor 列表页（分页 /2/…/10/，data-max-page 指示）+ 每案文章页增强（字段各自独立成 <p>，全页剥标签后取最后一组完整字段；YouTube 取字段区之后首个 embed）
+- 列表记录决定文章身份和发布日期。缓存以完整 URL 的 SHA-256 命名，正文核对 canonical / og:url。解析器只读取文章正文部件，按 DOM 顺序将分钟、情境与该段的一个或多个视频配对。
+- 每篇的 `events[]` 保存 `situacion_es`、`situacion_norm`、`minuto` 及 `videos[{url,title,lang}]`。原有扁平字段保留首段投影。遇官方字段互换，保留在 `source_fields`，页面展示原值与视频原题。
 - situacion_norm 归一：penalty/no_penalty/red_card/offside/no_offside/goal/no_goal/ofr_penalty/other（官方西语原文保留在 situacion_es）
 
 UEFA、RFEF、CONMEBOL 与 IFAB 的正式快照由 `lib/source_snapshot.py` 比较来源记录后原子替换。使用相应抓取命令的 `all --refresh` 联网复核，`parse` 读取本地缓存。缺页或既有记录缺失应先核查来源。纯缓存重解析沿用原核查日期。
 
 ### conmebol-zh.json（conmebol 情境译制层，并存提交，绝不可互相覆写）
-- `{note, translated, cases{url: {situation}}}`——按判例文章 url 平铺（rfef-zh 同构，无块序脆弱性）；命中即中文情境主显、西语原文保留标注，未命中回退西语并 ⚠；无官方情境标签（situacion_es 空）的案子不要求译文
+- `cases[url]` 将既有译文与本篇的西语情境配对。其他时刻可精确复用有唯一人工译名依据的 `terms`。`untranslated` 按事件登记尚缺的原文，`pending_cases` 保存此前三份错配来源的历史译稿。
 - 与 uefa-zh/rfef-zh 一致的对齐断言在 tests/test_integrity.py（test_uefa_rfef_conmebol_zh_aligned）
 
 ### weekly.json（全球周更评议节目期目索引，fetch_weekly.py 产物，提交进仓库）
@@ -393,7 +394,7 @@ UEFA、RFEF、CONMEBOL 与 IFAB 的正式快照由 `lib/source_snapshot.py` 比�
 ## 已知不足（欢迎改进）
 
 - 2026 赛季进行中：持续跑 fetch→parse→classify→impact 增量更新；影响统计的 79 场比分已全量核验（2026-10-25，维基赛季条目赛果表+抽样交叉验证）；2024 第1期判例三（seq3）因原文未载明对阵与防守方无法归因受损队，未纳入影响统计（make_impact_2024.py UNATTRIBUTABLE 有注）；2025 seq215 红牌问题官方不予认定但黄牌认定明确，按合集口径计为漏判黄牌（ISSUE_NOTES 期31 有注）
-- search.html 索引内联 ~950KB（判例/规则/尺度全量 + 国际资料截断），中文子串线性扫描已够快；进一步瘦身可用前缀索引（见 docs/ROADMAP.md 候选）；PRO/HNS/CONMEBOL/RFEF 的国际资料条目无逐条锚点，搜索结果跳页面级
+- search.html 在构建时内联检索文档。PRO 文章、HNS 判例、CONMEBOL 文章与多段时刻、RFEF 判例、IFAB 条款等各有站内锚点；加入新文档时应验证生成页面和目标，尺寸及数量从实际构建获取。
 - xlinks.json 的 dogso/sfp_vc/simulation/goal_decision 四类暂无专属尺度场景组（官方三季宣讲未单设），只链规则章节；官方增设后补策表即可
 - weekly.html 的中文译注层目前覆盖节目简介与各节目近期期目，其余回退官方原文说明（按 weekly-zh 增量补译）；英格兰《Mic'd Up》因官方发布形态分散（Sky 频道内短片、无完整播放列表）仅收录 3 期；YouTube 存量回补依赖页面 ytInitialData 结构，若其变更则仅影响回补通道（RSS 主通道不受影响）；ifab-zh.json 为 2026-10 首译，欢迎对照官方英文原文修订
 - 114 支标准队伍中 42 支无可靠来源队徽（历史队/女足/全运会省队为主），显示文字徽章；人工补录已于 2026-10 止步（2026 在册男足仅余山西崇德荣海一支），维基体系与懂球帝（DoH 解析失败被 safe_http 拦截）之外的自动源已穷尽

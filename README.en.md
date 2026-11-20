@@ -3,24 +3,24 @@
 [中文文档](README.md) · This is the concise English overview.
 
 A fully offline-capable static site that archives **all 85 issues of the Chinese Football
-Association's official referee reviews (2024–2026 seasons, 627 cases with video)**,
+Association's official referee reviews (2024–2026 seasons, 627 cases, 629 videos covering 623 cases)**,
 re-organized by a unified teaching taxonomy, plus:
 
 - **Paired case lessons** (compare.html) — four two-case exercises with official CFA evidence, replayable observation clips and printable personal reviews. Pick any two cases in the same teaching category across the three seasons to read them side by side.
 - **[Coach lesson planner](site/compare.html#coach)** lets instructors order cases from all three seasons, write prompts, present one case at a time and reveal the CFA decision on demand. Share a discussion or review handout by link, standalone HTML or print. A separate JSON backup carries private teaching notes between devices.
 - **Case citations** can be copied at the foot of a season case. They include the official decision, dated sources and a link back to the case. While the answer is hidden, the button copies the sources and a blind-practice link. A selectable text field supports offline copying.
-- **Per-team impact stats** (stats-2026/2025/2024.html) — every officially confirmed
-  wrong call, score-correction analysis, both victim/beneficiary views.
+- **Season filters and search** keep the current criteria on refresh. Share public filters from a season page, or open a search result directly at an offline rule paragraph, programme or international article.
+- **Per-team impact stats** (stats-2026/2025/2024.html) cover errors attributable to a team in the men's top three leagues and FA Cup. View either team's perspective and the score adjustment for goal decisions.
 - **Official unified-caliber briefings** (scale.html) — 104 typical scenarios across
   three seasons with official videos and decision matrices.
 - **Laws of the Game 2026/27 in Simplified Chinese** (rules.html) — converted from the
   official IFAB traditional-Chinese PDF, with highlighting and per-chapter notes.
 - **International referee-review library** — official sources translated into Chinese:
   UEFA Clear Line (83 cases), IFAB VAR protocol (full text + FAQ), Spain's RFEF
-  Criterios Arbitrales, USA PRO weekly reviews (228 articles), CONMEBOL VAR cases,
+  Criterios Arbitrales, USA PRO weekly reviews (228 articles), CONMEBOL VAR reviews (60 articles, 88 incidents and 95 videos),
   Croatia's HNS weekly analyses, plus a global directory of 23 official resources.
 - **Quiz mode** (quiz.html) — 842 questions with spaced repetition
-  (Leitner scheduler), category-specific drills for weak topics, a wrong-answer book, and Anki TSV export.
+  (Leitner scheduler), category-specific drills for weak topics, a wrong-answer book, and Anki TSV export. Refreshing a mock exam in the same tab restores its answers and original deadline.
 
 ## Key properties
 

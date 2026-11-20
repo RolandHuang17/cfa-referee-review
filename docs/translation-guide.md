@@ -11,14 +11,14 @@
 |---|---|---|---|
 | `uefa-zh.json` | `uefa.json` | 组按 key，判例按视频 ID，准则按整块现行原文与历史译块配对 | 判例标题、组名、导语和准则 |
 | `rfef-zh.json` | `rfef.json` | 栏目按 key、分组按 code、判例按 id | 判例情形（situation） |
-| `conmebol-zh.json` | `conmebol.json` | 案例按文章 url | 官方情境（situacion_es 非空的案子） |
+| `conmebol-zh.json` | `conmebol.json` | 匹配文章和情境原词，或复用该词唯一的已核译名 | 有可核西语标签的时刻，逐项登记缺译 |
 | `weekly-zh.json` | `weekly.json` | 期目按 videoId、节目按 show key | 各期 note 译注 |
 | `ifab-zh.json` | `ifab.json` | 主协议与配套资料按 id，条款块按英文小节标题（节首为 `_head`），FAQ 按本节内 id | 文档标题、小节标题、正文条款和问答 |
 | `hns-zh.json` | `hns.json` | 轮次按 id、判例按 no | 判例 paras（与原文 1:1 条数对齐） |
 
 运行 `python scripts/translation_status.py` 查看各类对象的覆盖数，加 `-v` 可按当前资料顺序列出每项缺口。「缺译」表示该项缺少可用中文。「待复核」表示存在历史译文，当前来源版本、结构或身份需要核对。若官网新增或改写了一个无稳定 ID 的准则块，应从所在组核对它与旧译的关系。
 
-UEFA 与 IFAB 的覆盖数使用详情页实际能配对的译文。RFEF、CONMEBOL、weekly 和 HNS 的这一统计按上表所列文字字段是否已经填写计算。这四层目前没有逐条原文版本指纹，同一文章、节目或判例更新后仍需对照官方原文检查。HNS 的段落条数对齐另由完整性测试检查。[数据结构与约束](../AGENTS.md)
+UEFA、IFAB 和 CONMEBOL 的覆盖数使用详情页实际能配对的译文。CONMEBOL 的 `untranslated` 用时刻锚点登记尚无已核译名的西语原词，`pending_cases` 留存有来源归属问题的历史稿。RFEF、weekly 和 HNS 按上表所列文字字段统计；这些来源变更时仍需逐项对照。HNS 的段落条数另有完整性测试。[数据结构与约束](../AGENTS.md)
 
 ## 补译工作流
 

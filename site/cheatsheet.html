@@ -6,40 +6,62 @@
 <title>考点速查卡 · 裁判学习平台</title>
 <style>
 .cs-head{border-bottom:1px solid var(--line);background:var(--bg2)}
-.cs-head .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 16px}
-.cs-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:24px;letter-spacing:.4px}
-.cs-head .sub{color:var(--muted);font-size:13px;line-height:1.8}
-.cs-grid{max-width:1040px;margin:0 auto;padding:20px 16px 70px;display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.card3d{perspective:1200px;min-height:300px}
-.flip{position:relative;width:100%;height:100%;min-height:300px;cursor:pointer;
-  transition:transform .5s var(--ease);transform-style:preserve-3d}
-.card3d.flipped .flip{transform:rotateY(180deg)}
-.cface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:18px 20px;
-  display:flex;flex-direction:column;overflow:auto}
-.cface.back{transform:rotateY(180deg);border-color:var(--brand);background:var(--card2)}
-.cf-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.cf-ic{font-size:26px;flex:none}
-.cf-top h2{margin:0;font-family:var(--font-display);font-size:18.5px;flex:1}
-.cf-tag{font-size:12px;color:var(--brand);font-weight:600;margin:2px 0 10px}
-.cf-hint{margin-top:auto;padding-top:10px;font-size:11.5px;color:var(--faint);
-  border-top:1px dashed var(--line)}
-.cf-f li{margin:8px 0;font-size:13.8px;line-height:1.75;color:var(--ink)}
-.cf-f{padding-left:18px;margin:6px 0 4px}
-.cb-sec{margin-bottom:12px}
-.cb-sec h3{margin:0 0 5px;font-size:13px;color:var(--brand);letter-spacing:.5px}
-.cb-sec ul{margin:0;padding-left:16px}
-.cb-sec li{margin:4px 0;font-size:12.8px;line-height:1.7;color:var(--ink2)}
+.cs-head .wrap,.cs-grid{max-width:1040px;margin:auto;padding-inline:clamp(16px,3vw,32px)}
+.cs-head .wrap{padding-block:24px 20px}
+.cs-head h1{margin:0;font:700 26px/1.3 var(--font-display)}
+.cs-head p{margin:6px 0;color:var(--muted);line-height:1.65}
+.print-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.print-tools[hidden],.print-caption{display:none}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,295px),1fr));
+  align-items:start;gap:16px;padding-block:20px 64px}
+.study-card{scroll-margin-block-start:calc(var(--top-h,50px) + 12px);min-width:0;padding:17px 20px 19px;
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card)}
+.study-card:target{border-color:var(--brand);box-shadow:inset 3px 0 var(--brand)}
+.study-card h2{margin:0;font:700 20px/1.45 var(--font-display);overflow-wrap:anywhere}
+.card-icon{margin-inline-end:8px;font-size:20px}
+.study-card summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;
+  color:var(--brand);font-size:13px;font-weight:650}
+.study-card summary:hover{text-decoration:underline;text-underline-offset:.2em}
+.study-card .to-front,.study-card details[open] .to-back{display:none}
+.study-card details[open] .to-front{display:inline}
+.study-card li{margin:5px 0;overflow-wrap:anywhere}
+.study-card ul{padding-inline-start:1.3em;margin:5px 0}
+.card-front,.card-back{border-top:1px solid var(--line);padding-top:10px}
+.tagline,.card-back h3{color:var(--brand);font-size:13px;font-weight:650;line-height:1.5}
+.tagline{margin:0 0 10px}
+.card-back section+section{margin-top:12px}
+.card-back h3{margin:0 0 3px}
+.card-back ul{color:var(--ink2)}
+@media screen{
+  .study-card details[open]+.card-front{display:none}
+}
+@media screen and (prefers-reduced-motion:no-preference){
+  .study-card details[open] .card-back{animation:turn-card .22s ease-out;transform-origin:top left}
+  @keyframes turn-card{from{opacity:.55;transform:perspective(850px) rotateY(-7deg)}}
+}
+@page{size:A4;margin:12mm}
 @media print{
-  .cs-grid{display:block}
-  .card3d{min-height:0;page-break-inside:avoid;margin-bottom:14px;perspective:none}
-  .flip{transform:none !important;transition:none;min-height:0;display:flex;flex-direction:column}
-  .cface{position:static;backface-visibility:visible;transform:none !important;min-height:0;
-    border-radius:0;border:1px solid #999;background:#fff;overflow:visible}
-  .cface.back{border-top:none;margin-top:-1px}
-  .cf-hint{display:none}
-  body{background:#fff;color:#000}
+  .cs-head,.study-card{background:white;color:black}
+  .cs-head .wrap,.cs-grid{max-width:none;margin:0;padding:0}
+  .cs-head{margin-bottom:3mm;border-color:#777}
+  .cs-head h1{font-size:17pt}
+  .cs-head .sub,.print-tools,.study-card summary,.card-icon{display:none}
+  .print-caption{display:block;margin:1mm 0 2mm;font-size:9pt}
+  .cs-grid{display:block;column-count:2;column-gap:7mm}
+  .study-card,.study-card:target{display:flex;flex-direction:column;break-inside:avoid;
+    margin:0 0 4mm;padding:2mm 0 0;border:0;border-top:1px solid #666;border-radius:0;box-shadow:none}
+  .study-card h2{font-size:12pt}
+  .study-card details{order:2}
+  .study-card details::details-content{display:contents;content-visibility:visible}
+  .study-card ul{margin:1mm 0;padding-inline-start:1.2em}
+  .study-card li{margin:.45mm 0;font-size:9.5pt;line-height:1.35}
+  .tagline,.card-back h3{margin:1mm 0;color:#222;font-size:9.5pt}
+  .card-front,.card-back{padding:0;border:0}
+  .card-back section+section{margin-top:2mm}
+  html[data-print-front] .cs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4mm}
+  html[data-print-front] .study-card{display:block;margin:0;break-inside:avoid}
+  html[data-print-front] .study-card details{display:none}
+  html[data-print-front] .study-card li{font-size:11pt;line-height:1.4;margin:1mm 0}
 }
 </style>
 <meta name="description" content="考前一夜的 9 张速查卡：手球考量链、犯规三档、DOGSO 与 SPA、VAR 介入、红黄牌速查、点球程序、越位三步、重新开始方式与 2026/27 新规；手机翻卡 + 可打印讲义。">
@@ -393,32 +415,122 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
 
 </style><script>try{var t=localStorage.getItem('cfa.theme');if(t!=='light'&&t!=='dark')t=matchMedia('(prefers-color-scheme: light)').matches?'light':'dark';document.documentElement.dataset.theme=t;if(localStorage.getItem('cfa.lite')==='1')document.documentElement.dataset.lite='1';if(localStorage.getItem('cfa.hideans')==='1')document.documentElement.dataset.hideans='1'}catch(e){}</script></head>
 <body>
+<a class="skip-link" href="#main">跳到速查卡</a>
 <header class="topbar"><button class="tbtn" id="btnNav" title="站点导航" aria-label="站点导航" aria-expanded="false" aria-controls="navDrawer"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button><a class="brand" href="index.html"><svg class="ic" width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2l8 3.5V12c0 5-3.4 8.6-8 10-4.6-1.4-8-5-8-10V5.5z"/><path d="M9 12l2 2 4-4"/></svg><b>裁判学习平台</b><span class="brand-sub">考点速查</span></a><nav class="nav" aria-label="站点导航"><div class="navgrp"><button class="tbtn grp-btn" type="button" aria-expanded="false"><span>赛季</span><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="navpop"><a class="tbtn" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026赛季评议</span></a><a class="tbtn" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025赛季评议</span></a><a class="tbtn" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024赛季评议</span></a><a class="tbtn" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a></div></div><div class="navgrp cur"><button class="tbtn grp-btn" type="button" aria-expanded="false"><span>工具</span><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="navpop"><a class="tbtn" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="tbtn" href="search.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>全站搜索</span></a><a class="tbtn" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="tbtn" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="tbtn cur" href="cheatsheet.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>考点速查卡</span></a><a class="tbtn" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题模式</span></a><a class="tbtn" href="compare.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>尺度对照课</span></a></div></div><div class="navgrp"><button class="tbtn grp-btn" type="button" aria-expanded="false"><span>国际评议</span><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="6 9 12 15 18 9"/></svg></button><div class="navpop"><a class="tbtn" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA 判例库</span></a><a class="tbtn" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>UEFA RAP</span></a><a class="tbtn" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>西班牙 RFEF</span></a><a class="tbtn" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国 PRO</span></a><a class="tbtn" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美 CONMEBOL</span></a><a class="tbtn" href="weekly.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg><span>全球周更节目</span></a><a class="tbtn" href="ifab.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>IFAB 协议中译</span></a><a class="tbtn" href="hns.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>克罗地亚 HNS</span></a><a class="tbtn" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>全球资源导航</span></a></div></div></nav><div class="top-right"><button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题"><span class="when-dark"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg></span><span class="when-light"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg></span></button></div></header><dialog class="navdrawer" id="navDrawer" aria-labelledby="navTitle"><div class="navd-head"><b id="navTitle">站点导航</b><button type="button" id="navClose" class="btn" autofocus>关闭导航</button></div><nav aria-label="全部页面"><div class="navd-h">赛季</div><a class="navd-i" href="season-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2026赛季评议</span></a><a class="navd-i" href="season-2025.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2025赛季评议</span></a><a class="navd-i" href="season-2024.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg><span>2024赛季评议</span></a><a class="navd-i" href="stats-2026.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg><span>得失盘点</span></a><div class="navd-h">工具</div><a class="navd-i" href="index.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg><span>首页</span></a><a class="navd-i" href="search.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg><span>全站搜索</span></a><a class="navd-i" href="rules.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>竞赛规则</span></a><a class="navd-i" href="scale.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg><span>统一尺度</span></a><a class="navd-i cur" href="cheatsheet.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>考点速查卡</span></a><a class="navd-i" href="quiz.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg><span>考题模式</span></a><a class="navd-i" href="compare.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg><span>尺度对照课</span></a><div class="navd-h">国际评议</div><a class="navd-i" href="uefa.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>UEFA 判例库</span></a><a class="navd-i" href="rap.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg><span>UEFA RAP</span></a><a class="navd-i" href="rfef.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg><span>西班牙 RFEF</span></a><a class="navd-i" href="pro.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 15s1-1 4-1 5 2 8 2 4-1 4-1V3s-1 1-4 1-5-2-8-2-4 1-4 1z"/><line x1="4" y1="22" x2="4" y2="15"/></svg><span>美国 PRO</span></a><a class="navd-i" href="conmebol.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="6 3 20 12 6 21 6 3"/></svg><span>南美 CONMEBOL</span></a><a class="navd-i" href="weekly.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="7" width="20" height="15" rx="2" ry="2"/><polyline points="17 2 12 7 7 2"/></svg><span>全球周更节目</span></a><a class="navd-i" href="ifab.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg><span>IFAB 协议中译</span></a><a class="navd-i" href="hns.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg><span>克罗地亚 HNS</span></a><a class="navd-i" href="intl.html"><svg class="ic" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polygon points="16.24 7.76 14.12 14.12 7.76 16.24 9.88 9.88 16.24 7.76"/></svg><span>全球资源导航</span></a></nav></dialog>
-<div class="cs-head"><div class="wrap">
+<header class="cs-head"><div class="wrap">
   <h1>考点速查卡</h1>
-  <div class="sub">考前一夜的 9 张卡：手球考量链 / 犯规三档 / DOGSO·SPA / VAR 介入 / 红黄牌速查 / 点球程序 / 越位三步 / 重新开始方式 / 2026/27 新规。<b>点击卡片翻面看细则</b>；打印即得单页讲义（全部展开）。条文依据《足球竞赛规则 2026/27》简体中文版（<a href="rules.html">规则全文</a>），评议口径提示提炼自三赛季评议。</div>
-</div></div>
-<div class="cs-grid" id="csGrid"></div>
+  <p class="sub">9 张卡。先看卡面要点，再翻看细则与评议提示。<a href="rules.html">查阅《足球竞赛规则 2026/27》全文</a></p>
+  <div class="print-tools" hidden>
+    <button type="button" class="btn" data-print="front">打印单页速记（仅卡面要点）</button>
+    <button type="button" class="btn" data-print="full">打印完整讲义（含细则）</button>
+  </div>
+  <p class="print-caption">足球竞赛规则 2026/27 · <span>卡面要点与完整细则</span></p>
+</div></header>
+<main id="main" tabindex="-1"><div class="cs-grid"><article class="study-card" id="card-handball" aria-labelledby="card-handball-title" tabindex="-1">
+  <h2 id="card-handball-title"><span class="card-icon" aria-hidden="true">✋</span>手球判罚考量</h2>
+  <details>
+    <summary aria-labelledby="card-handball-action card-handball-title"><span id="card-handball-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>判犯规</h3><ul><li>并非每次球碰手都犯规；两个条件满足其一即犯规</li><li>手/臂位置非身体动作结果或不能证实是身体动作所致 → 视为身体不自然扩大</li></ul></section><section><h3>与进球相关（即使意外）</h3><ul><li>球直接从手/臂送入对方球门 → 无效</li><li>手/臂触球后立即射门入对方球门 → 无效</li></ul></section><section><h3>守门员特例（己方罚球区内）</h3><ul><li>队友蓄意脚踢回传 / 界外球直接掷回，用手接 → 间接任意球</li><li>放球后未经他人触球再用手触球 → 间接任意球</li><li>用手持球超过八秒才放出 → 判对方角球（最后五秒举手示意倒计时）</li></ul></section><section><h3>评议口径提示</h3><ul><li>判罚考量链：触球点是否腋窝以下 → 手臂是否不自然扩大/扬起 → 距离与反应时间 → 是否直接导致进球/进球机会</li><li>紧贴身体、被动被球击中通常不判；张开扬臂扩大防守面积通常判罚</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">腋窝为界 · 两个犯规条件 · 两种进球无效</p><ul><li>肩臂分界线 = 腋窝</li><li>犯规条件①：蓄意用手/臂触球（手移向球）</li><li>犯规条件②：身体不自然扩大时触球</li><li>意外触球后立即射门得分 → 进球无效</li><li>守门员禁区外手球限制同其他球员</li></ul></div>
+</article>
+<article class="study-card" id="card-force" aria-labelledby="card-force-title" tabindex="-1">
+  <h2 id="card-force-title"><span class="card-icon" aria-hidden="true">⚖</span>犯规程度三档</h2>
+  <details>
+    <summary aria-labelledby="card-force-action card-force-title"><span id="card-force-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>三档定义（第12章原文）</h3><ul><li>不小心：没有事前专注或事先考虑下与对方争夺球</li><li>鲁莽：争夺球时没有顾及对方球员的危害或后果</li><li>使用过分力量：动作力量超出需要及/或伤害和危及对方球员</li></ul></section><section><h3>直接任意球犯规（身体接触类）</h3><ul><li>冲撞 / 跳向 / 踢或意图踢 / 推 / 击打或意图击打（含用头顶撞）/ 拦截或冲击 / 绊倒或意图绊倒</li><li>另有：手球、拉扯、有身体接触的阻碍、咬或吐唾沫、持物触球</li></ul></section><section><h3>间接任意球（无接触/程序类）</h3><ul><li>危险动作 / 无接触的阻碍 / 言语不满 / 阻挠守门员放球 / 诡计回传门将 / 守门员禁区内的二次触球与回传</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">不小心无处分 · 鲁莽黄牌 · 过分力量红牌</p><ul><li>不小心 → 无须纪律处分</li><li>鲁莽（不顾及对方危害）→ 黄牌</li><li>使用过分力量（伤害危及对方）→ 红牌</li><li>不危及对方安全的剪刀脚/倒挂 → 允许</li></ul></div>
+</article>
+<article class="study-card" id="card-dogso" aria-labelledby="card-dogso-title" tabindex="-1">
+  <h2 id="card-dogso-title"><span class="card-icon" aria-hidden="true">🚫</span>DOGSO 与 SPA</h2>
+  <details>
+    <summary aria-labelledby="card-dogso-action card-dogso-title"><span id="card-dogso-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>须黄牌的欠缺体育精神情形（与机会相关）</h3><ul><li>破坏对方进球/明显进球机会，且被判点球、属非蓄意手球</li><li>意图争夺球犯规破坏明显进球机会且被判点球</li><li>手球或犯规干扰/阻止明显进攻机会（点球+争夺球例外）</li><li>蓄意用手触球取得进球（无论是否成功）</li></ul></section><section><h3>有利原则红线</h3><ul><li>严重犯规、凶暴行为、第二次黄牌：除非当时有明显进球机会，否则不应运用有利</li><li>DOGSO 运用有利后非犯规方进球 → 不再执行纪律处分；未进球 → 黄牌（欠缺体育精神）</li><li>SPA 运用有利 → 不需要补黄牌</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">破坏机会的纪律处分四情形</p><ul><li>DOGSO（破坏明显进球机会）→ 红牌</li><li>例外：点球 + 意图争夺球的犯规 → 黄牌</li><li>例外：点球 + 非蓄意手球 → 黄牌</li><li>SPA（干扰/阻止明显进攻机会）→ 黄牌</li></ul></div>
+</article>
+<article class="study-card" id="card-var" aria-labelledby="card-var-title" tabindex="-1">
+  <h2 id="card-var-title"><span class="card-icon" aria-hidden="true">📺</span>VAR 可介入情形</h2>
+  <details>
+    <summary aria-labelledby="card-var-action card-var-title"><span id="card-var-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>可介入的判罚类别</h3><ul><li>进球（及进球前的进攻过程犯规/越位/手球）</li><li>罚球点球 / 罚球点球未判</li><li>直接红牌（严重犯规、暴力行为、吐唾沫等）</li><li>错误认定球员身份（警告/罚错人）</li></ul></section><section><h3>覆检后纪律处分</h3><ul><li>原决定被改变后，此前已作出的纪律处分不可取消</li><li>例外：因干扰/阻止明显进攻机会或破坏明显进球机会而出示的黄牌/红牌</li></ul></section><section><h3>场地要求</h3><ul><li>必须有一个视像控制室（VOR）及最少一个裁判员覆检区域（RRA）</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">四大类 · 覆检不设时限 · 重开后原则不可覆检</p><ul><li>覆检原则：准确度比速度重要，不设时间限制</li><li>覆检中裁判员必须保持「可见」</li><li>比赛重新开始后不可覆检</li><li>例外：认错球员身份 / 暴力行为类红牌</li></ul></div>
+</article>
+<article class="study-card" id="card-cards" aria-labelledby="card-cards-title" tabindex="-1">
+  <h2 id="card-cards-title"><span class="card-icon" aria-hidden="true">🟨</span>红黄牌速查</h2>
+  <details>
+    <summary aria-labelledby="card-cards-action card-cards-title"><span id="card-cards-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>欠缺体育精神的典型</h3><ul><li>试图欺骗裁判员：假装受伤或假装被侵犯（假摔）</li><li>比赛中未经准许与守门员互换位置</li><li>蓄意用手触球取得进球（无论成败）</li><li>诡计回传门将（头/胸/膝）逃避规则</li><li>得到准许离场途中触球 / 场内划未认可记号</li></ul></section><section><h3>红牌罚令出场（球员）</h3><ul><li>严重犯规 / 暴力行为（凶暴行为）</li><li>咬人或向任何人吐唾沫</li><li>破坏明显进球机会（DOGSO，点球例外见速查卡③）</li><li>使用冒犯性、侮辱性或辱骂性言语/举动</li><li>同一场比赛第二次被黄牌警告</li></ul></section><section><h3>两项分别需警告的犯规（即使时间接近）</h3><ul><li>应出示两个黄牌（随后红牌罚令出场），不能合并为一张</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">应警告的常见情形（第12章）</p><ul><li>拖延重新开始比赛</li><li>用言语或行动表示不满</li><li>未得裁判员准许擅自进入/再次进入/离开场地</li><li>定位球时未退离规定距离</li><li>屡次触犯规则（无特定次数）</li><li>欠缺体育精神（含假摔/伪装行为）</li></ul></div>
+</article>
+<article class="study-card" id="card-penalty" aria-labelledby="card-penalty-title" tabindex="-1">
+  <h2 id="card-penalty-title"><span class="card-icon" aria-hidden="true">⚽</span>罚球点球程序</h2>
+  <details>
+    <summary aria-labelledby="card-penalty-action card-penalty-title"><span id="card-penalty-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>程序要点</h3><ul><li>门柱、横梁和球门网必须保持静止状态</li><li>主射者与守方守门员之外的所有球员须在合规位置后方可执行</li><li>防守方拉扯进攻球员从区外持续到区内 → 判点球（而非区外任意球）</li></ul></section><section><h3>点球决胜相关</h3><ul><li>半场/加时结束时，比赛时间因执行点球延长至完成</li><li>点球向前移动中球破损且未触及任何球员/门柱/横梁 → 重射</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">放定 · 九一五 · 点后区外 · 信号后必完成</p><ul><li>球：放定于罚球点，一部分触及罚球点中央</li><li>其他球员：距点 ≥9.15 米、在点之后、罚球区外、场内</li><li>裁判员发出讯号后，该次点球必须完成</li><li>判罚条件：比赛进行中，己方罚球区内应判直接任意球的犯规</li></ul></div>
+</article>
+<article class="study-card" id="card-offside" aria-labelledby="card-offside-title" tabindex="-1">
+  <h2 id="card-offside-title"><span class="card-icon" aria-hidden="true">🚩</span>越位判定三步</h2>
+  <details>
+    <summary aria-labelledby="card-offside-action card-offside-title"><span id="card-offside-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>构成越位犯规的三类参与</h3><ul><li>干扰比赛：接应或接触队友踢出/触及的传球</li><li>干扰对方：遮挡视线、与其争球、近距离试图参与并明显影响、明确动作明显影响其处理球能力</li><li>取得利益：球从门柱/横梁/官员/对方反弹或被对方蓄意救球弹回</li></ul></section><section><h3>不判越位的例外</h3><ul><li>接获对方球员蓄意处理球（传/控/解围，含蓄意手球）——蓄意救球除外</li><li>开球门球、界外球、角球直接接球不判（对应重新开始方式）</li><li>身处越位位置本身不是犯规</li></ul></section><section><h3>判罚</h3><ul><li>越位犯规 → 对方在犯规发生地点获间接任意球</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">位置 → 干扰 → 例外</p><ul><li>第一步·位置：头/身/脚比对方第二名最后球员及球更接近对方门线</li><li>手臂与手不计入（腋窝为肩臂分界）</li><li>与倒数第二名球员平行 → 不越位；半场内接球点须在对方场区</li><li>第二步·干扰：接球/干扰对方/取得利益才构成犯规</li></ul></div>
+</article>
+<article class="study-card" id="card-restart" aria-labelledby="card-restart-title" tabindex="-1">
+  <h2 id="card-restart-title"><span class="card-icon" aria-hidden="true">🔄</span>重新开始方式速查</h2>
+  <details>
+    <summary aria-labelledby="card-restart-action card-restart-title"><span id="card-restart-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>距离与时间数字</h3><ul><li>中圈开球：对方离球 9.15 米；全体在本方半场</li><li>界外球：对方距掷球点 ≥2 米；拖延 5 秒未掷 → 判给对方</li><li>球门球：对方留罚球区外直至开始；5 秒未开出 → 对方角球</li><li>守门员持球 8 秒未放出 → 对方角球</li><li>任意球：对方退 9.15 米；攻方距守方 3+ 人墙 &lt;1 米 → 攻方间接任意球</li></ul></section><section><h3>坠球规则</h3><ul><li>球在罚球区内 → 给守方门将；在区外 → 给将获/保有控球权一方</li><li>在暂停时球所在位置执行；球击中官员/外物 → 在干扰位置执行</li><li>球触及地面比赛即开始</li></ul></section><section><h3>球出界即停（第9章）</h3><ul><li>整个球在地面或空中完全越过球门线或边线，或比赛被裁判员暂停</li><li>球触官员后留在场内致明显进攻/进球/控球权改变 → 坠球</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">能不能直接得分 · 距离数字一页记</p><ul><li>中圈开球：可直射对方门（入己门→对方角球）</li><li>球门球：可直射对方门（入己门→对方角球）</li><li>界外球：不可直接得分（入对方门→球门球；入己门→角球）</li><li>坠球：罚球区内给守方门将；他人须离 4 米；球触地即开始</li></ul></div>
+</article>
+<article class="study-card" id="card-laws-2627" aria-labelledby="card-laws-2627-title" tabindex="-1">
+  <h2 id="card-laws-2627-title"><span class="card-icon" aria-hidden="true">🆕</span>2026/27 新规速查</h2>
+  <details>
+    <summary aria-labelledby="card-laws-2627-action card-laws-2627-title"><span id="card-laws-2627-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back"><section><h3>替换与时间</h3><ul><li>A级友谊赛：可替换8名或（双方同意并提前通知裁判员）11名，每队3次换人机会</li><li>10秒离场；超时替补须待比赛重新开始1分钟后的首次暂停方可入场</li><li>受伤接受评估/治理或导致比赛停止的球员：重新开始后离场并在场外逗留1分钟</li><li>界外球/球门球延误：5秒明显倒计时，超时分别判对方界外球/角球</li></ul></section><section><h3>仅限队长</h3><ul><li>2027-07-01起成为所有比赛强制性协定</li><li>只有队长可接近裁判员（须保持尊重、行为得体）；队长专用区4米</li><li>守门员是队长：赛前掷毫时或之前指定另一名球员</li><li>多人进入队长区：至少黄牌警告一人（通常第一个或最激烈者）</li><li>信号：双臂举过头顶、手腕交叉；随后双臂分开、手掌前推</li></ul></section><section><h3>VAR 与纪律</h3><ul><li>可覆检明显错误的第二面黄牌导致的红牌</li><li>可覆检犯规者为另一名球员时的错误红黄牌</li><li>可覆检明显错判的角球（须能立即更改且不延迟重新开始，竞赛组织可允许）</li><li>2026/27 起竞赛组织可选择为比赛官员提供随身摄像机</li></ul></section><section><h3>DOGSO / 点球</h3><ul><li>运用有利并进球得分：对DOGSO犯规不再黄牌警告</li><li>DOGSO考虑因素新增「进攻球员」</li><li>点球主射与守门员同时犯规：取消主射球员的自动黄牌警告</li><li>坠球：明确控球权归属；裁判员/外来物体干扰时在干扰地点坠球</li></ul></section></div>
+  </details>
+  <div class="card-front"><p class="tagline">10秒换人 · 5秒界外球/球门球 · 仅限队长 · VAR新覆检</p><ul><li>被替换球员须在替换讯号后10秒内离场</li><li>超时：替补须等比赛重新开始1分钟后的首次暂停</li><li>界外球/球门球延误超5秒：分别改判对方界外球/角球</li><li>仅限队长：队长专用区4米；2027-07-01起强制</li><li>VAR可覆检：错误第二黄红牌、错误球员身份、可立即更正的角球</li><li>有利后进球：DOGSO不再黄牌；点球同时犯规取消主射自动黄牌</li></ul></div>
+</article></div></main>
 <script>
-const CARDS = [{"id":"handball","icon":"✋","title":"手球判罚考量","tagline":"腋窝为界 · 两个犯规条件 · 两种进球无效","front":["肩臂分界线 = 腋窝","犯规条件①：蓄意用手/臂触球（手移向球）","犯规条件②：身体不自然扩大时触球","意外触球后立即射门得分 → 进球无效","守门员禁区外手球限制同其他球员"],"back":[{"h":"判犯规","items":["并非每次球碰手都犯规；两个条件满足其一即犯规","手/臂位置非身体动作结果或不能证实是身体动作所致 → 视为身体不自然扩大"]},{"h":"与进球相关（即使意外）","items":["球直接从手/臂送入对方球门 → 无效","手/臂触球后立即射门入对方球门 → 无效"]},{"h":"守门员特例（己方罚球区内）","items":["队友蓄意脚踢回传 / 界外球直接掷回，用手接 → 间接任意球","放球后未经他人触球再用手触球 → 间接任意球","用手持球超过八秒才放出 → 判对方角球（最后五秒举手示意倒计时）"]},{"h":"评议口径提示","items":["判罚考量链：触球点是否腋窝以下 → 手臂是否不自然扩大/扬起 → 距离与反应时间 → 是否直接导致进球/进球机会","紧贴身体、被动被球击中通常不判；张开扬臂扩大防守面积通常判罚"]}]},{"id":"force","icon":"⚖","title":"犯规程度三档","tagline":"不小心无处分 · 鲁莽黄牌 · 过分力量红牌","front":["不小心 → 无须纪律处分","鲁莽（不顾及对方危害）→ 黄牌","使用过分力量（伤害危及对方）→ 红牌","不危及对方安全的剪刀脚/倒挂 → 允许"],"back":[{"h":"三档定义（第12章原文）","items":["不小心：没有事前专注或事先考虑下与对方争夺球","鲁莽：争夺球时没有顾及对方球员的危害或后果","使用过分力量：动作力量超出需要及/或伤害和危及对方球员"]},{"h":"直接任意球犯规（身体接触类）","items":["冲撞 / 跳向 / 踢或意图踢 / 推 / 击打或意图击打（含用头顶撞）/ 拦截或冲击 / 绊倒或意图绊倒","另有：手球、拉扯、有身体接触的阻碍、咬或吐唾沫、持物触球"]},{"h":"间接任意球（无接触/程序类）","items":["危险动作 / 无接触的阻碍 / 言语不满 / 阻挠守门员放球 / 诡计回传门将 / 守门员禁区内的二次触球与回传"]}]},{"id":"dogso","icon":"🚫","title":"DOGSO 与 SPA","tagline":"破坏机会的纪律处分四情形","front":["DOGSO（破坏明显进球机会）→ 红牌","例外：点球 + 意图争夺球的犯规 → 黄牌","例外：点球 + 非蓄意手球 → 黄牌","SPA（干扰/阻止明显进攻机会）→ 黄牌"],"back":[{"h":"须黄牌的欠缺体育精神情形（与机会相关）","items":["破坏对方进球/明显进球机会，且被判点球、属非蓄意手球","意图争夺球犯规破坏明显进球机会且被判点球","手球或犯规干扰/阻止明显进攻机会（点球+争夺球例外）","蓄意用手触球取得进球（无论是否成功）"]},{"h":"有利原则红线","items":["严重犯规、凶暴行为、第二次黄牌：除非当时有明显进球机会，否则不应运用有利","DOGSO 运用有利后非犯规方进球 → 不再执行纪律处分；未进球 → 黄牌（欠缺体育精神）","SPA 运用有利 → 不需要补黄牌"]}]},{"id":"var","icon":"📺","title":"VAR 可介入情形","tagline":"四大类 · 覆检不设时限 · 重开后原则不可覆检","front":["覆检原则：准确度比速度重要，不设时间限制","覆检中裁判员必须保持「可见」","比赛重新开始后不可覆检","例外：认错球员身份 / 暴力行为类红牌"],"back":[{"h":"可介入的判罚类别","items":["进球（及进球前的进攻过程犯规/越位/手球）","罚球点球 / 罚球点球未判","直接红牌（严重犯规、暴力行为、吐唾沫等）","错误认定球员身份（警告/罚错人）"]},{"h":"覆检后纪律处分","items":["原决定被改变后，此前已作出的纪律处分不可取消","例外：因干扰/阻止明显进攻机会或破坏明显进球机会而出示的黄牌/红牌"]},{"h":"场地要求","items":["必须有一个视像控制室（VOR）及最少一个裁判员覆检区域（RRA）"]}]},{"id":"cards","icon":"🟨","title":"红黄牌速查","tagline":"应警告的常见情形（第12章）","front":["拖延重新开始比赛","用言语或行动表示不满","未得裁判员准许擅自进入/再次进入/离开场地","定位球时未退离规定距离","屡次触犯规则（无特定次数）","欠缺体育精神（含假摔/伪装行为）"],"back":[{"h":"欠缺体育精神的典型","items":["试图欺骗裁判员：假装受伤或假装被侵犯（假摔）","比赛中未经准许与守门员互换位置","蓄意用手触球取得进球（无论成败）","诡计回传门将（头/胸/膝）逃避规则","得到准许离场途中触球 / 场内划未认可记号"]},{"h":"红牌罚令出场（球员）","items":["严重犯规 / 暴力行为（凶暴行为）","咬人或向任何人吐唾沫","破坏明显进球机会（DOGSO，点球例外见速查卡③）","使用冒犯性、侮辱性或辱骂性言语/举动","同一场比赛第二次被黄牌警告"]},{"h":"两项分别需警告的犯规（即使时间接近）","items":["应出示两个黄牌（随后红牌罚令出场），不能合并为一张"]}]},{"id":"penalty","icon":"⚽","title":"罚球点球程序","tagline":"放定 · 九一五 · 点后区外 · 信号后必完成","front":["球：放定于罚球点，一部分触及罚球点中央","其他球员：距点 ≥9.15 米、在点之后、罚球区外、场内","裁判员发出讯号后，该次点球必须完成","判罚条件：比赛进行中，己方罚球区内应判直接任意球的犯规"],"back":[{"h":"程序要点","items":["门柱、横梁和球门网必须保持静止状态","主射者与守方守门员之外的所有球员须在合规位置后方可执行","防守方拉扯进攻球员从区外持续到区内 → 判点球（而非区外任意球）"]},{"h":"点球决胜相关","items":["半场/加时结束时，比赛时间因执行点球延长至完成","点球向前移动中球破损且未触及任何球员/门柱/横梁 → 重射"]}]},{"id":"offside","icon":"🚩","title":"越位判定三步","tagline":"位置 → 干扰 → 例外","front":["第一步·位置：头/身/脚比对方第二名最后球员及球更接近对方门线","手臂与手不计入（腋窝为肩臂分界）","与倒数第二名球员平行 → 不越位；半场内接球点须在对方场区","第二步·干扰：接球/干扰对方/取得利益才构成犯规"],"back":[{"h":"构成越位犯规的三类参与","items":["干扰比赛：接应或接触队友踢出/触及的传球","干扰对方：遮挡视线、与其争球、近距离试图参与并明显影响、明确动作明显影响其处理球能力","取得利益：球从门柱/横梁/官员/对方反弹或被对方蓄意救球弹回"]},{"h":"不判越位的例外","items":["接获对方球员蓄意处理球（传/控/解围，含蓄意手球）——蓄意救球除外","开球门球、界外球、角球直接接球不判（对应重新开始方式）","身处越位位置本身不是犯规"]},{"h":"判罚","items":["越位犯规 → 对方在犯规发生地点获间接任意球"]}]},{"id":"restart","icon":"🔄","title":"重新开始方式速查","tagline":"能不能直接得分 · 距离数字一页记","front":["中圈开球：可直射对方门（入己门→对方角球）","球门球：可直射对方门（入己门→对方角球）","界外球：不可直接得分（入对方门→球门球；入己门→角球）","坠球：罚球区内给守方门将；他人须离 4 米；球触地即开始"],"back":[{"h":"距离与时间数字","items":["中圈开球：对方离球 9.15 米；全体在本方半场","界外球：对方距掷球点 ≥2 米；拖延 5 秒未掷 → 判给对方","球门球：对方留罚球区外直至开始；5 秒未开出 → 对方角球","守门员持球 8 秒未放出 → 对方角球","任意球：对方退 9.15 米；攻方距守方 3+ 人墙 <1 米 → 攻方间接任意球"]},{"h":"坠球规则","items":["球在罚球区内 → 给守方门将；在区外 → 给将获/保有控球权一方","在暂停时球所在位置执行；球击中官员/外物 → 在干扰位置执行","球触及地面比赛即开始"]},{"h":"球出界即停（第9章）","items":["整个球在地面或空中完全越过球门线或边线，或比赛被裁判员暂停","球触官员后留在场内致明显进攻/进球/控球权改变 → 坠球"]}]},{"id":"laws-2627","icon":"🆕","title":"2026/27 新规速查","tagline":"10秒换人 · 5秒界外球/球门球 · 仅限队长 · VAR新覆检","front":["被替换球员须在替换讯号后10秒内离场","超时：替补须等比赛重新开始1分钟后的首次暂停","界外球/球门球延误超5秒：分别改判对方界外球/角球","仅限队长：队长专用区4米；2027-07-01起强制","VAR可覆检：错误第二黄红牌、错误球员身份、可立即更正的角球","有利后进球：DOGSO不再黄牌；点球同时犯规取消主射自动黄牌"],"back":[{"h":"替换与时间","items":["A级友谊赛：可替换8名或（双方同意并提前通知裁判员）11名，每队3次换人机会","10秒离场；超时替补须待比赛重新开始1分钟后的首次暂停方可入场","受伤接受评估/治理或导致比赛停止的球员：重新开始后离场并在场外逗留1分钟","界外球/球门球延误：5秒明显倒计时，超时分别判对方界外球/角球"]},{"h":"仅限队长","items":["2027-07-01起成为所有比赛强制性协定","只有队长可接近裁判员（须保持尊重、行为得体）；队长专用区4米","守门员是队长：赛前掷毫时或之前指定另一名球员","多人进入队长区：至少黄牌警告一人（通常第一个或最激烈者）","信号：双臂举过头顶、手腕交叉；随后双臂分开、手掌前推"]},{"h":"VAR 与纪律","items":["可覆检明显错误的第二面黄牌导致的红牌","可覆检犯规者为另一名球员时的错误红黄牌","可覆检明显错判的角球（须能立即更改且不延迟重新开始，竞赛组织可允许）","2026/27 起竞赛组织可选择为比赛官员提供随身摄像机"]},{"h":"DOGSO / 点球","items":["运用有利并进球得分：对DOGSO犯规不再黄牌警告","DOGSO考虑因素新增「进攻球员」","点球主射与守门员同时犯规：取消主射球员的自动黄牌警告","坠球：明确控球权归属；裁判员/外来物体干扰时在干扰地点坠球"]}]}];
-document.getElementById("csGrid").innerHTML = CARDS.map((c, i) => `
-  <div class="card3d" style="--i:${i}">
-    <div class="flip">
-      <div class="cface front">
-        <div class="cf-top"><span class="cf-ic">${c.icon}</span><h2>${c.title}</h2></div>
-        <div class="cf-tag">${c.tagline}</div>
-        <ul class="cf-f">${c.front.map(p => `<li>${p}</li>`).join("")}</ul>
-        <div class="cf-hint">点击翻面看细则与出处 →</div>
-      </div>
-      <div class="cface back">
-        ${c.back.map(s => `<div class="cb-sec"><h3>${s.h}</h3><ul>${s.items.map(t => `<li>${t}</li>`).join("")}</ul></div>`).join("")}
-        <div class="cf-hint">← 点击翻回速记面</div>
-      </div>
-    </div>
-  </div>`).join("");
-document.getElementById("csGrid").addEventListener("click", e => {
-  const card = e.target.closest(".card3d");
-  if (card) card.classList.toggle("flipped");
+const grid = document.getElementById("main");
+grid.addEventListener("click", event => {
+  const card = event.target.closest(".study-card");
+  if (!card || event.target.closest("summary,a,button") || !getSelection().isCollapsed) return;
+  const details = card.querySelector("details");
+  details.open = !details.open;
+});
+const printTools = document.querySelector(".print-tools");
+const caption = document.querySelector(".print-caption span");
+let closedBeforePrint = [];
+printTools.hidden = false;
+printTools.addEventListener("click", event => {
+  const mode = event.target.closest("[data-print]")?.dataset.print;
+  if (!mode) return;
+  const front = mode === "front";
+  document.documentElement.toggleAttribute("data-print-front", front);
+  caption.textContent = front ? "单页速记 · 仅卡面要点" : "卡面要点与完整细则";
+  window.print();
+});
+window.addEventListener("beforeprint", () => {
+  // Modern engines reveal closed details through the print stylesheet.
+  if (document.documentElement.hasAttribute("data-print-front") || CSS.supports("selector(details::details-content)")) return;
+  for (const details of grid.querySelectorAll("details:not([open])")) {
+    closedBeforePrint.push(details);
+    details.open = true;
+  }
+});
+window.addEventListener("afterprint", () => {
+  closedBeforePrint.forEach(details => { details.open = false; });
+  closedBeforePrint = [];
+  document.documentElement.removeAttribute("data-print-front");
+  caption.textContent = "卡面要点与完整细则";
 });
 </script>
 <script>document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnTheme');if(!b)return;var r=document.documentElement,t=r.dataset.theme==='light'?'dark':'light';r.dataset.theme=t;try{localStorage.setItem('cfa.theme',t)}catch(_){}});document.addEventListener('click',function(e){var b=e.target.closest&&e.target.closest('#btnLite');if(!b)return;var r=document.documentElement,on=r.dataset.lite!=='1';if(on)r.dataset.lite='1';else r.removeAttribute('data-lite');b.setAttribute('aria-pressed',on?'true':'false');try{localStorage.setItem('cfa.lite',on?'1':'0')}catch(_){}try{document.dispatchEvent(new CustomEvent('cfa:lite',{detail:{on:on}}))}catch(_){}});(function(){var bl=document.getElementById('btnLite');if(bl)bl.setAttribute('aria-pressed',document.documentElement.dataset.lite==='1'?'true':'false');})();document.addEventListener('click',function(e){var t=e.target.closest&&e.target.closest('.grp-btn');document.querySelectorAll('.navgrp').forEach(function(g){var open=!!t&&g===t.parentElement&&!g.classList.contains('open');g.classList.toggle('open',open);var b=g.querySelector('.grp-btn');if(b)b.setAttribute('aria-expanded',open?'true':'false');});});

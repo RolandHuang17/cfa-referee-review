@@ -1,16 +1,33 @@
 # -*- coding: utf-8 -*-
-"""生成 site/cheatsheet.html：考点速查卡（手机翻卡 + A4 打印视图）。
-
-内容来自 data/cheatsheet.json（人工策表：卡面速记 + 翻面细则），
-条文出处为 data/laws.json《足球竞赛规则 2026/27》简体中文版。
-点击卡片翻面（CSS 3D flip）；打印时全部展开为单页讲义。
-"""
+"""生成考点速查卡。内容来自 data/cheatsheet.json，页面支持离线翻阅与 A4 打印。"""
 
 import json
+from html import escape
 
 from lib.paths import DATA, SITE
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar
+
+
+def render_card(card):
+    card_id = "card-" + escape(card["id"], quote=True)
+    title = escape(card["title"])
+    front = "".join(f"<li>{escape(item)}</li>" for item in card["front"])
+    sections = []
+    for section in card["back"]:
+        items = "".join(f"<li>{escape(item)}</li>" for item in section["items"])
+        sections.append(
+            f"<section><h3>{escape(section['h'])}</h3><ul>{items}</ul></section>"
+        )
+    return f"""<article class="study-card" id="{card_id}" aria-labelledby="{card_id}-title" tabindex="-1">
+  <h2 id="{card_id}-title"><span class="card-icon" aria-hidden="true">{escape(card["icon"])}</span>{title}</h2>
+  <details>
+    <summary aria-labelledby="{card_id}-action {card_id}-title"><span id="{card_id}-action"><span class="to-back">查看细则</span><span class="to-front">翻回速记</span></span></summary>
+    <div class="card-back">{"".join(sections)}</div>
+  </details>
+  <div class="card-front"><p class="tagline">{escape(card["tagline"])}</p><ul>{front}</ul></div>
+</article>"""
+
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -20,70 +37,111 @@ HTML = r"""<!DOCTYPE html>
 <title>考点速查卡 · 裁判学习平台</title>
 <style>
 .cs-head{border-bottom:1px solid var(--line);background:var(--bg2)}
-.cs-head .wrap{max-width:1040px;margin:0 auto;padding:24px 16px 16px}
-.cs-head h1{margin:0 0 4px;font-family:var(--font-display);font-size:24px;letter-spacing:.4px}
-.cs-head .sub{color:var(--muted);font-size:13px;line-height:1.8}
-.cs-grid{max-width:1040px;margin:0 auto;padding:20px 16px 70px;display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.card3d{perspective:1200px;min-height:300px}
-.flip{position:relative;width:100%;height:100%;min-height:300px;cursor:pointer;
-  transition:transform .5s var(--ease);transform-style:preserve-3d}
-.card3d.flipped .flip{transform:rotateY(180deg)}
-.cface{position:absolute;inset:0;backface-visibility:hidden;-webkit-backface-visibility:hidden;
-  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card);padding:18px 20px;
-  display:flex;flex-direction:column;overflow:auto}
-.cface.back{transform:rotateY(180deg);border-color:var(--brand);background:var(--card2)}
-.cf-top{display:flex;align-items:center;gap:10px;margin-bottom:4px}
-.cf-ic{font-size:26px;flex:none}
-.cf-top h2{margin:0;font-family:var(--font-display);font-size:18.5px;flex:1}
-.cf-tag{font-size:12px;color:var(--brand);font-weight:600;margin:2px 0 10px}
-.cf-hint{margin-top:auto;padding-top:10px;font-size:11.5px;color:var(--faint);
-  border-top:1px dashed var(--line)}
-.cf-f li{margin:8px 0;font-size:13.8px;line-height:1.75;color:var(--ink)}
-.cf-f{padding-left:18px;margin:6px 0 4px}
-.cb-sec{margin-bottom:12px}
-.cb-sec h3{margin:0 0 5px;font-size:13px;color:var(--brand);letter-spacing:.5px}
-.cb-sec ul{margin:0;padding-left:16px}
-.cb-sec li{margin:4px 0;font-size:12.8px;line-height:1.7;color:var(--ink2)}
+.cs-head .wrap,.cs-grid{max-width:1040px;margin:auto;padding-inline:clamp(16px,3vw,32px)}
+.cs-head .wrap{padding-block:24px 20px}
+.cs-head h1{margin:0;font:700 26px/1.3 var(--font-display)}
+.cs-head p{margin:6px 0;color:var(--muted);line-height:1.65}
+.print-tools{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.print-tools[hidden],.print-caption{display:none}
+.cs-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,295px),1fr));
+  align-items:start;gap:16px;padding-block:20px 64px}
+.study-card{scroll-margin-block-start:calc(var(--top-h,50px) + 12px);min-width:0;padding:17px 20px 19px;
+  border:1px solid var(--line);border-radius:var(--r-lg);background:var(--card)}
+.study-card:target{border-color:var(--brand);box-shadow:inset 3px 0 var(--brand)}
+.study-card h2{margin:0;font:700 20px/1.45 var(--font-display);overflow-wrap:anywhere}
+.card-icon{margin-inline-end:8px;font-size:20px}
+.study-card summary{width:fit-content;min-height:44px;align-content:center;cursor:pointer;
+  color:var(--brand);font-size:13px;font-weight:650}
+.study-card summary:hover{text-decoration:underline;text-underline-offset:.2em}
+.study-card .to-front,.study-card details[open] .to-back{display:none}
+.study-card details[open] .to-front{display:inline}
+.study-card li{margin:5px 0;overflow-wrap:anywhere}
+.study-card ul{padding-inline-start:1.3em;margin:5px 0}
+.card-front,.card-back{border-top:1px solid var(--line);padding-top:10px}
+.tagline,.card-back h3{color:var(--brand);font-size:13px;font-weight:650;line-height:1.5}
+.tagline{margin:0 0 10px}
+.card-back section+section{margin-top:12px}
+.card-back h3{margin:0 0 3px}
+.card-back ul{color:var(--ink2)}
+@media screen{
+  .study-card details[open]+.card-front{display:none}
+}
+@media screen and (prefers-reduced-motion:no-preference){
+  .study-card details[open] .card-back{animation:turn-card .22s ease-out;transform-origin:top left}
+  @keyframes turn-card{from{opacity:.55;transform:perspective(850px) rotateY(-7deg)}}
+}
+@page{size:A4;margin:12mm}
 @media print{
-  .cs-grid{display:block}
-  .card3d{min-height:0;page-break-inside:avoid;margin-bottom:14px;perspective:none}
-  .flip{transform:none !important;transition:none;min-height:0;display:flex;flex-direction:column}
-  .cface{position:static;backface-visibility:visible;transform:none !important;min-height:0;
-    border-radius:0;border:1px solid #999;background:#fff;overflow:visible}
-  .cface.back{border-top:none;margin-top:-1px}
-  .cf-hint{display:none}
-  body{background:#fff;color:#000}
+  .cs-head,.study-card{background:white;color:black}
+  .cs-head .wrap,.cs-grid{max-width:none;margin:0;padding:0}
+  .cs-head{margin-bottom:3mm;border-color:#777}
+  .cs-head h1{font-size:17pt}
+  .cs-head .sub,.print-tools,.study-card summary,.card-icon{display:none}
+  .print-caption{display:block;margin:1mm 0 2mm;font-size:9pt}
+  .cs-grid{display:block;column-count:2;column-gap:7mm}
+  .study-card,.study-card:target{display:flex;flex-direction:column;break-inside:avoid;
+    margin:0 0 4mm;padding:2mm 0 0;border:0;border-top:1px solid #666;border-radius:0;box-shadow:none}
+  .study-card h2{font-size:12pt}
+  .study-card details{order:2}
+  .study-card details::details-content{display:contents;content-visibility:visible}
+  .study-card ul{margin:1mm 0;padding-inline-start:1.2em}
+  .study-card li{margin:.45mm 0;font-size:9.5pt;line-height:1.35}
+  .tagline,.card-back h3{margin:1mm 0;color:#222;font-size:9.5pt}
+  .card-front,.card-back{padding:0;border:0}
+  .card-back section+section{margin-top:2mm}
+  html[data-print-front] .cs-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:4mm}
+  html[data-print-front] .study-card{display:block;margin:0;break-inside:avoid}
+  html[data-print-front] .study-card details{display:none}
+  html[data-print-front] .study-card li{font-size:11pt;line-height:1.4;margin:1mm 0}
 }
 </style>
 </head>
 <body>
+<a class="skip-link" href="#main">跳到速查卡</a>
 __TOPBAR__
-<div class="cs-head"><div class="wrap">
+<header class="cs-head"><div class="wrap">
   <h1>考点速查卡</h1>
-  <div class="sub">考前一夜的 __NCARDS__ 张卡：手球考量链 / 犯规三档 / DOGSO·SPA / VAR 介入 / 红黄牌速查 / 点球程序 / 越位三步 / 重新开始方式 / 2026/27 新规。<b>点击卡片翻面看细则</b>；打印即得单页讲义（全部展开）。条文依据《足球竞赛规则 2026/27》简体中文版（<a href="rules.html">规则全文</a>），评议口径提示提炼自三赛季评议。</div>
-</div></div>
-<div class="cs-grid" id="csGrid"></div>
+  <p class="sub">__NCARDS__ 张卡。先看卡面要点，再翻看细则与评议提示。<a href="rules.html">查阅《足球竞赛规则 2026/27》全文</a></p>
+  <div class="print-tools" hidden>
+    <button type="button" class="btn" data-print="front">打印单页速记（仅卡面要点）</button>
+    <button type="button" class="btn" data-print="full">打印完整讲义（含细则）</button>
+  </div>
+  <p class="print-caption">足球竞赛规则 2026/27 · <span>卡面要点与完整细则</span></p>
+</div></header>
+<main id="main" tabindex="-1"><div class="cs-grid">__CARDS__</div></main>
 <script>
-const CARDS = __CARDS__;
-document.getElementById("csGrid").innerHTML = CARDS.map((c, i) => `
-  <div class="card3d" style="--i:${i}">
-    <div class="flip">
-      <div class="cface front">
-        <div class="cf-top"><span class="cf-ic">${c.icon}</span><h2>${c.title}</h2></div>
-        <div class="cf-tag">${c.tagline}</div>
-        <ul class="cf-f">${c.front.map(p => `<li>${p}</li>`).join("")}</ul>
-        <div class="cf-hint">点击翻面看细则与出处 →</div>
-      </div>
-      <div class="cface back">
-        ${c.back.map(s => `<div class="cb-sec"><h3>${s.h}</h3><ul>${s.items.map(t => `<li>${t}</li>`).join("")}</ul></div>`).join("")}
-        <div class="cf-hint">← 点击翻回速记面</div>
-      </div>
-    </div>
-  </div>`).join("");
-document.getElementById("csGrid").addEventListener("click", e => {
-  const card = e.target.closest(".card3d");
-  if (card) card.classList.toggle("flipped");
+const grid = document.getElementById("main");
+grid.addEventListener("click", event => {
+  const card = event.target.closest(".study-card");
+  if (!card || event.target.closest("summary,a,button") || !getSelection().isCollapsed) return;
+  const details = card.querySelector("details");
+  details.open = !details.open;
+});
+const printTools = document.querySelector(".print-tools");
+const caption = document.querySelector(".print-caption span");
+let closedBeforePrint = [];
+printTools.hidden = false;
+printTools.addEventListener("click", event => {
+  const mode = event.target.closest("[data-print]")?.dataset.print;
+  if (!mode) return;
+  const front = mode === "front";
+  document.documentElement.toggleAttribute("data-print-front", front);
+  caption.textContent = front ? "单页速记 · 仅卡面要点" : "卡面要点与完整细则";
+  window.print();
+});
+window.addEventListener("beforeprint", () => {
+  // Modern engines reveal closed details through the print stylesheet.
+  if (document.documentElement.hasAttribute("data-print-front") || CSS.supports("selector(details::details-content)")) return;
+  for (const details of grid.querySelectorAll("details:not([open])")) {
+    closedBeforePrint.push(details);
+    details.open = true;
+  }
+});
+window.addEventListener("afterprint", () => {
+  closedBeforePrint.forEach(details => { details.open = false; });
+  closedBeforePrint = [];
+  document.documentElement.removeAttribute("data-print-front");
+  caption.textContent = "卡面要点与完整细则";
 });
 </script>
 </body>
@@ -92,10 +150,7 @@ document.getElementById("csGrid").addEventListener("click", e => {
 
 
 def main():
-    data = json.loads((DATA / "cheatsheet.json").read_text(encoding="utf-8"))
-    cards_js = json.dumps(
-        data["cards"], ensure_ascii=False, separators=(",", ":")
-    ).replace("</", "<\\/")
+    cards = json.loads((DATA / "cheatsheet.json").read_text(encoding="utf-8"))["cards"]
     tb = topbar(
         active="cheatsheet.html",
         stats="stats-2026.html",
@@ -103,16 +158,16 @@ def main():
         seasons=("2026", "2025", "2024"),
     )
     html = (
-        HTML.replace("__CARDS__", cards_js)
+        HTML.replace("__CARDS__", "\n".join(render_card(card) for card in cards))
         .replace("__TOPBAR__", tb)
-        .replace("__NCARDS__", str(len(data["cards"])))
+        .replace("__NCARDS__", str(len(cards)))
     )
     html = inject_theme(html, meta=meta_tags("cheatsheet.html"))
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "cheatsheet.html"
     out.write_text(html, encoding="utf-8")
     print(
-        f"生成 {out}（{len(data['cards'])} 张速查卡，{len(html.encode('utf-8')) / 1024:.0f} KB）"
+        f"生成 {out}（{len(cards)} 张速查卡，{len(html.encode('utf-8')) / 1024:.0f} KB）"
     )
 
 

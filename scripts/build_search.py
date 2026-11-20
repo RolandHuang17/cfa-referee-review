@@ -138,7 +138,7 @@ def build_docs():
             "law",
             "考点速查",
             f"速查卡 · {card['title']}",
-            "cheatsheet.html",
+            f"cheatsheet.html#card-{card['id']}",
             " ".join(parts),
         )
     # 规则段落与页面生成使用相同锚点。

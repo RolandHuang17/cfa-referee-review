@@ -49,6 +49,8 @@ HTML = r"""<!DOCTYPE html>
   padding:14px 18px;margin-bottom:12px;
   transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
 .edition:hover{transform:translateY(-2px);border-color:var(--brand)}
+.edition[id]{scroll-margin-block-start:calc(var(--top-h) + 12px)}
+.edition:target{outline:2px solid var(--brand);outline-offset:2px}
 .ed-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ed-head h3{margin:0;font-family:var(--font-display);font-size:16.5px}
 .ed-size{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:6px;
@@ -135,27 +137,26 @@ def build_page(data):
         )
         for e in eds:
             badge = "correct" if e.get("platform") == "nextaur" else "info"
+            status_text = e.get("status_cn", "")
             if e.get("status") == "unreviewed":
                 badge = "pending"
+                status_text = "待人工核对"
             size = (
                 f'<span class="ed-size">{esc(e["size"])}</span>'
                 if e.get("size")
                 else ""
             )
-            status = (
-                f'<span class="ed-status badge {badge}">'
-                f"{esc(e.get('status_cn', ''))}</span>"
-            )
+            status = f'<span class="ed-status badge {badge}">{esc(status_text)}</span>'
             links = "".join(
                 f'<a class="btn" href="{esc(link["url"])}" target="_blank" rel="noopener noreferrer">'
                 f"{icon('external', 12)} {esc(link['label'])}</a>"
                 for link in e.get("links", [])
             )
-            editions_html += f"""<div class="edition">
+            editions_html += f"""<article class="edition" id="edition-{esc(e["id"])}" tabindex="-1">
   <div class="ed-head"><h3>{esc(e["title"])}</h3>{size}{status}</div>
   <p class="ed-note">{esc(e.get("note_cn", ""))}</p>
   <div class="ed-links">{links}</div>
-</div>"""
+</article>"""
     tools = "".join(
         f'<a class="tool" href="{esc(t["url"])}" target="_blank" rel="noopener noreferrer">'
         f"<b>{esc(t['name'])}</b><span>{esc(t.get('note_cn', ''))}</span></a>"

@@ -48,6 +48,8 @@ HTML = r"""<!DOCTYPE html>
   padding:14px 18px;margin-bottom:12px;
   transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
 .res:hover{transform:translateY(-2px);border-color:var(--brand)}
+.res[id]{scroll-margin-block-start:calc(var(--top-h) + 12px)}
+.res:target{outline:2px solid var(--brand);outline-offset:2px}
 .res-head{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
 .res-head h3{margin:0;font-family:var(--font-display);font-size:16px}
 .res-org{font-size:12px;color:var(--brand);font-weight:600;white-space:nowrap}
@@ -117,14 +119,14 @@ def build_page(data):
                 f"{icon('external', 11)} {esc(link['label'])}</a>"
                 for link in r.get("links", [])
             )
-            cards += f"""<div class="res">
+            cards += f"""<article class="res" id="resource-{esc(r["id"])}" tabindex="-1">
   <div class="res-head"><span class="res-org">{esc(r["org"])}</span>
     <h3>{esc(r["name"])}</h3>
     <span class="badge {lang_badge}">{esc(r.get("status_cn", ""))}</span></div>
   <div class="res-meta">{meta}</div>
   <p class="res-note">{esc(r.get("note_cn", ""))}</p>
   <div class="res-links">{links}</div>
-</div>"""
+</article>"""
         groups_html += (
             f'<section class="sect"><h2>{icon("flag", 17)} {esc(g["name_cn"])}</h2>'
             f'<p class="desc">{esc(g.get("desc_cn", ""))}</p>{cards}</section>'

@@ -29,7 +29,9 @@ from lib.paths import (
     HNS_ZH_JSON,
     IFAB_JSON,
     IFAB_ZH_JSON,
+    INTL_JSON,
     PRO_JSON,
+    RAP_JSON,
     RFEF_JSON,
     RFEF_ZH_JSON,
     SCALE_JSON,
@@ -261,6 +263,51 @@ def build_docs():
             f"pro.html#{article_anchor(a['url'])}",
             f"{a.get('title', '')} {a.get('league', '')}",
         )
+    # RAP 期目与资源目录都是入口说明；它们与已收录的逐期判例分别定位。
+    rap = _read(RAP_JSON)
+    eras = {era["key"]: era["name_cn"] for era in rap.get("eras", [])}
+    for edition in rap.get("editions", []):
+        if edition.get("era") not in eras:
+            continue  # 详情页也只展示已登记的分期。
+        pending = edition.get("status") == "unreviewed"
+        status = "待人工核对" if pending else edition.get("status_cn", "")
+        title = edition["title"] + (" · " + status if pending else "")
+        terms = [
+            f"UEFA RAP {edition['id']}",
+            "Refereeing Assistance Programme 裁判援助计划",
+            str(edition.get("year") or ""),
+            eras[edition["era"]],
+            edition.get("platform"),
+            edition.get("size"),
+            status,
+            edition.get("note_cn"),
+            *(link["label"] for link in edition.get("links", [])),
+        ]
+        add(
+            "intl",
+            "RAP 期目",
+            title,
+            f"rap.html#edition-{edition['id']}",
+            " ".join(filter(None, terms)),
+        )
+    for group in _read(INTL_JSON).get("groups", []):
+        for resource in group.get("resources", []):
+            terms = [
+                group["name_cn"],
+                resource.get("lang"),
+                resource.get("update"),
+                resource.get("form"),
+                resource.get("status_cn"),
+                resource.get("note_cn"),
+                *(link["label"] for link in resource.get("links", [])),
+            ]
+            add(
+                "intl",
+                "资源导航",
+                f"{resource['org']} · {resource['name']}",
+                f"intl.html#resource-{resource['id']}",
+                " ".join(filter(None, terms)),
+            )
     return docs
 
 

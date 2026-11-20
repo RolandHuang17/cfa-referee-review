@@ -31,6 +31,8 @@
   padding:14px 18px;margin-bottom:12px;
   transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
 .edition:hover{transform:translateY(-2px);border-color:var(--brand)}
+.edition[id]{scroll-margin-block-start:calc(var(--top-h) + 12px)}
+.edition:target{outline:2px solid var(--brand);outline-offset:2px}
 .ed-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .ed-head h3{margin:0;font-family:var(--font-display);font-size:16.5px}
 .ed-size{font-size:11.5px;color:var(--muted);border:1px solid var(--line);border-radius:6px;
@@ -416,99 +418,99 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   <section class="sect">
     <h2><svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="2.18"/><line x1="7" y1="2" x2="7" y2="22"/><line x1="17" y1="2" x2="17" y2="22"/><line x1="2" y1="12" x2="22" y2="12"/><line x1="2" y1="7" x2="7" y2="7"/><line x1="2" y1="17" x2="7" y2="17"/><line x1="17" y1="17" x2="22" y2="17"/><line x1="17" y1="7" x2="22" y2="7"/></svg> 各期索引</h2>
     <p class="desc">按发布时期分组。下载包时期的 WeTransfer 链接通常在数周后失效，「链接可能已失效」为常态——在线期请直接使用 Nextaur。介意第三方工具的请只用 Nextaur。</p>
-    <h3 style="font-family:var(--font-display);font-size:15.5px;margin:18px 0 10px">Nextaur 在线期（2025-2 起）</h3><p class="desc" style="margin:-6px 0 12px">免费注册 Nextaur 账号后在线观看，无需下载。</p><div class="edition">
+    <h3 style="font-family:var(--font-display);font-size:15.5px;margin:18px 0 10px">Nextaur 在线期（2025-2 起）</h3><p class="desc" style="margin:-6px 0 12px">免费注册 Nextaur 账号后在线观看，无需下载。</p><article class="edition" id="edition-2026-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2026-1</h3><span class="ed-status badge correct">在线（免费注册）</span></div>
   <p class="ed-note">最新一期，欧足联改用 Nextaur 平台发布</p>
   <div class="ed-links"><a class="btn" href="https://nextaur.com/uefa/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Nextaur 平台</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2025-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2025-2</h3><span class="ed-status badge correct">在线（免费注册）</span></div>
   <p class="ed-note">首个 Nextaur 在线版，判例量较大</p>
   <div class="ed-links"><a class="btn" href="https://nextaur.com/uefa/" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> Nextaur 平台</a></div>
-</div><h3 style="font-family:var(--font-display);font-size:15.5px;margin:18px 0 10px">下载包时期（2016 – 2025-1）</h3><p class="desc" style="margin:-6px 0 12px">WeTransfer 下载包（5–14GB），区分 PC/MAC；链接多已失效，2020 起需付费 Mulppy App 打开。下载与付费风险自负。</p><div class="edition">
+</article><h3 style="font-family:var(--font-display);font-size:15.5px;margin:18px 0 10px">下载包时期（2016 – 2025-1）</h3><p class="desc" style="margin:-6px 0 12px">WeTransfer 下载包（5–14GB），区分 PC/MAC；链接多已失效，2020 起需付费 Mulppy App 打开。下载与付费风险自负。</p><article class="edition" id="edition-2025-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2025-1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2025 年夏休版；发布后链接有过更新</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2025-1-update" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载（更新链接）</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-EURO-2024" tabindex="-1">
   <div class="ed-head"><h3>RAP Euro 2024</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">原计划的 2024-2 未发布，欧洲杯版为该周期最终版，2025 年初发布</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2024-euro" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2024-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2024:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2024 夏季版</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2024-1-new" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2023-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2023:2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2023 年末版；链接曾更新</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2023-2-new" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载（新链接）</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2023-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2023:1</h3><span class="ed-size">14.2GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2023 年 8 月发布</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2023-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2022-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2022:2</h3><span class="ed-size">9.9GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2023 年 1 月发布（2022-23 冬歇版）</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2022-2" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2022-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2022:1</h3><span class="ed-size">11.3GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2022 夏季版</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2022-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2021-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2021:2</h3><span class="ed-size">8.5GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">由读者共享给 dutchreferee 发布</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2021-2" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2021-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2021:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2021 夏季版</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/uefa-rap-2021-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-EURO-2020" tabindex="-1">
   <div class="ed-head"><h3>RAP Euro 2020</h3><span class="ed-size">5.1GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">欧足联官方发布的欧洲杯专题版</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/rap-euro-2020" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2020-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2020:2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">链接由欧足联流出后在网络流传</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2020-2" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2020-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2020:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">自 2020 版起需要 Mulppy App 打开（付费）</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2020-1" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载（Mac 与 PC）</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2019-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2019:2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">区分系统版本</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/rap-2019-2-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/rap-2019-2-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a><a class="btn" href="http://bit.ly/rap-2019-2-mac-mojave" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC (Mojave/Sierra)</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2019-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2019:1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">区分系统版本</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-2019-1-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/rap-2019-1-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a><a class="btn" href="http://bit.ly/rap-2019-1-sierra-mojave" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC (Sierra/Mojave)</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2018-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2018:2</h3><span class="ed-size">约10GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">文件巨大，建议 Wi-Fi 下载</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/RAP-2018-2-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-2018-2-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2018-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2018:1</h3><span class="ed-size">约10GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">文件巨大，建议 Wi-Fi 下载</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-2018-1-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-2018-1-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a><a class="btn" href="http://bit.ly/RAP-2018-1-mac-sierra" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC Sierra</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2017-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2017-2</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">近半年新场景合集</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-2017-2-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-2017-2-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-WEURO-2017" tabindex="-1">
   <div class="ed-head"><h3>RAP Women&#39;s Euro 2017</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2017 女足欧洲杯专题</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/rap-womens-euro-2017-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/rap-women-euro-2017-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2017-1" tabindex="-1">
   <div class="ed-head"><h3>RAP 2017-1</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">2017 年第一期；链接曾更新</p>
   <div class="ed-links"><a class="btn" href="https://bit.ly/rap-2017-1-pc-new" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> 下载</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-EURO-2016" tabindex="-1">
   <div class="ed-head"><h3>RAP Euro 2016</h3><span class="ed-size">约5GB</span><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">法国欧洲杯专题，仅 PC 版</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/rap-euro-2016-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a></div>
-</div><div class="edition">
+</article><article class="edition" id="edition-2016-2" tabindex="-1">
   <div class="ed-head"><h3>RAP 2016（edition 2）</h3><span class="ed-status badge info">下载包（链接可能已失效）</span></div>
   <p class="ed-note">链接来自 Twitter 上的 Arbiter Café</p>
   <div class="ed-links"><a class="btn" href="http://bit.ly/RAP-pc" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> PC</a><a class="btn" href="http://bit.ly/RAP-mac" target="_blank" rel="noopener noreferrer"><svg class="ic" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg> MAC</a></div>
-</div>
+</article>
   </section>
   <section class="sect">
     <h2><svg class="ic" width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg> 相关工具与链接</h2>

@@ -18,6 +18,7 @@ from lib.ifab_content import search_rows as ifab_search_rows
 from lib.law_blocks import anchored_section
 from lib.pagelib import article_anchor
 from lib.pro_series import series_name
+from lib.uefa_content import apply_zh as apply_uefa_zh
 
 from lib.paths import (
     CONMEBOL_JSON,
@@ -164,17 +165,27 @@ def build_docs():
                     )
     # UEFA 判例（中文标题 + 英文原标题都可搜）
     uefa, uzh = _read(UEFA_JSON), _read(UEFA_ZH_JSON)
+    apply_uefa_zh(uefa, uzh)
     for gi, grp in enumerate(uefa.get("groups", [])):
         for i, it in enumerate(grp.get("items", []), 1):
-            zh_title = (uzh.get("items", {}).get(it.get("id", "")) or {}).get(
-                "title", ""
-            )
+            zh_title = it["title_cn"]
             add(
                 "intl",
                 "UEFA",
                 zh_title or it.get("title", ""),
                 f"uefa.html#u-{gi}c{i}",
-                f"{it.get('title', '')} {zh_title} {grp.get('name_cn', '')} {it.get('caption', '')}",
+                " ".join(
+                    filter(
+                        None,
+                        (
+                            it["title"],
+                            zh_title,
+                            grp["name_current_cn"],
+                            grp["name_en"],
+                            it.get("caption"),
+                        ),
+                    )
+                ),
             )
     # 主协议与配套指南使用详情页相同的双语配对及条款锚点。
     for title, anchor, text in ifab_search_rows(_read(IFAB_JSON), _read(IFAB_ZH_JSON)):

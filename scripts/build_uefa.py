@@ -3,8 +3,8 @@
 
 数据来自 data/uefa.json（fetch_uefa.py 抓取并提交，CI 无网络依赖照常重建）；
 中文译文来自 data/uefa-zh.json（翻译层，与抓取管线解耦——fetch_uefa.py parse 会整体
-覆写 uefa.json，译文绝不能写进去）。构建时防御式合并：组按 key 匹配、准则按块序
-对齐（块数/条数不符该组回退英文）、判例按 id 匹配，未命中保持英文并打印构建警告。
+覆写 uefa.json，译文绝不能写进去）。构建时按来源版本配对组名、导语、准则与判例标题。
+原文已变或缺译的部分展示官方英文并标记中文待复核。
 页面默认纯中文，页头「英文原文」开关（localStorage cfa.uefa-en）切换显示英文原文。
 视频为 Akamai token 门禁 HLS，无法本地化/热链，且官方分享页实测
 X-Frame-Options: DENY（2026-10 探测）→ 卡片为纯文字 + 「在 UEFA 官网观看」外链；
@@ -15,12 +15,14 @@ import json
 
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
+from lib.uefa_content import apply_zh
 
 from lib.paths import DATA, SITE, UEFA_JSON
 
 ZH_JSON = DATA / "uefa-zh.json"
 SOURCE_URL = "https://www.uefa.com/running-competitions/refereeing/clear-line/"
 EMBED = False  # UEFA 分享页 X-Frame-Options: DENY（实测），纯链接模式
+REVIEW_NOTE = '<p class="translation-status">中文待复核，暂显示官方英文。</p>'
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -85,6 +87,7 @@ html[data-uefa-en] ul.en{display:block}
   border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2);white-space:nowrap}
 .hhead h3{margin:0;font-size:16px;font-weight:600;line-height:1.5}
 .hnote{font-size:14px;line-height:1.9;margin:8px 0 0}
+.translation-status{font-size:12px;color:var(--muted);margin:4px 0}
 .hcap{font-size:13.5px;line-height:1.85;margin:8px 0 0;color:var(--ink2)}
 .watch{display:inline-flex;align-items:center;gap:7px;margin-top:12px;padding:7px 15px;
   border-radius:999px;border:1px solid var(--brand);background:var(--info-bg);color:var(--brand);
@@ -165,72 +168,27 @@ def load_zh():
         return None
 
 
-def apply_zh(data, zh):
-    """把 uefa-zh.json 译文并入 data：组按 key 匹配、criteria 按块序对齐、判例按 id 匹配；
-    结构不符或未译的部分保持英文并打印构建警告；译文里未被匹配的键也会告警（防 uefa.json
-    更新后译文漂移失联）。"""
-    if not zh:
-        return
-    zh_groups = zh.get("groups") or {}
-    zh_items = zh.get("items") or {}
-    used_g, used_i = set(), set()
-    for g in data.get("groups", []):
-        key = g.get("key", "")
-        zg = zh_groups.get(key)
-        if not zg:
-            if zh_groups:
-                print(f"⚠ 组 [{key}] 无译文，该组保持英文")
-            continue
-        used_g.add(key)
-        if zg.get("intro"):
-            g["intro_cn"] = zg["intro"]
-        elif g.get("intro"):
-            print(f"⚠ 组 [{key}] 缺 intro 译文")
-        en_c = g.get("criteria") or []
-        zc = zg.get("criteria") or []
-        if zc:
-            if len(zc) == len(en_c) and all(
-                len(b.get("items") or []) == len(a.get("items") or [])
-                for a, b in zip(en_c, zc)
-            ):
-                g["criteria_cn"] = zc
-            else:
-                print(f"⚠ 组 [{key}] criteria 块数/条数与英文不一致，该组准则回退英文")
-        elif en_c:
-            print(f"⚠ 组 [{key}] 缺 criteria 译文")
-        for it in g.get("items", []):
-            zi = zh_items.get(it.get("id", ""))
-            if zi and zi.get("title"):
-                it["title_cn"] = zi["title"]
-                used_i.add(it.get("id", ""))
-            else:
-                print(f"⚠ 判例 [{it.get('id', '')}] 无标题译文，保持英文")
-    stale_g = sorted(set(zh_groups) - used_g)
-    stale_i = sorted(set(zh_items) - used_i)
-    if stale_g:
-        print(f"⚠ 译文中存在未匹配的组 key: {', '.join(stale_g)}")
-    if stale_i:
-        head = ", ".join(stale_i[:5]) + (" …" if len(stale_i) > 5 else "")
-        print(f"⚠ 译文中存在未匹配的判例 id（{len(stale_i)} 条）: {head}")
-
-
 def build_page(data):
     groups = data.get("groups", [])
     navs, secs = "", ""
     for gi, g in enumerate(groups):
         anchor = f"u-{gi}"
+        cn_name, en_name = g.get("name_current_cn") or "", g.get("name_en") or ""
         navs += (
-            f'<a class="gnav" href="#{anchor}">{esc(g["name_cn"])}'
+            f'<a class="gnav" href="#{anchor}">{esc(cn_name or en_name)}'
             f"<b>{len(g['items'])}</b></a>"
         )
-        cn_name, en_name = g.get("name_cn") or "", g.get("name_en") or ""
         icn, ien = g.get("intro_cn") or "", g.get("intro") or ""
         if icn:
             intro = f'<p class="gintro">{esc(icn)}</p>'
             if ien:
                 intro += f'<p class="gintro en">{esc(ien)}</p>'
         else:
-            intro = f'<p class="gintro">{esc(ien)}</p>' if ien else ""
+            intro = (
+                f'<p class="gintro" lang="en">{esc(ien)}</p>{REVIEW_NOTE}'
+                if ien
+                else ""
+            )
         crit = ""
         if g.get("criteria"):
             ccn = g.get("criteria_cn") or []
@@ -241,18 +199,22 @@ def build_page(data):
                     esc(c["h"]),
                     "".join(f"<li>{esc(x)}</li>" for x in c["items"]),
                 )
-                h4 = f"<h4>{esc(z['h']) if z else en_h}</h4>"
-                ul = f"<ul>{''.join(f'<li>{esc(x)}</li>' for x in z['items']) if z else en_lis}</ul>"
                 if z:
-                    h4 += f'<h4 class="en">{en_h}</h4>'
-                    ul += f'<ul class="en">{en_lis}</ul>'
+                    h4 = f'<h4>{esc(z["h"])}</h4><h4 class="en" lang="en">{en_h}</h4>'
+                    cn_lis = "".join(f"<li>{esc(x)}</li>" for x in z["items"])
+                    ul = f'<ul>{cn_lis}</ul><ul class="en" lang="en">{en_lis}</ul>'
+                else:
+                    h4 = f'<h4 lang="en">{en_h}</h4>'
+                    ul = f'<ul lang="en">{en_lis}</ul>{REVIEW_NOTE}'
                 blocks += f'<div class="gcrit">{h4}{ul}</div>'
             crit = f'<div class="gcrits">{blocks}</div>'
         cards = ""
         for i, it in enumerate(g["items"], 1):
             tcn, ten = it.get("title_cn") or "", it.get("title") or ""
             title_en = (
-                f'<p class="htitle-en en">{esc(ten)}</p>' if (tcn and ten) else ""
+                f'<p class="htitle-en en" lang="en">{esc(ten)}</p>'
+                if (tcn and ten)
+                else ""
             )
             frame = ""
             if EMBED:
@@ -269,15 +231,15 @@ def build_page(data):
                 else ""
             )
             cards += f"""<article class="hcard" id="{anchor}c{i}">
-  <div class="hhead"><span class="hid">#{i}</span><h3>{esc(tcn or ten)}</h3></div>
-  {title_en}{frame}{caption}
+  <div class="hhead"><span class="hid">#{i}</span><h3 lang="{"zh-CN" if tcn else "en"}">{esc(tcn or ten)}</h3></div>
+  {title_en}{"" if tcn else REVIEW_NOTE}{frame}{caption}
   <a class="watch" href="{esc(it["url"])}" target="_blank" rel="noopener noreferrer">{icon("play", 13)} 在 UEFA 官网观看 {icon("external", 13)}</a>{date}
 </article>"""
         if cn_name:
             en_part = f'<small class="en">{esc(en_name)}</small>' if en_name else ""
             h2 = f"<h2>{esc(cn_name)} {en_part} <b>{len(g['items'])}例</b></h2>"
         else:
-            h2 = f"<h2>{esc(en_name)} <b>{len(g['items'])}例</b></h2>"
+            h2 = f'<h2><span lang="en">{esc(en_name)}</span> <b>{len(g["items"])}例</b></h2>{REVIEW_NOTE}'
         secs += (
             f'<section class="gsec" id="{anchor}">{h2}{intro}{crit}{cards}</section>'
         )
@@ -307,7 +269,7 @@ def main():
     if not UEFA_JSON.exists():
         raise SystemExit(f"缺少 {UEFA_JSON}；请先运行 fetch_uefa.py 抓取")
     data = json.loads(UEFA_JSON.read_text(encoding="utf-8"))
-    apply_zh(data, load_zh())
+    apply_zh(data, load_zh(), print)
     build_page(data)
 
 

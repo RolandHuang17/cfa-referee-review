@@ -1,14 +1,8 @@
 """IFAB 原文、译文与定位。详情页和搜索只从这一份配对结果取数。"""
 
-import hashlib
-import json
 from collections import Counter
 
-
-def fingerprint(value):
-    """原文来源指纹；复核旧译与新版本后才更新对应项。"""
-    serialized = json.dumps(value, ensure_ascii=False, separators=(",", ":"))
-    return hashlib.sha256(serialized.encode("utf-8")).hexdigest()[:20]
+from lib.translation_versions import fingerprint
 
 
 def version_inputs(data):

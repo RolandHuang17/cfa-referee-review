@@ -61,39 +61,18 @@ jobs:
         run: python scripts/build_all.py
       - name: Verify learning records and coach handouts
         run: node --test tests/test_coach_model.cjs tests/quiz-records.cjs
+      - name: Install pinned browser CLI
+        run: |
+          npm install --prefix "$RUNNER_TEMP/cfa-browser-cli" --no-save --no-audit --no-fund @playwright/cli@0.1.24
+          echo "$RUNNER_TEMP/cfa-browser-cli/node_modules/.bin" >> "$GITHUB_PATH"
       - name: Verify browser learning flow and offline upgrade
         run: |
           python tests/browser_server.py 8765 > /tmp/cfa-browser.log 2>&1 &
           python tests/browser_server.py 8876 > /tmp/cfa-offline.log 2>&1 &
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci open http://127.0.0.1:8765/quiz.html --browser=chrome
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_smoke.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_learning_audit.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_learning_recovery.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_favorite_labels.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_quiz_records.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_scale_quiz_history.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_interface.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_stats_rounds.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_case_citation.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_navigation.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_local_video.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_search_details.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_ifab_content.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_cheatsheet.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_learning_interop.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_favorite_tabs.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_rfef_media.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_exam_resume.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_quiz_backup.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_international_guide_search.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_search_controls.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_season_filters.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_theme_contrast.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_highlight_layers.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_exam_navigation.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_search_landing.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_pending_notes.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_offline.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_compare.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_coach.js
-          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci close
+          trap 'playwright-cli -s=ci close' EXIT
+          playwright-cli -s=ci open http://127.0.0.1:8765/quiz.html --browser=chrome
+          for scenario in tests/browser_*.js; do
+            echo "::group::$scenario"
+            playwright-cli -s=ci run-code --filename "$scenario"
+            echo "::endgroup::"
+          done

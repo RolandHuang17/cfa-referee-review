@@ -28,7 +28,35 @@ async (startPage) => {
       const box = page.locator("#noteWrap");
       if (rule && !await box.evaluate(e => e.open)) await box.locator("summary").click();
     }
+    async function importFile(data) {
+      const alert = page.waitForEvent("dialog");
+      await page.locator(rule ? "#importFileN" : "#importFile").setInputFiles({
+        name:"另一设备的笔记备份.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(data))
+      });
+      const dialog = await alert, message = dialog.message();
+      await dialog.accept();
+      return message;
+    }
     try {
+      const independent = rule ? "law-10" : "228";
+      await open(independent);
+      await input.fill("设备甲记录");
+      const abroad = await download(page, output);
+      const stamp = abroad.notes[independent].ts;
+      abroad.notes[independent] = {text:"设备乙记录", ts:stamp+100, conflicts:[{text:"乙的副本",ts:stamp-1}]};
+      check((await importFile(abroad)).includes("合并了 1 条"), file + " 新备份没有合并");
+      const afterImport = (await download(page, output)).notes[independent];
+      check(afterImport.text === "设备乙记录" && afterImport.conflicts.map(v=>v.text).sort().join("/") ===
+        ["设备甲记录","乙的副本"].sort().join("/"), file + " 跨设备导入丢失不同文本");
+      const versions = await page.evaluate(id=>noteStore.base(id, true), independent);
+      check((await importFile(abroad)).includes("合并了 0 条") && await page.evaluate(
+        ({id,versions}) => JSON.stringify(noteStore.base(id,true)) === JSON.stringify(versions), {id:independent,versions}),
+        file + " 重复导入同一备份还在写版本");
+      abroad.notes[independent] = {text:"旧设备另一份记录", ts:stamp-100};
+      await importFile(abroad);
+      const final = (await download(page, output)).notes[independent];
+      check(final.text === "设备乙记录" && final.conflicts.some(v=>v.text === "旧设备另一份记录"),
+        file + " 旧备份的不同文字未保留为可恢复副本");
       await open(ids[0]);
       await input.fill("第一次编辑");
       await open(ids[1]);
@@ -84,5 +112,5 @@ async (startPage) => {
         file + " 继续写入后覆盖了异常原件或新笔记");
     } finally { await context.close(); }
   }
-  return "PASS 赛季和规则笔记快速切换、离开前写失败保留草稿、异常隔离及原件恢复";
+  return "PASS 赛季和规则笔记快速切换、离开前写失败保留草稿、异常隔离及原件恢复、多设备备份合并与去重";
 }

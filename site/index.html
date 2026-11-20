@@ -673,6 +673,33 @@ function noteFromBackup(value) {
   }
   return note;
 }
+// Backups from two devices have no shared revision IDs. Keep distinct text as
+// recoverable copies, and replace only the local parents observed before the import.
+function importLearningNotes(store, entries, known) {
+  const local = store.read(), updates = [];
+  for (const [id, raw] of Object.entries(entries || {})) {
+    if (!known(id)) continue;
+    const incoming = noteFromBackup(raw), old = local[id];
+    if (!incoming || (!incoming.text.trim() && !incoming.conflicts?.length)) continue;
+    const recent = old && (old.ts || 0) >= incoming.ts ? old : incoming;
+    const other = recent === old ? incoming : old;
+    const copies = new Map();
+    for (const copy of [...(recent.conflicts || []), other, ...(other?.conflicts || [])]) {
+      if (!copy?.text || copy.text === recent.text) continue;
+      const previous = copies.get(copy.text);
+      if (!previous || (copy.ts || 0) > previous.ts)
+        copies.set(copy.text, {text:copy.text, ts:copy.ts || 0});
+    }
+    const merged = {...recent};
+    if (copies.size) merged.conflicts = [...copies.values()];
+    else delete merged.conflicts;
+    if (old && old.text === merged.text && old.ts === merged.ts &&
+        JSON.stringify(old.conflicts || []) === JSON.stringify(merged.conflicts || [])) continue;
+    updates.push({id, value:merged, parents:store.base(id, true)});
+  }
+  for (const {id, value, parents} of updates) store.put(id, value, parents);
+  return updates.length;
+}
 function showNoteCopies(box, note, restore, resolve) {
   box.replaceChildren();
   if (!note || !note.conflicts || !note.conflicts.length) return;

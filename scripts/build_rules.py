@@ -1009,13 +1009,7 @@ document.getElementById("importFileN").addEventListener("change", e=>{
         if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;
         writeHighlight(h, h); seen.add(identity(h)); n++;
       }
-      secNotes = noteStore.read();
-      for (const [s, raw] of Object.entries(d.notes || {})) {
-        const v = noteFromBackup(raw);
-        if (byId[s] && v && (!secNotes[s] || v.ts > (secNotes[s].ts || 0))) {
-          noteStore.put(s, v, noteStore.base(s)); n++;
-        }
-      }
+      n += importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));
       applyHl(); loadNote(); showWriteStatus();
       alert((hlStore.pending.size || noteStore.pending.size ? "已读入，部分记录待保存" : "导入完成") + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }

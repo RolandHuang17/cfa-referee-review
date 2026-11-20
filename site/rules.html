@@ -630,6 +630,33 @@ function noteFromBackup(value) {
   }
   return note;
 }
+// Backups from two devices have no shared revision IDs. Keep distinct text as
+// recoverable copies, and replace only the local parents observed before the import.
+function importLearningNotes(store, entries, known) {
+  const local = store.read(), updates = [];
+  for (const [id, raw] of Object.entries(entries || {})) {
+    if (!known(id)) continue;
+    const incoming = noteFromBackup(raw), old = local[id];
+    if (!incoming || (!incoming.text.trim() && !incoming.conflicts?.length)) continue;
+    const recent = old && (old.ts || 0) >= incoming.ts ? old : incoming;
+    const other = recent === old ? incoming : old;
+    const copies = new Map();
+    for (const copy of [...(recent.conflicts || []), other, ...(other?.conflicts || [])]) {
+      if (!copy?.text || copy.text === recent.text) continue;
+      const previous = copies.get(copy.text);
+      if (!previous || (copy.ts || 0) > previous.ts)
+        copies.set(copy.text, {text:copy.text, ts:copy.ts || 0});
+    }
+    const merged = {...recent};
+    if (copies.size) merged.conflicts = [...copies.values()];
+    else delete merged.conflicts;
+    if (old && old.text === merged.text && old.ts === merged.ts &&
+        JSON.stringify(old.conflicts || []) === JSON.stringify(merged.conflicts || [])) continue;
+    updates.push({id, value:merged, parents:store.base(id, true)});
+  }
+  for (const {id, value, parents} of updates) store.put(id, value, parents);
+  return updates.length;
+}
 function showNoteCopies(box, note, restore, resolve) {
   box.replaceChildren();
   if (!note || !note.conflicts || !note.conflicts.length) return;
@@ -1139,13 +1166,7 @@ document.getElementById("importFileN").addEventListener("change", e=>{
         if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;
         writeHighlight(h, h); seen.add(identity(h)); n++;
       }
-      secNotes = noteStore.read();
-      for (const [s, raw] of Object.entries(d.notes || {})) {
-        const v = noteFromBackup(raw);
-        if (byId[s] && v && (!secNotes[s] || v.ts > (secNotes[s].ts || 0))) {
-          noteStore.put(s, v, noteStore.base(s)); n++;
-        }
-      }
+      n += importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));
       applyHl(); loadNote(); showWriteStatus();
       alert((hlStore.pending.size || noteStore.pending.size ? "已读入，部分记录待保存" : "导入完成") + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }

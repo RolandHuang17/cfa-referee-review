@@ -992,6 +992,44 @@ class QuizRecords {
   static strings(value) {
     return Array.isArray(value) && value.every(s => typeof s === "string");
   }
+  static validVersion(value) {
+    return Array.isArray(value) && value.length === 2 && this.count(value[0]) &&
+      typeof value[1] === "string" && /^[a-z0-9-]{1,64}$/.test(value[1]);
+  }
+  static compareVersion(a,b) {
+    return a[0]-b[0] || (a[1] < b[1] ? -1 : a[1] > b[1] ? 1 : 0);
+  }
+  static reviewTime(row) {
+    // Older versions scheduled a correct review at its time plus the stage interval.
+    const interval = this.intervals[row.stage || 0] || 0;
+    return Math.max(row.last || 0, (row.due || 0) - interval*86400000);
+  }
+  static mergeWrong(local, incoming) {
+    if (!local) return {...incoming};
+    const latestMiss = this.compareVersion(incoming.missVersion || [incoming.last || 0,""],
+      local.missVersion || [local.last || 0,""]) > 0 ? incoming : local;
+    // Without a star operation timestamp a legacy false can also mean the default.
+    const newerStar = local.starVersion || incoming.starVersion
+      ? this.compareVersion(incoming.starVersion || [0,""],local.starVersion || [0,""]) > 0
+      : incoming.star && !local.star;
+    const star = newerStar ? incoming : local;
+    const reviewOrder = this.compareVersion(incoming.reviewVersion || [this.reviewTime(incoming),""],
+      local.reviewVersion || [this.reviewTime(local),""]);
+    // If both snapshots lack a distinct review time, retain verifiable progress.
+    const progress = row => (row.done ? this.intervals.length : 0) + (row.stage || 0);
+    const reviewDifference = reviewOrder || progress(incoming)-progress(local) || (incoming.due || 0)-(local.due || 0);
+    const review = reviewDifference > 0 ? incoming : local;
+    const wrong = Math.max(local.wrong || 0,incoming.wrong || 0);
+    if (latestMiss === local && star === local && review === local && wrong === (local.wrong || 0)) return local;
+    const result = {...latestMiss};
+    for (const [source,fields] of [[star,["star","starVersion"]],[review,["stage","due","done","reviewVersion"]]]){
+      for (const key of fields){
+        if (key in source) result[key] = source[key]; else delete result[key];
+      }
+    }
+    if (wrong || "wrong" in latestMiss) result.wrong = wrong;
+    return result;
+  }
   static wrongEntry(value, question) {
     if (!this.object(value)) throw Error("错题记录应为对象");
     const type = value.t ?? question?.t;
@@ -1006,6 +1044,12 @@ class QuizRecords {
       if (key in value && !this.count(value[key])) throw Error("次数、时间或复习档位无效");
     }
     if (value.stage >= this.intervals.length) throw Error("复习档位超出范围");
+    for (const field of ["starVersion","reviewVersion","missVersion"]){
+      if (!(field in value)) continue;
+      const complete = field === "starVersion" ? "star" in value : field === "missVersion" ? "last" in value :
+        ["stage","due","done"].every(k=>k in value);
+      if (!complete || !this.validVersion(value[field])) throw Error("错题操作版本无效");
+    }
     const your = value.your;
     if (your != null && your !== "") {
       if (type === "case") {
@@ -1132,7 +1176,11 @@ class QuizRecords {
     return {...state,wrong:Object.assign(Object.create(null),state.wrong),
       stats:Object.assign(Object.create(null),state.stats),history:state.history.slice(),examReceipts:state.examReceipts.slice()};
   }
-  static apply(state, event) {
+  static apply(state, event, key = "") {
+    // A local action follows the imported state it actually saw, even if the device clock is behind.
+    const token = key.slice(this.prefix.length);
+    const nextVersion = previous => [Math.min(Number.MAX_SAFE_INTEGER, Math.max(event.time,previous+1)),
+      /^[a-z0-9-]{1,64}$/.test(token) ? token : "legacy"];
     state.order = Math.max(state.order,event.order);
     if (event.kind === "attempt") {
       if (event.examId){
@@ -1144,13 +1192,20 @@ class QuizRecords {
         const entry = state.wrong[item.id];
         if (item.miss) {
           state.stats[item.id] = {r:stat.r,w:stat.w+1};
-          state.wrong[item.id] = {...item.miss, star:entry?.star || false, wrong:(entry?.wrong || 0)+1,
+          const version = nextVersion(Math.max(entry?.missVersion?.[0] || entry?.last || 0,
+            entry?.reviewVersion?.[0] || (entry ? this.reviewTime(entry) : 0)));
+          state.wrong[item.id] = {...item.miss, star:entry?.star || false,
+            missVersion:version, reviewVersion:version,
+            wrong:(entry?.wrong || 0)+1,
             stage:0, done:false, last:event.time, due:event.time};
+          if (entry?.starVersion) state.wrong[item.id].starVersion = entry.starVersion;
+          else delete state.wrong[item.id].starVersion;
         } else {
           state.stats[item.id] = {r:stat.r+1,w:stat.w};
           if (entry) {
             const stage = Math.min((entry.stage || 0)+1, this.intervals.length-1);
-            state.wrong[item.id] = {...entry,stage,due:event.time + this.intervals[stage]*86400000,done:stage === this.intervals.length-1};
+            const reviewVersion = nextVersion(entry.reviewVersion?.[0] || this.reviewTime(entry));
+            state.wrong[item.id] = {...entry,reviewVersion,stage,due:event.time + this.intervals[stage]*86400000,done:stage === this.intervals.length-1};
           }
         }
       }
@@ -1159,14 +1214,12 @@ class QuizRecords {
         state.history.length = Math.min(state.history.length,20);
       }
     } else if (event.kind === "star") {
-      if (state.wrong[event.id]) state.wrong[event.id] = {...state.wrong[event.id],star:event.value};
+      const entry = state.wrong[event.id];
+      if (entry) state.wrong[event.id] = {...entry,star:event.value,starVersion:nextVersion(entry.starVersion?.[0] || 0)};
     } else if (event.kind === "remove") {
       for (const id of event.ids) delete state.wrong[id];
     } else if (event.kind === "import") {
-      for (const [id, row] of Object.entries(event.rows)) {
-        if (!state.wrong[id] || (row.last || 0) > (state.wrong[id].last || 0))
-          state.wrong[id] = {...row};
-      }
+      for (const [id,row] of Object.entries(event.rows)) state.wrong[id] = this.mergeWrong(state.wrong[id],row);
       // An imported aggregate may overlap a local one. Retain the local counts.
       for (const [id,row] of Object.entries(event.legacyScaleStats || {}))
         if (!state.stats[id]) state.stats[id] = {r:row.r,w:row.w};
@@ -1179,14 +1232,7 @@ class QuizRecords {
       const other = state.stats[id] || {r:0,w:0};
       state.stats[id] = {r:Math.max(stat.r,other.r),w:Math.max(stat.w,other.w)};
     }
-    for (const [id,row] of Object.entries(fragment.wrong)) {
-      const other = state.wrong[id];
-      if (!other) state.wrong[id] = row;
-      else {
-        const latest = (row.last || 0) >= (other.last || 0) ? row : other;
-        state.wrong[id] = {...latest,wrong:Math.max(row.wrong || 0,other.wrong || 0)};
-      }
-    }
+    for (const [id,row] of Object.entries(fragment.wrong)) state.wrong[id] = QuizRecords.mergeWrong(state.wrong[id],row);
     // Preserve genuine identical exams within a single source, including timestamp ties.
     const counts = new Map();
     const identity = h => [h.t,h.got,h.max,h.n].join("/");
@@ -1256,7 +1302,7 @@ class QuizRecords {
   }
   replay(state, entries) {
     entries.sort(([a,x],[b,y]) => x.order-y.order || (a < b ? -1 : a > b ? 1 : 0));
-    for (const [,event] of entries) QuizRecords.apply(state,event);
+    for (const [key,event] of entries) QuizRecords.apply(state,event,key);
     return state;
   }
   read() {
@@ -1305,10 +1351,10 @@ class QuizRecords {
     } catch (_) {
       if (!keepDraft) throw Error("浏览器存储不可写，现有记录已保留");
       this.pending.set(key,event);
-      QuizRecords.apply(this.state,event);
+      QuizRecords.apply(this.state,event,key);
       return false;
     }
-    QuizRecords.apply(this.state,event);
+    QuizRecords.apply(this.state,event,key);
     if (!this.damagedSnapshot && (this.eventCount+1 >= 64 || this.eventSize+serialized.length >= 65536)) this.compact();
     return true;
   }

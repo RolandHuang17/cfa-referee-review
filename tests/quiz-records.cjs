@@ -32,6 +32,68 @@ test("legacy scale stats keep the local aggregate through imports and reloads", 
   assert.equal(Records.validEvent({kind:"import",rows:{},time:1,order:1}),true);
 });
 
+test("star and review backups merge independently and repeated imports cannot roll them back", () => {
+  const {Records,a} = setup();
+  const original={t:"var",last:100,wrong:3,star:false,stage:0,due:100,done:false,correct:"old"};
+  const id="var-1", bank={ [id]:{t:"var",s:"ifab"} };
+  const fresh = () => Records.importRows({wrong:{[id]:original}},bank)[id];
+  const s1=a.empty(),s2=a.empty();
+  s1.wrong[id]=fresh(); s2.wrong[id]=fresh();
+  function apply(state,event,order,time,token) {
+    Records.apply(state,{...event,time,order},Records.prefix+token);
+  }
+  apply(s1,{kind:"star",id,value:true},1,150,"device-a");
+  apply(s2,{kind:"attempt",answers:[{id}]},1,160,"device-b");
+  const starred=s1.wrong[id], reviewed=s2.wrong[id];
+  const merged=Records.mergeWrong(starred,reviewed);
+  assert.equal(merged.star,true); assert.equal(merged.stage,1); assert.equal(merged.last,100);
+  assert.deepEqual(JSON.parse(JSON.stringify(merged)),JSON.parse(JSON.stringify(Records.mergeWrong(reviewed,starred))));
+  assert.equal(Records.mergeWrong(merged,reviewed),merged);
+  s2.wrong[id]=merged;
+  apply(s2,{kind:"star",id,value:false},2,130,"device-b-unstar"); // Device clock runs behind its imported state.
+  assert.equal(Records.mergeWrong(s2.wrong[id],starred),s2.wrong[id]);
+  assert.equal(Records.mergeWrong(starred,s2.wrong[id]).star,false);
+  apply(s2,{kind:"attempt",answers:[miss(id)]},3,120,"new-miss");
+  const reset=Records.mergeWrong(merged,s2.wrong[id]);
+  assert.equal(reset.stage,0); assert.equal(reset.done,false); assert.equal(reset.wrong,4);
+  assert.equal(reset.star,false); assert.equal(reset.last,120);
+  assert.equal(Records.mergeWrong(reset,merged),reset);
+  assert.equal(Records.mergeWrong(reset,{...original,star:true,wrong:2}),reset);
+});
+
+test("unversioned backups retain known legacy stars and review dates, and malformed versions reject a whole import", () => {
+  const {Records}=setup();
+  const a={t:"var",last:200,wrong:2,stage:0,due:200,done:false,star:false};
+  const b={...a,wrong:1,stage:1,due:86400300,star:true};
+  const merged=Records.mergeWrong(a,b);
+  assert.equal(merged.star,true); assert.equal(merged.stage,1); assert.equal(merged.wrong,2);
+  assert.equal(Records.mergeWrong(merged,a),merged);
+  const reset={...a,last:400,due:400};
+  const updated=Records.mergeWrong(merged,reset);
+  assert.equal(updated.star,true); assert.equal(updated.stage,0); assert.equal(updated.last,400);
+  const bank={a:{t:"var"},b:{t:"var"}};
+  for (const bad of [{...b,starVersion:[5,4]},{t:"var",reviewVersion:[5,"token"]},{...b,missVersion:[-1,"token"]}]) {
+    assert.throws(()=>Records.importRows({wrong:{a,b:bad}},bank),/b：错题操作版本无效/);
+  }
+});
+
+test("operation versions survive compaction and same-time devices converge", async () => {
+  const locks={request:(_,options,cb)=>Promise.resolve().then(()=>cb({name:"lock"}))};
+  const {Records,a,storage}=setup(locks);
+  a.write({kind:"attempt",answers:[miss("var-1")]});
+  a.write({kind:"star",id:"var-1",value:true});
+  a.write({kind:"attempt",answers:[{id:"var-1"}]});
+  const before=JSON.stringify(a.read().wrong["var-1"]);
+  for(let n=0;n<64;n++) a.write({kind:"star",id:"empty",value:false});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.ok(storage.getItem(Records.checkpoint));
+  assert.equal(JSON.stringify(new Records(storage).state.wrong["var-1"]),before);
+  const starred={...JSON.parse(before),star:true,starVersion:[300,"device-a"]};
+  const cleared={...starred,star:false,starVersion:[300,"device-b"]};
+  assert.equal(Records.mergeWrong(starred,cleared).star,false);
+  assert.equal(Records.mergeWrong(cleared,starred).star,false);
+});
+
 test("simultaneous attempts retain both results, star and history on the same question without Web Locks", () => {
   const {a,b,storage,Records} = setup();
   const exam = {got:0,max:1,n:1};

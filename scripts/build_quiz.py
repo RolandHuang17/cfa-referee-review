@@ -1528,7 +1528,7 @@ document.getElementById("importFile").addEventListener("change", e=>{
       const {wrong:current, stats} = quizRecords.read();
       const legacy = scaleHistory.importStats(backup, stats);
       const fresh = Object.fromEntries(Object.entries(rows).filter(([id,row]) =>
-        !current[id] || (row.last||0) > (current[id].last||0)));
+        QuizRecords.mergeWrong(current[id],row) !== current[id]));
       const n = Object.keys(fresh).length;
       const ns = Object.keys(legacy.rows).length;
       if (n || ns) quizRecords.write({kind:"import",rows:fresh,legacyScaleStats:legacy.rows}, false);

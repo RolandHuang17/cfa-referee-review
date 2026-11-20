@@ -542,18 +542,45 @@ class LearningRecords {
     this.records = Object.create(null);
     this.versions = new Map();
     this.obsolete = new Map();
+    this.unreadable = new Map();
+    this.readFailed = false;
+  }
+  validValue(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) return false;
+    return !this.notes || (typeof value.text === "string" &&
+      (value.conflicts === undefined || (Array.isArray(value.conflicts) &&
+        value.conflicts.every(copy => copy && typeof copy.text === "string"))));
   }
   scan() {
-    const raw = JSON.parse(localStorage.getItem(this.key) || (this.listKey ? "[]" : "{}"));
-    if (this.listKey && !Array.isArray(raw)) throw Error("旧高亮格式异常");
-    const legacy = this.listKey ? Object.fromEntries(raw.filter(Boolean).map(item => [this.listKey(item), item])) : raw;
-    if (!legacy || typeof legacy !== "object" || Array.isArray(legacy)) throw Error("旧存储格式异常");
-    const records = Object.assign(Object.create(null), legacy);
+    const unreadable = new Map();
+    const records = Object.create(null);
+    const aggregate = localStorage.getItem(this.key);
+    if (aggregate !== null) {
+      try {
+        const raw = JSON.parse(aggregate);
+        if (!raw || typeof raw !== "object" || Array.isArray(raw) !== !!this.listKey)
+          throw Error("旧存储格式异常");
+        for (const [id, value] of Object.entries(raw)) {
+          if (!this.validValue(value)) { unreadable.set(this.key, aggregate); continue; }
+          records[this.listKey ? this.listKey(value) : id] = value;
+        }
+      } catch (_) { unreadable.set(this.key, aggregate); }
+    }
     const versions = new Map();
     for (const name of Object.keys(localStorage)) {
       if (!name.startsWith(this.prefix)) continue;
-      const entry = JSON.parse(localStorage.getItem(name));
-      if (!entry) continue; // Another tab compacted this version during the scan.
+      const raw = localStorage.getItem(name);
+      if (raw === null) continue; // Another tab compacted this version during the scan.
+      let entry;
+      try {
+        entry = JSON.parse(raw);
+        if (!entry || typeof entry.id !== "string" || !Number.isFinite(entry.at) ||
+            !(entry.value === null || this.validValue(entry.value))) throw Error("版本内容异常");
+        const idPrefix = this.prefix + encodeURIComponent(entry.id) + ".";
+        if (!name.startsWith(idPrefix) || !Array.isArray(entry.parents) ||
+            !entry.parents.every(parent => typeof parent === "string" && parent.startsWith(idPrefix) && parent !== name))
+          throw Error("版本关系异常");
+      } catch (_) { unreadable.set(name, raw); continue; }
       const items = versions.get(entry.id) || [];
       items.push({...entry, name});
       versions.set(entry.id, items);
@@ -580,12 +607,14 @@ class LearningRecords {
       if (alternatives.size) records[id].conflicts = [...alternatives.values()];
       else delete records[id].conflicts;
     }
+    this.unreadable = unreadable;
+    this.readFailed = false;
     this.obsolete = obsolete;
     this.versions = versions;
     this.records = records;
   }
   read() {
-    try { this.scan(); } catch (_) { /* Keep the last readable records and unsaved edits for export. */ }
+    try { this.scan(); } catch (_) { this.readFailed = true; }
     const out = Object.assign(Object.create(null), this.records);
     for (const [id, op] of this.pending) {
       if (op.value) out[id] = op.value;
@@ -620,10 +649,12 @@ class LearningRecords {
         localStorage.setItem(op.name, JSON.stringify({id, at: op.at, value: op.value, parents: op.parents}));
         op.stored = true;
       }
-      for (const old of op.parents) localStorage.removeItem(old);
+      for (const old of op.parents) if (!this.unreadable.has(old)) localStorage.removeItem(old);
       this.scan();
       // Preserve the original aggregate key for older pages and backup readers.
-      localStorage.setItem(this.key, JSON.stringify(this.listKey ? Object.values(this.records) : this.records));
+      // If the old snapshot is damaged it is also the owner's raw recovery copy.
+      if (!this.unreadable.has(this.key))
+        localStorage.setItem(this.key, JSON.stringify(this.listKey ? Object.values(this.records) : this.records));
       this.pending.delete(id);
       return true;
     } catch (_) { return false; }
@@ -693,6 +724,8 @@ class LearningNoteEditor {
         this.status.textContent = "其他窗口已更新此笔记，编辑时将保留两个版本";
       }
     });
+    // Run before the pending-write guard. pagehide is already too late to offer a choice.
+    window.addEventListener("beforeunload", () => this.flush());
     window.addEventListener("pagehide", () => this.flush());
     document.addEventListener("visibilitychange", () => {
       if (document.visibilityState === "hidden") this.flush();
@@ -747,11 +780,33 @@ class LearningNoteEditor {
   }
 }
 function watchLearningWrites(stores, retryButton, report, onRetry) {
+  const recovery = document.createElement("button");
+  recovery.type = "button";
+  recovery.className = "btn";
+  recovery.textContent = "导出异常记录原件";
+  retryButton.after(recovery);
+  recovery.addEventListener("click", () => {
+    const entries = Object.fromEntries(stores.flatMap(store => [...store.unreadable]));
+    const data = {format:"cfa.learning.recovery", version:1, entries};
+    const url = URL.createObjectURL(new Blob([JSON.stringify(data, null, 2)], {type:"application/json"}));
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = stores[0].key + "-原始恢复资料.json";
+    link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 0);
+  });
   function refresh() {
     const failed = stores.some(store => store.pending.size);
     retryButton.hidden = !failed;
     retryButton.style.display = failed ? "" : "none";
-    report.textContent = failed ? "浏览器写入失败。草稿仍在此页，可重试或导出备份。" : "";
+    const damaged = stores.some(store => store.unreadable.size);
+    recovery.hidden = !damaged;
+    recovery.style.display = damaged ? "" : "none";
+    const messages = [];
+    if (failed) messages.push("浏览器写入失败。草稿仍在此页，可重试或导出备份。");
+    if (damaged) messages.push("部分本机记录损坏。可读记录可照常备份，异常原件可另行导出。");
+    if (stores.some(store => store.readFailed)) messages.push("浏览器无法读取本机记录。");
+    report.textContent = messages.join(" ");
   }
   retryButton.addEventListener("click", () => {
     stores.forEach(store => store.retry());

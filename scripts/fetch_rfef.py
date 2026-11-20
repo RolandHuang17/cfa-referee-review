@@ -91,6 +91,7 @@ DECISION_RULES = [
     (r"no\s+penalti", "no_penalty"),
     (r"falta\s+en\s+ataque", "attacking_foul"),
     (r"tiro\s+libre\s+directo", "dfk"),
+    (r"tiro\s+libre\s+indirecto\s+y\s+tarjeta\s+amarilla", "ifk_yellow"),
     (r"tiro\s+libre\s+indirecto", "ifk"),
     (r"tarjeta\s+roja", "red_card"),
     (r"tarjeta\s+amarilla", "yellow_card"),

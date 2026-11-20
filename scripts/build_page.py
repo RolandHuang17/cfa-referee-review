@@ -1277,15 +1277,25 @@ function step(dir){
 }
 
 // ---------- 收藏与笔记 ----------
-function toggleFav(seq){
-  const c = bySeq[seq]; if(!c) return;
+function setFavorite(seq, wanted){
+  const c = bySeq[seq]; if (!c) return;
   fav = favStore.read();
-  if (isFav(seq)) delete fav[seq];
-  else fav[seq] = {tags: [], ts: Date.now()};
-  persistFav(seq);
-  renderFavUI(c); renderFavList();
-  const row = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-  if (row) row.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"");
+  if (isFav(seq) !== wanted) {
+    if (wanted) fav[seq] = {tags:[], ts:Date.now()};
+    else delete fav[seq];
+    persistFav(seq);
+  }
+  refreshFavorite(c);
+}
+function refreshFavorite(c){
+  renderFavUI(c);
+  if (state.fav === "all" || state.fav?.startsWith("tag:")) applyFilter();
+  else { renderFavList(); updateFavoriteMark(c.seq); }
+}
+function updateFavoriteMark(seq){
+  const mark = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
+  if (mark) mark.innerHTML = (isFav(seq) ? IC["star-f"] : "") + (hasNote(seq) ? IC.note : "") +
+    (seen[seq] ? `<span class="ic-seen">${IC.check}</span>` : "");
 }
 function renderFavUI(c){
   const btn = document.getElementById("favBtn");
@@ -1296,46 +1306,39 @@ function renderFavUI(c){
   const box = document.getElementById("favTags");
   if (!isFav(c.seq)) { box.style.display = "none"; return; }
   box.style.display = "flex";
-  const cur = (fav[c.seq].tags||[]);
-  const customs = cur.filter(t=>!TAG_PRESETS.includes(t));
-  box.innerHTML =
-    `<span style="font-size:13px;color:var(--muted)">收藏标签:</span>` +
-    TAG_PRESETS.map(t=>`<span class="ftag ${cur.includes(t)?"on":""}" data-tag="${t}">${t}</span>`).join("") +
-    customs.map(t=>`<span class="ftag on" data-tag="${esc(t)}">${esc(t)} <b data-del="${esc(t)}" style="cursor:pointer">✕</b></span>`).join("") +
-    `<input id="customTag" placeholder="自定义标签"><button class="ftag" id="addTag">添加</button>`;
+  if (box.dataset.seq !== String(c.seq)) {
+    box.dataset.seq = String(c.seq);
+    box.innerHTML = '<span style="font-size:13px;color:var(--muted)">收藏标签:</span>' +
+      '<span class="ftag-options" style="display:contents"></span>' +
+      '<input id="customTag" placeholder="自定义标签"><button type="button" class="ftag" id="addTag">添加</button>';
+  }
+  const cur = fav[c.seq].tags || [];
+  const choices = box.querySelector(".ftag-options");
+  const focused = choices.contains(document.activeElement) ? document.activeElement.dataset.tag : null;
+  choices.innerHTML = [...new Set([...TAG_PRESETS,...cur])].map(t => {
+    const on = cur.includes(t);
+    const remove = TAG_PRESETS.includes(t) ? "" : ' <b aria-hidden="true">✕</b>';
+    return '<button type="button" class="ftag'+(on?' on':'')+'" data-tag="'+esc(t)+'" aria-pressed="'+on+'">'+esc(t)+remove+'</button>';
+  }).join("");
+  if (focused) ([...choices.children].find(button => button.dataset.tag === focused) || btn).focus({preventScroll:true});
 }
 document.getElementById("favTags").addEventListener("click", e=>{
-  fav = favStore.read();
-  const del = e.target.closest("[data-del]");
-  if (del) {
-    const c = bySeq[state.sel]; if(!c) return;
-    if (!fav[c.seq]) { renderFavUI(c); return; }
-    const arr = fav[c.seq].tags || [];
-    fav[c.seq].tags = arr.filter(t=>t!==del.dataset.del);
-    persistFav(c.seq); renderFavUI(c); renderFavList();
-    return;
-  }
-  if (e.target.id === "addTag") {
-    const c = bySeq[state.sel]; if(!c) return;
-    const inp = document.getElementById("customTag");
-    const t = (inp.value||"").trim();
-    if (!t) return;
-    if (!fav[c.seq]) fav[c.seq] = {tags:[], ts:Date.now()};
-    fav[c.seq].tags = fav[c.seq].tags||[];
-    if (!fav[c.seq].tags.includes(t)) fav[c.seq].tags.push(t);
-    persistFav(c.seq); renderFavUI(c); renderFavList();
-    return;
-  }
+  const c = bySeq[state.sel]; if (!c) return;
   const chip = e.target.closest(".ftag[data-tag]");
-  if (chip) {
-    const c = bySeq[state.sel]; if(!c) return;
-    if (!fav[c.seq]) fav[c.seq] = {tags:[], ts:Date.now()};
-    fav[c.seq].tags = fav[c.seq].tags||[];
-    const t = chip.dataset.tag;
-    if (fav[c.seq].tags.includes(t)) fav[c.seq].tags = fav[c.seq].tags.filter(x=>x!==t);
-    else fav[c.seq].tags.push(t);
-    persistFav(c.seq); renderFavUI(c); renderFavList();
+  const adding = e.target.id === "addTag";
+  if (!chip && !adding) return;
+  fav = favStore.read();
+  const input = document.getElementById("customTag");
+  const tag = adding ? input.value.trim() : chip.dataset.tag;
+  if (!tag) return;
+  const wanted = adding || chip.getAttribute("aria-pressed") !== "true";
+  const saved = fav[c.seq]?.tags || [];
+  if (saved.includes(tag) !== wanted) {
+    fav[c.seq] = {...fav[c.seq], tags:wanted ? [...saved,tag] : saved.filter(t => t !== tag)};
+    persistFav(c.seq);
   }
+  if (adding) input.value = "";
+  refreshFavorite(c);
 });
 document.getElementById("favTags").addEventListener("keydown", e=>{
   if (e.target.id === "customTag" && e.key === "Enter") {
@@ -1344,7 +1347,27 @@ document.getElementById("favTags").addEventListener("keydown", e=>{
   }
 });
 document.getElementById("dHead").addEventListener("click", e=>{
-  if (e.target.closest("#favBtn")) toggleFav(state.sel);
+  const button = e.target.closest("#favBtn");
+  if (button) setFavorite(state.sel, button.getAttribute("aria-pressed") !== "true");
+});
+let favoriteRefresh;
+window.addEventListener("storage", e => {
+  if (e.key !== null && e.key !== FAV_KEY && !e.key.startsWith(favStore.prefix)) return;
+  clearTimeout(favoriteRefresh);
+  favoriteRefresh = setTimeout(() => {
+    const old = fav;
+    fav = favStore.read();
+    if (JSON.stringify(old) === JSON.stringify(fav)) return;
+    const c = bySeq[state.sel];
+    if (c && JSON.stringify(old[c.seq]) !== JSON.stringify(fav[c.seq])) renderFavUI(c);
+    if (state.fav === "all" || state.fav?.startsWith("tag:")) applyFilter();
+    else {
+      renderFavList();
+      for (const seq of new Set([...Object.keys(old), ...Object.keys(fav)])) {
+        if (Boolean(old[seq]) !== Boolean(fav[seq]) && Object.hasOwn(bySeq,seq)) updateFavoriteMark(seq);
+      }
+    }
+  }, 0);
 });
 function renderNoteUI(c){
   document.getElementById("noteWrap").style.display = "block";

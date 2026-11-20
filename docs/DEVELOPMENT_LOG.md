@@ -200,3 +200,13 @@ Windows 上的 Chromium 157、Firefox 159 和 WebKit 27.2 均从同一个最终 
 17:02:11 达到 180 分钟，从此只收尾上轮回归与归档。两案交换回归改为等待两个面板及其具体比赛，赛季弹窗回归向已进入视口的按钮发出 Enter。两项在 GitHub Linux Chrome 均通过，随后的同批回归另有一次跨段划词工具条超时。[GitHub 测试记录](https://github.com/RolandHuang17/cfa-referee-review/actions/runs/44707806022)
 
 17:13 核对了 GitHub 手工 CI 在 Windows 重建的审阅包（`c6f455d`）。重新下载的 ZIP 与本机断网三引擎验收的文件 SHA-256 一致，125 个成员的 CRC 全部通过。下载入口保留 30 天，GitHub 登录后即可取件。代码和静态站点长期保存在开发分支。[GitHub 离线包](https://github.com/RolandHuang17/cfa-referee-review/actions/runs/44708551604/artifacts/14615688194)
+
+### 最终离线包
+
+归档阶段的慢图回归确认了一项实际使用问题。鼠标在《比赛场地》跨段拖选 112 字后，三张图示到达，旧工具条落在 720px 高视口之外（顶部 1509px）。`23db691` 按 21 张原图的 PNG 尺寸预留空间，工具条在同样条件下位于 317px。实际拖选及保存、刷新和恢复在 HTTP 连续通过三次，双击文件通过一次。本轮共 37 组已确认问题。[问题台账](BUG_TRACKER.md#2026-11-20-三小时开发分支)
+
+最终产品提交为 `23db6912ede9d259865f333205bc8c2a391ba264`。Windows Python 3.9、3.11、3.12 分别通过 208 项，两项符号链接测试受本机账户权限限制。Ubuntu 3.12 通过全部 210 项。四个环境重建的 30 份跟踪产物一致。Ruff、5 份 Schema 对应的 9 个数据文件与 23 项 Node 测试通过。
+
+**本次交付使用以下 ZIP。** 共 125 个文件、9,569,517 字节，SHA-256 为 `fbcd7612eb5cb084ba10e32e6dff40e76abef352bafcd7ecd805beb246149b05`。从 GitHub 重新下载后与本机文件逐字节相同，CRC 通过。Chromium、Firefox、WebKit 各自在断网状态打开 23 个 HTML，277 张参与布局的图片均正常显示，390px 无横向溢出或脚本错误。以 Pages 项目路径提供同一 ZIP 后关闭本地服务器，新标签页仍能恢复搜索、视频条目和已存笔记。[下载最终离线包](https://github.com/RolandHuang17/cfa-referee-review/actions/runs/44709774541/artifacts/14617450320) · [GitHub CI](https://github.com/RolandHuang17/cfa-referee-review/actions/runs/44709774541)
+
+归档时间 2026-11-20 17:25:22 +08:00，实际用时 3 小时 23 分 11 秒。GitHub CI 全部通过（3 个 Python 作业和 30 套浏览器场景）。 下次在 `codex/3h-improvements-20261120-1402` 继续，先阅读本节和路线图。首个可独立推进的任务是逐项审校南美足联 8 个时刻的西语标签，两个有冲突的字段随原文核对。正式发布由维护者另行决定。

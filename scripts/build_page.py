@@ -1488,13 +1488,15 @@ document.getElementById("importFile").addEventListener("change", e=>{
       }
       let n = 0;
       fav = favStore.read();
+      const favorites = [];
       for (const [s, v] of Object.entries(d.fav || {})) {
         if (!bySeq[s] || !v || !Array.isArray(v.tags) || !v.tags.every(t => typeof t === "string")) continue;
         if (!fav[s] || (v.ts || 0) > (fav[s].ts || 0)) {
-          favStore.put(s, {tags: v.tags, ts: Number(v.ts) || 0}, favStore.base(s)); n++;
+          favorites.push({id:s, value:{tags:v.tags, ts:Number(v.ts) || 0}, parents:favStore.base(s)});
         }
       }
-      n += importLearningNotes(noteStore, d.notes, id => Object.hasOwn(bySeq, id));
+      favStore.putMany(favorites);
+      n += favorites.length + importLearningNotes(noteStore, d.notes, id => Object.hasOwn(bySeq, id));
       fav = favStore.read(); notes = noteStore.read(); showWriteStatus(); renderFavList(); applyFilter();
       if (bySeq[state.sel]) { renderNoteUI(bySeq[state.sel]); renderFavUI(bySeq[state.sel]); }
       alert((favStore.pending.size || noteStore.pending.size ? '已读入，部分记录待保存' : '导入完成') + `：合并了 ${n} 条记录`);

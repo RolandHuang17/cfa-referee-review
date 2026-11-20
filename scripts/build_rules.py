@@ -1029,11 +1029,15 @@ document.getElementById("importFileN").addEventListener("change", e=>{
       let n = 0;
       const identity = h => highlightKey(h, false);
       const seen = new Set(Object.values(hlStore.read()).map(identity));
+      const additions = [];
       for (const h of (d.highlights || [])) {
         if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;
-        writeHighlight(h, h); seen.add(identity(h)); n++;
+        const id = highKey(h);
+        additions.push({id, value:h, parents:hlStore.base(id)});
+        seen.add(identity(h));
       }
-      n += importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));
+      hlStore.putMany(additions);
+      n += additions.length + importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));
       applyHl(); loadNote(); showWriteStatus();
       alert((hlStore.pending.size || noteStore.pending.size ? "已读入，部分记录待保存" : "导入完成") + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }

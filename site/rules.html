@@ -551,18 +551,9 @@ class LearningRecords {
       versions.set(id, items);
       items.sort((a, b) => b.at - a.at || b.name.localeCompare(a.name));
       const values = items.map(item => item.value);
-      const primary = this.notes ? values.find(value => value && (value.text || value.conflicts?.length)) : values[0];
-      if (!primary) { delete records[id]; continue; }
-      if (!this.notes) { records[id] = primary; continue; }
-      const alternatives = new Map();
-      for (const v of values.filter(Boolean)) {
-        for (const copy of [v, ...(v.conflicts || [])]) {
-          if (copy.text && copy.text !== primary.text) alternatives.set(copy.text, {text: copy.text, ts: copy.ts});
-        }
-      }
-      records[id] = {...primary};
-      if (alternatives.size) records[id].conflicts = [...alternatives.values()];
-      else delete records[id].conflicts;
+      const value = this.notes ? this.mergeNoteVersions(values) : values[0];
+      if (value) records[id] = value;
+      else delete records[id];
     }
     this.unreadable = unreadable;
     this.readFailed = false;
@@ -570,11 +561,31 @@ class LearningRecords {
     this.versions = versions;
     this.records = records;
   }
+  mergeNoteVersions(values) {
+    const primary = values.find(value => value && (value.text || value.conflicts?.length));
+    if (!primary) return null;
+    const copies = new Map();
+    for (const value of values.filter(Boolean)) {
+      for (const copy of [value, ...(value.conflicts || [])]) {
+        if (copy.text && copy.text !== primary.text) copies.set(copy.text, {text:copy.text, ts:copy.ts});
+      }
+    }
+    const merged = {...primary};
+    if (copies.size) merged.conflicts = [...copies.values()];
+    else delete merged.conflicts;
+    return merged;
+  }
   read() {
     try { this.scan(); } catch (_) { this.readFailed = true; }
     const out = Object.assign(Object.create(null), this.records);
     for (const [id, op] of this.pending) {
-      if (op.value) out[id] = op.value;
+      let value = op.value;
+      if (this.notes) {
+        const siblings = (this.versions.get(id) || [])
+          .filter(entry => entry.name !== op.name && !op.parents.includes(entry.name));
+        value = this.mergeNoteVersions([value, ...siblings.map(entry => entry.value)]);
+      }
+      if (value) out[id] = value;
       else delete out[id];
     }
     return out;
@@ -586,39 +597,49 @@ class LearningRecords {
     return primary ? [primary.name] : [];
   }
   put(id, value, parents) {
-    id = String(id);
-    const prior = this.pending.get(id);
-    const nonce = Array.from(crypto.getRandomValues(new Uint32Array(3)), n => n.toString(36)).join("-");
-    const name = this.prefix + encodeURIComponent(id) + "." + nonce;
-    this.lastWriteName = name;
-    const replaced = prior?.stored ? [...parents, prior.name] : prior ? prior.parents : parents;
-    this.pending.set(id, {name, value, parents: replaced, at: Date.now()});
-    return this.commit(id);
+    return this.putMany([{id, value, parents}]);
   }
-  commit(id) {
-    const op = this.pending.get(id);
-    if (!op) return true;
+  putMany(updates) {
+    const ids = [];
+    for (const update of updates) {
+      const id = String(update.id), prior = this.pending.get(id);
+      const nonce = Array.from(crypto.getRandomValues(new Uint32Array(3)), n => n.toString(36)).join("-");
+      const name = this.prefix + encodeURIComponent(id) + "." + nonce;
+      this.lastWriteName = name;
+      const parents = prior?.stored ? [...update.parents, prior.name] : prior ? prior.parents : update.parents;
+      this.pending.set(id, {name, value:update.value, parents, at:Date.now()});
+      ids.push(id);
+    }
+    return this.commitMany(ids);
+  }
+  commitMany(ids) {
+    if (!ids.length) return true;
+    const completed = [];
     try {
       this.scan();
-      if (!op.stored) {
-        // Carry forward physically surviving parents if a previous tab stopped during cleanup.
-        op.parents = [...new Set([...op.parents, ...(this.obsolete.get(id) || [])])];
-        localStorage.setItem(op.name, JSON.stringify({id, at: op.at, value: op.value, parents: op.parents}));
-        op.stored = true;
+      for (const id of ids) {
+        const op = this.pending.get(id);
+        if (!op) continue;
+        try {
+          if (!op.stored) {
+            op.parents = [...new Set([...op.parents, ...(this.obsolete.get(id) || [])])];
+            localStorage.setItem(op.name, JSON.stringify({id, at:op.at, value:op.value, parents:op.parents}));
+            op.stored = true;
+          }
+          for (const parent of op.parents) if (!this.unreadable.has(parent)) localStorage.removeItem(parent);
+          completed.push(id);
+        } catch (_) { break; } // Keep this revision and the remaining drafts queued for retry.
       }
-      for (const old of op.parents) if (!this.unreadable.has(old)) localStorage.removeItem(old);
+      // Include other tabs' durable revisions and publish the old-format snapshot once.
       this.scan();
-      // Preserve the original aggregate key for older pages and backup readers.
-      // If the old snapshot is damaged it is also the owner's raw recovery copy.
-      if (!this.unreadable.has(this.key))
+      if (!this.unreadable.has(this.key) && ids.some(id => this.pending.get(id)?.stored))
         localStorage.setItem(this.key, JSON.stringify(this.listKey ? Object.values(this.records) : this.records));
-      this.pending.delete(id);
-      return true;
+      for (const id of completed) this.pending.delete(id);
     } catch (_) { return false; }
+    return ids.every(id => !this.pending.has(id));
   }
   retry() {
-    for (const id of [...this.pending.keys()]) this.commit(id);
-    return !this.pending.size;
+    return this.commitMany([...this.pending.keys()]);
   }
 }
 
@@ -654,7 +675,7 @@ function importLearningNotes(store, entries, known) {
         JSON.stringify(old.conflicts || []) === JSON.stringify(merged.conflicts || [])) continue;
     updates.push({id, value:merged, parents:store.base(id, true)});
   }
-  for (const {id, value, parents} of updates) store.put(id, value, parents);
+  store.putMany(updates);
   return updates.length;
 }
 function showNoteCopies(box, note, restore, resolve) {
@@ -701,7 +722,7 @@ class LearningNoteEditor {
       this.timer = setTimeout(() => this.flush(), 800);
     });
     window.addEventListener("storage", e => {
-      if (!this.id || !e.key || !e.key.startsWith(store.prefix)) return;
+      if (!this.id || !e.key?.startsWith(store.prefix + encodeURIComponent(this.id) + ".")) return;
       const note = store.read()[this.id];
       this.showCopies(note);
       if (!this.timer && !store.pending.has(this.id) && (note?.text || "") !== this.input.value) {
@@ -1186,11 +1207,15 @@ document.getElementById("importFileN").addEventListener("change", e=>{
       let n = 0;
       const identity = h => highlightKey(h, false);
       const seen = new Set(Object.values(hlStore.read()).map(identity));
+      const additions = [];
       for (const h of (d.highlights || [])) {
         if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;
-        writeHighlight(h, h); seen.add(identity(h)); n++;
+        const id = highKey(h);
+        additions.push({id, value:h, parents:hlStore.base(id)});
+        seen.add(identity(h));
       }
-      n += importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));
+      hlStore.putMany(additions);
+      n += additions.length + importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));
       applyHl(); loadNote(); showWriteStatus();
       alert((hlStore.pending.size || noteStore.pending.size ? "已读入，部分记录待保存" : "导入完成") + `：合并了 ${n} 条记录`);
     } catch(err) { alert("导入失败：文件不是有效的导出JSON"); }

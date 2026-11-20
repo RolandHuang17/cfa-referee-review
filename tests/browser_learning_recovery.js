@@ -112,6 +112,70 @@ async (startPage) => {
         file + " 继续写入后覆盖了异常原件或新笔记");
     } finally { await context.close(); }
   }
+  // A batch may run out of space after a durable prefix, or when publishing the legacy snapshot.
+  const batchContext = await browser.newContext({serviceWorkers:"block"});
+  batchContext.setDefaultTimeout(10000);
+  try {
+    const first = await batchContext.newPage(), second = await batchContext.newPage();
+    const url = new URL("season-2026.html#case-3", base).href;
+    await first.goto(url); await second.goto(url);
+    const batch = {app:"cfa-referee-review-2026",fav:{},notes:{}};
+    for (const id of ["1","2","3","4"]) {
+      batch.notes[id] = {text:"备份笔记 " + id,ts:1700000000000};
+      batch.fav[id] = {tags:["精选"],ts:1700000000000};
+    }
+    await first.evaluate(() => {
+      const original = Storage.prototype.setItem;
+      window.bulkWrites = {fail:"entry",notes:0,favorites:0,entries:0};
+      Storage.prototype.setItem = function(key, value) {
+        if (key === favStore.key) bulkWrites.favorites++;
+        if (key === noteStore.key) {
+          bulkWrites.notes++;
+          if (bulkWrites.fail === "mirror") throw new DOMException("空间不足","QuotaExceededError");
+        }
+        if (key.startsWith(noteStore.prefix)) {
+          if (bulkWrites.fail === "entry" && key.startsWith(noteStore.prefix+"3.")) throw new DOMException("空间不足","QuotaExceededError");
+          bulkWrites.entries++;
+        }
+        return original.call(this,key,value);
+      };
+    });
+    const notified = first.waitForEvent("dialog");
+    await first.locator("#importFile").setInputFiles({name:"训练笔记.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(batch))});
+    const warning = await notified;
+    check(warning.message().includes("待保存"), "批量写入中断却报告全部已保存");
+    await warning.accept();
+    check(await first.evaluate(() => {
+      const legacy = JSON.parse(localStorage.getItem(noteStore.key));
+      return Object.keys(legacy).join(",") === "1,2" && noteStore.pending.size === 2 &&
+        bulkWrites.notes === 1 && bulkWrites.favorites === 1 && bulkWrites.entries === 2 &&
+        Object.keys(JSON.parse(localStorage.getItem(favStore.key))).length === 4;
+    }), "中断后旧版汇总不是已落盘前缀，或导入重复写了汇总");
+    check(Object.keys((await download(first,"#btnExport")).notes).length === 4, "中断后备份遗漏待写入的笔记");
+
+    await second.locator("#noteBox").fill("另一个窗口的现场笔记");
+    await download(second,"#btnExport");
+    await first.waitForFunction(() => noteStore.read()["3"]?.conflicts?.some(note => note.text === "另一个窗口的现场笔记"));
+    const pendingCopy = (await download(first,"#btnExport")).notes["3"];
+    check(pendingCopy.text === "备份笔记 3" && pendingCopy.conflicts.some(n=>n.text === "另一个窗口的现场笔记"),
+      "待重试时导出遗漏另一窗口刚保存的笔记");
+
+    await first.evaluate(() => bulkWrites.fail = "mirror");
+    await first.locator("#retryWrite").click();
+    check(await first.evaluate(() => bulkWrites.entries === 4 && bulkWrites.notes === 2 && noteStore.pending.size === 2),
+      "汇总失败后未留下已写入的版本以便重试");
+    const keys = await first.evaluate(() => Object.keys(localStorage).filter(key => key.startsWith(noteStore.prefix)).sort());
+    await first.evaluate(() => bulkWrites.fail = "");
+    await first.locator("#retryWrite").click();
+    const legacy = await first.evaluate(() => JSON.parse(localStorage.getItem(noteStore.key)));
+    const comparable = note => [note.text, ...(note.conflicts || []).map(n=>n.text)].sort().join("/");
+    check(Object.keys(legacy).length === 4 && comparable(legacy["3"]) === comparable(pendingCopy) &&
+      comparable((await download(first,"#btnExport")).notes["3"]) === comparable(pendingCopy),
+      "写入恢复后旧页汇总或导出缺少并发版本");
+    check(await first.evaluate(keys => !noteStore.pending.size && noteStore.retry() && bulkWrites.entries === 4 &&
+      bulkWrites.notes === 3 && JSON.stringify(Object.keys(localStorage).filter(key => key.startsWith(noteStore.prefix)).sort()) === JSON.stringify(keys), keys),
+      "重试重复新增独立版本或重复写了兼容汇总");
+  } finally { await batchContext.close(); }
   // Save two separate occurrences of a common word, then a selection spanning blocks.
   const context = await browser.newContext({serviceWorkers:"block"});
   context.setDefaultTimeout(10000);

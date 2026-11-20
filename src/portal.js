@@ -26,8 +26,9 @@
     if (width !== titleWidth) { titleWidth = width; fitTitle(); }
   }).observe(title.parentElement);
   new MutationObserver(fitTitle).observe(title, {childList:true, characterData:true, subtree:true});
-  document.fonts.ready.then(fitTitle);
-  fitTitle();
+  // The first ResizeObserver delivery fits the laid-out title before paint.
+  // Reading its geometry while parsing would force layout before the study controls are wired.
+  document.fonts.addEventListener("loadingdone", fitTitle);
   const rows = __STUDY_INDEX__;
   const seasons = ["2026", "2025", "2024"];
   function read(key, fallback) {

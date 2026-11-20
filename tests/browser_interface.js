@@ -129,6 +129,81 @@ async (startPage) => {
       await page.setViewportSize({width,height:844});
       check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "RFEF 布局溢出 " + width);
     }
-    return "PASS 首页示例认定、五组资料、离线图片、学习进度、320px长队名、键盘跳转、搜索与RFEF";
+    async function openWithKeyboard(button, id) {
+      await page.locator(button).focus();
+      await page.keyboard.press("Enter");
+      const dialog = page.getByRole("dialog", {name:await page.locator(id + " h3").textContent()});
+      await dialog.waitFor();
+      check(await dialog.evaluate(el => el.matches(":modal") && el.contains(document.activeElement)),
+        "打开后焦点未进入原生弹窗 " + id);
+      return dialog;
+    }
+    const focused = selector => page.locator(selector).evaluate(el => el === document.activeElement);
+    for (const [width, height] of [[1440,900],[390,844]]) {
+      await page.setViewportSize({width,height});
+      for (const theme of ["dark","light"]) {
+        await page.emulateMedia({colorScheme:theme});
+        await page.evaluate(t => localStorage.setItem("cfa.theme", t), theme);
+        for (const file of ["uefa.html","rfef.html"]) {
+          await navigate(file);
+          await page.keyboard.press("Tab");
+          check(await focused(".skip-link"), file + " 的首个键盘操作未到跳转链接");
+          await page.keyboard.press("Enter");
+          check(await focused("main#content0") && await page.evaluate(() => location.hash === "#content0"),
+            file + " 跳到内容未落在可聚焦正文");
+          await page.keyboard.press("Tab");
+          check(await page.evaluate(() => !!document.activeElement.closest("main")), file + " 继续 Tab 又回到了导航");
+        }
+
+        await navigate("season-2026.html#case-229");
+        const hash = new URL(page.url()).hash;
+        const help = await openWithKeyboard("#btnHelp", "#modalHelp");
+        await page.keyboard.press("Tab");
+        check(await help.evaluate(el => el.contains(document.activeElement)), "Tab 离开帮助弹窗");
+        await page.keyboard.press("Shift+Tab");
+        await page.keyboard.press("/");
+        await page.keyboard.press("ArrowDown");
+        check(new URL(page.url()).hash === hash && await help.evaluate(el => el.contains(document.activeElement)),
+          "帮助弹窗触发了底层搜索或切题");
+        await page.keyboard.press("Escape");
+        check(await focused("#btnHelp") && !(await help.isVisible()), "关闭帮助未返回说明按钮");
+        await openWithKeyboard("#btnHelp", "#modalHelp");
+        await page.mouse.click(4,4);
+        check(await focused("#btnHelp") && !(await help.isVisible()), "点背景未关闭帮助或未归还焦点");
+
+        if (width === 390) await page.locator("#btnSb").click();
+        const stats = await openWithKeyboard("#btnStats", "#modalStats");
+        const close = stats.getByRole("button",{name:"关闭"});
+        check(await close.evaluate(el => el === document.activeElement), "统计总表没有聚焦关闭按钮");
+        await page.keyboard.press("ArrowDown");
+        check(new URL(page.url()).hash === hash, "统计弹窗触发了底层切题");
+        await page.keyboard.press("Escape");
+        check(await focused("#btnStats") && !(await stats.isVisible()), "关闭统计未返回侧栏按钮");
+        if (width === 390) check(await page.evaluate(() => document.body.classList.contains("sb-open")),
+          "关闭统计同时关掉了底层筛选抽屉");
+
+        const notes = await openWithKeyboard("#btnNotesView", "#modalNotes");
+        check(await focused("#nvQ"), "笔记汇总没有聚焦搜索输入框");
+        await page.keyboard.type("/");
+        check(await page.locator("#nvQ").inputValue() === "/", "笔记弹窗中的斜杠触发了背景搜索");
+        await page.keyboard.press("Shift+Tab");
+        await page.keyboard.press("Enter");
+        check(await focused("#btnNotesView") && !(await notes.isVisible()), "按关闭按钮没有返回笔记汇总入口");
+      }
+    }
+    await navigate("season-2026.html?case=1");
+    await page.locator("#noteBox").fill("键盘回访的判例");
+    await page.locator("#nextBtn").click();
+    check(new URL(page.url()).hash !== "#case-1", "没有切到另一条判例");
+    await page.locator("#btnSb").click();
+    const notesDialog = await openWithKeyboard("#btnNotesView", "#modalNotes");
+    await page.locator("#nvQ").fill("键盘回访");
+    await page.keyboard.press("Tab");
+    check(await focused('.nv-item[data-seq="1"]'), "匹配的笔记不能用 Tab 选中");
+    await page.keyboard.press("Enter");
+    check(!(await notesDialog.isVisible()) && new URL(page.url()).hash === "#case-1" &&
+      await focused("#dHead") && !(await page.evaluate(() => document.body.classList.contains("sb-open"))),
+      "按回车打开笔记没有切至判例详情并移动焦点");
+    return "PASS 首页示例认定、五组资料、离线图片、学习进度、320px长队名、国际页键盘跳正文、三种赛季弹窗的焦点和快捷键、搜索与RFEF";
   } finally { await context.close(); }
 }

@@ -441,12 +441,13 @@ body.sb-off .sidebar{display:none}
 .nv-search input{width:100%;padding:9px 14px;border:1px solid var(--line);border-radius:999px;
   background:var(--card);color:var(--ink);font-size:13.5px;outline:none}
 .nv-search input:focus{border-color:var(--brand)}
-.nv-item{padding:10px 2px;border-bottom:1px dashed var(--line2);cursor:pointer}
+.nv-item{display:block;width:100%;text-align:left;font:inherit;color:inherit;background:transparent;
+  border:0;padding:10px 2px;border-bottom:1px dashed var(--line2);cursor:pointer}
 .nv-item:hover .nv-head b{color:var(--brand)}
 .nv-head{display:flex;justify-content:space-between;gap:10px;align-items:baseline;margin-bottom:4px}
 .nv-head b{font-size:13.5px}
 .nv-head span{font-size:11.5px;color:var(--muted);flex:none}
-.nv-text{font-size:12.8px;color:var(--ink2);line-height:1.8;white-space:pre-wrap;
+.nv-text{display:block;font-size:12.8px;color:var(--ink2);line-height:1.8;white-space:pre-wrap;
   max-height:110px;overflow:hidden}
 .nv-text .ntime{display:inline-block;padding:0 6px;border:1px solid var(--brand);border-radius:999px;
   color:var(--brand);font-size:11.5px;font-weight:700}
@@ -496,6 +497,11 @@ html[data-hideans] .prow .dot{background:var(--line)!important}
 html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
 
 /* ---- 统计矩阵 / 帮助 / 回顶 ---- */
+.page-season .season-dialog{position:fixed;inset:0 0 auto;margin:min(5vh,44px) auto 0;
+  width:min(calc(100% - 32px),980px);max-height:calc(100% - min(10vh,88px));color:var(--ink);
+  overflow:auto;overscroll-behavior:contain}
+.season-dialog::backdrop{background:rgba(20,17,12,.55);backdrop-filter:blur(3px)}
+.season-dialog[open]{animation:popIn var(--t-med) var(--ease)}
 .matrix table{border-collapse:collapse;width:100%;font-size:13.5px}
 .matrix th,.matrix td{border-bottom:1px solid var(--line2);padding:6px 10px;text-align:center}
 .matrix th:first-child,.matrix td:first-child{text-align:left}
@@ -552,7 +558,7 @@ html[data-lite] .v-acts{display:none}
 .present .pr-ans.hidden{visibility:hidden}
 .present .pr-hint{color:#8d8677;font-size:12.5px}
 .present .pr-exit{position:absolute;top:18px;right:18px}
-@media print{.present,.ch-bar,.v-acts{display:none !important}}
+@media print{.season-dialog,.present,.ch-bar,.v-acts{display:none !important}}
 </style>
 </head>
 <body class="page-season">
@@ -572,7 +578,7 @@ __TOPBAR__
       <div class="side-actions">
         <button class="btn" id="btnExport">__I_UP__ 导出</button>
         <button class="btn" id="btnImport">__I_DOWN__ 导入</button>
-        <button class="btn" id="btnNotesView" title="全季笔记一览：搜索、点击跳转对应判例">🗒 笔记汇总</button>
+        <button class="btn" id="btnNotesView" aria-haspopup="dialog" title="全季笔记一览：搜索、点击跳转对应判例">🗒 笔记汇总</button>
         <input type="file" id="importFile" accept=".json,application/json" style="display:none">
       </div>
       <h3 class="side-h">赛事</h3>
@@ -583,7 +589,7 @@ __TOPBAR__
       <div id="issueList"></div>
       <h3 class="side-h">教学分类</h3>
       <div id="catList"></div>
-      <button class="side-link" id="btnStats">__I_CHART__ 分类统计总表</button>
+      <button class="side-link" id="btnStats" aria-haspopup="dialog">__I_CHART__ 分类统计总表</button>
     </div>
   </aside>
 
@@ -601,7 +607,7 @@ __TOPBAR__
     <button class="mobile-back" id="mobileBack">__I_LEFT__ 返回列表</button>
     <div class="detail-empty" id="detailEmpty">__I_FILM_B__<span>从中间列表选择判例开始学习</span></div>
     <div class="d-card" id="dcard" style="display:none">
-      <div class="d-head" id="dHead"></div>
+      <div class="d-head" id="dHead" tabindex="-1"></div>
       <div class="src-actions" id="srcActions"></div>
       <div class="vfail-tip" id="vfailTip"></div>
       <div class="d-video"><div class="vkey-tip" id="vkeyTip"></div><video id="dvid" controls preload="metadata" playsinline referrerpolicy="no-referrer"></video></div>
@@ -642,35 +648,29 @@ __TOPBAR__
 </div>
 
 <!-- 统计弹层 -->
-<div class="modal-mask" id="modalStats">
-  <div class="modal matrix">
-    <button class="close" data-close>关闭</button>
-    <h3>判罚认定统计总表（按教学分类）</h3>
-    <table><thead><tr>
-      <th>分类</th><th>错漏判</th><th>支持原判</th><th>不予认定</th><th>小计</th>
-      <th>其中 VAR错误</th><th>其中 涉及红牌</th><th>其中 涉及点球</th>
-    </tr></thead><tbody id="mxBody"></tbody><tfoot id="mxFoot"></tfoot></table>
-  </div>
-</div>
+<dialog class="modal season-dialog matrix" id="modalStats" aria-labelledby="titleStats" closedby="any">
+  <button class="close" data-close autofocus>关闭</button>
+  <h3 id="titleStats">判罚认定统计总表（按教学分类）</h3>
+  <table><thead><tr>
+    <th>分类</th><th>错漏判</th><th>支持原判</th><th>不予认定</th><th>小计</th>
+    <th>其中 VAR错误</th><th>其中 涉及红牌</th><th>其中 涉及点球</th>
+  </tr></thead><tbody id="mxBody"></tbody><tfoot id="mxFoot"></tfoot></table>
+</dialog>
 
 <!-- 说明弹层 -->
-<div class="modal-mask" id="modalHelp">
-  <div class="modal help">
-    <button class="close" data-close>关闭</button>
-    <h3>使用说明与统计口径</h3>
-    <div id="helpBody"></div>
-  </div>
-</div>
+<dialog class="modal season-dialog help" id="modalHelp" aria-labelledby="titleHelp" closedby="any">
+  <button class="close" data-close autofocus>关闭</button>
+  <h3 id="titleHelp">使用说明与统计口径</h3>
+  <div id="helpBody"></div>
+</dialog>
 
 <!-- 笔记汇总弹层：全季笔记一览 + 笔记内搜索 + 点击跳判例 -->
-<div class="modal-mask" id="modalNotes">
-  <div class="modal help">
-    <button class="close" data-close>关闭</button>
-    <h3>我的笔记汇总（本季）</h3>
-    <div class="nv-search"><input id="nvQ" type="search" placeholder="搜索笔记内容（如：手球 / 越位 / 12:34）…" aria-label="搜索笔记"></div>
-    <div id="nvList"></div>
-  </div>
-</div>
+<dialog class="modal season-dialog help" id="modalNotes" aria-labelledby="titleNotes" closedby="any">
+  <button class="close" data-close>关闭</button>
+  <h3 id="titleNotes">我的笔记汇总（本季）</h3>
+  <div class="nv-search"><input id="nvQ" type="search" autofocus placeholder="搜索笔记内容（如：手球 / 越位 / 12:34）…" aria-label="搜索笔记"></div>
+  <div id="nvList"></div>
+</dialog>
 
 <button class="top-btn" id="btnTop">__I_UP__ 回到顶部</button>
 
@@ -771,7 +771,7 @@ for (const c of DATA.cases) {
 const verCount = {all:DATA.cases.length, wrong:0, correct:0, pending:0};
 for (const c of DATA.cases) verCount[c.v]++;
 
-document.getElementById("btnStats").onclick = ()=>openModal("modalStats");
+document.getElementById("btnStats").onclick = e=>openModal("modalStats", e.currentTarget);
 const catSeen = {};
 for (const s of Object.keys(seen)) { const c = bySeq[s]; if (c) catSeen[c.category] = (catSeen[c.category]||0)+1; }
 function renderCats(){
@@ -1342,23 +1342,25 @@ function renderNotesView(){
     .sort((a, b) => (b.n.ts || 0) - (a.n.ts || 0));
   document.getElementById("nvList").innerHTML = entries.length ? entries.map(x=>{
     const d = new Date(x.n.ts || 0), pad = v=>String(v).padStart(2, "0");
-    return `<div class="nv-item" data-seq="${x.c.seq}">
-      <div class="nv-head"><b>${esc(x.c.home)} vs ${esc(x.c.away)}</b>
-        <span>第${x.c.issue}期-判例${x.c.no} · ${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}</span></div>
-      <div class="nv-text">${esc(x.n.text).replace(/\[(\d{1,3}):(\d{1,2})\]/g,
-        (m, mm, ss)=>`<span class="ntime" data-sec="${(+mm)*60+(+ss)}">${esc(m)}</span>`)}</div>
-    </div>`;
+    return `<button type="button" class="nv-item" data-seq="${x.c.seq}">
+      <span class="nv-head"><b>${esc(x.c.home)} vs ${esc(x.c.away)}</b>
+        <span>第${x.c.issue}期-判例${x.c.no} · ${pad(d.getMonth()+1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}</span></span>
+      <span class="nv-text">${esc(x.n.text).replace(/\[(\d{1,3}):(\d{1,2})\]/g,
+        (m, mm, ss)=>`<span class="ntime" data-sec="${(+mm)*60+(+ss)}">${esc(m)}</span>`)}</span>
+    </button>`;
   }).join("") : `<p style="color:var(--muted);font-size:13px">${q ? "没有匹配的笔记。" : "还没有笔记——在判例详情区写下第一条学习笔记吧。"}</p>`;
 }
-document.getElementById("btnNotesView").onclick = ()=>{ renderNotesView(); openModal("modalNotes"); };
+document.getElementById("btnNotesView").onclick = e=>{ renderNotesView(); openModal("modalNotes", e.currentTarget); };
 document.getElementById("nvQ").addEventListener("input", renderNotesView);
 document.getElementById("nvList").addEventListener("click", e=>{
   const it = e.target.closest(".nv-item[data-seq]");
   if (!it) return;
   const seq = +it.dataset.seq;
   const tm = e.target.closest(".ntime");
-  document.getElementById("modalNotes").classList.remove("open");
+  document.getElementById("modalNotes").close();
+  if (document.body.classList.contains("sb-open")) closeSidebar();
   select(seq);
+  document.getElementById("dHead").focus({preventScroll:true});
   if (tm){
     const sec = +tm.dataset.sec;
     setTimeout(()=>{
@@ -1505,19 +1507,34 @@ sbButton.onclick = ()=>{
   }
 };
 document.addEventListener("keydown", e=>{
-  if (e.key === "Escape" && document.body.classList.contains("sb-open")){
+  if (e.key === "Escape" && !document.querySelector("dialog[open]") && document.body.classList.contains("sb-open")){
     e.preventDefault();
     closeSidebar();
   }
 });
 document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
 document.getElementById("btnTop").onclick = ()=>document.getElementById("detail").scrollTo({top:0,behavior:"smooth"});
-document.getElementById("btnHelp").onclick = ()=>openModal("modalHelp");
-document.querySelectorAll("[data-close]").forEach(b=>
-  b.onclick = ()=>b.closest(".modal-mask").classList.remove("open"));
-document.querySelectorAll(".modal-mask").forEach(m=>
-  m.addEventListener("click", e=>{ if(e.target===m) m.classList.remove("open"); }));
-function openModal(id){ document.getElementById(id).classList.add("open"); }
+const helpButton = document.getElementById("btnHelp");
+helpButton.setAttribute("aria-haspopup", "dialog");
+helpButton.onclick = e=>openModal("modalHelp", e.currentTarget);
+function openModal(id, trigger){
+  trigger.focus({preventScroll:true});
+  document.getElementById(id).showModal();
+}
+for (const dialog of document.querySelectorAll(".season-dialog")){
+  dialog.querySelector("[data-close]").onclick = ()=>dialog.close();
+  if (!("closedBy" in dialog)){
+    // Older browsers need the outside click, but a text selection may also finish outside.
+    const outside = e=>{
+      const rect = dialog.getBoundingClientRect();
+      return e.target === dialog && (e.clientX < rect.left || e.clientX >= rect.right ||
+        e.clientY < rect.top || e.clientY >= rect.bottom);
+    };
+    let startedOutside = false;
+    dialog.addEventListener("pointerdown", e=>{ startedOutside = outside(e); });
+    dialog.addEventListener("click", e=>{ if (startedOutside && outside(e)) dialog.close(); });
+  }
+}
 
 // ---------- 放映模式（讲师投影）：复用唯一 .d-video 节点，退出时精确归位 ----------
 let presentOn = false, prRevealed = false, prParent = null, prNext = null;
@@ -1608,6 +1625,7 @@ let CHALLENGE = false;
 }
 
 document.addEventListener("keydown", e=>{
+  if (e.defaultPrevented || document.querySelector("dialog[open]")) return;
   const tag = (e.target.tagName||"").toLowerCase();
   if (tag==="input"||tag==="select"||tag==="textarea") {
     if (e.key==="Escape") e.target.blur();
@@ -1631,8 +1649,6 @@ document.addEventListener("keydown", e=>{
     if (e.key==="["){ e.preventDefault(); setRate(-1); return; }
     if (e.key==="]"){ e.preventDefault(); setRate(1); return; }
   }
-  if (e.key==="Escape"){ document.querySelectorAll(".modal-mask.open")
-      .forEach(m=>m.classList.remove("open")); return; }
   if (e.key==="ArrowDown"){ e.preventDefault(); step(1); }
   if (e.key==="ArrowUp"){ e.preventDefault(); step(-1); }
 });

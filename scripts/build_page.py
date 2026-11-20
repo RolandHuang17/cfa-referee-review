@@ -1431,17 +1431,32 @@ document.getElementById("nvList").addEventListener("click", e=>{
   }
 });
 function renderFavList(){
-  const tags = {};
-  for (const f of Object.values(fav)) for (const t of (f.tags||[])) tags[t]=(tags[t]||0)+1;
-  const nAll = Object.keys(fav).length;
-  const nNote = Object.values(notes).filter(n=>n.text&&n.text.trim()).length;
-  const cur = state.fav;
-  const item = (val, label, n) =>
-    `<button class="ver-item ${cur===val?"on":""}" data-fav="${val}"><span class="nm">${label}</span><b>${n}</b></button>`;
-  let h = item("", "全部", DATA.cases.length) + item("all", IC["star-f"]+" 收藏", nAll) + item("note", IC.note+" 笔记", nNote);
-  for (const t of TAG_PRESETS) h += item("tag:"+t, t, tags[t]||0);
-  for (const t of Object.keys(tags)) if (!TAG_PRESETS.includes(t)) h += item("tag:"+t, t, tags[t]);
-  document.getElementById("favList").innerHTML = h;
+  const tags = new Map(TAG_PRESETS.map(t => [t, 0]));
+  for (const f of Object.values(fav)) {
+    if (Array.isArray(f.tags)) for (const t of f.tags) tags.set(t, (tags.get(t) || 0) + 1);
+  }
+  const list = document.createDocumentFragment();
+  function item(value, label, count, icon){
+    const button = document.createElement("button");
+    const selected = (state.fav || "") === value;
+    button.type = "button";
+    button.className = selected ? "ver-item on" : "ver-item";
+    button.dataset.fav = value;
+    button.setAttribute("aria-pressed", String(selected));
+    const name = document.createElement("span");
+    name.className = "nm";
+    if (icon) name.innerHTML = icon; // Built-in SVG only; labels come from backups.
+    name.append((icon ? " " : "") + label);
+    const number = document.createElement("b");
+    number.textContent = count;
+    button.append(name, number);
+    list.append(button);
+  }
+  item("", "全部", DATA.cases.length);
+  item("all", "收藏", Object.keys(fav).length, IC["star-f"]);
+  item("note", "笔记", Object.values(notes).filter(n=>n.text&&n.text.trim()).length, IC.note);
+  for (const [tag,count] of tags) item("tag:"+tag, tag, count);
+  document.getElementById("favList").replaceChildren(list);
 }
 document.getElementById("favList").addEventListener("click", e=>{
   const b = e.target.closest("[data-fav]"); if(!b) return;

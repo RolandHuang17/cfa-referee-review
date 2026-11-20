@@ -69,6 +69,7 @@ jobs:
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_smoke.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_learning_audit.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_learning_recovery.js
+          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_favorite_labels.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_quiz_records.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_scale_quiz_history.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_interface.js

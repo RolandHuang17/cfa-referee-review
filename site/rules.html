@@ -58,7 +58,7 @@ mark.hl.hr{background:#ffc2b8;color:#7a1d10}
 .notebox summary{cursor:pointer;padding:8px 14px;color:var(--brand);font-weight:600;user-select:none;display:flex;align-items:center;gap:6px}
 .notebox summary .hasnote{color:var(--amber)}
 .notebox textarea{width:100%;min-height:96px;border:none;border-top:1px dashed var(--line);
-  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:var(--card);color:var(--ink);outline:none;
+  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:var(--card);color:var(--ink);
   display:block;border-radius:0 0 var(--r-md) var(--r-md)}
 .notebox .nrow{display:flex;gap:10px;align-items:center;padding:6px 14px 10px;font-size:12.5px;color:var(--muted)}
 .notebox .nrow button{border:1px solid var(--line);background:var(--card);border-radius:var(--r-sm);
@@ -186,6 +186,7 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);
   font-size:14.5px;line-height:1.65;
   -webkit-font-smoothing:antialiased;text-rendering:optimizeLegibility}
 button,a,input,select,textarea{font:inherit;color:inherit}
+::placeholder{color:var(--muted);opacity:1}
 a{color:var(--brand)}
 ::selection{background:rgba(163,80,43,.25)}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px;border-radius:4px}
@@ -272,11 +273,11 @@ h1,h2{font-variant-numeric:tabular-nums}
 [data-theme="light"] #btnTheme .when-light{display:inline-flex}
 
 /* 轻量版开关(#btnLite)激活态: 陶土描边 + 浅 chip 底 */
-html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand);
+html[data-lite] #btnLite{background:var(--top-chip-on);color:var(--brand-strong);
   box-shadow:inset 0 0 0 1px var(--brand)}
 
 /* 隐藏答案开关(#btnHideAns, season 页)激活态: 同轻量版样式 */
-html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
+html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand-strong);
   box-shadow:inset 0 0 0 1px var(--brand)}
 
 /* ---------- 通用组件 ---------- */

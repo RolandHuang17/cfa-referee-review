@@ -544,7 +544,7 @@ mark.hl.hr{background:#ffc2b8;color:#7a1d10}
 .notebox summary{cursor:pointer;padding:8px 14px;color:var(--brand);font-weight:600;user-select:none;display:flex;align-items:center;gap:6px}
 .notebox summary .hasnote{color:var(--amber)}
 .notebox textarea{width:100%;min-height:96px;border:none;border-top:1px dashed var(--line);
-  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:var(--card);color:var(--ink);outline:none;
+  padding:10px 14px;font:inherit;font-size:14.5px;resize:vertical;background:var(--card);color:var(--ink);
   display:block;border-radius:0 0 var(--r-md) var(--r-md)}
 .notebox .nrow{display:flex;gap:10px;align-items:center;padding:6px 14px 10px;font-size:12.5px;color:var(--muted)}
 .notebox .nrow button{border:1px solid var(--line);background:var(--card);border-radius:var(--r-sm);

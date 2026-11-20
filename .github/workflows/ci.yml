@@ -45,6 +45,17 @@ jobs:
         run: python scripts/build_all.py
       - name: Verify project
         run: python -m pytest tests/ -q
+      - name: Package the offline site for review
+        if: github.event_name == 'workflow_dispatch' && runner.os == 'Windows'
+        run: python scripts/package_site.py "review-$env:GITHUB_SHA"
+      - name: Attach the offline ZIP to this run
+        if: github.event_name == 'workflow_dispatch' && runner.os == 'Windows'
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          path: dist/cfa-referee-site-review-*.zip
+          archive: false
+          if-no-files-found: error
+          retention-days: 30
 
   browser:
     runs-on: ubuntu-latest

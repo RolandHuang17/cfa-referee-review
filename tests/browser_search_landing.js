@@ -52,6 +52,37 @@ async (startPage) => {
         check(await page.getByRole("tab",{selected:true}).getAttribute("data-season") === "2025",
           "旧尺度书签未恢复相应赛季");
       }
+      // Hold one player above the bookmark until after the first correct paint.
+      // The app must work even when the browser does not compensate for a late media error.
+      const targetId = "h2025-var-1";
+      await page.evaluate(id => {
+        document.documentElement.style.overflowAnchor = "none";
+        const slot = document.createElement("div"), video = document.createElement("video");
+        slot.className = "hvideo";
+        slot.id = "delayed-local-player";
+        video.preload = "none";
+        slot.append(video);
+        document.getElementById(id).before(slot);
+        window.dispatchEvent(new HashChangeEvent("hashchange"));
+      }, targetId);
+      await page.waitForFunction(id => {
+        const el = document.getElementById(id);
+        const inset = parseFloat(getComputedStyle(el).scrollMarginBlockStart);
+        const maxScroll = document.scrollingElement.scrollHeight-innerHeight;
+        const expected = Math.min(maxScroll, window.scrollY+el.getBoundingClientRect().top-inset);
+        return Math.abs(window.scrollY-expected) < 2;
+      }, targetId);
+      await page.locator("#delayed-local-player video").evaluate(el=>el.dispatchEvent(new Event("error")));
+      await page.locator("#delayed-local-player .hfallback").waitFor({state:"attached"});
+      await visibleHeading("scale.html#"+targetId);
+      const aligned = await page.evaluate(()=>window.scrollY);
+      await page.keyboard.press("PageUp");
+      await page.waitForFunction(y=>window.scrollY < y-100, aligned);
+      await page.locator("#delayed-local-player").evaluate(el=>el.remove());
+      await page.evaluate(()=>new Promise(done=>requestAnimationFrame(()=>requestAnimationFrame(done))));
+      check(await page.evaluate(y=>window.scrollY < y-100, aligned), "媒体变化把正在阅读的用户拉回旧书签");
+      await page.evaluate(()=>document.documentElement.style.removeProperty("overflow-anchor"));
+
       await page.locator('.season-tab[data-season="2024"]').click();
       const group = await page.locator('.gnavcol[data-season="2024"] a.gnav').first().getAttribute("href");
       await page.locator('.gnavcol[data-season="2024"] a.gnav').first().click();

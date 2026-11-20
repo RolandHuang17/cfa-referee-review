@@ -520,6 +520,30 @@ __TOPBAR__
     blocks.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
     banners.forEach(function(b){ b.classList.toggle("on", b.dataset.season === t.dataset.season); });
   }
+  // Missing local video packs replace tall players with compact links as metadata arrives.
+  // Keep only the requested bookmark aligned; user input returns control to ordinary scrolling.
+  var bookmark = null, bookmarkSize = null, bookmarkFrame = 0;
+  function releaseBookmark(){
+    bookmark = null;
+    if (bookmarkSize) bookmarkSize.disconnect();
+    if (bookmarkFrame) cancelAnimationFrame(bookmarkFrame);
+    bookmarkFrame = 0;
+  }
+  function alignBookmark(){
+    if (!bookmark || bookmarkFrame) return;
+    bookmarkFrame = requestAnimationFrame(function(){
+      bookmarkFrame = 0;
+      if (!bookmark) return;
+      var inset = parseFloat(getComputedStyle(bookmark).scrollMarginBlockStart) || 0;
+      if (Math.abs(bookmark.getBoundingClientRect().top - inset) > 1)
+        bookmark.scrollIntoView({block:"start"});
+    });
+  }
+  if (window.ResizeObserver) bookmarkSize = new ResizeObserver(alignBookmark);
+  ["wheel","pointerdown","touchstart","keydown","pagehide"].forEach(function(event){
+    window.addEventListener(event, releaseBookmark, {passive:true, capture:true});
+  });
+  window.addEventListener("load", alignBookmark);
   tabs.forEach(function(t){
     t.addEventListener("click", function(){
       activate(t);
@@ -553,6 +577,7 @@ __TOPBAR__
   // 深链恢复：#s2025 恢复页签；#h2025-…（quiz 错题本/结果页「查看」链接）激活对应赛季
   // 页签并滚动到场景——目标是 display:none 的隐藏块，必须先切页签再定位
   function restoreHash(){
+    releaseBookmark();
     var h = decodeURIComponent(location.hash || "").slice(1);
     if (!h) return;
     var season = null, isCard = false;
@@ -563,8 +588,11 @@ __TOPBAR__
     if (!t) return;
     activate(t);
     if (isCard) {
-      var target = document.getElementById(h);
-      if (target) requestAnimationFrame(function(){ target.scrollIntoView({block: "start"}); });
+      bookmark = document.getElementById(h);
+      if (bookmark) {
+        if (bookmarkSize) bookmarkSize.observe(bookmark.closest(".sblock"));
+        alignBookmark();
+      }
     }
   }
   restoreHash();

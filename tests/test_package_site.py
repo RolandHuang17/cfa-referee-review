@@ -1,5 +1,6 @@
 """在独立临时目录打 ZIP，覆盖轻量发行清单与失败时的旧包保护。"""
 
+import os
 import sys
 import zipfile
 from datetime import date
@@ -79,6 +80,31 @@ def test_no_version_uses_date(bundle, monkeypatch):
     package_site.main()
     expected = out.with_name(f"cfa-referee-site-{date.today():%Y.%m.%d}.zip")
     assert zipfile.is_zipfile(expected)
+
+
+def test_identical_files_produce_identical_archive_after_rebuild(bundle):
+    site, out = bundle
+    package_site.main()
+    original = out.read_bytes()
+    page = site / "index.html"
+    os.utime(page, (1_600_000_000, 1_600_000_000))
+    package_site.main()
+    assert original == out.read_bytes()
+    # A changed page must still change the archive and remain byte-exact.
+    page.write_bytes(b"first line\r\nsecond line\n")
+    package_site.main()
+    assert original != out.read_bytes()
+    with zipfile.ZipFile(out) as archive:
+        assert archive.read("index.html") == page.read_bytes()
+
+
+@pytest.mark.parametrize("version", ["", "test/preview", "test\\preview"])
+def test_version_is_one_filename_component(bundle, monkeypatch, version):
+    _, out = bundle
+    monkeypatch.setattr(sys, "argv", ["package_site.py", version])
+    with pytest.raises(SystemExit, match="版本"):
+        package_site.main()
+    assert not out.parent.exists()
 
 
 def test_incomplete_site_preserves_previous_release(bundle):

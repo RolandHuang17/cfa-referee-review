@@ -60,8 +60,11 @@ def release_members():
 
 def main():
     version = sys.argv[1] if len(sys.argv) > 1 else date.today().strftime("%Y.%m.%d")
+    if not version.strip() or re.search(r'[<>:"/\\|?*\x00-\x1f]', version):
+        raise SystemExit("版本号必须可用作单个文件名")
     site = SITE.parent.resolve() / SITE.name
     members = release_members()
+    total = 0
     for name in members:
         path = site / name
         if path.resolve() != path:
@@ -70,16 +73,27 @@ def main():
             raise SystemExit(
                 f"发行文件缺失：{name}。请先运行 python scripts/build_all.py"
             )
+        total += path.stat().st_size
+    if total > SIZE_LIMIT:
+        raise SystemExit("⚠ 包体超过 60MB——请核查发行文件体积")
 
     DIST.mkdir(exist_ok=True)
     out = DIST / f"cfa-referee-site-{version}.zip"
     with tempfile.TemporaryDirectory(dir=DIST) as tmp:
         candidate = Path(tmp) / "bundle.zip"
-        with zipfile.ZipFile(
-            candidate, "w", zipfile.ZIP_DEFLATED, compresslevel=9
-        ) as z:
+        with zipfile.ZipFile(candidate, "w") as z:
             for name in members:
-                z.write(site / name, name)
+                # ZipInfo defaults to the ZIP epoch. Rebuilding a page must not
+                # change the digest solely through local timestamps or mode bits.
+                entry = zipfile.ZipInfo(name)
+                entry.create_system = 3
+                entry.external_attr = 0o100644 << 16
+                z.writestr(
+                    entry,
+                    (site / name).read_bytes(),
+                    compress_type=zipfile.ZIP_DEFLATED,
+                    compresslevel=9,
+                )
             total = sum(info.file_size for info in z.infolist())
         if total > SIZE_LIMIT:
             raise SystemExit("⚠ 包体超过 60MB——请核查发行文件体积")

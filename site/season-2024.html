@@ -1337,7 +1337,8 @@ function persistFav(seq) {
   showWriteStatus();
 }
 function isFav(seq) { return !!fav[seq]; }
-function hasNote(seq) { return !!(notes[seq] && notes[seq].text && notes[seq].text.trim()); }
+function hasNote(seq, source = notes) { return !!source[seq]?.text?.trim(); }
+function noteCount() { return Object.keys(notes).filter(seq => hasNote(seq)).length; }
 // ---------- 学习足迹：看过即记（cfa{季}.seen），供覆盖率/继续学习/首页统计 ----------
 let seen = {};
 try { seen = JSON.parse(localStorage.getItem(SEEN_KEY) || "{}") || {}; } catch(_) { seen = {}; }
@@ -1630,7 +1631,8 @@ copyFilters.onclick = async () => {
   }
 };
 
-function applyFilter(updateAddress = true){
+function applyFilter(updateAddress = true, keepNoteEditor = false){
+  if (state.fav === "note" && !keepNoteEditor) flushNote();
   const list = visibleCases();
   if (renderCats.category !== state.cat) renderCats();
   renderSidebar();
@@ -1645,15 +1647,19 @@ function applyFilter(updateAddress = true){
   for (const button of document.querySelectorAll("#sidebar .cat-item, #sidebar .ver-item")) {
     button.setAttribute("aria-pressed", String(button.classList.contains("on")));
   }
+  if (!keepNoteEditor) syncFilteredDetail(list);
+  if (updateAddress) {
+    const current = readSeasonFilterHash(location.hash, allowedSeasonFilters);
+    setFilterAddress(current.selected === state.sel ? state.sel : null);
+  }
+}
+
+function syncFilteredDetail(list) {
   if (!list.some(c=>c.seq===state.sel)) {
     if (list.length) select(list[0].seq, false, false); else clearDetail();
   }
   if (narrowSeason.matches && (!list.length || document.body.classList.contains("sb-open") || document.activeElement === fSearch)) {
     document.body.classList.remove("detail-open");
-  }
-  if (updateAddress) {
-    const current = readSeasonFilterHash(location.hash, allowedSeasonFilters);
-    setFilterAddress(current.selected === state.sel ? state.sel : null);
   }
 }
 
@@ -2118,13 +2124,17 @@ document.getElementById("btnNoteTime").addEventListener("click", ()=>{
 const noteEditor = new LearningNoteEditor(noteStore, {
   input: "noteBox", status: "noteStatus", copies: "noteCopies",
 }, () => {
+  const seq = noteEditor.id;
+  const hadNote = hasNote(seq);
   notes = noteStore.read();
   showWriteStatus();
   renderNoteView();
   renderFavList();
-  const seq = noteEditor.id;
-  const mark = document.querySelector(`.prow[data-seq="${seq}"] .pmark`);
-  if (mark) mark.innerHTML = (isFav(seq)?IC["star-f"]:"") + (hasNote(seq)?IC.note:"") + (seen[seq]?`<span class="ic-seen">${IC.check}</span>`:"");
+  if (state.fav === "note" && hadNote !== hasNote(seq)) {
+    // A filter click can itself save a note. Check its finished list before rebuilding.
+    queueMicrotask(() => refreshFilteredNote(seq));
+  }
+  updateFavoriteMark(seq);
 });
 const showWriteStatus = watchLearningWrites([noteStore, favStore], document.getElementById("retryWrite"),
   document.getElementById("writeStatus"), () => {
@@ -2132,6 +2142,43 @@ const showWriteStatus = watchLearningWrites([noteStore, favStore], document.getE
     if (bySeq[state.sel]) { noteEditor.open(state.sel); renderFavUI(bySeq[state.sel]); }
   });
 function flushNote(){ noteEditor.flush(); }
+function editingCaseNote() { return document.getElementById("noteWrap").contains(document.activeElement); }
+function refreshFilteredNote(seq) {
+  if (state.fav !== "note" || !bySeq[seq]) return;
+  const keepEditor = editingCaseNote();
+  const row = document.querySelector('.prow[data-seq="' + seq + '"]');
+  if (!!row !== baseMatch(bySeq[seq])) applyFilter(true, keepEditor);
+  else if (!keepEditor && state.sel && !hasNote(state.sel)) syncFilteredDetail(visibleCases());
+}
+document.getElementById("noteWrap").addEventListener("focusout", e => {
+  if (state.fav !== "note" || e.currentTarget.contains(e.relatedTarget)) return;
+  const seq = noteEditor.id;
+  setTimeout(() => refreshFilteredNote(seq), 0);
+});
+
+let externalNoteTimer;
+window.addEventListener("storage", e => {
+  if (e.key !== null && e.key !== NOTE_KEY && !e.key.startsWith(noteStore.prefix)) return;
+  clearTimeout(externalNoteTimer);
+  externalNoteTimer = setTimeout(() => {
+    // A save can update both its entry and the compatibility copy. Read the final set once.
+    const previous = notes;
+    notes = noteStore.read();
+    if (state.fav === "note") {
+      const rows = new Set([...caseRows.querySelectorAll(".prow")].map(row => Number(row.dataset.seq)));
+      const list = visibleCases();
+      if (rows.size !== list.length || list.some(c => !rows.has(c.seq))) {
+        applyFilter(true, editingCaseNote());
+        return;
+      }
+    }
+    const count = document.querySelector('#favList [data-fav="note"] b');
+    if (count) count.textContent = noteCount();
+    for (const seq of new Set([...Object.keys(previous), ...Object.keys(notes)])) {
+      if (Object.hasOwn(bySeq, seq) && hasNote(seq, previous) !== hasNote(seq)) updateFavoriteMark(seq);
+    }
+  }, 0);
+});
 
 // ---------- 笔记汇总弹层：全季一览 + 笔记内搜索 + 点击跳判例 ----------
 function renderNotesView(){
@@ -2194,7 +2241,7 @@ function renderFavList(){
   }
   item("", "全部", DATA.cases.length);
   item("all", "收藏", Object.keys(fav).length, IC["star-f"]);
-  item("note", "笔记", Object.values(notes).filter(n=>n.text&&n.text.trim()).length, IC.note);
+  item("note", "笔记", noteCount(), IC.note);
   for (const [tag,count] of tags) item("tag:"+tag, tag, count);
   document.getElementById("favList").replaceChildren(list);
 }

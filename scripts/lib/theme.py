@@ -168,11 +168,13 @@ def topbar(
             for href, label, ic in items
         )
     drawer += "</nav></dialog>"
+    # The season and rulebook toolbars have page actions as well as site navigation.
+    toolbar = bool(right and sb_btn)
+    sidebar_name = "目录" if active == "rules.html" else "筛选"
+    sidebar_id = "tocSidebar" if active == "rules.html" else "sidebar"
     sb = (
-        (
-            f'<button class="tbtn" id="btnSb" title="收起/展开筛选侧栏" aria-label="切换筛选侧栏">'
-            f"{icon('sliders')}</button>"
-        )
+        f'<button class="tbtn" id="btnSb" title="{sidebar_name}" aria-label="{sidebar_name}" '
+        f'aria-controls="{sidebar_id}">{icon("sliders")}<span class="bar-label">{sidebar_name}</span></button>'
         if sb_btn
         else ""
     )
@@ -180,6 +182,7 @@ def topbar(
     navb = (
         f'<button class="{menu_class}" id="btnNav" title="站点导航" aria-label="站点导航" aria-expanded="false" aria-controls="navDrawer">'
         + icon("menu")
+        + ('<span class="bar-label">导航</span>' if toolbar else "")
         + "</button>"
     )
     lite_b = (
@@ -201,7 +204,11 @@ def topbar(
     theme_btn = (
         '<button class="tbtn" id="btnTheme" title="切换明暗主题" aria-label="切换明暗主题">'
         '<span class="when-dark">' + icon("sun") + "</span>"
-        '<span class="when-light">' + icon("moon") + "</span></button>"
+        '<span class="when-light">'
+        + icon("moon")
+        + "</span>"
+        + ('<span class="bar-label">主题</span>' if toolbar else "")
+        + "</button>"
     )
     sub = f'<span class="brand-sub">{brand_sub}</span>' if brand_sub else ""
     current = ' aria-current="page"' if active == "index.html" else ""
@@ -217,6 +224,12 @@ def topbar(
             f'{brand}{desktop_nav}<div class="top-right">{theme_btn}{navb}'
             '<a class="tbtn training-link" href="quiz.html">考题训练</a></div></div>'
             f"{drawer}</header>"
+        )
+    if toolbar:
+        return (
+            f'<header class="topbar page-toolbar"><div class="bar-main">{brand}{desktop_nav}'
+            f'{navb}{sb}{theme_btn}</div><div class="top-right">{right}{lite_b}{help_b}</div></header>'
+            + drawer
         )
     return (
         f'<header class="topbar">{sb}{navb}{brand}{desktop_nav}'

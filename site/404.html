@@ -282,6 +282,31 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
   .topbar input[type=search]{min-width:64px}
 }
 
+.page-toolbar .bar-main{display:flex;align-items:center;gap:inherit;min-width:0}
+.page-toolbar .bar-label{display:none}
+@media(min-width:1280px){.page-toolbar .bar-label{display:inline}}
+@media(max-width:760px){
+  body.page-season,body.page-rules{--top-h:96px}
+  .topbar.page-toolbar{display:grid;grid-template-rows:1fr 1fr;gap:0;padding:0 10px;overflow:visible}
+  .page-toolbar .bar-main,.page-toolbar .top-right{width:100%;margin:0;gap:4px}
+  .page-toolbar .bar-main{border-bottom:1px solid var(--top-line)}
+  .page-toolbar .brand{flex:1;max-width:none;gap:5px}
+  .page-toolbar .brand b{font-size:15px;letter-spacing:0}
+  .page-toolbar .bar-label,.topbar.page-toolbar .top-right .tbtn span:not(.when-dark):not(.when-light){display:inline}
+  .page-toolbar .tbtn{min-width:44px;padding:4px 5px;gap:4px}
+  .page-toolbar .search-wrap{min-width:0;max-width:none;flex:1 1 0}
+  .page-toolbar input[type=search]{width:100%;min-width:0;height:44px;padding-inline:29px 4px}
+  .page-toolbar .search-wrap .ic{left:7px}
+}
+@media(max-width:380px){.page-toolbar .top-right .tbtn>.ic{display:none}}
+@media(max-width:1080px){.page-season:not(.sb-open) .sidebar{visibility:hidden}}
+@media(max-width:900px){.page-rules:not(.toc-open) .sidebar{visibility:hidden}}
+@media(min-width:901px){
+  .page-rules.toc-off .layout{grid-template-columns:minmax(0,1fr)}
+  .page-rules.toc-off .sidebar{display:none}
+  .page-rules.toc-off .searchbox{left:24px}
+}
+
 /* 门户的固定站点导航，与各内容屏共享 .wrap 的两条边线。 */
 .topbar.portal-nav{position:fixed;inset:0 0 auto;height:var(--nav,72px);padding:0;overflow:visible;
   background:var(--top-bg);color:var(--top-ink);box-shadow:none}

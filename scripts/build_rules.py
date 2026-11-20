@@ -596,7 +596,7 @@ footer{margin-top:18px;font-size:12.5px;color:var(--muted);max-width:900px;line-
 <a class="skip-link" href="#secHtml">跳到正文</a>
 __TOPBAR__
 <div class="layout">
-  <nav class="sidebar" aria-label="章节目录">
+  <nav class="sidebar" id="tocSidebar" aria-label="章节目录">
     <div class="rprog-wrap"><div class="rprog"><i id="readFill"></i></div><span class="rtxt" id="readTxt"></span></div>
     <div id="toc"></div>
   </nav>
@@ -604,7 +604,7 @@ __TOPBAR__
     <div class="content" id="content">
       <div class="empty" id="emptyBox">__I_BOOK__<span>从左侧目录选择章节开始学习</span></div>
       <div id="secBody" style="display:none">
-        <h2 id="secTitle"></h2>
+        <h2 id="secTitle" tabindex="-1"></h2>
         <div class="pages" id="secPages"></div>
         <div class="hltip">划选正文文字可添加高亮：<b>黄=重要</b> / <b>绿=已掌握</b> / <b>红=易错</b>；点击已有高亮可删除。高亮与笔记保存在本浏览器。</div>
         <div role="status" id="writeStatus"></div>
@@ -751,13 +751,43 @@ function step(dir){
   const i = byId[cur].idx + dir;
   if(i>=0 && i<DATA.sections.length) select(DATA.sections[i].id);
 }
+const tocButton = document.getElementById("btnSb");
+const narrowRules = matchMedia("(max-width:900px)");
+function syncToc(){
+  const open = narrowRules.matches ? document.body.classList.contains("toc-open") :
+    !document.body.classList.contains("toc-off");
+  tocButton.setAttribute("aria-expanded", String(open));
+}
+tocButton.onclick = ()=>{
+  document.body.classList.toggle(narrowRules.matches ? "toc-open" : "toc-off");
+  syncToc();
+  if (narrowRules.matches && document.body.classList.contains("toc-open")){
+    (document.querySelector(".toc-item.on") || document.querySelector(".toc-item")).focus();
+  }
+};
+narrowRules.addEventListener("change", ()=>{
+  document.body.classList.remove("toc-open");
+  syncToc();
+  if (tocButton.getAttribute("aria-expanded")==="false" && document.activeElement.closest("#tocSidebar")) tocButton.focus();
+});
+syncToc();
 document.getElementById("toc").addEventListener("click", e=>{
   const b = e.target.closest(".toc-item"); if(!b) return;
   select(b.dataset.id);
-  if (window.matchMedia && matchMedia("(max-width:900px)").matches)
+  if (narrowRules.matches){
     document.body.classList.remove("toc-open");
+    syncToc();
+    document.getElementById("secTitle").focus({preventScroll:true});
+  }
 });
-document.getElementById("btnSb").onclick = ()=>document.body.classList.toggle("toc-open");
+document.addEventListener("keydown", e=>{
+  if (e.key==="Escape" && document.body.classList.contains("toc-open") &&
+      !document.querySelector("dialog[open], #searchBox.open")){
+    document.body.classList.remove("toc-open");
+    syncToc();
+    tocButton.focus();
+  }
+});
 document.getElementById("prevBtn").onclick = ()=>step(-1);
 document.getElementById("nextBtn").onclick = ()=>step(1);
 
@@ -1101,7 +1131,7 @@ def build_html_page(sections):
     }
     right = (
         f'<div class="search-wrap">{icon("search")}'
-        f'<input id="fSearch" type="search" placeholder="搜索规则全文…（如：越位 罚球区 手球）" aria-label="搜索规则"></div>'
+        f'<input id="fSearch" type="search" placeholder="搜索规则全文" aria-label="搜索规则" title="搜索规则全文，如越位、罚球区、手球"></div>'
         f'<button class="tbtn" id="fsMinus" title="缩小字号">A－</button>'
         f'<button class="tbtn" id="fsPlus" title="放大字号">A＋</button>'
         f'<button class="tbtn" id="btnTTS" title="朗读本章（浏览器语音，通勤路上听规则）">🔊 朗读</button>'

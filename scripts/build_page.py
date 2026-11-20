@@ -281,8 +281,10 @@ HTML = r"""<!DOCTYPE html>
 body{overflow:hidden}
 .workspace{display:grid;grid-template-columns:276px minmax(0,356px) minmax(0,1fr);
   height:calc(100vh - var(--top-h));min-height:0}
-body.sb-off .workspace{grid-template-columns:0 minmax(0,356px) minmax(0,1fr)}
-body.sb-off .sidebar{display:none}
+@media(min-width:1081px){
+  body.sb-off .workspace{grid-template-columns:minmax(0,356px) minmax(0,1fr)}
+  body.sb-off .sidebar{display:none}
+}
 
 /* ---- 侧栏筛选 ---- */
 .sidebar{background:var(--bg2);border-right:1px solid var(--line);display:flex;flex-direction:column;min-height:0}
@@ -338,8 +340,10 @@ body.sb-off .sidebar{display:none}
   font-family:var(--font-display);font-size:12.5px;font-weight:700;letter-spacing:.8px;
   color:var(--ink);background:var(--card2);border-bottom:1px solid var(--line2)}
 .ph b{color:var(--brand);font-weight:600}
-.prow{display:flex;align-items:center;gap:9px;padding:8px 13px;cursor:pointer;
+.prow{display:flex;align-items:center;gap:9px;width:100%;padding:8px 13px;cursor:pointer;
+  text-align:left;background:transparent;border:0;scroll-margin-block-start:2rem;
   border-bottom:1px solid var(--line2);transition:background .12s, transform .18s var(--ease)}
+.prow:focus-visible{outline-offset:-3px}
 .prow:hover{background:var(--card2);transform:translateX(2px)}
 .prow.sel{background:var(--info-bg);box-shadow:inset 3px 0 0 var(--brand)}
 .prow .ptxt{flex:1;min-width:0}
@@ -535,7 +539,6 @@ html[data-hideans] .prow .rv,html[data-hideans] .prow .rvn{display:none}
   .sidebar{position:fixed;left:0;top:var(--top-h);bottom:0;width:284px;z-index:70;
     transform:translateX(-105%);transition:transform .18s;box-shadow:var(--shadow)}
   body.sb-open .sidebar{transform:none}
-  body.sb-off .sidebar{display:flex}  /* 桌面收起态不能压死窄屏抽屉 */
   body.detail-open .plist{display:none}
   .mobile-back{display:inline-flex;align-items:center;gap:6px;border:0;background:none;
     color:var(--brand);padding:2px 0 10px;font-weight:700;cursor:pointer;font-family:inherit;font-size:14px}
@@ -922,12 +925,12 @@ function renderList(){
       const short = (c.comp||"").replace("联赛","");
       const varChip = c.var==="none" ? "" :
         `<span class="rv ${c.var==="wrong"?"bad":""}">V${c.var==="wrong"?"✗":"✓"}</span>`;
-      return `<div class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" style="--i:${Math.min(ri++,18)}" aria-current="${state.sel===c.seq}">
+      return `<button type="button" tabindex="${state.sel===c.seq?0:-1}" class="prow ${state.sel===c.seq?"sel":""}" data-seq="${c.seq}" style="--i:${Math.min(ri++,18)}" aria-current="${state.sel===c.seq}">
         <span class="dot ${c.v}"></span>
         <span class="ptxt"><b>${crest(c.home,16,true)}${esc(c.home)} <span class="vs">vs</span> ${crest(c.away,16,true)}${esc(c.away)}</b>
         <i>${esc(short)}${c.round?esc(c.round):""}${c.minute?" · 第"+c.minute+"分钟":""} · 第${c.issue}期-判例${c.no} · <span class="rvn">${VN[c.v]}</span></i></span>
         <span class="pmark">${isFav(c.seq)?IC["star-f"]:""}${hasNote(c.seq)?IC.note:""}${seen[c.seq]?`<span class="ic-seen">${IC.check}</span>`:""}</span>
-        ${varChip}</div>`;
+        ${varChip}</button>`;
     }).join("")).join("");
   const rowsEl = document.getElementById("plistRows");
   rowsEl.innerHTML = rows ||
@@ -944,7 +947,7 @@ function applyFilter(){
   renderList();
   const list = visibleCases();
   if (!list.some(c=>c.seq===state.sel)) {
-    if (list.length) select(list[0].seq, false); else clearDetail();
+    if (list.length) select(list[0].seq, false, false); else clearDetail();
   }
 }
 
@@ -1106,11 +1109,10 @@ document.getElementById("ansRevealBtn").onclick = ()=>{
 document.getElementById("btnHideAns").setAttribute("aria-pressed", HIDE ? "true" : "false");
 
 // ---------- 选中判例 ----------
-function select(seq, scrollRow=true){
+function select(seq, scrollRow=true, openDetail=true){
   const c = bySeq[seq]; if (!c) return;
   flushNote();
-  if (window.matchMedia && window.matchMedia("(max-width:1080px)").matches)
-    document.body.classList.add("detail-open");
+  if (openDetail && narrowSeason.matches) document.body.classList.add("detail-open");
   state.sel = seq;
   const iss = DATA.issues[c.issue];
   document.getElementById("detailEmpty").style.display = "none";
@@ -1240,10 +1242,18 @@ function select(seq, scrollRow=true){
   ).join("<br>");
   document.getElementById("detail").scrollTop = 0;
   // 列表高亮
-  document.querySelectorAll(".prow.sel").forEach(e=>e.classList.remove("sel"));
-  const row = document.querySelector(`.prow[data-seq="${seq}"]`);
-  if (row && scrollRow) row.scrollIntoView({block:"nearest"});
-  if (row) row.classList.add("sel");
+  const rows = document.getElementById("plistRows");
+  rows.querySelectorAll(".prow.sel").forEach(el=>{
+    el.classList.remove("sel");
+    el.setAttribute("aria-current", "false");
+  });
+  const row = rows.querySelector(`.prow[data-seq="${seq}"]`);
+  if (row){
+    setListStop(row);
+    row.classList.add("sel");
+    row.setAttribute("aria-current", "true");
+    if (scrollRow) row.scrollIntoView({block:"nearest"});
+  }
   history.replaceState(null, "", "#case-"+seq);
   // 学习足迹：仅用户主动选择才记（scrollRow=false = applyFilter/init 的自动选中，
   // 打开页面不算「学过」）；上次学习入口同理
@@ -1507,9 +1517,32 @@ document.getElementById("importFile").addEventListener("change", e=>{
 });
 
 // ---------- 事件绑定 ----------
-document.getElementById("plistRows").addEventListener("click", e=>{
+const caseRows = document.getElementById("plistRows");
+function setListStop(row){
+  const previous = caseRows.querySelector('.prow[tabindex="0"]');
+  if (previous) previous.tabIndex = -1;
+  row.tabIndex = 0;
+}
+caseRows.addEventListener("click", e=>{
   const row = e.target.closest(".prow");
-  if (row) select(+row.dataset.seq);
+  if (!row) return;
+  select(+row.dataset.seq);
+  if (narrowSeason.matches) document.getElementById("dHead").focus({preventScroll:true});
+});
+caseRows.addEventListener("keydown", e=>{
+  const row = e.target.closest(".prow");
+  if (!row || !["ArrowDown","ArrowUp","Home","End"].includes(e.key)) return;
+  e.preventDefault();
+  e.stopPropagation();
+  const rows = Array.from(caseRows.querySelectorAll(".prow"));
+  const last = rows.length-1;
+  const index = rows.indexOf(row);
+  const next = e.key==="Home" ? 0 : e.key==="End" ? last :
+    Math.max(0, Math.min(last, index + (e.key==="ArrowDown" ? 1 : -1)));
+  const target = rows[next];
+  if (!narrowSeason.matches) select(+target.dataset.seq);
+  setListStop(target);
+  target.focus();
 });
 document.getElementById("catList").addEventListener("click", e=>{
   const b = e.target.closest(".cat-item"); if(!b) return;
@@ -1565,27 +1598,55 @@ document.getElementById("vswRow").addEventListener("click", e=>{
   document.querySelectorAll(".vsw").forEach(x=>x.classList.toggle("on", x===b));
 });
 const sbButton = document.getElementById("btnSb");
+const narrowSeason = matchMedia("(max-width:1080px)");
+function syncSidebar(){
+  const open = narrowSeason.matches ? document.body.classList.contains("sb-open") :
+    !document.body.classList.contains("sb-off");
+  sbButton.setAttribute("aria-expanded", String(open));
+}
 function closeSidebar(){
   document.body.classList.remove("sb-open");
-  sbButton.setAttribute("aria-expanded", "false");
+  syncSidebar();
   sbButton.focus();
 }
 sbButton.onclick = ()=>{
-  if (matchMedia("(max-width:1080px)").matches){
-    const open = document.body.classList.toggle("sb-open");
-    sbButton.setAttribute("aria-expanded", String(open));
-    if (open) document.getElementById("fSearch").focus();
-  } else {
-    document.body.classList.toggle("sb-off");
+  document.body.classList.toggle(narrowSeason.matches ? "sb-open" : "sb-off");
+  syncSidebar();
+  if (narrowSeason.matches && document.body.classList.contains("sb-open")){
+    document.querySelector("#sidebar button").focus();
   }
 };
+narrowSeason.addEventListener("change", ()=>{
+  document.body.classList.remove("sb-open");
+  syncSidebar();
+  if (sbButton.getAttribute("aria-expanded")==="false" && document.activeElement.closest("#sidebar")) sbButton.focus();
+});
+syncSidebar();
 document.addEventListener("keydown", e=>{
   if (e.key === "Escape" && !document.querySelector("dialog[open]") && document.body.classList.contains("sb-open")){
     e.preventDefault();
     closeSidebar();
   }
 });
-document.getElementById("mobileBack").onclick = ()=>document.body.classList.remove("detail-open");
+document.getElementById("sidebar").addEventListener("click", e=>{
+  // A filter can rebuild its own button. Keep keyboard focus on its replacement.
+  const old = e.target.closest("button[data-path],button[data-comp],button[data-team],button[data-issue],button[data-fav]");
+  if (!old || old.isConnected || document.activeElement!==document.body) return;
+  const key = Object.keys(old.dataset)[0];
+  const replacement = document.querySelector(`#sidebar button[data-${key}="${CSS.escape(old.dataset[key])}"]`);
+  (replacement || sbButton).focus({preventScroll:true});
+});
+function focusCaseList(){
+  document.body.classList.remove("detail-open");
+  const row = caseRows.querySelector(".prow.sel") || caseRows.querySelector(".prow");
+  if (row){ setListStop(row); row.focus(); }
+  else sbButton.focus();
+}
+document.getElementById("mobileBack").onclick = focusCaseList;
+document.querySelector('.skip-link[href="#plistRows"]').onclick = e=>{
+  e.preventDefault();
+  focusCaseList();
+};
 document.getElementById("btnTop").onclick = ()=>document.getElementById("detail").scrollTo({top:0,behavior:"smooth"});
 const helpButton = document.getElementById("btnHelp");
 helpButton.setAttribute("aria-haspopup", "dialog");
@@ -1847,7 +1908,7 @@ def build_season(season):
     )
     search_html = (
         f'<div class="search-wrap">{icon("search")}'
-        f'<input id="fSearch" type="search" placeholder="搜索球队 / 判例内容 / 关键词…" aria-label="搜索判例"></div>'
+        f'<input id="fSearch" type="search" placeholder="搜球队、判例" aria-label="搜索判例" title="搜索球队、判例内容或关键词"></div>'
     )
     hideans_btn = (
         f'<button class="tbtn" id="btnHideAns" title="隐藏答案模式：先看视频自己判断，再揭示官方认定" '
@@ -1855,7 +1916,7 @@ def build_season(season):
     )
     tb = topbar(
         active=cfg["out"],
-        right=hideans_btn + search_html,
+        right=search_html + hideans_btn,
         stats=cfg["stats"],
         brand_sub=f"{season}赛季 · {len(data['cases'])}判例",
         seasons=tuple(sorted(SEASONS)),

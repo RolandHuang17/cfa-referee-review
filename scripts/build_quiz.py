@@ -276,7 +276,7 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 .axis .ah{font-size:13px;font-weight:700;margin-bottom:7px}
 .axis .ah small{color:var(--muted);font-weight:400}
 .optrow{display:flex;flex-wrap:wrap;gap:7px}
-.opt{position:relative;cursor:pointer;user-select:none}
+.chip.opt{position:relative;max-width:100%;white-space:normal;overflow-wrap:anywhere;cursor:pointer;user-select:none}
 .opt input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:inherit}
 .opt:focus-within{outline:2px solid var(--brand);outline-offset:2px}
 .axis:disabled .opt{cursor:default}
@@ -313,12 +313,17 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 .passbadge{display:inline-block;padding:3px 13px;border-radius:999px;font-size:13px;font-weight:700}
 .passbadge.ok{background:var(--green-bg);color:var(--green);border:1px solid var(--green)}
 .passbadge.no{background:var(--red-bg);color:var(--red);border:1px solid var(--red)}
-.edots{display:none;flex-wrap:wrap;gap:5px;margin:4px 0 10px}
-.edot{width:26px;height:22px;display:inline-flex;align-items:center;justify-content:center;
-  border:1px solid var(--line);border-radius:6px;font-size:11px;color:var(--muted);
+.exam-nav{margin:4px 0 10px}
+.exam-nav summary{width:fit-content;cursor:pointer;color:var(--ink2);font-size:13px;font-weight:600}
+.exam-nav p{margin:4px 0;color:var(--muted);font-size:12px}
+.edots{display:grid;grid-template-columns:repeat(auto-fill,minmax(44px,1fr));gap:5px;padding:4px;
+  max-height:min(32vh,18rem);overflow:auto}
+.edot{min-width:0;height:32px;padding:2px;display:inline-flex;align-items:center;justify-content:center;gap:2px;
+  border:1px solid var(--line);border-radius:6px;font-size:12px;color:var(--muted);
   cursor:pointer;background:var(--card2);font-variant-numeric:tabular-nums}
 .edot.done{border-color:var(--green);color:var(--green)}
-.edot.cur{border-color:var(--brand);color:var(--brand);font-weight:700;background:var(--info-bg)}
+.edot.done::after{content:"✓"}
+.edot.cur{border:2px solid var(--brand);color:var(--brand);font-weight:700;background:var(--info-bg)}
 .anbox{margin-top:10px;border:1px solid var(--line);border-radius:var(--r-md);background:var(--card2)}
 .anbox summary{cursor:pointer;padding:10px 14px;font-size:13.5px;font-weight:600;color:var(--ink2)}
 .anbox summary:hover{color:var(--brand)}
@@ -359,7 +364,7 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 #legacyScaleBox>p,#legacyScaleList p{margin:6px 0;color:var(--muted);line-height:1.65}
 #legacyScaleList h4{margin:0;font-size:inherit}
 .wbbtn{flex:none}
-.topbtn{position:fixed;right:20px;bottom:22px;display:none;align-items:center;gap:6px;
+.top-btn:not([hidden]){position:fixed;right:16px;bottom:12px;min-height:44px;display:inline-flex;align-items:center;gap:6px;
   background:var(--brand-strong);color:var(--on-brand);border:none;border-radius:999px;
   padding:9px 16px;font-size:13px;cursor:pointer;z-index:30;box-shadow:var(--shadow-sm)}
 @media (max-width:640px){.scroll{padding:14px 10px 60px}.panel{padding:14px}}
@@ -376,7 +381,7 @@ __TOPBAR__
 
 <!-- 开始屏 -->
 <section id="scrStart">
-  <h1 class="page-h">考题模式</h1>
+  <h1 class="page-h" tabindex="-1">考题模式</h1>
   <p class="page-sub">用赛季判例、尺度场景、VAR 协议和规则理论四类题目练习。作答后可以对照官方认定或条文，再复练错题。</p>
   <div class="panel">
     <div class="stat">
@@ -468,10 +473,14 @@ __TOPBAR__
 <section id="scrQuiz" style="display:none">
   <div class="panel">
     <div class="frow" style="justify-content:space-between;margin-top:0">
-      <b id="qProgress" style="font-size:14px"></b>
+      <b id="qProgress" tabindex="-1" style="font-size:14px"></b>
       <span id="qScore" style="font-size:13px;color:var(--muted)"></span>
     </div>
-    <div class="edots" id="examDots" style="display:none"></div>
+    <details class="exam-nav" id="examNav" hidden>
+      <summary>题号导航</summary>
+      <p id="examNavHelp">✓ 表示已作答。方向键选题号，Enter 跳转。</p>
+      <div class="edots" id="examDots" role="group" aria-label="题号" aria-describedby="examNavHelp"></div>
+    </details>
     <div id="qCard"></div>
     <div class="ansgate" id="ansGate">🤔 先看视频、读完事件经过，在心里做出你的判罚，再作答。</div>
     <div id="qForm"></div>
@@ -489,7 +498,7 @@ __TOPBAR__
 <!-- 结果屏 -->
 <section id="scrResult" style="display:none">
   <div class="panel">
-    <div class="bigscore"><b id="rScore">0</b><span id="rPct"></span></div>
+    <div class="bigscore"><b id="rScore" tabindex="-1">0</b><span id="rPct"></span></div>
     <p id="rRate" style="margin:0 0 6px;font-size:14px"></p>
     <p id="rPass" style="margin:0 0 10px"></p>
     <div class="frow">
@@ -506,7 +515,7 @@ __TOPBAR__
 </section>
 
 </div></div></div>
-<button class="top-btn" id="btnTop">__I_UP__ 回到顶部</button>
+<button type="button" class="top-btn" id="btnTop" hidden>__I_UP__ 回到顶部</button>
 
 <script>
 __CALENDAR_JS__
@@ -639,25 +648,57 @@ for (const event of ["click", "keydown"]) {
   }, true);
 }
 
-// ---------- 答题卡进度点（考试模式：灰=未答 绿=已答 高亮=当前） ----------
+// ---------- 模考题号导航 ----------
 function hasAnswer(answer){
   if (Array.isArray(answer)) return answer.length > 0;
   if (answer && typeof answer === "object") return Object.values(answer).some(v => v != null);
   return answer != null;
 }
-function updateDots(){
-  const box = document.getElementById("examDots");
-  if (!round || round.mode !== "exam"){ box.style.display = "none"; return; }
-  box.style.display = "flex";
-  box.innerHTML = round.qs.map((_, i)=>{
-    const cls = i === round.i ? "cur" : (hasAnswer(round.answers[i]) ? "done" : "");
-    return `<button type="button" class="edot ${cls}" data-i="${i}" aria-label="第 ${i+1} 题"${i===round.i?' aria-current="step"':""}>${i + 1}</button>`;
-  }).join("");
+const examNav = document.getElementById("examNav"), examDots = document.getElementById("examDots");
+function updateDot(dot, i){
+  const answered = hasAnswer(round.answers[i]), current = i === round.i;
+  dot.classList.toggle("done", answered);
+  dot.classList.toggle("cur", current);
+  if (current) dot.setAttribute("aria-current","step"); else dot.removeAttribute("aria-current");
+  dot.setAttribute("aria-label", "第 "+(i+1)+" 题，"+(answered ? "已作答" : "未作答"));
 }
-document.getElementById("examDots").addEventListener("click", e=>{
-  const d = e.target.closest(".edot"); if (!d || !round || round.finished) return;
+function tabToDot(dot){
+  const previous = examDots.querySelector('[tabindex="0"]');
+  if (previous !== dot && previous) previous.tabIndex = -1;
+  dot.tabIndex = 0;
+}
+function updateDots(){
+  examNav.hidden = round?.mode !== "exam";
+  if (examNav.hidden) return;
+  if (examDots.dataset.exam !== round.id){
+    examNav.open = round.qs.length <= 20;
+    examDots.dataset.exam = round.id;
+    examDots.innerHTML = round.qs.map((_,i)=>
+      `<button type="button" class="edot" data-i="${i}" tabindex="-1">${i+1}</button>`).join("");
+    for (const dot of examDots.children) updateDot(dot, +dot.dataset.i);
+  } else {
+    const previous = examDots.querySelector('[aria-current="step"]');
+    if (previous) updateDot(previous, +previous.dataset.i);
+  }
+  const current = examDots.children[round.i];
+  updateDot(current, round.i);
+  tabToDot(current);
+}
+examDots.addEventListener("keydown", e=>{
+  const dot = e.target.closest(".edot");
+  if (!dot || e.altKey || e.ctrlKey || e.metaKey) return;
+  const i = +dot.dataset.i, last = examDots.children.length-1;
+  const columns = getComputedStyle(examDots).gridTemplateColumns.split(" ").length;
+  const moves = {ArrowLeft:i-1, ArrowRight:i+1, ArrowUp:i-columns, ArrowDown:i+columns, Home:0, End:last};
+  if (!(e.key in moves)) return;
+  e.preventDefault(); e.stopPropagation();
+  const next = examDots.children[Math.max(0,Math.min(last,moves[e.key]))];
+  tabToDot(next); next.focus();
+});
+examDots.addEventListener("click", e=>{
+  const dot = e.target.closest(".edot"); if (!dot || !round || round.finished) return;
   if (round.scores[round.i] == null) round.answers[round.i] = currentAnswer();
-  round.i = +d.dataset.i;
+  round.i = +dot.dataset.i;
   renderQuestion();
 });
 
@@ -1410,7 +1451,11 @@ document.getElementById("importFile").addEventListener("change", e=>{
 // Native controls own the answer state; the chip follows both pointer and keyboard changes.
 document.getElementById("qForm").addEventListener("change", e=>{
   if (!e.target.matches("input")) return;
-  if (round?.mode === "exam" && !round.finished){ round.answers[round.i] = currentAnswer(); saveExam(); }
+  if (round?.mode === "exam" && !round.finished){
+    round.answers[round.i] = currentAnswer();
+    updateDot(examDots.children[round.i], round.i);
+    saveExam();
+  }
   for (const input of e.target.closest("fieldset").querySelectorAll("input"))
     input.closest(".opt").classList.toggle("on",input.checked);
 });
@@ -1430,7 +1475,15 @@ document.getElementById("btnWrongRedo").onclick = ()=>{
   if (list.length) startRound(list); else startRound(round.qs);
 };
 document.getElementById("btnBack").onclick = ()=>{ renderWbStats(); updatePoolTip(); showScreen("start"); };
-document.getElementById("btnTop").onclick = ()=>document.getElementById("scroll").scrollTo({top:0,behavior:"smooth"});
+const quizScroll = document.getElementById("scroll"), topButton = document.getElementById("btnTop");
+quizScroll.addEventListener("scroll", ()=>{
+  topButton.hidden = quizScroll.scrollTop <= Math.min(240,quizScroll.clientHeight/2);
+}, {passive:true});
+topButton.onclick = ()=>{
+  const heading = [...document.querySelectorAll(".page-h,#qProgress,#rScore")].find(el=>el.getClientRects().length);
+  if (heading) heading.focus({preventScroll:true});
+  quizScroll.scrollTo({top:0,behavior:matchMedia("(prefers-reduced-motion: reduce)").matches ? "instant" : "smooth"});
+};
 
 // 视频两级回退（本地缺失 → 官方直链）
 let vidsMissing = false;

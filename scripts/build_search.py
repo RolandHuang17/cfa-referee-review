@@ -18,6 +18,7 @@ from lib.ifab_content import search_rows as ifab_search_rows
 from lib.law_blocks import anchored_section
 from lib.pagelib import article_anchor
 from lib.pro_series import series_name
+from lib.uefa_anchors import video_anchor
 from lib.uefa_content import apply_zh as apply_uefa_zh
 
 from lib.paths import (
@@ -166,14 +167,14 @@ def build_docs():
     # UEFA 判例（中文标题 + 英文原标题都可搜）
     uefa, uzh = _read(UEFA_JSON), _read(UEFA_ZH_JSON)
     apply_uefa_zh(uefa, uzh)
-    for gi, grp in enumerate(uefa.get("groups", [])):
-        for i, it in enumerate(grp.get("items", []), 1):
+    for grp in uefa.get("groups", []):
+        for it in grp.get("items", []):
             zh_title = it["title_cn"]
             add(
                 "intl",
                 "UEFA",
                 zh_title or it.get("title", ""),
-                f"uefa.html#u-{gi}c{i}",
+                f"uefa.html#{video_anchor(it['id'], it['url'])}",
                 " ".join(
                     filter(
                         None,

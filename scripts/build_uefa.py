@@ -15,6 +15,13 @@ import json
 
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
+from lib.uefa_anchors import (
+    LEGACY_GROUPS,
+    LEGACY_VIDEOS,
+    bookmark_groups,
+    group_anchor,
+    video_anchor,
+)
 from lib.uefa_content import apply_zh
 
 from lib.paths import DATA, SITE, UEFA_JSON
@@ -82,9 +89,11 @@ html[data-uefa-en] ul.en{display:block}
   padding:16px 18px;margin-bottom:16px;
   transition:transform var(--t-fast) var(--ease), border-color var(--t-fast) var(--ease)}
 .hcard:hover{transform:translateY(-2px);border-color:var(--brand)}
+.gsec,.hcard,.legacy-uefa-target{scroll-margin-top:calc(var(--top-h) + 12px)}
 .hhead{display:flex;align-items:center;gap:9px;margin-bottom:8px}
 .hid{font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--brand);
-  border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2);white-space:nowrap}
+  border:1px solid var(--line);border-radius:6px;padding:1px 9px;background:var(--card2);white-space:nowrap;text-decoration:none}
+.hid:hover{text-decoration:underline}
 .hhead h3{margin:0;font-size:16px;font-weight:600;line-height:1.5}
 .hnote{font-size:14px;line-height:1.9;margin:8px 0 0}
 .translation-status{font-size:12px;color:var(--muted);margin:4px 0}
@@ -168,11 +177,18 @@ def load_zh():
         return None
 
 
+def legacy_target(content, anchor):
+    if anchor:
+        return f'<div class="legacy-uefa-target" id="{anchor}">{content}</div>'
+    return content
+
+
 def build_page(data):
     groups = data.get("groups", [])
+    owners = bookmark_groups(groups)
     navs, secs = "", ""
-    for gi, g in enumerate(groups):
-        anchor = f"u-{gi}"
+    for g in groups:
+        anchor = group_anchor(g["key"])
         cn_name, en_name = g.get("name_current_cn") or "", g.get("name_en") or ""
         navs += (
             f'<a class="gnav" href="#{anchor}">{esc(cn_name or en_name)}'
@@ -210,6 +226,12 @@ def build_page(data):
             crit = f'<div class="gcrits">{blocks}</div>'
         cards = ""
         for i, it in enumerate(g["items"], 1):
+            target = video_anchor(it["id"], it["url"])
+            card_id, old = "", ""
+            if owners.get(target) == g["key"]:
+                del owners[target]
+                card_id = f' id="{target}"'
+                old = LEGACY_VIDEOS.get(target, ("", ""))[1]
             tcn, ten = it.get("title_cn") or "", it.get("title") or ""
             title_en = (
                 f'<p class="htitle-en en" lang="en">{esc(ten)}</p>'
@@ -230,18 +252,20 @@ def build_page(data):
                 if it.get("date")
                 else ""
             )
-            cards += f"""<article class="hcard" id="{anchor}c{i}">
-  <div class="hhead"><span class="hid">#{i}</span><h3 lang="{"zh-CN" if tcn else "en"}">{esc(tcn or ten)}</h3></div>
+            card = f"""<article class="hcard"{card_id}>
+  <div class="hhead"><a class="hid" href="#{target}" aria-label="{esc(tcn or ten)}的永久链接">#{i}</a><h3 lang="{"zh-CN" if tcn else "en"}">{esc(tcn or ten)}</h3></div>
   {title_en}{"" if tcn else REVIEW_NOTE}{frame}{caption}
   <a class="watch" href="{esc(it["url"])}" target="_blank" rel="noopener noreferrer">{icon("play", 13)} 在 UEFA 官网观看 {icon("external", 13)}</a>{date}
 </article>"""
+            cards += legacy_target(card, old)
         if cn_name:
             en_part = f'<small class="en">{esc(en_name)}</small>' if en_name else ""
             h2 = f"<h2>{esc(cn_name)} {en_part} <b>{len(g['items'])}例</b></h2>"
         else:
             h2 = f'<h2><span lang="en">{esc(en_name)}</span> <b>{len(g["items"])}例</b></h2>{REVIEW_NOTE}'
-        secs += (
-            f'<section class="gsec" id="{anchor}">{h2}{intro}{crit}{cards}</section>'
+        secs += legacy_target(
+            f'<section class="gsec" id="{anchor}">{h2}{intro}{crit}{cards}</section>',
+            LEGACY_GROUPS.get(g["key"]),
         )
     tb = topbar(
         active="uefa.html",

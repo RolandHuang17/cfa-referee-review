@@ -7,7 +7,7 @@
 
 import json
 import re
-from lib.issue_notes import ISSUE_NOTES
+from lib.issue_notes import ISSUE_NOTES, supplement_issue_no
 import sys
 from datetime import date
 
@@ -16,7 +16,7 @@ from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
 from lib.xlinks import resolve as resolve_xlinks
 
-from lib.paths import DATA, SITE, SRC
+from lib.paths import DATA, LAWS_JSON, SITE, SRC
 from lib.site_stats import counts
 
 _COUNTS = counts()
@@ -101,7 +101,8 @@ CATEGORY_NOTES = {
 
 VERDICT_NAME = {"wrong": "错漏判", "correct": "支持原判", "pending": "不予认定"}
 # 教学分类 ↔ 规则章节 ↔ 尺度场景 互链（data/xlinks.json 策表解析产物，三季共用）
-XLINKS, _ = resolve_xlinks()
+_RULEBOOK = json.loads(LAWS_JSON.read_text(encoding="utf-8"))
+XLINKS, _ = resolve_xlinks(laws=_RULEBOOK)
 
 
 def build_paths(raw_cases):
@@ -224,6 +225,9 @@ def build_data(season):
                 "var": c["var_verdict"],
             }
         )
+        supplement = supplement_issue_no(c["conclusion"])
+        if supplement is not None:
+            cases[-1]["supplementIssue"] = supplement
     catalog = load_catalog()
     teams = {item["name"]: item for item in catalog.values()}
     issues = {
@@ -257,6 +261,7 @@ def build_data(season):
         "categories": [{"id": k, "name": n, "icon": ic} for k, n, ic in CATEGORY_ORDER],
         "notes": CATEGORY_NOTES,
         "xlinks": XLINKS,
+        "rulebookEdition": _RULEBOOK["season"],
         "issueNotes": ISSUE_NOTES.get(season, {}),
         "verdictNames": VERDICT_NAME,
         "varNames": VAR_NAME,
@@ -390,6 +395,11 @@ body.sb-off .sidebar{display:none}
 .d-foot{font-size:13px;margin-top:13px;color:var(--muted)}
 .d-foot a{color:var(--brand);text-decoration:none}
 .d-foot a:hover{text-decoration:underline}
+.citation-actions{display:flex;align-items:center;flex-wrap:wrap;gap:6px 12px;margin-top:8px}
+.citation-actions .btn{min-block-size:44px}
+#citationStatus{font-size:13px;color:var(--ink2)}
+#citationText{box-sizing:border-box;width:100%;margin-top:8px;padding:10px;font:inherit;
+  color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:var(--r-md)}
 .d-nav{display:flex;gap:10px;margin-top:15px;max-width:960px}
 .d-head .match .vs{color:var(--faint);font-weight:400;font-size:14px;margin:0 2px}
 /* 相关判例（同分类推荐，点击跳转） */
@@ -635,6 +645,11 @@ __TOPBAR__
       <div class="fmlinks" id="dXlinks" style="display:none"></div>
       <div class="tags" id="dTags"></div>
       <div class="d-foot" id="dFoot"></div>
+      <div class="citation-actions">
+        <button class="btn" type="button" id="citationCopy">复制判例引用</button>
+        <span role="status" id="citationStatus"></span>
+      </div>
+      <textarea id="citationText" aria-label="可手动复制的判例引用" readonly hidden rows="6"></textarea>
       <div class="d-nav">
         <button id="prevBtn">__I_UP__ 上一个 <span class="kbd">↑</span></button>
         <button id="nextBtn">下一个 <span class="kbd">↓</span> __I_DOWN__</button>
@@ -693,6 +708,7 @@ __TOPBAR__
 <script>
 __RECORDS_JS__
 __CALENDAR_JS__
+__CITATION_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const CATS = DATA.categories;
@@ -934,6 +950,7 @@ function applyFilter(){
 
 function clearDetail(){
   state.sel = null;
+  resetCitation();
   document.getElementById("dcard").style.display = "none";
   document.getElementById("detailEmpty").style.display = "flex";
   const v = document.getElementById("dvid");
@@ -1033,6 +1050,43 @@ function goLite(){
 }
 document.addEventListener("cfa:lite", applyLite);  // theme.py 顶栏 #btnLite 切换时派发
 
+const citationButton = document.getElementById("citationCopy");
+const citationText = document.getElementById("citationText");
+const citationStatus = document.getElementById("citationStatus");
+let citationRequest = 0;
+let citationTimer;
+function citationShowsDecision(){
+  return !HIDE || document.getElementById("dcard").classList.contains("revealed");
+}
+function resetCitation(){
+  ++citationRequest;
+  clearTimeout(citationTimer);
+  citationText.hidden = true;
+  citationText.value = "";
+  citationStatus.textContent = "";
+  citationButton.textContent = citationShowsDecision() ? "复制判例引用" : "复制判例出处";
+}
+citationButton.onclick = async ()=>{
+  const c = bySeq[state.sel];
+  if (!c) return;
+  resetCitation();
+  const request = citationRequest;
+  const text = formatCaseCitation(DATA, c, document.querySelector('link[rel="canonical"]')?.href, citationShowsDecision());
+  try {
+    await navigator.clipboard.writeText(text);
+    if (request !== citationRequest) return;
+    citationStatus.textContent = "已复制";
+    citationTimer = setTimeout(()=>{ citationStatus.textContent = ""; }, 3000);
+  } catch {
+    if (request !== citationRequest) return;
+    citationText.value = text;
+    citationText.hidden = false;
+    citationText.focus();
+    citationText.select();
+    citationStatus.textContent = "请手动复制下方已选中的文字";
+  }
+};
+
 // ---------- 隐藏答案模式切换（CSS 门控显隐；揭示只对当前题生效，切题自动重隐） ----------
 document.getElementById("btnHideAns").onclick = ()=>{
   const r = document.documentElement, on = r.dataset.hideans !== "1";
@@ -1041,9 +1095,11 @@ document.getElementById("btnHideAns").onclick = ()=>{
   document.getElementById("btnHideAns").setAttribute("aria-pressed", on ? "true" : "false");
   try { localStorage.setItem("cfa.hideans", on ? "1" : "0"); } catch(_) {}
   document.getElementById("dcard").classList.remove("revealed");
+  resetCitation();
 };
 document.getElementById("ansRevealBtn").onclick = ()=>{
   document.getElementById("dcard").classList.add("revealed");
+  resetCitation();
   const concl = document.querySelector("#dcard .txt .concl");
   if (concl) concl.scrollIntoView({behavior:"smooth", block:"nearest"});
 };
@@ -1061,6 +1117,7 @@ function select(seq, scrollRow=true){
   document.getElementById("dcard").style.display = "block";
   // 隐藏答案模式：切题后重新隐藏，需再次点击「显示本题答案」揭示
   document.getElementById("dcard").classList.toggle("revealed", !HIDE);
+  resetCitation();
   // 分段拼接（勿用 replace：空队名会触发 replace("",…) 前插、队名互为子串时首个匹配错位）
   const segs = [];
   if (c.comp) segs.push(esc(c.comp));
@@ -1151,7 +1208,7 @@ function select(seq, scrollRow=true){
       if (rule.source) parts.push(`<a class="fml-link" href="${esc(rule.source)}" target="_blank" rel="noopener noreferrer">官方执行依据</a>`);
 
       if (xl.laws.length)
-        parts.push(`<span class="fml-k">现行规则 2026/27</span>` + xl.laws.map(l=>
+        parts.push(`<span class="fml-k">现行规则 ${esc(DATA.rulebookEdition)}</span>` + xl.laws.map(l=>
           `<a class="fml-link" href="${esc(l.url)}">${IC.book}${esc(l.title)}</a>`).join(""));
       if (xl.scale.length)
         parts.push(`<span class="fml-k">尺度场景</span>` + xl.scale.map(s=>
@@ -1175,8 +1232,12 @@ function select(seq, scrollRow=true){
       }).join("");
     } else relBox.style.display = "none";
   }
-  document.getElementById("dFoot").innerHTML =
-    `来源：<a href="${esc(iss.url)}" target="_blank" rel="noopener">${esc(iss.title)}</a>（${iss.date.slice(0,4)}-${iss.date.slice(4,6)}-${iss.date.slice(6,8)}发布）`;
+  const sources = [iss];
+  if (c.supplementIssue) sources.push(DATA.issues[c.supplementIssue]);
+  document.getElementById("dFoot").innerHTML = sources.map((source, i) =>
+    (i ? "补充认定：" : "来源：") +
+    `<a href="${esc(source.url)}" target="_blank" rel="noopener noreferrer">${esc(source.title)}</a>（${esc(citationDate(source.date))}发布）`
+  ).join("<br>");
   document.getElementById("detail").scrollTop = 0;
   // 列表高亮
   document.querySelectorAll(".prow.sel").forEach(e=>e.classList.remove("sel"));
@@ -1607,9 +1668,7 @@ let CHALLENGE = false;
     const bar = document.getElementById("chBar");
     bar.style.display = "";
     document.getElementById("btnChCopy").onclick = ()=>{
-      const url = location.origin !== "null"
-        ? `${location.origin}${location.pathname}?case=${state.sel}&hideans=1`
-        : `${location.href.split("?")[0]}?case=${state.sel}&hideans=1`;
+      const url = caseShareLink(DATA.cfg.season, state.sel, document.querySelector('link[rel="canonical"]')?.href, true);
       const done = ()=>alert("挑战链接已复制——发给队友，打开即进入本判例的隐藏答案模式。");
       if (navigator.clipboard && navigator.clipboard.writeText)
         navigator.clipboard.writeText(url).then(done, ()=>{ prompt("复制此挑战链接：", url); });
@@ -1619,6 +1678,8 @@ let CHALLENGE = false;
       CHALLENGE = false;
       HIDE = false;
       document.documentElement.removeAttribute("data-hideans");
+      document.getElementById("btnHideAns").setAttribute("aria-pressed", "false");
+      resetCitation();
       bar.style.display = "none";
     };
   }
@@ -1805,6 +1866,9 @@ def build_season(season):
         )
         .replace(
             "__CALENDAR_JS__", (SRC / "study-calendar.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__CITATION_JS__", (SRC / "case-citation.js").read_text(encoding="utf-8")
         )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)

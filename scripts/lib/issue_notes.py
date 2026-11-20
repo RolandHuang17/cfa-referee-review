@@ -33,6 +33,12 @@ ISSUE_NOTES = {
 }
 
 
+def supplement_issue_no(conclusion):
+    """Return the issue that published the appended ruling, if present."""
+    match = re.search(r"^【第(\d+)期补充认定】", conclusion, re.MULTILINE)
+    return int(match.group(1)) if match else None
+
+
 def title_wrong_count(issue):
     count = issue.get("expected_wrong", 0)
     title = issue.get("title", "")

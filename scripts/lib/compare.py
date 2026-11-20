@@ -6,6 +6,7 @@ import re
 from functools import lru_cache
 from urllib.parse import urlsplit
 
+from lib.issue_notes import supplement_issue_no
 from lib.law_blocks import text_of
 from lib.paths import DATA
 from lib.site_stats import SEASONS
@@ -77,11 +78,9 @@ def _project_cases(data_dir, rules):
                 "href": f"season-{season}.html#case-{record['seq']}",
             }
             # fix_issue27_merge appends the later ruling to its original case.
-            supplemental = re.search(
-                r"^【第(\d+)期补充认定】", record["conclusion"], re.MULTILINE
-            )
-            if supplemental:
-                cited_issue = issues[int(supplemental.group(1))]
+            supplemental = supplement_issue_no(record["conclusion"])
+            if supplemental is not None:
+                cited_issue = issues[supplemental]
                 cases[key]["supplement"] = {
                     "issue": cited_issue["no"],
                     "date": cited_issue["date"],

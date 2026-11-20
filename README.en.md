@@ -8,6 +8,7 @@ re-organized by a unified teaching taxonomy, plus:
 
 - **Paired case lessons** (compare.html) — four two-case exercises with official CFA evidence, replayable observation clips and printable personal reviews. Pick any two cases in the same teaching category across the three seasons to read them side by side.
 - **[Coach lesson planner](site/compare.html#coach)** lets instructors order cases from all three seasons, write prompts, present one case at a time and reveal the CFA decision on demand. Share a discussion or review handout by link, standalone HTML or print. A separate JSON backup carries private teaching notes between devices.
+- **Case citations** can be copied at the foot of a season case. They include the official decision, dated sources and a link back to the case. While the answer is hidden, the button copies the sources and a blind-practice link. A selectable text field supports offline copying.
 - **Per-team impact stats** (stats-2026/2025/2024.html) — every officially confirmed
   wrong call, score-correction analysis, both victim/beneficiary views.
 - **Official unified-caliber briefings** (scale.html) — 104 typical scenarios across

@@ -134,14 +134,16 @@ def build_page(data):
             f'<p class="desc" style="margin:-6px 0 12px">{esc(era["desc_cn"])}</p>'
         )
         for e in eds:
-            online = e.get("platform") == "nextaur"
+            badge = "correct" if e.get("platform") == "nextaur" else "info"
+            if e.get("status") == "unreviewed":
+                badge = "pending"
             size = (
                 f'<span class="ed-size">{esc(e["size"])}</span>'
                 if e.get("size")
                 else ""
             )
             status = (
-                f'<span class="ed-status badge {"correct" if online else "info"}">'
+                f'<span class="ed-status badge {badge}">'
                 f"{esc(e.get('status_cn', ''))}</span>"
             )
             links = "".join(

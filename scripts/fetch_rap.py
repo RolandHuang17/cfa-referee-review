@@ -1,122 +1,189 @@
-# -*- coding: utf-8 -*-
-"""核对 UEFA RAP（Refereeing Assistance Programme）各期索引 → 辅助维护 data/rap.json
+"""核对 Dutch Referee 的 UEFA RAP 索引，保留已策展的期数与链接。
 
-RAP 的实际判例内容在 Nextaur 登录墙后（免费注册）或已失效的下载包里，**不可抓取**；
-本脚本只抓 dutchreferee.com 的公开索引页，提取各期链接与说明文本，用于：
-1. 首次策展 data/rap.json（人工核对后录入）；
-2. UEFA 每年发布新一期 RAP 后，重跑本脚本发现新增期数（merge 子命令把新期并入
-   rap.json，已有人工标注的期保持不动）。
-
-用法: python fetch_rap.py [fetch|merge]
-- fetch: 抓取索引页缓存 data/local/dutchref-cache/ 并打印期数清单（默认）
-- merge: fetch 后把发现的、rap.json 中尚不存在的期数以 status="unreviewed" 并入
+python scripts/fetch_rap.py [fetch|merge] [--offline]
+默认联网更新索引缓存。--offline 使用最近一次成功解析的本地索引。
+merge 将有明确发布平台的新期标为待核。证据不足的链接保存在
+data/local/dutchref-cache/pending-editions.json，供人工核对。
 """
 
-import html as htmllib
+import argparse
+import html
 import json
 import re
-import sys
-import time
+from urllib.parse import urlsplit
 
-from lib.safe_http import fetch_text
-
+from lib.atomic_json import write_json, write_text
 from lib.paths import DUTCHREF_CACHE, RAP_JSON
+from lib.safe_http import fetch_text
 
 INDEX = "https://www.dutchreferee.com/refereeing-assistance-programme/"
 MIN_BODY = 20000
-BACKOFFS = [30, 90]
 
-LINK_RE = re.compile(r'<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)</a>', re.I)
-# 期数模式：RAP 2026-1 / RAP 2025:2 / RAP Euro 2024 / RAP Women's Euro 2017 …
-EDITION_RE = re.compile(
-    r"(?i)RAP\s+((?:women'?s\s+)?(?:euro\s+)?20\d\d(?:\s*[:\-–]\s*\d)?)"
+BLOCK = re.compile(
+    r"<h(?P<level>[1-6])\b[^>]*>(?P<heading>.*?)</h(?P=level)\s*>|"
+    r"<a\b[^>]*?\s+href\s*=\s*(?P<quote>[\"'])(?P<url>.*?)(?P=quote)[^>]*>"
+    r"(?P<label>.*?)</a\s*>",
+    re.I | re.S,
 )
-URL_HOSTS = re.compile(r"(?i)bit\.ly|nextaur\.com|wetransfer|dutchreferee\.com")
+EDITION = re.compile(
+    r"\b(?:(?P<women>women(?:['’]s|s)?\s+|w)(?=euro))?euro[\s-]+(?P<euro>20\d{2})\b|"
+    r"\b(?P<year>20\d{2})(?:\s*[:–-]\s*|\s*\(\s*edition\s+)(?P<number>[1-9]\d?)\b",
+    re.I,
+)
+DOWNLOAD_HOSTS = {"bit.ly", "we.tl", "wetransfer.com", "www.wetransfer.com"}
 
 
-def clean(text: str) -> str:
-    return htmllib.unescape(re.sub(r"\s+", " ", re.sub(r"<[^>]+>", " ", text))).strip()
+def clean(text):
+    return " ".join(html.unescape(re.sub(r"<[^>]+>", " ", text)).split())
 
 
-def fetch_page() -> str:
-    DUTCHREF_CACHE.mkdir(parents=True, exist_ok=True)
-    cache_f = DUTCHREF_CACHE / "rap-index.html"
-    if cache_f.exists() and cache_f.stat().st_size > MIN_BODY:
-        print(f"缓存命中: {cache_f.name}", flush=True)
-        return cache_f.read_text(encoding="utf-8", errors="replace")
-    for i, wait in enumerate([0] + BACKOFFS):
-        if wait:
-            print(f"  失败，退避 {wait}s 后重试…", flush=True)
-            time.sleep(wait)
-        try:
-            st, txt = fetch_text(INDEX, timeout=45, retries=2)
-            if st == 200 and len(txt) > MIN_BODY:
-                cache_f.write_text(txt, encoding="utf-8")
-                print(f"  已缓存 {len(txt) // 1024}KB", flush=True)
-                return txt
-            print(f"  HTTP {st}, {len(txt)}B", flush=True)
-        except Exception as e:  # noqa: BLE001
-            print(f"  请求异常: {e}", flush=True)
-    raise SystemExit("索引页抓取失败（重跑可续）")
+def edition_key(text):
+    match = EDITION.search(text)
+    if not match:
+        return ""
+    if match["euro"]:
+        prefix = "WEURO" if match["women"] else "EURO"
+        return f"{prefix}-{match['euro']}"
+    return f"{match['year']}-{match['number']}"
 
 
-def discover(page: str) -> list:
-    """文档顺序提取 (edition_key, url, link_text)。同链接取首次出现。"""
-    out, seen = [], set()
-    for m in LINK_RE.finditer(page):
-        url, txt = m.group(1), clean(m.group(2))
-        if not URL_HOSTS.search(url):
+def discover(page):
+    # WordPress 的读者留言也有自荐下载链接。索引只取文章正文。
+    article = re.search(r"<article\b[^>]*>(.*?)</article\s*>", page, re.I | re.S)
+    content = (
+        article[1]
+        if article
+        else re.split(r"""\bid\s*=\s*["']comments["']""", page, maxsplit=1, flags=re.I)[
+            0
+        ]
+    )
+    editions = {}
+    heading = ""
+    for block in BLOCK.finditer(content):
+        if block["heading"] is not None:
+            heading = edition_key(clean(block["heading"]))
             continue
-        em = EDITION_RE.search(txt) or EDITION_RE.search(
-            clean(page[max(0, m.start() - 300) : m.start()])
-        )
-        if not em:
+        label = clean(block["label"])
+        explicit = edition_key(label)
+        key = explicit or heading
+        if not key or not (
+            explicit or re.search(r"\b(nextaur|download|PC|MAC|link)\b", label, re.I)
+        ):
             continue
-        key = (
-            re.sub(r"\s+", " ", em.group(1))
-            .upper()
-            .replace("–", "-")
-            .replace(": ", "-")
-        )
-        key = re.sub(r"\s*-\s*", "-", key)
-        if url not in seen:
-            seen.add(url)
-            out.append({"edition": key, "url": url, "text": txt[:120]})
-    return out
+        url = html.unescape(block["url"]).strip()
+        parts = urlsplit(url)
+        if (
+            parts.scheme not in ("http", "https")
+            or not parts.hostname
+            or parts.username
+            or parts.password
+        ):
+            continue
+        # Nextaur 的同一组织入口可指向不同期；去重只在同一期内进行。
+        editions.setdefault(key, {}).setdefault(url, label)
+    return editions
+
+
+def read_index(offline):
+    cache = DUTCHREF_CACHE / "rap-index.html"
+    if offline:
+        if not cache.is_file():
+            raise SystemExit(f"缺少 RAP 索引缓存：{cache}")
+        page = cache.read_text(encoding="utf-8")
+    else:
+        status, page = fetch_text(INDEX, timeout=45, retries=3)
+        if status != 200 or not page or len(page) <= MIN_BODY:
+            raise SystemExit(f"RAP 索引抓取失败（HTTP {status}），已保留原缓存")
+    found = discover(page)
+    if not found:
+        raise SystemExit("未解析出 RAP 期号与链接，请核对来源索引")
+    if not offline:
+        write_text(cache, page)
+    return found
+
+
+def platform(url, label, reviewed_downloads):
+    parts = urlsplit(url)
+    if (
+        parts.hostname in {"nextaur.com", "www.nextaur.com"}
+        and parts.scheme == "https"
+        and parts.path.rstrip("/").split("/")[:2] == ["", "uefa"]
+    ):
+        return "nextaur"
+    if (
+        parts.hostname in DOWNLOAD_HOSTS
+        and url in reviewed_downloads
+        and re.search(r"\b(download|PC|MAC)\b", label, re.I)
+    ):
+        return "download"
+    return ""
+
+
+def merge(found):
+    data = json.loads(RAP_JSON.read_text(encoding="utf-8"))
+    known = {edition_key(e["id"]) for e in data["editions"]}
+    reviewed_downloads = {
+        link["url"]
+        for edition in data["editions"]
+        if edition.get("era") == "download" and edition.get("status") != "unreviewed"
+        for link in edition.get("links", [])
+    }
+    pending_path = DUTCHREF_CACHE / "pending-editions.json"
+    previous = (
+        json.loads(pending_path.read_text(encoding="utf-8"))
+        if pending_path.exists()
+        else {}
+    )
+    pending = {k: v for k, v in previous.items() if k not in known}
+    additions = []
+    for key, urls in found.items():
+        if key in known:
+            continue
+        links = [{"label": label, "url": url} for url, label in urls.items()]
+        platforms = {
+            platform(url, label, reviewed_downloads) for url, label in urls.items()
+        }
+        # 欧洲杯名称中的年份可能不等于资料发布年份（如 EURO-2020）。
+        if key[:4].isdigit() and len(platforms) == 1 and "" not in platforms:
+            era = platforms.pop()
+            additions.append(
+                {
+                    "id": key,
+                    "title": f"RAP {key}",
+                    "year": int(key[:4]),
+                    "era": era,
+                    "platform": era,
+                    "status": "unreviewed",
+                    "status_cn": "待人工核对",
+                    "links": links,
+                    "note_cn": "来源索引新增，期数与链接待人工核对。",
+                }
+            )
+            pending.pop(key, None)
+        else:
+            saved = {link["url"]: link for link in pending.get(key, [])}
+            saved.update({link["url"]: link for link in links})
+            pending[key] = list(saved.values())
+    if additions:
+        data["editions"] = additions + data["editions"]
+        write_json(RAP_JSON, data)
+    if previous != pending:
+        write_json(pending_path, pending)
+    print(f"新增待核 {len(additions)} 期；{len(pending)} 期需核对发布平台或年份")
 
 
 def main():
-    mode = sys.argv[1] if len(sys.argv) > 1 else "fetch"
-    page = fetch_page()
-    found = discover(page)
-    print(f"\n索引页发现 {len(found)} 个期数链接：")
-    for f in found:
-        print(f"  {f['edition']:22s} {f['url']}\n    链接文本: {f['text']}")
-    if mode == "merge":
-        if not RAP_JSON.exists():
-            raise SystemExit(f"缺少 {RAP_JSON}，先人工策展创建")
-        data = json.loads(RAP_JSON.read_text(encoding="utf-8"))
-        have = {e.get("id", "").upper() for e in data.get("editions", [])}
-        added = 0
-        for f in found:
-            if f["edition"] not in have:
-                data["editions"].append(
-                    {
-                        "id": f["edition"],
-                        "title": f"RAP {f['edition']}",
-                        "platform": "nextaur" if "nextaur" in f["url"] else "download",
-                        "status": "unreviewed",
-                        "url": f["url"],
-                        "note": "脚本发现待人工核对",
-                    }
-                )
-                added += 1
-        if added:
-            data["checked"] = time.strftime("%Y-%m-%d")
-            RAP_JSON.write_text(
-                json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8"
-            )
-        print(f"merge 完成: 新增 {added} 期（status=unreviewed，待人工核对补注）")
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("mode", choices=("fetch", "merge"), nargs="?", default="fetch")
+    parser.add_argument("--offline", action="store_true", help="使用本地索引缓存")
+    args = parser.parse_args()
+    found = read_index(args.offline)
+    for key, urls in found.items():
+        print(f"RAP {key}")
+        for url, label in urls.items():
+            print(f"  {label}  {url}")
+    if args.mode == "merge":
+        merge(found)
 
 
 if __name__ == "__main__":

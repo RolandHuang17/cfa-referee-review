@@ -19,12 +19,14 @@
 """
 
 import html as htmllib
+import json
 import random
 import re
 import sys
 import time
 
 from lib.source_snapshot import SnapshotReads, publish
+from lib.rfef_media import assign_local_file, local_choices, media_url
 from lib.safe_http import fetch_text
 
 from lib.paths import RFEF_CACHE, RFEF_JSON
@@ -195,9 +197,7 @@ def fetch_all():
 
 
 def _norm_url(raw: str) -> str:
-    url = htmllib.unescape(raw).replace("\\/", "/")
-    url = re.sub(r"^http://", "https://", url).strip()
-    return url if url.lower().startswith("https://www.card.rfef.es/") else ""
+    return media_url(htmllib.unescape(raw).replace("\\/", "/").strip())
 
 
 def parse_video_cards(page: str) -> list:
@@ -223,7 +223,7 @@ def parse_video_cards(page: str) -> list:
         if cm:
             cap = clean(cm.group(1))
         if not vid:  # 兜底：从 URL 文件名取
-            vid = url.rsplit("/", 1)[-1][:-4]
+            vid = local_choices(url)[0].rsplit("/", 1)[-1][:-4]
         out.append({"_pos": m.start(), "id": vid, "url": url, "caption_es": cap})
     # 去重（同 URL 保留首现）
     seen, uniq = set(), []
@@ -293,7 +293,7 @@ def parse_sections(page: str) -> dict:
     return out
 
 
-def parse_page(page: str, slug: str) -> dict:
+def parse_page(page: str, slug: str, used_files=None) -> dict:
     hs = list(H2_RE.finditer(page))
     h2s = [
         (m.start(), clean(m.group(1)))
@@ -373,14 +373,10 @@ def parse_page(page: str, slug: str) -> dict:
             {"url": v["url"], "id": v["id"], "caption_es": v["caption_es"]}
         )
     # 文件名冲突兜底（同 stem 异路径）→ 加父目录名前缀
-    used = {}
+    used = used_files if used_files is not None else {}
     for it in items:
         for v in it.get("videos", []):
-            stem = v["url"].rsplit("/", 1)[-1][:-4]
-            if stem in used and used[stem] != v["url"]:
-                stem = v["url"].split("/uploads/")[-1].replace("/", "-")[:-4]
-            used[stem] = v["url"]
-            v["file"] = f"videos/rfef/{stem}.mp4"
+            v["file"] = assign_local_file(v["url"], used)
             v["decision_norm"] = ""
     for it in items:
         head, rest = split_decision(it.get("decision_es", ""))
@@ -481,12 +477,22 @@ def identities(data):
 
 def parse_all():
     sections = []
+    used_files = {}
+    if RFEF_JSON.exists():
+        previous = json.loads(RFEF_JSON.read_text(encoding="utf-8"))
+        for section in previous.get("sections", []):
+            for group in section["groups"]:
+                for item in group["items"]:
+                    for video in item.get("videos", []):
+                        url = media_url(video.get("url"))
+                        if url and video.get("file") in local_choices(url):
+                            used_files[video["file"].lower()] = url
     for slug, _cn in TOPICS:
         cache_f = RFEF_CACHE / f"{slug}.html"
         if not cache_f.exists():
             raise ValueError(f"专题缓存缺失: {slug}")
         page = cache_f.read_text(encoding="utf-8", errors="replace")
-        sec = parse_page(page, slug)
+        sec = parse_page(page, slug, used_files)
         n_it = sum(len(g["items"]) for g in sec["groups"])
         n_vid = sum(
             len(it.get("videos", [])) for g in sec["groups"] for it in g["items"]

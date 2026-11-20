@@ -8,13 +8,14 @@
 判例/视频说明按 id 匹配，未命中保持西语并打印构建警告；译文里未被匹配的键也告警。
 页面默认纯中文，页头「西语原文」开关（localStorage cfa.rfef-es）切换对照。
 视频已由 download_rfef_videos.py 本地化至 site/videos/rfef/（git 忽略，本地学习用途）；
-缺失时 <video> onerror 自动降级为官方直链。轻量版（html[data-lite]）隐藏全部视频并
+本地视频加载失败时，播放器读取已校验的官方直链回退。轻量版（html[data-lite]）隐藏全部视频并
 显示官方手册横幅。
 """
 
 import json
 
 from lib.seo import meta_tags
+from lib.rfef_media import local_choices, local_filename, media_url
 from lib.theme import inject_theme, topbar, icon
 
 from lib.paths import DATA, SITE, RFEF_JSON
@@ -180,19 +181,20 @@ html[data-lite] .sit{font-size:15px}
 }
 </style>
 <script>
-/* vfb 必须在正文之前定义：未下载完成的视频在首屏解析期就触发 onerror */
-function vfb(el, url){
-  var w = el.parentElement;
-  if (!w) return;
-  var a = document.createElement('a');
-  a.className = 'watch';
-  a.href = url;
-  a.target = '_blank';
-  a.rel = 'noopener noreferrer';
-  a.innerHTML = '__I_PLAY__ 在线观看（官方直链） __I_EXT__';
-  w.innerHTML = '';
-  w.appendChild(a);
-}
+// Capture media errors during parsing, before any local video can fail.
+document.addEventListener("error",function(event){
+  var video=event.target;
+  if(!(video instanceof HTMLVideoElement) || !video.hasAttribute("data-rfef-url"))return;
+  var url=video.dataset.rfefUrl;
+  if(!url){video.replaceWith(document.createTextNode("本地视频不可用。"));return;}
+  var link=document.createElement("a");
+  link.className="watch";
+  link.href=url;
+  link.target="_blank";
+  link.rel="noopener noreferrer";
+  link.textContent="在线观看（官方直链）";
+  video.replaceWith(link);
+},true);
 </script>
 </head>
 <body class="page-rfef">
@@ -353,6 +355,19 @@ def _zh_or_es(cn, es):
     return es or "", ""
 
 
+def video_markup(video):
+    url = media_url(video.get("url"))
+    file = video.get("file", "")
+    if local_filename(file) and (not url or file in local_choices(url)):
+        return (
+            f'<video controls preload="none" src="{esc(file)}" '
+            f'data-rfef-url="{esc(url)}"></video>'
+        )
+    if url:
+        return f'<a class="watch" href="{esc(url)}" target="_blank" rel="noopener noreferrer">在线观看（官方直链）</a>'
+    return "视频来源待核对。"
+
+
 def build_page(data):
     dec_labels = {}
     zh = load_zh()
@@ -463,10 +478,7 @@ def build_page(data):
                         )
                         if v.get("caption_same"):
                             cap_cn = cap_es = ""  # 与情形文本重复，不逐视频重复渲染
-                        fig = (
-                            f'<figure class="vitem"><video controls preload="none" '
-                            f'src="{esc(v["file"])}" onerror="vfb(this,\'{v["url"]}\')"></video>'
-                        )
+                        fig = f'<figure class="vitem">{video_markup(v)}'
                         if cap_cn:
                             fig += f"<figcaption>{esc(cap_cn)}</figcaption>"
                             if cap_es:
@@ -506,8 +518,6 @@ def build_page(data):
         .replace("__I_EXTERNAL__", icon("external", 14))
         .replace("__I_INFO__", icon("help", 14))
         .replace("__I_SEARCH__", icon("search", 13))
-        .replace("__I_PLAY__", icon("play", 13))
-        .replace("__I_EXT__", icon("external", 12))
         .replace("__NAVS__", navs)
         .replace("__SECS__", secs_html),
         meta=meta_tags("rfef.html"),

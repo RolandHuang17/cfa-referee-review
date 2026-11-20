@@ -13,6 +13,7 @@ import time
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
 from lib.safe_http import download, head_size
+from lib.rfef_media import destination, local_choices, media_url
 
 from lib.paths import RFEF_JSON, SITE_VIDEOS
 
@@ -21,14 +22,28 @@ VID_DIR = SITE_VIDEOS / "rfef"
 
 def load_videos() -> list:
     data = json.loads(RFEF_JSON.read_text(encoding="utf-8"))
-    seen, out = set(), []
+    seen, files, out = {}, {}, []
     for sec in data["sections"]:
         for g in sec["groups"]:
             for it in g["items"]:
                 for v in it.get("videos", []):
-                    if v["url"] not in seen:
-                        seen.add(v["url"])
-                        out.append({"url": v["url"], "file": v["file"]})
+                    url, file = media_url(v.get("url")), v.get("file", "")
+                    if not url or file not in local_choices(url):
+                        raise ValueError(
+                            f"RFEF 判例 {it['id']} 的视频来源或文件名待核对"
+                        )
+                    dest = destination(VID_DIR, file)
+                    if (
+                        files.get(file.lower(), url) != url
+                        or seen.get(url, file) != file
+                    ):
+                        raise ValueError(
+                            f"RFEF 判例 {it['id']} 的来源与视频文件名对应不唯一"
+                        )
+                    if url not in seen:
+                        files[file.lower()] = url
+                        seen[url] = file
+                        out.append({"url": url, "file": file, "destination": dest})
     return out
 
 
@@ -61,8 +76,7 @@ def main():
         fails = []
 
         def one(v):
-            dest = VID_DIR / v["file"].rsplit("/", 1)[-1]
-            st, size = download(v["url"], dest, timeout=90, retries=4)
+            st, size = download(v["url"], v["destination"], timeout=90, retries=4)
             return v, st, size
 
         done = 0
@@ -90,7 +104,7 @@ def main():
     elif mode == "verify":
         bad = []
         for v in vids:
-            f = VID_DIR / v["file"].rsplit("/", 1)[-1]
+            f = v["destination"]
             if not f.exists():
                 bad.append((v["file"], "缺失"))
                 continue

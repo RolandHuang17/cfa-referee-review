@@ -870,18 +870,15 @@ document.addEventListener("click", e=>{
 
 // ---------- 划词高亮（localStorage: cfa2026rules.hl） ----------
 const HL_KEY = "cfa2026rules.hl";
-function highlightKey(h, includeTime) {
-  const key = [h.sec];
-  if (includeTime) key.push(h.ts);
-  key.push(h.quote);
+function highlightKey(h) {
+  const key = [h.sec, h.ts, h.quote];
   if (h.anchor !== undefined) key.push(h.anchor?.block, h.anchor?.offset);
   return JSON.stringify(key);
 }
-const highKey = h => highlightKey(h, true);
 const highlightOf = new WeakMap();
-const hlStore = new LearningRecords(HL_KEY, false, highKey);
+const hlStore = new LearningRecords(HL_KEY, false, highlightKey);
 function writeHighlight(h, value) {
-  const id = highKey(h);
+  const id = highlightKey(h);
   hlStore.read();
   hlStore.put(id, value, hlStore.base(id));
   showWriteStatus();
@@ -1057,14 +1054,16 @@ document.getElementById("importFileN").addEventListener("change", e=>{
       const d = JSON.parse(rd.result);
       if (d.app !== "cfa-rules-2026") throw Error("规则笔记文件标识不匹配");
       let n = 0;
-      const identity = h => highlightKey(h, false);
-      const seen = new Set(Object.values(hlStore.read()).map(identity));
+      // A later colour can cover an earlier mark at the same place. Both layers
+      // are in the export and use the same IDs as drawing and deleting a mark.
+      const seen = new Set(Object.keys(hlStore.read()));
       const additions = [];
       for (const h of (d.highlights || [])) {
-        if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;
-        const id = highKey(h);
+        if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote) continue;
+        const id = highlightKey(h);
+        if (seen.has(id)) continue;
         additions.push({id, value:h, parents:hlStore.base(id)});
-        seen.add(identity(h));
+        seen.add(id);
       }
       hlStore.putMany(additions);
       n += additions.length + importLearningNotes(noteStore, d.notes, id => Object.hasOwn(byId, id));

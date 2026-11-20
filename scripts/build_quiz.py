@@ -25,6 +25,7 @@ from lib.scale_quiz_ids import LEGACY_SCALE_IDS, assign_scale_quiz_ids
 from lib.seo import meta_tags
 from lib.site_stats import is_quiz_case, is_quiz_scale
 from lib.theme import icon, inject_theme, js_icons, topbar
+from lib.var_quiz import read_var_questions
 from lib.xlinks import resolve as resolve_xlinks
 
 WRONG_KEY = "cfa.quiz.wrong"
@@ -65,117 +66,6 @@ COMP_ALIAS = {
     "女超": "女超联赛",
     "女甲": "女甲联赛",
     "运动会": "全运会",
-}
-# VAR 协议题干扰项映射（人工指定：每题 4 选项、ans=正确项下标；正确项全部为官方答案）
-VAR_OPTS = {
-    "q1": {
-        "ans": 0,
-        "opts": [
-            "可以——该黄牌（非第二张黄牌）可回看确认犯规球员身份，黄牌取消并改判 B 队直接任意球",
-            "不可以——黄牌判罚一律不可回看，维持原判",
-            "可以，但 VAR 只能提示裁判员注意，原判不可更改",
-            "可以——直接取消黄牌并判给 A 队点球",
-        ],
-    },
-    "q2": {
-        "ans": 1,
-        "opts": [
-            "不可以——由第二张黄牌引发的红牌不可回看",
-            "可以——明显错误的第二张黄牌可由 VAR 协助：红牌取消，假摔球员被警告，进攻方获间接任意球",
-            "可以——直接改判进攻方点球",
-            "可以——红牌维持，另补判进攻方间接任意球",
-        ],
-    },
-    "q3": {
-        "ans": 0,
-        "opts": [
-            "不可以——VAR 只能纠正「明显错误的第二张黄牌」，不能补漏判第二张黄牌",
-            "可以——这属于严重漏判事件，VAR 应建议回看",
-            "可以——VAR 直接出示第二张黄牌并罚令出场",
-            "不可以——除非裁判员已经出示了红牌",
-        ],
-    },
-    "q4": {
-        "ans": 2,
-        "opts": [
-            "维持点球——回看后非清晰错误不得更改",
-            "取消点球，改判防守方球门球",
-            "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
-            "取消点球，坠球恢复比赛",
-        ],
-    },
-    "q5": {
-        "ans": 1,
-        "opts": [
-            "可以——任何改变比赛进程的判罚都可回看",
-            "不可以——仅错罚对象，或与暴力行为、吐口水、咬人、极其攻击性/侮辱性言行相关的罚令出场事件例外",
-            "可以——但只能更改纪律处分，不能更改重新开始方式",
-            "不可以——比赛重新开始后一律不可回看",
-        ],
-    },
-    "q6": {
-        "ans": 3,
-        "opts": [
-            "必须维持红牌——回看是为红牌发起的，不能降级",
-            "由 VAR 决定最终出示红牌还是黄牌",
-            "取消处罚但不补牌，比赛照常恢复",
-            "以回看所见为准——若裁判员认为该犯规只值警告而非罚令出场，就必须出示黄牌",
-        ],
-    },
-    "q7": {
-        "ans": 0,
-        "opts": [
-            "适用「仅 VAR 回看」——VAR 告知回放内容，裁判员做出电视信号手势后取消点球、改判防守方任意球",
-            "必须进行场上回看（OFR）",
-            "维持点球——罚球区内外的判断属于裁判员主观裁量",
-            "取消点球，坠球恢复比赛",
-        ],
-    },
-    "q8": {
-        "ans": 3,
-        "opts": [
-            "VAR 直接判罚点球并通知裁判员",
-            "比赛继续——VAR 无权提示这类情形",
-            "立即停止比赛并以坠球恢复",
-            "裁判员在球下次进入中立区域/局面时停止比赛、做出电视信号手势，经场上回看（OFR）后再作最终决定",
-        ],
-    },
-    "q9": {
-        "ans": 0,
-        "opts": [
-            "不可以——VAR 只能在裁判员已作出第一决定（包括允许比赛继续）之后使用",
-            "可以——这属于「延迟吹罚」的正常执法形态",
-            "可以——但仅限进球类判定",
-            "不可以——VAR 只能应由队长申请使用",
-        ],
-    },
-    "q10": {
-        "ans": 1,
-        "opts": [
-            "不允许——点球执行阶段的犯规不可回看",
-            "允许——罚球点球时守门员和/或主罚队员犯规，裁判员可以获得 VAR 协助",
-            "允许——但仅限主罚队员的犯规",
-            "允许——且该进球必须判定有效",
-        ],
-    },
-    "q11": {
-        "ans": 2,
-        "opts": [
-            "维持点球，并向防守队员出示黄牌",
-            "取消点球，坠球恢复比赛",
-            "取消点球，改判防守方间接任意球，假摔球员因非体育行为被警告（黄牌）",
-            "取消点球，改判防守方球门球",
-        ],
-    },
-    "q12": {
-        "ans": 1,
-        "opts": [
-            "黄牌维持——已出示的牌不可通过回看取消",
-            "取消黄牌并改判点球；犯规的防守队员视情况被警告或罚令出场",
-            "取消黄牌并改判点球，但不得再处罚防守队员",
-            "维持比赛原样，赛后报告处理",
-        ],
-    },
 }
 
 
@@ -279,34 +169,10 @@ def build_bank():
                             }
                         )
                         n_scale += 1
-    # 第三题型：VAR 协议题（IFAB 协议 FAQ：场景 → 官方决定，四选一）
-    n_var = 0
-    if IFAB_JSON.exists():
-        d = json.loads(IFAB_JSON.read_text(encoding="utf-8"))
-        zh = {}
-        if IFAB_ZH_JSON.exists():
-            zh = json.loads(IFAB_ZH_JSON.read_text(encoding="utf-8")).get("faq", {})
-        for q in d.get("faq", []):
-            zq = zh.get(q["id"], {})
-            cfg = VAR_OPTS.get(q["id"])
-            if not cfg or not zq:
-                continue
-            bank.append(
-                {
-                    "k": f"var-{q['id']}",
-                    "t": "var",
-                    "s": "ifab",
-                    "qid": q["id"],
-                    "q": zq["q"],
-                    "q_en": q["q"],
-                    "a": zq["a"],
-                    "a_en": q["a"],
-                    "opts": cfg["opts"],
-                    "ans": cfg["ans"],
-                    "link": f"ifab.html#faq-{q['id']}",
-                }
-            )
-            n_var += 1
+    # 只有官方原文、译文和人工四选项仍与已复核版本对应时才可出题。
+    var_questions = read_var_questions(IFAB_JSON, IFAB_ZH_JSON, warn=print)
+    bank.extend(var_questions)
+    n_var = len(var_questions)
     # 第四题型：规则理论题（data/theory-questions.json，数字/定义/程序专项；
     # 每题带 laws.json 章节锚点与出处引文，页面端选项按次打乱）
     n_theory = 0

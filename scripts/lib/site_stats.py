@@ -2,12 +2,13 @@
 """全站数据规模统计的唯一权威源。
 
 页面描述、门户数字、stats 期数文案都从这里取，避免 81/82、612/615、592/796
-这类手写常量再次漂移。只依赖 lib.paths 与 JSON 数据，不 import 任何 builder。
+这类手写常量再次漂移。只读取数据与题源入池规则，不 import 任何 builder。
 """
 
 import json
 
 from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON
+from lib.var_quiz import read_var_questions
 
 SEASONS = ("2026", "2025", "2024")
 
@@ -69,10 +70,7 @@ def quiz_counts():
                     1 for item in group.get("items", []) if is_quiz_scale(item)
                 )
 
-    ifab = _read(IFAB_JSON)
-    ifab_zh = _read(IFAB_ZH_JSON).get("faq", {})
-    # build_quiz 只收有中文译制且配置了选项的 FAQ；当前 12 条全满足。
-    var_n = sum(1 for q in ifab.get("faq", []) if q.get("id") in ifab_zh)
+    var_n = len(read_var_questions(IFAB_JSON, IFAB_ZH_JSON))
 
     theory_n = len(_read(DATA / "theory-questions.json").get("questions", []))
     total = case_n + scale_n + var_n + theory_n

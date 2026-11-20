@@ -130,10 +130,21 @@ async (startPage) => {
       check(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth), "RFEF 布局溢出 " + width);
     }
     async function openWithKeyboard(button, id) {
-      await page.locator(button).focus();
-      await page.keyboard.press("Enter");
+      const trigger = page.locator(button);
+      // The notes and statistics buttons sit at opposite ends of a scrolling drawer.
+      await trigger.scrollIntoViewIfNeeded();
+      await trigger.press("Enter");
       const dialog = page.getByRole("dialog", {name:await page.locator(id + " h3").textContent()});
-      await dialog.waitFor();
+      try {
+        await dialog.waitFor();
+      } catch (error) {
+        const state = await page.evaluate(() => ({
+          width:innerWidth, hash:location.hash, theme:document.documentElement.dataset.theme,
+          focus:document.activeElement.id, drawer:document.getElementById("btnSb").getAttribute("aria-expanded"),
+          open:[...document.querySelectorAll("dialog[open]")].map(el => el.id)
+        }));
+        throw new Error(button + " 未打开 " + id + " " + JSON.stringify(state) + " " + error.message);
+      }
       check(await dialog.evaluate(el => el.matches(":modal") && el.contains(document.activeElement)),
         "打开后焦点未进入原生弹窗 " + id);
       return dialog;

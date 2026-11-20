@@ -6,6 +6,17 @@ class QuizRecords {
   static recovery = "cfa.quiz.v2.recovery";
   static intervals = [0, 1, 3, 7, 14, 30];
   static legacyScaleIds = new Set();
+  static receiptLimit = 128;
+  static examId(id) { return typeof id === "string" && /^[0-9a-f]{32}$/.test(id); }
+  static examStatus(state, id, opened) {
+    if (state.examReceipts.some(([run])=>run === id) || state.history.some(h=>h.id === id)) return "recorded";
+    return opened < state.examFloor ? "uncertain" : "new";
+  }
+  static rememberExam(state, id, order) {
+    state.examReceipts.push([id,order]);
+    if (state.examReceipts.length > this.receiptLimit)
+      state.examFloor = Math.max(state.examFloor,state.examReceipts.shift()[1]);
+  }
 
   constructor(storage) {
     try { this.storage = storage ?? globalThis.localStorage; }
@@ -17,7 +28,7 @@ class QuizRecords {
     this.read();
   }
   empty() {
-    return {wrong:Object.create(null), stats:Object.create(null), history:[], order:0, damaged:0};
+    return {wrong:Object.create(null), stats:Object.create(null), history:[], examReceipts:[], examFloor:0, order:0, damaged:0};
   }
   static readWrong() {
     if (!this.portalReader) this.portalReader = new QuizRecords();
@@ -85,6 +96,7 @@ class QuizRecords {
     const id = value => typeof value === "string" && value.length > 0;
     switch (event.kind) {
     case "attempt":
+      if ("examId" in event && (!this.examId(event.examId) || !this.count(event.opened) || !event.exam)) return false;
       return Array.isArray(event.answers) && event.answers.length > 0 && event.answers.every(item => {
         if (!this.object(item) || !id(item.id)) return false;
         if ("miss" in item) item.miss = this.wrongEntry(item.miss);
@@ -123,6 +135,18 @@ class QuizRecords {
       else state.damaged++;
     }
     state.history = state.history.slice(0,20);
+    if ("examFloor" in raw){
+      if (QuizRecords.count(raw.examFloor)) state.examFloor = raw.examFloor;
+      else state.damaged++;
+    }
+    if ("examReceipts" in raw){
+      if (!Array.isArray(raw.examReceipts)) state.damaged++;
+      else for (const item of raw.examReceipts){
+        if (Array.isArray(item) && QuizRecords.examId(item[0]) && QuizRecords.count(item[1]))
+          QuizRecords.rememberExam(state,item[0],item[1]);
+        else state.damaged++;
+      }
+    }
     return state;
   }
   legacy() {
@@ -162,11 +186,15 @@ class QuizRecords {
     // Replay replaces individual records, so copying only the maps and the history list
     // keeps the cached, validated checkpoint immutable.
     return {...state,wrong:Object.assign(Object.create(null),state.wrong),
-      stats:Object.assign(Object.create(null),state.stats),history:state.history.slice()};
+      stats:Object.assign(Object.create(null),state.stats),history:state.history.slice(),examReceipts:state.examReceipts.slice()};
   }
   static apply(state, event) {
     state.order = Math.max(state.order,event.order);
     if (event.kind === "attempt") {
+      if (event.examId){
+        if (this.examStatus(state,event.examId,event.opened) !== "new") return;
+        this.rememberExam(state,event.examId,event.order);
+      }
       for (const item of event.answers) {
         const stat = state.stats[item.id] || {r:0,w:0};
         const entry = state.wrong[item.id];
@@ -220,12 +248,17 @@ class QuizRecords {
     const identity = h => [h.t,h.got,h.max,h.n].join("/");
     for (const h of state.history) counts.set(identity(h),(counts.get(identity(h)) || 0)+1);
     for (const h of fragment.history) {
+      if (h.id && state.history.some(other => other.id === h.id)) continue;
       const key = identity(h), n = counts.get(key) || 0;
       if (n) counts.set(key,n-1);
       else state.history.push(h);
     }
     state.history.sort((a,b)=>b.t-a.t);
     state.history = state.history.slice(0,20);
+    state.examFloor = Math.max(state.examFloor,fragment.examFloor);
+    const receipts = new Map([...state.examReceipts,...fragment.examReceipts]);
+    state.examReceipts = [];
+    for (const [id,order] of [...receipts].sort((a,b)=>a[1]-b[1])) QuizRecords.rememberExam(state,id,order);
     state.order = Math.max(state.order,fragment.order);
   }
   scan(primary, recovery) {
@@ -291,7 +324,13 @@ class QuizRecords {
       this.damagedStorage = damaged;
       this.damagedSnapshot = damagedSnapshot;
       const combined = new Map(entries);
-      for (const [key,event] of this.pending) if (!this.savedPending.has(key)) combined.set(key,event);
+      // A restored pending exam can predate a durable copy that was temporarily unreadable.
+      // Compare against durable receipts before combining drafts or retrying their writes.
+      const durable = [...this.pending.values()].some(e=>e.examId) ? this.replay(this.cloneState(state),entries.slice()) : null;
+      for (const [key,event] of this.pending){
+        if (event.examId && QuizRecords.examStatus(durable,event.examId,event.opened) !== "new") this.savedPending.add(key);
+        if (!this.savedPending.has(key)) combined.set(key,event);
+      }
       this.state = this.replay(state,[...combined]);
       for (const key of this.savedPending) this.pending.delete(key);
       this.savedPending.clear();
@@ -299,8 +338,18 @@ class QuizRecords {
     } catch (_) { this.unavailable = true; }
     return this.state;
   }
-  write(change, keepDraft = true) {
+  commitExam(change) {
     const state = this.read();
+    const status = QuizRecords.examStatus(state,change.examId,change.opened);
+    if (status !== "new"){
+      return [...this.pending.values()].some(e=>e.examId === change.examId) ? "pending" : status;
+    }
+    return this.append(change,state,true) ? "written" : "pending";
+  }
+  write(change, keepDraft = true) {
+    return this.append(change,this.read(),keepDraft);
+  }
+  append(change, state, keepDraft) {
     const event = {...change,order:state.order+1,time:Date.now()};
     if (this.damagedStorage) event.afterRecovery = true;
     const serialized = JSON.stringify(event);

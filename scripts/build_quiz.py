@@ -15,6 +15,7 @@
 轻量版（cfa.lite）不出视频窗口，改官方链接。
 """
 
+import hashlib
 import json
 from datetime import date
 
@@ -332,7 +333,22 @@ def build_bank():
 def build_data():
     bank, teams, n_scale, n_var, n_theory = build_bank()
     n_case = sum(1 for b in bank if b["t"] == "case")
+    # Include the grading rules revision, question text, answer options and answer keys.
+    # Sorting by stable key keeps the signature independent of source enumeration order.
+    version_data = [
+        1,
+        sorted(bank, key=lambda q: q["k"]),
+        V_OPTIONS,
+        R_OPTIONS,
+        C_OPTIONS,
+    ]
+    signature = hashlib.sha256(
+        json.dumps(
+            version_data, ensure_ascii=False, sort_keys=True, separators=(",", ":")
+        ).encode("utf-8")
+    ).hexdigest()
     return {
+        "examBankVersion": signature,
         "cfg": {"wrongKey": WRONG_KEY, "built": date.today().isoformat()},
         "bank": bank,
         "legacyScaleIds": LEGACY_SCALE_IDS,
@@ -355,6 +371,8 @@ HTML = r"""<!DOCTYPE html>
 /* ===== quiz 页专属布局 (tokens/组件来自 data-cfa-theme) ===== */
 body{overflow:hidden}
 .layout{display:grid;grid-template-columns:minmax(0,1fr);height:calc(100vh - var(--top-h));overflow:hidden}
+#btnAbandon[hidden]{display:none}
+#examNotice:not(:empty){margin:0 0 12px;color:var(--ink2);font-size:14px}
 .scroll{overflow-y:auto;padding:22px 18px 60px}
 .wrap{max-width:900px;margin:0 auto}
 .page-h{font-family:var(--font-display);font-size:22px;margin:0 0 4px;letter-spacing:.4px}
@@ -487,6 +505,7 @@ __TOPBAR__
 
 <div class="layout"><div class="scroll" id="scroll"><div class="wrap">
 
+<div id="examNotice" role="status" aria-live="polite"></div>
 <div><span id="recordStatus" role="status"></span> <button id="recordRetry" type="button" class="btn" hidden>重试保存</button> <button id="recordRecovery" type="button" class="btn" hidden>导出本机恢复资料</button></div>
 
 <!-- 开始屏 -->
@@ -593,6 +612,7 @@ __TOPBAR__
     <div class="fb" id="qFb"></div>
     <div class="qbtns">
       <p class="kbd-hint"><span class="kbd">1</span>–<span class="kbd">9</span> 选答 · <span class="kbd">Enter</span> 提交/下一题 · <span class="kbd">Shift</span>+<span class="kbd">Enter</span> 上一题 · 视频：<span class="kbd">←</span><span class="kbd">→</span> 5秒 <span class="kbd">,</span><span class="kbd">.</span> 逐帧 <span class="kbd">R</span> 循环 <span class="kbd">[</span><span class="kbd">]</span> 倍速</p>
+      <button class="btn" id="btnAbandon" hidden>放弃本场</button>
       <button class="btn" id="btnPrev">上一题</button>
       <button class="btn" id="btnSkip">跳过</button>
       <button class="btn primary" id="btnSubmit">提交答案</button>
@@ -625,6 +645,7 @@ __TOPBAR__
 <script>
 __CALENDAR_JS__
 __QUIZ_RECORDS_JS__
+__QUIZ_SESSION_JS__
 __SCALE_HISTORY_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
@@ -653,6 +674,15 @@ function crest(team, h, mark){
 
 // 汇总结果同时驱动训练筛选、错题管理和历史成绩。
 const quizRecords = new QuizRecords();
+const examSession = new QuizSession(BANK,DATA.examBankVersion,{v:V_OPTS,r:R_OPTS,c:C_OPTS});
+function examNotice(text){ document.getElementById("examNotice").textContent = text; }
+function saveExam(){
+  if (round?.mode !== "exam" || round.finished) return;
+  const wasBlocked = round.draftFailed;
+  round.draftFailed = !examSession.save(round);
+  if (round.draftFailed) examNotice("本页暂时无法保存试卷进度。请保持标签页打开，刷新可能丢失最近作答。");
+  else if (wasBlocked) examNotice("本标签页已重新保存试卷进度。");
+}
 let wrong, qstats, qhist;
 function syncRecordViews(){
   ({wrong,stats:qstats,history:qhist} = quizRecords.state);
@@ -671,7 +701,11 @@ function refreshRecords(){
   syncRecordViews();
   renderWbStats(); renderAnalysis(); renderHistory(); updatePoolTip();
   if (document.getElementById("wbBox").style.display !== "none") renderWbList();
-  if (document.getElementById("scrQuiz").style.display !== "none" && round) updateFeedbackStar(round.qs[round.i].k);
+  if (document.getElementById("scrQuiz").style.display !== "none" && round){
+    if (round.mode === "exam" && !round.finished && !quizRecords.unavailable &&
+        QuizRecords.examStatus(quizRecords.state,round.id,round.opened) === "recorded") closeRecordedExam();
+    else updateFeedbackStar(round.qs[round.i].k);
+  }
 }
 function writeRecords(change){
   quizRecords.write(change);
@@ -712,14 +746,14 @@ function checkDeadline(){
   round.left = Math.max(0, Math.ceil((round.deadline - Date.now()) / 1000));
   document.getElementById("qScore").textContent = `⏳ 剩余 ${fmtMS(round.left)} · 超时自动交卷`;
   if (round.left > 0) return false;
-  finishExam();
-  alert("时间到，自动交卷。");
+  finishExam(false,true);
   return true;
 }
 function startTimer(totalSec){
   stopTimer();
   if (!totalSec) return;
   round.deadline = Date.now() + totalSec * 1000;
+  saveExam();
   examTimer = setInterval(checkDeadline, 1000);
   checkDeadline();
 }
@@ -755,7 +789,7 @@ function updateDots(){
   }).join("");
 }
 document.getElementById("examDots").addEventListener("click", e=>{
-  const d = e.target.closest(".edot"); if (!d) return;
+  const d = e.target.closest(".edot"); if (!d || !round || round.finished) return;
   if (round.scores[round.i] == null) round.answers[round.i] = currentAnswer();
   round.i = +d.dataset.i;
   renderQuestion();
@@ -941,8 +975,16 @@ function startRound(list, mode = sel.mode){
   let qs = shuffle(list.slice());
   if (sel.count > 0) qs = qs.slice(0, sel.count);
   if (!qs.length) return;
+  if (mode === "exam" && round?.submitting && quizRecords.pending.size && examSession.stored &&
+      !confirm("上一场成绩暂未写入。开始新考试会替换该场的刷新恢复副本，可先取消并重试保存。继续开考？")) return;
   stopTimer();
-  round = {qs, i:0, mode, answers:qs.map(()=>null), scores:qs.map(()=>null), locked:false};
+  examNotice("");
+  qs = qs.map(q => q.t === "theory" ? {...q,_disp:shuffle(q.opts.map((_,i)=>i))} : q);
+  round = {qs, i:0, mode, answers:qs.map(()=>null), scores:qs.map(()=>null), locked:false, deadline:null};
+  if (mode === "exam"){
+    round.id = QuizSession.id(); round.opened = quizRecords.read().order; round.timer = sel.timer;
+    examNotice(sel.timer === "off" ? "未交卷前，可在本标签页刷新后继续。" : "可在本标签页刷新后继续，离开期间照常计时。");
+  }
   touchStudyDay();
   if (round.mode === "exam" && sel.timer !== "off")
     startTimer(qs.length * (sel.timer === "relaxed" ? 120 : 75));
@@ -976,6 +1018,8 @@ function answerGroup(title, hint, axis, options, selected){
 }
 
 function renderQuestion(){
+  saveExam();
+  document.getElementById("btnAbandon").hidden = round.mode !== "exam";
   const q = round.qs[round.i];
   round.locked = false;
   updateDots();
@@ -1189,9 +1233,12 @@ document.getElementById("recordRecovery").onclick = () => {
   a.href = URL.createObjectURL(blob); a.download = "考题记录-本机恢复资料.json";
   a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),0);
 };
-document.getElementById("recordRetry").onclick = () => { quizRecords.retry(); refreshRecords(); };
+document.getElementById("recordRetry").onclick = () => {
+  const saved = quizRecords.retry(); refreshRecords();
+  if (saved && round?.submitting && round.finished){ examSession.clear(); examNotice(""); }
+};
 window.addEventListener("beforeunload", e => {
-  if (quizRecords.pending.size) { e.preventDefault(); e.returnValue = ""; }
+  if (quizRecords.pending.size || (round?.draftFailed && !round.finished)) { e.preventDefault(); e.returnValue = ""; }
 });
 let recordRefreshTimer;
 window.addEventListener("storage", e => {
@@ -1199,10 +1246,15 @@ window.addEventListener("storage", e => {
   clearTimeout(recordRefreshTimer);
   recordRefreshTimer = setTimeout(refreshRecords, 0);
 });
-window.addEventListener("pageshow", e => { if (e.persisted) refreshRecords(); });
+window.addEventListener("pageshow", e => {
+  if (!e.persisted) return;
+  refreshRecords();
+  if (!round?.finished) restoreExam(true);
+});
 
 // ---------- 提交与导航 ----------
 function submitAnswer(){
+  if (!round || round.finished) return;
   const q = round.qs[round.i];
   if (round.mode === "practice"){
     const done = round.scores[round.i] != null;
@@ -1226,13 +1278,14 @@ function submitAnswer(){
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else finishExam();
 }
-function finishExam(captureCurrent=true){
+function finishExam(captureCurrent=true, expired=false){
   if (!round || round.finished) return;
-  round.finished = true;
-  stopTimer();
-  // 兜底：手动交卷/超时交卷前都暂存当前题答案，重复写入幂等
   if (captureCurrent && round.qs[round.i] && round.scores[round.i] == null)
     round.answers[round.i] = currentAnswer();
+  round.submitting = true;
+  saveExam();  // Keep the final answers until the same attempt ID has a durable receipt.
+  round.finished = true;
+  stopTimer();
   let totalGot = 0, totalMax = 0;
   const answers = [];
   round.qs.forEach((q,i)=>{
@@ -1242,18 +1295,39 @@ function finishExam(captureCurrent=true){
     totalGot += s.got; totalMax += s.max;
     answers.push(attemptAnswer(q, a, s));
   });
-  writeRecords({kind:"attempt", answers, exam:{got:totalGot,max:totalMax,n:round.qs.length}});
-  renderHistory();
-  showResult();
+  const submitted = round;
+  const change = {kind:"attempt",answers,examId:submitted.id,opened:submitted.opened,
+    exam:{id:submitted.id,got:totalGot,max:totalMax,n:submitted.qs.length}};
+  function commit(){
+    const outcome = quizRecords.commitExam(change);
+    if (round !== submitted) return;
+    syncRecordViews();
+    if (outcome === "recorded"){ closeRecordedExam(); return; }
+    if (outcome === "pending") examNotice("本场已交卷，成绩暂未写入浏览器，可重试保存。");
+    else {
+      examSession.clear();
+      examNotice(outcome === "uncertain" ? "这份试卷开始较早，已有至少128场交卷记录。现仅显示本卷得分，未重复计入历史。" : "");
+    }
+    renderHistory(); showResult();
+    if (expired) alert("时间到，自动交卷。");
+  }
+  // A duplicated tab can hold a copy of this exact draft. Serialize its commits where supported.
+  const locks = navigator.locks;
+  if (locks){
+    let entered = false;
+    locks.request("cfa.quiz.exam."+submitted.id,()=>{ entered = true; commit(); })
+      .catch(()=>{ if (!entered && round===submitted) commit(); });
+  } else commit();
 }
 function gotoPrev(){
-  if (round.i>0){
+  if (round && !round.finished && round.i>0){
     // 暂存当前作答再离开：考试模式来回查看、练习模式未提交返回都不丢
     if (round.scores[round.i] == null) round.answers[round.i] = currentAnswer();
     round.i--; renderQuestion();
   }
 }
 function skipQuestion(){
+  if (!round || round.finished) return;
   // 仅练习模式立即判分记错；考试模式只暂存未答（finishExam 交卷统一判分，避免双计错次）
   const q = round.qs[round.i];
   const a = q.t==="case" ? {v:null,r:null,c:null} : (q.t==="var"||q.t==="theory") ? null : [];
@@ -1470,9 +1544,17 @@ document.getElementById("importFile").addEventListener("change", e=>{
 // Native controls own the answer state; the chip follows both pointer and keyboard changes.
 document.getElementById("qForm").addEventListener("change", e=>{
   if (!e.target.matches("input")) return;
+  if (round?.mode === "exam" && !round.finished){ round.answers[round.i] = currentAnswer(); saveExam(); }
   for (const input of e.target.closest("fieldset").querySelectorAll("input"))
     input.closest(".opt").classList.toggle("on",input.checked);
 });
+document.getElementById("btnAbandon").onclick = ()=>{
+  if (!round || round.finished || !confirm("放弃本场考试？本卷作答将清除，不会记入成绩。")) return;
+  if (checkDeadline()) return;
+  if (!examSession.clear()){ examNotice("暂时无法清除已保存的试卷，请重试。"); return; }
+  stopTimer(); stopVideo(); round = null; examNotice("本场考试已放弃。"); showScreen("start");
+  document.getElementById("btnStart").focus();
+};
 document.getElementById("btnSubmit").onclick = submitAnswer;
 document.getElementById("btnSkip").onclick = skipQuestion;
 document.getElementById("btnPrev").onclick = gotoPrev;
@@ -1609,7 +1691,36 @@ document.getElementById("anaText").addEventListener("click", e => {
 const params = new URLSearchParams(location.search);
 if (params.has("cat")) chooseCategory(params.get("cat"));
 if (params.get("range") === "due") document.getElementById("btnDue").click();
+function closeRecordedExam(){
+  stopTimer(); stopVideo(); examSession.clear(); round = null; showScreen("start");
+  renderHistory(); examNotice("同一份试卷已经交卷并计入历史成绩。");
+}
+function restoreExam(fromCache=false){
+  let draft;
+  try { draft = examSession.load(); }
+  catch (error){
+    stopTimer(); stopVideo(); round = null; showScreen("start"); examNotice(error.message); return;
+  }
+  if (!draft){
+    if (fromCache && round?.mode === "exam" && examSession.readable && !round.draftFailed){ stopTimer(); stopVideo(); round = null; showScreen("start"); }
+    else if (fromCache) checkDeadline();
+    return;
+  }
+  clearInterval(examTimer);
+  round = draft;
+  if (QuizRecords.examStatus(quizRecords.read(),draft.id,draft.opened) === "recorded"){ closeRecordedExam(); return; }
+  document.querySelector('#segMode [data-v="exam"]').click();
+  document.querySelector('#segTimer [data-v="'+round.timer+'"]').click();
+  const count = [5,10,20,50].includes(round.qs.length) ? round.qs.length : 0;
+  document.querySelector('#segCount [data-v="'+count+'"]').click();
+  showScreen("quiz");
+  if (round.submitting){ finishExam(false); return; }
+  if (round.deadline && checkDeadline()) return;
+  if (round.deadline) examTimer = setInterval(checkDeadline,1000);
+  examNotice("已恢复本标签页未交的试卷。"); renderQuestion();
+}
 renderSeasonChips(); renderWbStats(); updatePoolTip(); renderAnalysis(); renderHistory();
+restoreExam();
 </script>
 </body>
 </html>
@@ -1637,6 +1748,9 @@ def main():
         )
         .replace(
             "__QUIZ_RECORDS_JS__", (SRC / "quiz-records.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__QUIZ_SESSION_JS__", (SRC / "quiz-session.js").read_text(encoding="utf-8")
         )
         .replace(
             "__SCALE_HISTORY_JS__",

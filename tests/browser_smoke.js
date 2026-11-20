@@ -51,6 +51,7 @@ async (page) => {
   await page.locator('#qForm .opt').first().click();
   // 考试界面不展示跳过按钮，同时验证内部末题跳过的防御分支。
   await page.evaluate(() => skipQuestion());
+  await page.locator('#scrResult').waitFor();
   check(await page.evaluate(() => round.finished && round.scores[0].got === 0 && round.scores[0].max === 2 && round.answers[0].length === 0), '末题跳过没有按空答交卷');
   await page.evaluate(() => { finishExam(); finishExam(); });
   check(await page.evaluate(() => qstats[round.qs[0].k].w === window.statBefore + 1), '交卷重复记录作答');
@@ -59,7 +60,8 @@ async (page) => {
     window.statBefore = (qstats[round.qs[0].k]?.w || 0);
   });
   await page.locator('#btnSubmit').click();
-  check(await page.evaluate(() => round.finished && round.scores[0].got === 0 && round.scores[0].max === 2 && qstats[round.qs[0].k].w === window.statBefore + 1), '考试手动空答交卷错误');
+  await page.locator('#scrResult').waitFor();
+  check(await page.evaluate(() => round.finished && round.scores[0].got === 0 && round.scores[0].max === 2 && new QuizRecords().state.stats[round.qs[0].k].w === window.statBefore + 1), '考试手动空答交卷错误');
   await page.evaluate(() => {
     startRound([DATA.bank.find(q => q.t === 'scale')]);
     window.alert = message => { window.timerMessage = message; };

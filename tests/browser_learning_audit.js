@@ -127,7 +127,7 @@ async (page) => {
     await first.locator('#segSrc [data-v="scale"]').click();
     await first.locator('#segCount [data-v="0"]').click();
     await first.locator("#btnStart").click();
-    const result = await first.evaluate(() => {
+    await first.evaluate(() => {
       for (let i = 0; i < round.qs.length; i++) {
         if (i < 86) {
           const correct = round.qs[i].dec.filter(d => d.active).map(d => d.label);
@@ -135,7 +135,10 @@ async (page) => {
         }
         document.querySelector("#btnSubmit").click();
       }
-      return {latest:qhist[0], badge:document.querySelector("#rPass").innerText, pct:document.querySelector("#rPct").innerText,
+    });
+    await first.locator("#scrResult").waitFor();
+    const result = await first.evaluate(() => {
+      return {latest:new QuizRecords().state.history[0], badge:document.querySelector("#rPass").innerText, pct:document.querySelector("#rPct").innerText,
         equality:examPassed(9, 10), over:examPassed(91,100), near:scorePercent(1862,2069)};
     });
     check(result.latest.got === 172 && result.latest.max === 192 && result.pct.includes("89.6") &&
@@ -155,10 +158,12 @@ async (page) => {
     await first.locator("#qForm .opt").first().click();
     await first.evaluate(() => {
       window.beforeTimeout = qhist.length;
-      window.alert = () => { window.finishedAtNotice = round.finished; };
+      window.alert = () => { window.finishedAtNotice = round.finished &&
+        document.getElementById("scrResult").style.display !== "none" && new QuizRecords().state.history.length === window.beforeTimeout+1; };
       startTimer(5);
     });
     await first.clock.fastForward(10000);
+    await first.locator("#scrResult").waitFor();
     check(await first.evaluate(() => round.finished && window.finishedAtNotice && qhist.length === window.beforeTimeout + 1 &&
       round.answers[0] != null), "暂停后未按截止时间自动交卷，或遗漏已选答案");
     // Observe Chrome's actual cross-origin media request without contacting the upstream.

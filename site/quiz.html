@@ -41,11 +41,15 @@ body{overflow:hidden}
 .qtext .lbl{color:var(--muted)}
 details.qappeal{margin-top:8px;font-size:13.5px;color:var(--ink2)}
 details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
-.axis{margin-top:14px}
+.axis{margin:14px 0 0;padding:0;border:0;min-inline-size:0}
+.axis legend{padding:0;max-width:100%}
 .axis .ah{font-size:13px;font-weight:700;margin-bottom:7px}
 .axis .ah small{color:var(--muted);font-weight:400}
 .optrow{display:flex;flex-wrap:wrap;gap:7px}
-.opt{cursor:pointer;user-select:none}
+.opt{position:relative;cursor:pointer;user-select:none}
+.opt input{position:absolute;inset:0;width:100%;height:100%;margin:0;opacity:0;cursor:inherit}
+.opt:focus-within{outline:2px solid var(--brand);outline-offset:2px}
+.axis:disabled .opt{cursor:default}
 .opt b{pointer-events:none}
 .ansgate{margin:16px 0 0;padding:11px 14px;border:1px dashed var(--line);border-radius:var(--r-md);
   color:var(--muted);font-size:13px;display:none;align-items:center;gap:8px}
@@ -1126,6 +1130,18 @@ function stopVideo(){
   v.removeAttribute("src"); v.load();
 }
 
+function answerGroup(title, hint, axis, options, selected){
+  const multiple = axis === "dec";
+  const html = options.map(([value,label],i)=>{
+    const picked = multiple ? selected.includes(value) : selected === value;
+    const data = multiple ? 'data-dec="'+esc(value)+'"' : 'data-axis="'+axis+'" data-v="'+esc(value)+'"';
+    const number = i < 9 ? '<span class="okn" aria-hidden="true">'+(i+1)+'</span>' : '';
+    return '<label class="chip opt'+(picked?' on':'')+'" '+data+'><input type="'+(multiple?'checkbox':'radio')+
+      '" name="'+axis+'" value="'+esc(value)+'"'+(picked?' checked':'')+'>'+number+esc(label)+'</label>';
+  }).join("");
+  return '<fieldset class="axis"><legend class="ah">'+esc(title)+' <small>'+esc(hint)+'</small></legend><div class="optrow">'+html+'</div></fieldset>';
+}
+
 function renderQuestion(){
   const q = round.qs[round.i];
   round.locked = false;
@@ -1197,34 +1213,23 @@ function renderQuestion(){
   }
   // 表单（已作答且练习已提交时还原为锁定态）
   const saved = round.answers[round.i];
+  const groups = [];
   if (q.t === "case"){
-    const axes = [`<div class="axis"><div class="ah">① 评议组复核结论 <small>必答 · 1分</small></div><div class="optrow">` +
-      V_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.v===v?"on":""}" data-axis="v" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`];
-    if (q.ans && q.ans.r)
-      axes.push(`<div class="axis"><div class="ah">② 正确的判罚决定 <small>1分</small></div><div class="optrow">` +
-        R_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.r===v?"on":""}" data-axis="r" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
-    if (q.ans && q.ans.c)
-      axes.push(`<div class="axis"><div class="ah">③ 纪律处分${q.discipline_target?" · "+esc(q.discipline_target):""} <small>1分</small></div><div class="optrow">` +
-        C_OPTS.map(([v,n],i)=>`<button class="chip opt ${saved&&saved.c===v?"on":""}" data-axis="c" data-v="${v}"><span class="okn">${i+1}</span>${n}</button>`).join("") + `</div></div>`);
-    document.getElementById("qForm").innerHTML = axes.join("");
-  } else if (q.t === "var"){
-    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">官方决定 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q.opts.map((o,i)=>`<button class="chip opt ${saved!=null&&+saved===i?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(o)}</button>`).join("") + `</div></div>`;
-  } else if (q.t === "theory"){
-    // 选项按次打乱显示（题库文件中正确项均在首位）；saved 存的是原始下标，经 _disp 反查高亮
-    if (!q._disp){
-      q._disp = q.opts.map((_,i)=>i);
-      for (let i = q._disp.length - 1; i > 0; i--){
-        const j = Math.floor(Math.random() * (i + 1));
-        [q._disp[i], q._disp[j]] = [q._disp[j], q._disp[i]];
-      }
-    }
-    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">正确条文 <small>四选一 · 1分</small></div><div class="optrow">` +
-      q._disp.map((orig,i)=>`<button class="chip opt ${saved!=null&&+saved===orig?"on":""}" data-axis="o" data-v="${i}"><span class="okn">${i+1}</span>${esc(q.opts[orig])}</button>`).join("") + `</div></div>`;
+    groups.push(answerGroup("① 评议组复核结论","必答 · 1分","v",V_OPTS,saved?.v));
+    if (q.ans?.r) groups.push(answerGroup("② 正确的判罚决定","1分","r",R_OPTS,saved?.r));
+    if (q.ans?.c) groups.push(answerGroup("③ 纪律处分"+(q.discipline_target ? " · "+q.discipline_target : ""),"1分","c",C_OPTS,saved?.c));
+  } else if (q.t === "var" || q.t === "theory"){
+    // The display order is stable throughout this round. Stored answers use the original index.
+    const order = q.opts.map((_,i)=>i);
+    const display = q.t === "theory" ? (q._disp ??= shuffle(order)) : order;
+    const options = display.map((original,i)=>[String(i),q.opts[original]]);
+    const selected = saved == null || saved === "" ? null : String(display.indexOf(+saved));
+    groups.push(answerGroup(q.t === "var" ? "官方决定" : "正确条文","四选一 · 1分","o",options,selected));
   } else {
-    document.getElementById("qForm").innerHTML = `<div class="axis"><div class="ah">判罚决定 <small>多选 · 满分2分：完全一致2分，部分正确且无错选1分，空答或错选0分</small></div><div class="optrow">` +
-      q.dec.map((d,i)=>`<button class="chip opt ${saved&&saved.includes(d.label)?"on":""}" data-dec="${esc(d.label)}">${i<9?`<span class="okn">${i+1}</span>`:""}${esc(d.label)}</button>`).join("") + `</div></div>`;
+    groups.push(answerGroup("判罚决定","多选 · 满分2分：完全一致2分，部分正确且无错选1分，空答或错选0分","dec",
+      q.dec.map(d=>[d.label,d.label]),saved || []));
   }
+  document.getElementById("qForm").innerHTML = groups.join("");
   document.getElementById("ansGate").classList.add("on");
   const fb = document.getElementById("qFb");
   fb.classList.remove("on"); fb.innerHTML = "";
@@ -1233,26 +1238,19 @@ function renderQuestion(){
 }
 function currentAnswer(){
   const q = round.qs[round.i];
+  const checked = [...document.querySelectorAll("#qForm input:checked")];
   if (q.t === "case"){
-    const a = {v:null, r:null, c:null};
-    document.querySelectorAll("#qForm .opt.on").forEach(b=>{
-      a[b.dataset.axis] = b.dataset.v;
-    });
-    return a;
+    const answer = {v:null,r:null,c:null};
+    for (const input of checked) answer[input.name] = input.value;
+    return answer;
   }
-  if (q.t === "var"){
-    const b = document.querySelector("#qForm .opt.on");
-    return b ? b.dataset.v : null;
-  }
-  if (q.t === "theory"){
-    // 显示位 → 原始下标（错题本/统计都存原始下标，避免再抽打乱后对不上）
-    const b = document.querySelector("#qForm .opt.on");
-    return b ? q._disp[+b.dataset.v] : null;
-  }
-  return Array.from(document.querySelectorAll("#qForm .opt.on")).map(b=>b.dataset.dec);
+  if (q.t === "scale") return checked.map(input=>input.value);
+  if (!checked.length) return null;
+  return q.t === "theory" ? q._disp[+checked[0].value] : checked[0].value;
 }
 function syncButtons(){
   const done = round.scores[round.i] != null && round.mode==="practice";
+  for (const field of document.querySelectorAll("#qForm fieldset")) field.disabled = done;
   document.getElementById("btnPrev").disabled = round.i===0;
   // 考试模式无「跳过」语义（可回改，交卷统一判分），与练习已提交态同样隐藏
   document.getElementById("btnSkip").style.display = (done || round.mode==="exam") ? "none" : "";
@@ -1610,16 +1608,11 @@ document.getElementById("importFile").addEventListener("change", e=>{
   rd.readAsText(f, "utf-8");
   e.target.value = "";
 });
-// 答题表单：单选/多选 chips
-document.getElementById("qForm").addEventListener("click", e=>{
-  const b = e.target.closest(".opt"); if (!b || round.locked) return;
-  const q = round.qs[round.i];
-  if (q.t === "case" || q.t === "var" || q.t === "theory"){   // 单选轴
-    const axis = b.dataset.axis;
-    document.querySelectorAll(`#qForm .opt[data-axis="${axis}"]`).forEach(x=>x.classList.toggle("on", x===b));
-  } else {
-    b.classList.toggle("on");
-  }
+// Native controls own the answer state; the chip follows both pointer and keyboard changes.
+document.getElementById("qForm").addEventListener("change", e=>{
+  if (!e.target.matches("input")) return;
+  for (const input of e.target.closest("fieldset").querySelectorAll("input"))
+    input.closest(".opt").classList.toggle("on",input.checked);
 });
 document.getElementById("btnSubmit").onclick = submitAnswer;
 document.getElementById("btnSkip").onclick = skipQuestion;
@@ -1678,7 +1671,7 @@ function pickOption(n){
   const q = round.qs[round.i];
   if (q.t === "scale"){
     const opts = Array.from(document.querySelectorAll("#qForm .opt"));
-    if (opts[n]) opts[n].classList.toggle("on");
+    opts[n]?.querySelector("input").click();
     return;
   }
   // 单选题（case 三轴 / var 四选一）：数字作用于第一个尚未作答的轴；全部已答则落到最后一轴（可改选）
@@ -1686,12 +1679,15 @@ function pickOption(n){
     : ["v", ...(q.ans && q.ans.r ? ["r"] : []), ...(q.ans && q.ans.c ? ["c"] : [])];
   const ax = axes.find(a=>!document.querySelector(`#qForm .opt[data-axis="${a}"].on`)) || axes[axes.length-1];
   const opts = Array.from(document.querySelectorAll(`#qForm .opt[data-axis="${ax}"]`));
-  if (opts[n]) opts.forEach(x=>x.classList.toggle("on", x===opts[n]));
+  opts[n]?.querySelector("input").click();
 }
 document.addEventListener("keydown", e=>{
   const tag = (e.target.tagName||"").toLowerCase();
   if (e.key === "Enter" && e.target.closest("button, a, summary")) return;
-  if (tag==="input"||tag==="select"||tag==="textarea"){ if(e.key==="Escape") e.target.blur(); return; }
+  const option = e.target.matches("#qForm input");
+  if (option && e.key === "Enter") { e.preventDefault(); if (e.shiftKey) gotoPrev(); else e.target.click(); return; }
+  if (option && (e.key.startsWith("Arrow") || e.key === " ")) return;
+  if ((tag==="input" && !option)||tag==="select"||tag==="textarea"){ if(e.key==="Escape") e.target.blur(); return; }
   // 开始屏 / 结果屏：Enter 开始 / 返回
   if (document.getElementById("scrStart").style.display !== "none"){
     if (e.key==="Enter"){ e.preventDefault(); if (!document.getElementById("btnStart").disabled) startRound(pool()); }

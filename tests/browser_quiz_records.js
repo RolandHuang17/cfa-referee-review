@@ -94,7 +94,51 @@ async (startPage) => {
       check(await page.locator("#wbList .wbitem").count()===1,"有效旧记录未保留");
       check(await page.evaluate(()=>localStorage.getItem("cfa.quiz.wrong"))===raw,"恢复时覆盖了旧记录");
     } finally {await legacy.close();}
+    const access = await browser.newContext({viewport:{width:390,height:844}});
+    try {
+      const tab = await access.newPage();
+      tab.on("pageerror",e=>errors.push(e.message));
+      await tab.goto(url);
+      const fixture = await tab.evaluate(()=>({
+        theory:DATA.bank.find(q=>q.t==="theory").k,
+        scale:DATA.bank.find(q=>q.t==="scale" && q.dec.length>2).k,
+        caseId:DATA.bank.find(q=>q.t==="case" && q.ans?.r && q.ans?.c).k
+      }));
+      await roundFor(tab,fixture.caseId,"practice");
+      const axes = tab.locator("#qForm fieldset");
+      check(await tab.getByRole("group",{name:/评议组复核结论/}).count()===1 &&
+        await axes.count()===3,"判例三轴没有可读的分组名称");
+      for (const axis of await axes.all()) {
+        const choice = axis.getByRole("radio").first();
+        await choice.focus();
+        await tab.keyboard.press("Space");
+        check(await choice.isChecked(),"空格未选中当前判罚轴");
+      }
+      await tab.locator("#btnSubmit").click();
+      check(await axes.first().getByRole("radio").first().isDisabled(),"已反馈的判例仍可更改");
+      await roundFor(tab,fixture.theory,"exam");
+      const opts = tab.getByRole("group",{name:/正确条文/}).getByRole("radio");
+      await opts.first().check();
+      await tab.keyboard.press("ArrowRight");
+      check(await opts.nth(1).isChecked() && !(await opts.first().isChecked()),"单选方向键没有替换选项");
+      await tab.keyboard.press("3");
+      check(await opts.nth(2).isChecked() && await tab.locator("#qForm .opt.on").count()===1,
+        "数字快捷键、可访问状态与视觉状态不一致");
+      // Re-render via the ordinary mode switch, preserving the original option index.
+      const chosen = await tab.evaluate(()=>currentAnswer());
+      await tab.locator("#btnLite").click();
+      check(await opts.nth(2).isChecked() && await tab.evaluate(()=>currentAnswer())===chosen,
+        "重绘后理论题的显示顺序或选中状态变了");
+      await roundFor(tab,fixture.scale,"practice");
+      const checks = tab.getByRole("group",{name:/判罚决定/}).getByRole("checkbox");
+      await checks.first().check();
+      await checks.nth(1).focus();
+      await tab.keyboard.press("Space");
+      check(await checks.first().isChecked() && await checks.nth(1).isChecked(),"多选题没有暴露两个独立选中态");
+      await tab.keyboard.press("1");
+      check(!(await checks.first().isChecked()) && await checks.nth(1).isChecked(),"多选数字键未撤销对应选项");
+    } finally {await access.close();}
     check(!errors.length,errors.join("\n"));
-    return "PASS 跨标签异题与同题计数、并发交卷历史、星标、Leitner、旧数据恢复、整份导入与导出";
+    return "PASS 跨标签异题与同题计数、并发交卷历史、星标、Leitner、旧数据恢复、整份导入与导出、四题源原生选中态与键盘操作";
   } finally {await context.close();}
 }

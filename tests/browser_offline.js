@@ -19,6 +19,11 @@ async (page) => {
       throw Error("缓存版本未稳定");
     }, {kept,removed});
   }
+  async function childScript(tab, scope) {
+    const response = await tab.request.get(base + scope + "sw.js");
+    check(response.ok(), "无法读取子站注册脚本 " + scope);
+    return response.text();
+  }
   const previousName = (scope, version) => "cfa-site-" + encodeURIComponent(scope) + "-" + version;
   const currentName = (scope, version) => "cfa-site:" + encodeURIComponent(scope) + ":" + version;
   // Start with real registrations and populated old-format caches on ordinary sibling paths.
@@ -46,7 +51,8 @@ async (page) => {
     await controlled(tab,scope);
     await tab.goto(base + scope + 'rules.html#law-12');
     check((await tab.title()).includes('竞赛规则'), '子目录首次安装和浏览失败 '+scope);
-    children.push({tab,scope});
+    await waitForCaches(tab,previousName(scope,previous),currentName(scope,previous));
+    children.push({tab,scope,script:await childScript(tab,scope)});
   }
   for (const term of ['手球','红牌','越位']) {
     await page.goto(base + '/study/search.html?q=' + encodeURIComponent(term));
@@ -110,6 +116,12 @@ async (page) => {
     await tab.evaluate(async () => { await (await navigator.serviceWorker.getRegistration()).update(); });
     await waitForCaches(tab,currentName(scope,revision),previousName(scope,previous));
     await controlled(tab,scope);
+  }
+  // A browser can check any active child for updates while a parent is upgrading.
+  // Exercise that ordering while the independent child deployment stays unchanged.
+  for (const {tab,scope,script} of children) {
+    check(await childScript(tab,scope) === script, '升级父站时子站脚本也发生了变化 '+scope);
+    await tab.evaluate(async () => { await (await navigator.serviceWorker.getRegistration()).update(); });
   }
   const keys = await page.evaluate(() => caches.keys());
   check(keys.includes('cfa-site-%2Fother%2F-v1') && keys.includes('cfa-site-%2Fstudy%2F-library') &&

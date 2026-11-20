@@ -10,6 +10,7 @@ SITE = pathlib.Path(__file__).resolve().parents[1] / "site"
 
 class Server(http.server.SimpleHTTPRequestHandler):
     revision = time.time_ns()
+    child_revision = revision
     previous = False
     mounts = ("/study/-club/", "/-club/", "/study/")
 
@@ -32,6 +33,8 @@ class Server(http.server.SimpleHTTPRequestHandler):
         if path in ("/__previous", "/__upgrade"):
             type(self).previous = path == "/__previous"
             type(self).revision += 1
+            if self.previous:
+                type(self).child_revision = self.revision
             self.send_response(200)
             self.send_header("Cache-Control", "no-store")
             self.end_headers()
@@ -39,8 +42,10 @@ class Server(http.server.SimpleHTTPRequestHandler):
             return
         if path in {mount + "sw.js" for mount in ("/", *self.mounts)}:
             text = (SITE / "sw.js").read_text(encoding="utf8")
-            if self.previous or "/-club/" in path:
-                # Leave the child installations on the previously released cache naming scheme.
+            child = "/-club/" in path
+            version = self.child_revision if child else self.revision
+            if self.previous or child:
+                # These independent child deployments keep both their script and cache version.
                 text = re.sub(
                     r"const CACHE = [^;]+;",
                     'const CACHE = "cfa-site-" + encodeURIComponent(SCOPE) + "-" + VERSION;',
@@ -48,7 +53,7 @@ class Server(http.server.SimpleHTTPRequestHandler):
                 )
             text = re.sub(
                 r'const VERSION = "[^"]+";',
-                f'const VERSION = "{self.revision:016x}";',
+                f'const VERSION = "{version:016x}";',
                 text,
             )
             self.send_response(200)

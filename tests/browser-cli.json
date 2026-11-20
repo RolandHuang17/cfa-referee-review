@@ -1,7 +1,7 @@
 {
   "browser": {
     "launchOptions": {
-      "args": ["--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE localhost"]
+      "args": ["--host-resolver-rules=MAP * ~NOTFOUND, EXCLUDE 127.0.0.1, EXCLUDE localhost"]
     }
   }
 }

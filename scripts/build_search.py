@@ -14,9 +14,11 @@
 
 import json
 import re
+from collections import Counter
 from lib.ifab_content import search_rows as ifab_search_rows
 from lib.law_blocks import anchored_section
 from lib.pagelib import article_anchor
+from lib.pages import PAGE_FILES
 from lib.pro_series import series_name
 from lib.uefa_anchors import video_anchor
 from lib.uefa_content import apply_zh as apply_uefa_zh
@@ -36,13 +38,14 @@ from lib.paths import (
     RFEF_ZH_JSON,
     SCALE_JSON,
     SITE,
+    SRC,
     UEFA_JSON,
     UEFA_ZH_JSON,
     WEEKLY_JSON,
     WEEKLY_ZH_JSON,
 )
 from lib.seo import meta_tags
-from lib.theme import inject_theme, js_icons, topbar
+from lib.theme import icon, inject_theme, topbar
 
 # 类型标记：g=分组（case/law/scale/intl），l=显示名
 GROUPS = [
@@ -75,7 +78,9 @@ def build_docs():
     def add(g, label, title, url, text):
         text = re.sub(r"\s+", " ", text or "").strip()
         if title and url:
-            docs.append([g, label, title, url, (text or title).lower()])
+            if url.partition("#")[0].partition("?")[0] not in PAGE_FILES:
+                raise ValueError(f"搜索结果缺少站内目标页面：{url}")
+            docs.append([g, label, title, url, text or title])
 
     # 三赛季判例
     for season in ("2026", "2025", "2024"):
@@ -148,8 +153,12 @@ def build_docs():
     # 规则段落与页面生成使用相同锚点。
     for section in _load_laws():
         _, blocks = anchored_section(section)
-        for anchor, text in blocks:
-            add("law", "竞赛规则", section["title"], f"rules.html#{anchor}", text)
+        repeats = Counter(text for _, text in blocks)
+        for position, (anchor, text) in enumerate(blocks, 1):
+            title = section["title"]
+            if repeats[text] > 1:
+                title += f" · 章内第 {position} 处"
+            add("law", "竞赛规则", title, f"rules.html#{anchor}", text)
     # 统一尺度场景
     scale = _read(SCALE_JSON)
     for year, ydata in scale.items():
@@ -202,7 +211,7 @@ def build_docs():
         add(
             "intl",
             "周更节目",
-            f"{show.get('name', e.get('show', ''))} · {e.get('title', '')[:80]}",
+            f"{show.get('name', e.get('show', ''))} · {e.get('title', '')}",
             f"weekly.html#ep-{e['id']}",
             f"{note} {e.get('desc', '')}",
         )
@@ -213,9 +222,18 @@ def build_docs():
         add(
             "intl",
             "CONMEBOL",
-            f"{c.get('comp_cn') or c.get('comp', '')} · {c.get('match', '')}",
+            " · ".join(
+                filter(
+                    None,
+                    (
+                        c.get("comp_cn") or c.get("comp"),
+                        c.get("match") or c.get("title"),
+                        f"发布 {c['date']}" if c.get("date") else "",
+                    ),
+                )
+            ),
             f"conmebol.html#{article_anchor(c['url'])}",
-            f"{zh} {c.get('situacion_es', '')} {c.get('estadio', '')}",
+            f"{c.get('title', '')} {zh} {c.get('situacion_es', '')} {c.get('estadio', '')}",
         )
     # RFEF（判例情形中文）
     rfef, rzh = _read(RFEF_JSON), _read(RFEF_ZH_JSON)
@@ -259,7 +277,7 @@ def build_docs():
         add(
             "intl",
             "PRO",
-            f"{series_name(a)} · {a.get('title', '')[:90]}",
+            " · ".join(filter(None, (series_name(a), a.get("title"), a.get("date")))),
             f"pro.html#{article_anchor(a['url'])}",
             f"{a.get('title', '')} {a.get('league', '')}",
         )
@@ -324,15 +342,24 @@ HTML = r"""<!DOCTYPE html>
 .shead .sub{color:var(--muted);font-size:13px}
 .sbar{position:relative;margin-top:16px}
 .sbar .ic{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--muted)}
-.sbar input{width:100%;padding:12px 40px 12px 40px;border:1px solid var(--line);border-radius:999px;
+.sbar input{width:100%;padding:12px 64px 12px 40px;border:1px solid var(--line);border-radius:999px;
   background:var(--card);color:var(--ink);font-size:15px;outline:none}
-.sbar input:focus{border-color:var(--brand)}
+.sbar input::-webkit-search-cancel-button{display:none}
+.sbar .clear-search{position:absolute;inset-inline-end:4px;top:50%;transform:translateY(-50%);
+  min-width:48px;min-height:40px;border:0;border-radius:999px;background:transparent;
+  color:var(--brand);font:inherit;font-size:13px;cursor:pointer}
+.sbar .clear-search[hidden]{display:none}
+@media(pointer:coarse){.sbar .clear-search{min-height:44px}}
+.sbar input:focus-visible{border-color:var(--brand);outline:2px solid var(--brand);outline-offset:2px}
 .schips{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px}
+.schips .chip{min-height:36px}
+@media(pointer:coarse){.schips .chip,#moreResults{min-height:44px}}
 .wrap2{max-width:880px;margin:0 auto;padding:18px 16px 60px}
 .scount{font-size:12.5px;color:var(--muted);margin:2px 0 10px}
 .sres a.sr{display:block;padding:13px 14px;border:1px solid var(--line);border-radius:var(--r-md);
   margin-bottom:10px;text-decoration:none;background:var(--card)}
-.sres a.sr:hover{border-color:var(--brand);transform:translateY(-1px)}
+.sres a.sr:hover{border-color:var(--brand)}
+.sres a.sr:focus-visible{outline-offset:2px}
 .sr .t1{font-size:14.5px;font-weight:600;color:var(--ink);margin-bottom:4px}
 .sr .t1 mark{background:transparent;color:var(--brand);font-weight:700}
 .sr .t2{font-size:12.5px;color:var(--muted);line-height:1.7}
@@ -341,87 +368,30 @@ HTML = r"""<!DOCTYPE html>
   border-radius:999px;font-size:11px;color:var(--brand);background:var(--card2)}
 .sempty{text-align:center;color:var(--muted);padding:48px 0;font-size:14px}
 .kbd-hint{font-size:12px;color:var(--faint);margin-top:6px}
+#moreResults[hidden]{display:none}
 </style>
 </head>
 <body>
+<a class="skip-link" href="#content0">跳到搜索</a>
 __TOPBAR__
+<main id="content0" tabindex="-1">
 <div class="shead"><div class="wrap">
   <h1>全站搜索</h1>
   <div class="sub">一次搜遍三赛季判例、竞赛规则、统一尺度场景与国际评议资料（__N__ 份文档）</div>
-  <div class="sbar" id="sbar"></div>
-  <div class="schips" id="schips"></div>
+  <div class="sbar">__SEARCH_ICON__<input id="q" type="search" aria-label="全站搜索" aria-keyshortcuts="/" placeholder="搜索判例、规则条文或资料来源"><button class="clear-search" id="clearSearch" type="button" aria-label="清空搜索条件" hidden>清空</button></div>
+  <div class="schips" id="schips" role="group" aria-label="资料来源"></div>
   <p class="kbd-hint">按 <b>/</b> 聚焦搜索框</p>
 </div></div>
 <div class="wrap2">
-  <div class="scount" id="scount"></div>
+  <div class="scount" id="scount" role="status"></div>
   <div class="sres" id="sres"></div>
+  <button type="button" class="btn" id="moreResults" hidden>继续显示</button>
 </div>
+</main>
 <script>
 const DOCS = __DOCS__;
 const GROUPS = __GROUPS__;
-const IC = __ICONS__;
-let cur = "all", q = "", limit = 60;
-function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
-function rex(kw){ return new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,"\\$&"),"gi"); }
-function renderBar(){
-  document.getElementById("sbar").innerHTML = IC.search +
-    '<input id="q" type="search" placeholder="输入关键词：如 手球 越位 点球 DOGSO 暴力行为 判例三…" aria-label="全站搜索">';
-  const si = document.getElementById("q");
-  ["input","search"].forEach(ev=>si.addEventListener(ev, ()=>{
-    q = (si.value||"").trim().toLowerCase();
-    limit = 60; render();
-  }));
-  // 深链预填：search.html?q=关键词（404 页搜索框 / 外部链接入口）
-  const qp = new URLSearchParams(location.search).get("q");
-  if (qp){
-    si.value = qp;
-    q = qp.trim().toLowerCase();
-    if (q) si.focus();
-  }
-}
-function renderChips(){
-  const n = g => g==="all" ? DOCS.length : DOCS.filter(d=>d[0]===g).length;
-  document.getElementById("schips").innerHTML =
-    `<button class="chip ${cur==="all"?"on":""}" data-g="all">全部 ${n("all")}</button>` +
-    GROUPS.map(([g,l])=>`<button class="chip ${cur===g?"on":""}" data-g="${g}">${l} ${n(g)}</button>`).join("");
-}
-document.getElementById("schips").addEventListener("click", e=>{
-  const b = e.target.closest("[data-g]"); if(!b) return;
-  cur = b.dataset.g; limit = 60; renderChips(); render();
-});
-function snippet(text, kw){
-  const i = text.toLowerCase().indexOf(kw);
-  if (i < 0) return esc(text.slice(0, 110)) + (text.length>110?"…":"");
-  const a = Math.max(0, i-45), b = Math.min(text.length, i+kw.length+70);
-  return (a>0?"…":"") + esc(text.slice(a, b)).replace(rex(kw), m=>"<mark>"+m+"</mark>") + (b<text.length?"…":"");
-}
-function render(){
-  const kw = q;
-  let hits = DOCS.filter(d => (cur==="all"||d[0]===cur) && (!kw || d[4].indexOf(kw)>=0 || d[2].toLowerCase().indexOf(kw)>=0));
-  document.getElementById("scount").textContent = kw || cur!=="all"
-    ? `命中 ${hits.length} 份文档` : `共 ${DOCS.length} 份文档，输入关键词开始搜索`;
-  const box = document.getElementById("sres");
-  if (!hits.length){
-    box.innerHTML = `<div class="sempty">${kw ? "没有找到相关内容——换个关键词试试（如：手球 / 越位 / 点球 / VAR）" : "输入关键词开始搜索"}</div>`;
-    return;
-  }
-  const gname = Object.fromEntries(GROUPS);
-  box.innerHTML = hits.slice(0, limit).map(d=>{
-    const ext = /^https?:/.test(d[3]) ? ' target="_blank" rel="noopener noreferrer"' : '';
-    const title = kw ? esc(d[2]).replace(rex(kw), m=>"<mark>"+m+"</mark>") : esc(d[2]);
-    return `<a class="sr" href="${esc(d[3])}"${ext}>
-      <div class="t1"><span class="gl">${gname[d[0]]||d[0]} · ${esc(d[1])}</span>${title}</div>
-      <div class="t2">${kw ? snippet(d[4], kw) : esc(d[4].slice(0,110)) + (d[4].length>110?"…":"")}</div>
-    </a>`;
-  }).join("") + (hits.length>limit ? '<button class="btn" id="moreResults">继续显示（已显示 '+limit+' / '+hits.length+'）</button>' : "");
-}
-document.getElementById("sres").addEventListener("click", e=>{ if(e.target.id==="moreResults"){limit += 60; render();} });
-document.addEventListener("keydown", e=>{
-  const t=(e.target.tagName||"").toLowerCase();
-  if(t==="input"||t==="textarea")return;
-  if(e.key==="/"){e.preventDefault();const el=document.getElementById("q");if(el)el.focus();}
-});
-renderBar(); renderChips(); render();
+__SEARCH_JS__
 </script>
 </body>
 </html>
@@ -431,7 +401,7 @@ renderBar(); renderChips(); render();
 def main():
     docs = build_docs()
     data_js = json.dumps(docs, ensure_ascii=False, separators=(",", ":")).replace(
-        "</", "<\\/"
+        "<", "\\u003c"
     )
     groups_js = json.dumps(GROUPS, ensure_ascii=False, separators=(",", ":"))
     tb = topbar(
@@ -441,13 +411,14 @@ def main():
         seasons=("2026", "2025", "2024"),
     )
     html = (
-        HTML.replace("__DOCS__", data_js)
-        .replace("__GROUPS__", groups_js)
+        HTML.replace("__GROUPS__", groups_js)
         .replace("__N__", str(len(docs)))
         .replace("__TOPBAR__", tb)
-        .replace("__ICONS__", js_icons())
+        .replace("__SEARCH_ICON__", icon("search", 16))
+        .replace("__SEARCH_JS__", (SRC / "search.js").read_text(encoding="utf-8"))
     )
     html = inject_theme(html, meta=meta_tags("search.html"))
+    html = html.replace("__DOCS__", data_js)
     SITE.mkdir(parents=True, exist_ok=True)
     out = SITE / "search.html"
     out.write_text(html, encoding="utf-8")

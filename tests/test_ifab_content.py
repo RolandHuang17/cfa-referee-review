@@ -76,7 +76,7 @@ def test_real_search_entries_cover_both_languages_and_link_to_single_targets(
     anchors.feed((tmp_path / "ifab.html").read_text(encoding="utf8"))
     assert max(anchors.ids.values()) == 1
     rows = [r for r in build_search.build_docs() if r[1] == "IFAB"]
-    indexed = {r[3].split("#", 1)[1]: r[4] for r in rows}
+    indexed = {r[3].split("#", 1)[1]: r[4].lower() for r in rows}
     assert len(rows) == len(indexed)
     assert all(anchors.ids[key] == 1 for key in indexed)
     for doc in docs:

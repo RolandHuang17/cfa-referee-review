@@ -15,6 +15,7 @@
 import json
 import re
 from lib.law_blocks import anchored_section
+from lib.pagelib import article_anchor
 from lib.pro_series import series_name
 
 from lib.paths import (
@@ -223,7 +224,7 @@ def build_docs():
             "intl",
             "CONMEBOL",
             f"{c.get('comp_cn') or c.get('comp', '')} · {c.get('match', '')}",
-            c.get("url", "conmebol.html"),
+            f"conmebol.html#{article_anchor(c['url'])}",
             f"{zh} {c.get('situacion_es', '')} {c.get('estadio', '')}",
         )
     # RFEF（判例情形中文）
@@ -262,14 +263,14 @@ def build_docs():
                 f"hns.html#hns-{r['id']}-{inc['no']}",
                 paras,
             )
-    # PRO 文章（外链官方页）
+    # 先到本地条目，离线可查看元数据，联网后可从该条目进入官方页。
     pro = _read(PRO_JSON)
     for a in pro.get("articles", []):
         add(
             "intl",
             "PRO",
             f"{series_name(a)} · {a.get('title', '')[:90]}",
-            a.get("url", ""),
+            f"pro.html#{article_anchor(a['url'])}",
             f"{a.get('title', '')} {a.get('league', '')}",
         )
     return docs

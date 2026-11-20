@@ -9,9 +9,16 @@
   搜索对比卡片的 data-search（小写子串）；年份组标题随组内可见性折叠。
 """
 
+import hashlib
 import json
 
 from lib.theme import icon
+
+
+def article_anchor(url):
+    """A stable local target for an official permalink, independent of list order."""
+    digest = hashlib.sha256(url.rstrip("/").encode("utf-8")).hexdigest()
+    return "article-" + digest[:16]
 
 
 def esc(s):
@@ -53,6 +60,8 @@ def head_css(max_width=1040, compact_years=False):
 .src-banner a:hover{{text-decoration:underline}}
 .wrap{{max-width:{max_width}px;margin:0 auto;padding:18px 16px 60px}}
 .chips{{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 18px}}
+:where(.acard,.ccard,.ecard)[id]{{scroll-margin-block-start:calc(var(--top-h) + 12px)}}
+:where(.acard,.ccard,.ecard):target{{outline:2px solid var(--brand);outline-offset:2px}}
 {year_h}
 .year-h small{{font-size:12px;color:var(--muted);font-weight:400;margin-left:8px}}
 .empty{{display:none;text-align:center;color:var(--muted);padding:40px 0;font-size:14px}}

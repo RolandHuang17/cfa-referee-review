@@ -11,6 +11,7 @@ from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.pagelib import (
+    article_anchor,
     SEARCH_CSS,
     esc,
     filter_js,
@@ -188,12 +189,12 @@ def build_page(data, zh=None):
                 c.get("situacion_es"),
                 label,
             )
-            rows += f"""<div class="ccard" data-kinds="{esc(kinds)}" data-search="{blob}">
+            rows += f"""<article class="ccard" id="{article_anchor(c["url"])}" tabindex="-1" data-kinds="{esc(kinds)}" data-search="{blob}">
   <div class="chead"><span class="cmatch">{esc(c.get("match") or c["title"])}</span>
     <span class="badge {badge}">{esc(label)}</span></div>
   <div class="cinfo">{meta}{es_sit}</div>
   <div class="clinks">{links}</div>
-</div>"""
+</article>"""
         secs += (
             f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>'
             f'{len(ycases)} 案</small></h3><div id="ybody-{esc(y)}">{rows}</div>'

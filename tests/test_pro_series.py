@@ -9,6 +9,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "scripts"))
 import build_pro
 import build_search
 import fetch_pro
+from lib.pagelib import article_anchor
 from lib.pro_series import series_name
 
 
@@ -21,7 +22,8 @@ def test_pro_search_and_index_match_article_series(tmp_path, monkeypatch):
         parsed = fetch_pro.classify(article["title"])
         assert parsed["lang"] == article["lang"] == "es"
         assert parsed["series_name"] == article["series_name"] == "VAR a Fondo（西）"
-        assert docs[article["url"]].startswith(article["series_name"] + " · ")
+        target = "pro.html#" + article_anchor(article["url"])
+        assert docs[target].startswith(article["series_name"] + " · ")
     sample = dict(spanish[0], series_name="Inside Video Review（VAR 评析·英）")
     assert series_name(sample) == "VAR a Fondo（西）"
     monkeypatch.setattr(build_pro, "SITE", tmp_path)

@@ -13,6 +13,7 @@ from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
 
 from lib.pagelib import (
+    article_anchor,
     SEARCH_CSS,
     esc,
     filter_js,
@@ -129,12 +130,12 @@ def build_page(data):
                 a.get("league"),
                 f"#{a['round']}" if a.get("round") else "",
             )
-            rows += f"""<div class="acard" data-kinds="{esc(kinds)}" data-search="{blob}">
+            rows += f"""<article class="acard" id="{article_anchor(a["url"])}" tabindex="-1" data-kinds="{esc(kinds)}" data-search="{blob}">
   <div class="t"><b>{esc(a["title"])}</b><small>{esc(a.get("date", ""))}</small></div>
   {tags}
   {vids}
   <a class="go" href="{esc(a["url"])}" target="_blank" rel="noopener noreferrer">{icon("external", 11)} 官方页</a>
-</div>"""
+</article>"""
         secs += (
             f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>{len(yarts)} 篇</small></h3>'
             f'<div id="ybody-{esc(y)}">{rows}</div>'

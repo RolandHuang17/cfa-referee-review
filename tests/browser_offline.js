@@ -1,10 +1,29 @@
-// 本地验收服务器在 /study/ 提供站点，/__upgrade 更换 SW 版本。
+// Local-only test server mounts the same site at four scopes and switches worker versions.
 async (page) => {
   const base = 'http://127.0.0.1:8876';
   function check(condition, message) {
     if (!condition) throw new Error(message);
   }
-  await page.goto(base + '/index.html');
+  async function controlled(tab, scope) {
+    await tab.waitForFunction(url => navigator.serviceWorker.controller?.scriptURL === url, base + scope + "sw.js");
+  }
+  async function waitForCaches(tab,kept,removed) {
+    await tab.evaluate(async ({kept,removed}) => {
+      const deadline = Date.now() + 15000;
+      do {
+        const reg = await navigator.serviceWorker.getRegistration(), names = await caches.keys();
+        if (!reg.installing && !reg.waiting && reg.active?.state === "activated" &&
+            names.includes(kept) && !names.includes(removed)) return;
+        await new Promise(resolve => setTimeout(resolve, 60));
+      } while (Date.now() < deadline);
+      throw Error("缓存版本未稳定");
+    }, {kept,removed});
+  }
+  const previousName = (scope, version) => "cfa-site-" + encodeURIComponent(scope) + "-" + version;
+  const currentName = (scope, version) => "cfa-site:" + encodeURIComponent(scope) + ":" + version;
+  // Start with real registrations and populated old-format caches on ordinary sibling paths.
+  await page.goto(base + '/icon.svg');
+  const previous = await page.evaluate(async () => (await fetch('/__previous', {cache:'no-store'})).text());
   await page.evaluate(async () => {
     const other = await caches.open('cfa-site-%2Fother%2F-v1');
     await other.put('/other/marker', new Response('sibling'));
@@ -15,41 +34,98 @@ async (page) => {
     await legacy.put('/study/archive.html?lang=en', new Response('English archive'));
     await legacy.put('/study/archive.html?lang=es', new Response('Spanish archive'));
   });
+  const root = await page.context().newPage();
+  await root.goto(base + '/index.html');
+  await controlled(root,'/');
   await page.goto(base + '/study/index.html');
-  await page.evaluate(async () => {
-    await navigator.serviceWorker.ready;
-    if (!navigator.serviceWorker.controller) {
-      await new Promise(resolve => navigator.serviceWorker.addEventListener('controllerchange', resolve, {once:true}));
-    }
-  });
+  await controlled(page,'/study/');
+  const children = [];
+  for (const scope of ['/-club/','/study/-club/']) {
+    const tab = await page.context().newPage();
+    await tab.goto(base + scope + 'index.html');
+    await controlled(tab,scope);
+    await tab.goto(base + scope + 'rules.html#law-12');
+    check((await tab.title()).includes('竞赛规则'), '子目录首次安装和浏览失败 '+scope);
+    children.push({tab,scope});
+  }
   for (const term of ['手球','红牌','越位']) {
     await page.goto(base + '/study/search.html?q=' + encodeURIComponent(term));
     check(await page.locator('#q').inputValue() === term, '在线搜索丢失查询参数');
   }
   // Inspect the live cache before upgrade so a migration cannot mask duplicate writes.
-  const searchKeys = await page.evaluate(async () => {
-    const name = (await caches.keys()).find(k => k.startsWith('cfa-site-%2Fstudy%2F-'));
+  const searchKeys = await page.evaluate(async name => {
     const cache = await caches.open(name);
     return (await cache.keys()).map(r => new URL(r.url)).filter(u => u.pathname === '/study/search.html')
       .map(u => u.search);
-  });
+  }, previousName('/study/', previous));
   check(searchKeys.length === 1 && searchKeys[0] === '', '不同搜索词重复缓存了静态 HTML');
   await page.goto(base + '/study/season-2026.html#case-229');
   await page.locator('#btnLite').click();
   await page.locator('#noteBox').fill('离线升级测试笔记 [00:05]');
   await page.goto(base + '/study/index.html');
-  const revision = await page.evaluate(async () => {
-    const version = await (await fetch('/__upgrade')).text();
-    await (await navigator.serviceWorker.getRegistration()).update();
-    return version;
+  // Seed the historic shared cache after those installations. Parent migration must
+  // not claim a separate app's documents simply because they sit below the parent URL.
+  await page.evaluate(async () => {
+    const unknown = await caches.open('cfa-site-%2Fstudy%2F-library');
+    await unknown.put('/study/library.txt', new Response('independent cache'));
+    const shared = await caches.open('cfa-site-202610261603');
+    const cover = await fetch('/study/assets/og-card.png');
+    if (!cover.ok) throw Error('未找到随包封面');
+    await shared.put('/study/assets/og-card.png',cover);
+    await shared.put('/study/-club/club-only.html', new Response('club lesson'));
   });
-  await page.waitForFunction(async v => {
-    const scoped = (await caches.keys()).filter(k => k.startsWith('cfa-site-%2Fstudy%2F-'));
-    return scoped.length === 1 && scoped[0].endsWith('offline-test-' + v);
-  }, revision);
+  const quota = await page.context().newCDPSession(page);
+  let revision;
+  try {
+    await quota.send('Storage.overrideQuotaForOrigin', {origin:base,quotaSize:1024});
+    revision = await page.evaluate(async () => (await fetch('/__upgrade', {cache:'no-store'})).text());
+    await page.evaluate(async () => {
+      const reg = await navigator.serviceWorker.getRegistration();
+      const failed = new Promise((resolve,reject) => {
+        const timer = setTimeout(() => reject(Error("配额不足的升级没有结束")), 15000);
+        reg.addEventListener("updatefound", () => {
+          const worker = reg.installing;
+          function changed() {
+            if (worker.state === "redundant" || worker.state === "activated") {
+              clearTimeout(timer); resolve(worker.state);
+            }
+          }
+          worker.addEventListener("statechange",changed);
+          changed();
+        }, {once:true});
+      });
+      await reg.update().catch(() => {});
+      if (await failed !== "redundant") throw Error("测试配额没有中止新安装");
+    });
+    await waitForCaches(page,previousName('/study/',previous),currentName('/study/',revision));
+    await page.context().setOffline(true);
+    const stillAvailable = await page.reload();
+    check(stillAvailable?.fromServiceWorker() && (await page.title()).includes('裁判'), '安装失败影响了已开的离线首页');
+  } finally {
+    await page.context().setOffline(false);
+    await quota.send('Storage.overrideQuotaForOrigin', {origin:base});
+    await quota.detach();
+  }
+  for (const [tab,scope] of [[root,'/'],[page,'/study/']]) {
+    await tab.evaluate(async () => { await (await navigator.serviceWorker.getRegistration()).update(); });
+    await waitForCaches(tab,currentName(scope,revision),previousName(scope,previous));
+    await controlled(tab,scope);
+  }
   const keys = await page.evaluate(() => caches.keys());
-  check(keys.includes('cfa-site-%2Fother%2F-v1'), '升级误删了同域另一个项目的缓存');
+  check(keys.includes('cfa-site-%2Fother%2F-v1') && keys.includes('cfa-site-%2Fstudy%2F-library') &&
+    keys.includes('cfa-site-202610261603'), '升级误删了其它应用、未知版本或共享缓存');
+  for (const {scope} of children)
+    check(keys.includes(previousName(scope,previous)), '父目录升级误删子目录缓存 '+scope);
   await page.context().setOffline(true);
+  for (const {tab,scope} of children) {
+    const response = await tab.reload();
+    check(response?.fromServiceWorker() && (await tab.title()).includes('竞赛规则'), '已开子站断网后无法重载 '+scope);
+    await controlled(tab,scope);
+    await tab.close();
+  }
+  const rootResponse = await root.reload();
+  check(rootResponse?.fromServiceWorker() && (await root.title()).includes('裁判'), '已开的根站点在升级后无法离线使用');
+  await root.close();
   await page.goto(base + '/study/season-2026.html#case-229');
   check(await page.locator('#noteBox').inputValue() === '离线升级测试笔记 [00:05]', '升级后笔记丢失');
   check((await page.title()).includes('2026'), '升级后已访问判例无法离线读');
@@ -67,15 +143,18 @@ async (page) => {
   check(page.url() === base + '/study/index.html' && (await page.title()).includes('裁判'), '离线首页不可用');
   await page.goto(base + '/study/never-visited/nested.html');
   await page.locator('#q404').fill('越位');
-  await page.locator('#go404').click();
-  check(new URL(page.url()).pathname === '/study/search.html', '嵌套错误页的搜索地址错误');
-  check(await page.locator('#q').count() === 1 && await page.locator('#q').inputValue() === '越位',
-    '已缓存的搜索页未能离线打开新关键词');
+  await Promise.all([
+    page.waitForURL(url => url.pathname === '/study/search.html' && url.searchParams.get('q') === '越位',
+      {waitUntil:'domcontentloaded'}),
+    page.locator('#go404').click(),
+  ]);
+  check(await page.locator('#q').inputValue() === '越位', '已缓存的搜索页未能离线打开新关键词');
   check(await page.locator('#sres a').count() > 0, '离线搜索未渲染结果');
-  const cached = await page.evaluate(async v => {
-    const name = (await caches.keys()).find(k => k.endsWith('offline-test-' + v));
+  const cached = await page.evaluate(async name => {
     return (await (await caches.open(name)).keys()).map(r => r.url);
-  }, revision);
+  }, currentName('/study/',revision));
+  check(cached.includes(base + '/study/assets/og-card.png'), '同一站点共享缓存中的随包资产丢失');
+  check(!cached.some(url => url.includes('/-club/')), '共享缓存混入子站独有的课程');
   check(!cached.some(url => url.includes('/videos/')), '视频被缓存');
   check(cached.every(url => new URL(url).origin === base), '缓存混入外域资源');
   for (const html of ['search.html','rap.html']) {
@@ -96,15 +175,14 @@ async (page) => {
       return {ok:response.ok, svg:(await response.text()).includes('<svg')};
     });
     check(resource.ok && resource.svg, '配额不足时联网静态资源变成 503');
-    const failedWrites = await page.evaluate(async v => {
-      const name = (await caches.keys()).find(k => k.endsWith('offline-test-' + v));
+    const failedWrites = await page.evaluate(async name => {
       const cache = await caches.open(name);
       return !(await cache.match('cheatsheet.html')) && !(await cache.match('icon.svg?quota-check=1'));
-    }, revision);
+    }, currentName('/study/',revision));
     check(failedWrites, '配额测试没有触发真实缓存写入失败');
   } finally {
     await devtools.send('Storage.overrideQuotaForOrigin', {origin:base});
     await devtools.detach();
   }
-  return 'PASS 离线升级/查询缓存合并与迁移/笔记/404与同域隔离/配额不足时联网导航与静态资源';
+  return 'PASS 根和子目录真实安装/已打开父子站升级后离线/查询迁移与笔记/404/真实配额下的联网访问';
 }

@@ -11,9 +11,12 @@
 
 import hashlib
 import json
+from pathlib import PurePosixPath
+from urllib.parse import quote
 
 from lib.pages import PAGE_FILES
-from lib.paths import SITE
+from lib.paths import SCALE_JSON, SITE
+from package_site import release_members
 
 MANIFEST = """{
   "name": "裁判学习一站式平台",
@@ -42,9 +45,20 @@ ICON_SVG = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96">
 SW_TEMPLATE = r""""use strict";
 const VERSION = "__BUILD_TS__";
 const SCOPE = new URL(self.registration.scope).pathname;
-const PREFIX = "cfa-site-" + encodeURIComponent(SCOPE) + "-";
+const encodedScope = encodeURIComponent(SCOPE);
+const PREFIX = "cfa-site:" + encodedScope + ":";
+const OLD_PREFIX = "cfa-site-" + encodedScope + "-";
 const CACHE = PREFIX + VERSION;
 const STATIC_PAGES = new Set(__STATIC_PAGES__);
+const BUNDLED_ASSETS = new Set(__BUNDLED_ASSETS__);
+// Released scoped builds end in exactly 16 lowercase hex digits. "-" can also
+// start a child's directory name, so a prefix match alone does not establish ownership.
+function cacheScope(key){
+  const match = /^cfa-site:([^:]+):[0-9a-f]{16}$/.exec(key) ||
+    /^cfa-site-(.+)-[0-9a-f]{16}$/.exec(key);
+  return match && match[1];
+}
+function sharedCache(key){ return /^cfa-site-\d{12}$/.test(key); }
 const owned = (url) => {
   const parsed = new URL(url);
   return parsed.origin === location.origin && parsed.pathname.startsWith(SCOPE)
@@ -57,30 +71,47 @@ function cacheKey(req){
   url.search = "";
   return new Request(url.href, {headers:req.headers});
 }
+async function populate(cache, keys){
+  // Process old shared caches first, so the scoped version wins if both have a page.
+  const mine = keys.filter(k => k !== CACHE && cacheScope(k) === encodedScope);
+  const previous = keys.filter(sharedCache).concat(mine.filter(k => k.startsWith(OLD_PREFIX)),
+    mine.filter(k => k.startsWith(PREFIX)));
+  const children = [...new Set(keys.map(cacheScope).filter(path => path && path !== encodedScope &&
+    path.startsWith(encodedScope) && path.endsWith("%2F")))];
+  for (const key of previous){
+    const old = await caches.open(key);
+    for (const req of await old.keys()){
+      if (!owned(req.url)) continue;
+      // Timestamped caches were shared by every deployment on the origin. A nested
+      // path might belong to a separate app. Keep only this site's known nested assets.
+      const pathname = new URL(req.url).pathname;
+      const encodedPath = encodeURIComponent(pathname);
+      if (children.some(child => encodedPath.startsWith(child))) continue;
+      const path = pathname.slice(SCOPE.length);
+      if (sharedCache(key) && path.includes("/") && !BUNDLED_ASSETS.has(path)) continue;
+      const response = await old.match(req);
+      if (response && response.ok) await cache.put(cacheKey(req), response);
+    }
+  }
+  await cache.addAll(["index.html", "404.html", "icon.svg"]);
+}
 self.addEventListener("install", e => {
   e.waitUntil((async () => {
-    const cache = await caches.open(CACHE);
     const keys = await caches.keys();
-    // Process old shared caches first, so the scoped version wins if both have a page.
-    const previous = keys.filter(k => /^cfa-site-\d+$/.test(k))
-      .concat(keys.filter(k => k !== CACHE && k.startsWith(PREFIX)));
-    for (const key of previous){
-      const old = await caches.open(key);
-      for (const req of await old.keys()){
-        if (owned(req.url)){
-          const response = await old.match(req);
-          if (response && response.ok) await cache.put(cacheKey(req), response);
-        }
-      }
+    try {
+      await populate(await caches.open(CACHE), keys);
+    } catch (error) {
+      // An incomplete install must leave room for a retry. Keep any pre-existing cache.
+      if (!keys.includes(CACHE)) await caches.delete(CACHE).catch(() => {});
+      throw error;
     }
-    await cache.addAll(["index.html", "404.html", "icon.svg"]);
     await self.skipWaiting();
   })());
 });
 self.addEventListener("activate", e => {
   e.waitUntil((async () => {
     for (const key of await caches.keys()){
-      if (key.startsWith(PREFIX) && key !== CACHE) await caches.delete(key);
+      if (key !== CACHE && cacheScope(key) === encodedScope) await caches.delete(key);
     }
     await self.clients.claim();
   })());
@@ -126,12 +157,25 @@ self.addEventListener("fetch", e => {
 
 
 def main():
-    template = SW_TEMPLATE.replace("__STATIC_PAGES__", json.dumps(PAGE_FILES))
+    assets = {name for name in release_members() if name.startswith("assets/")}
+    scale = json.loads(SCALE_JSON.read_text(encoding="utf-8"))
+    for season in scale.values():
+        for section in season.get("sections", []) if isinstance(season, dict) else []:
+            for group in section["groups"]:
+                for item in group["items"]:
+                    poster = item.get("poster")
+                    if poster and PurePosixPath(poster).parent == PurePosixPath(
+                        "assets/scale"
+                    ):
+                        assets.add(poster)
+    template = SW_TEMPLATE.replace("__STATIC_PAGES__", json.dumps(PAGE_FILES)).replace(
+        "__BUNDLED_ASSETS__", json.dumps(sorted(map(quote, assets)))
+    )
     # Cache-key or migration changes also require a fresh cache when HTML is unchanged.
     digest = hashlib.sha256(template.encode("utf-8"))
-    for page in sorted(SITE.glob("*.html")):
-        digest.update(page.name.encode("utf-8"))
-        digest.update(page.read_bytes())
+    for name in sorted(PAGE_FILES):
+        digest.update(name.encode("utf-8"))
+        digest.update((SITE / name).read_text(encoding="utf-8").encode("utf-8"))
     ts = digest.hexdigest()[:16]
     (SITE / "manifest.webmanifest").write_text(MANIFEST, encoding="utf-8")
     (SITE / "icon.svg").write_text(ICON_SVG, encoding="utf-8")

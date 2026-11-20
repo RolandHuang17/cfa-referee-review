@@ -75,9 +75,9 @@ flowchart LR
 |---|---|---|
 | 赛季收藏、笔记、已读和上次打开 | 每季独立的 `cfa2026.fav/notes/seen/last` 等键。收藏及笔记的逐条变化写入版本键，并兼容旧聚合键 | 页面之间用 `#case-N` 和分类锚点跳转。跨标签页同一笔记的冲突文本保留供恢复 |
 | 规则高亮、章节笔记和进度 | `cfa2026rules.hl/notes/read` 等键；章节与条款锚点同时被搜索、判例详情引用 | 稳定锚点承担跨页引用。新规则版本需要核对章节变动及个人标注的归属 |
-| 答题和复习 | `cfa.quiz.wrong`、`cfa.quiz.stats`、`cfa.quiz.history`；判分在浏览器完成，历史成绩只保留最近 20 次 | 复习到期时间、历史答案与联赛数据分开。`cfa.streak` 表示本地自然日学习 |
+| 答题和复习 | 每次作答以独立操作写入本地存储，兼容旧错题、统计和历史记录。进行中的模考用本标签页的 `sessionStorage` 保存题序、选项和绝对截止时间 | 重载读回原卷，交卷按尝试身份去重。旧尺度题编号发生碰撞时保留能证实的组累计数。[作答记录](../src/quiz-records.js) · [模考草稿](../src/quiz-session.js) |
 | 教练课单与讲义 | `compare.html#coach` 复用判例目录。课单以赛季和序号引用案例，以独立版本键保存在浏览器。导入教练 JSON 会生成新课单 | `coach-model.js` 只投影学员可见字段，`coach-handout.js` 负责在线及独立文档呈现。分享链接的片段携带编排和题目，独立 HTML 还保存导出时的正文。跨期补充认定来自同一判例目录。[课单模型](../src/coach-model.js) · [讲义输出](../src/coach-handout.js) |
-| 双击 HTML 与 HTTP(S) | 完整版优先本地媒体；轻量版使用文本和官方链接。HTTP(S) 下可为访问过的页面建立 SW 缓存 | 双击方式不注册 SW。联网模式不缓存大视频，跨打开方式迁移个人学习记录使用现有导出与导入 |
-| CI 与交付 | `ci.yml` 执行静态构建、Python 检查及独立浏览器任务。`pages.yml` 由 main 推送或手工触发，`release.yml` 负责发布附件打包 | 发布根是 `site/`。轻量 zip 跳过视频和尺度海报，保留自包含页面与随包声明。[CI](../.github/workflows/ci.yml) · [轻量打包](../scripts/package_site.py) |
+| 双击 HTML 与 HTTP(S) | 完整版优先本地媒体，轻量版使用文本和官方链接。HTTP(S) 的 Service Worker 按安装路径和构建版本隔离缓存 | 双击方式直接读取页面。缓存配额不足时仍可阅读已收到的在线响应，跨访问方式迁移个人资料可导出再导入。[离线构建](../scripts/build_pwa.py) |
+| CI 与交付 | `ci.yml` 执行构建、Python 与浏览器回归。手动运行时，Windows 作业把通过测试的离线 ZIP 保存为 30 天可下载的审阅附件 | `site/` 是发布根。打包器从登记的页面、队徽、图解与站点资源生成 ZIP。Pages 工作流及正式 Release 各有独立入口。[CI](../.github/workflows/ci.yml) · [打包清单](../scripts/package_site.py) |
 
 维护者可以用 `python scripts/validate_schemas.py` 检查数据契约，用 `python scripts/translation_status.py` 查询译文覆盖，用 `python -m pytest tests/ -q` 检查解析、重建、发布保护和完整性。浏览器脚本消费构建后的真实页面，对交互、存储和离线缓存进行独立验证。

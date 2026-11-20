@@ -104,3 +104,94 @@ test("interrupted cleanup cannot duplicate old events when another tab compacts"
   assert.equal(a.read().stats["var-1"].w,130);
   assert.equal(Object.keys(storage).filter(k=>k.includes(".event.")).length,0);
 });
+
+test("a broken event is quarantined as a whole; the recovery export preserves original strings", () => {
+  const {storage,a,b,Records} = setup();
+  const bad1 = Records.prefix+"truncated", bad2 = Records.prefix+"bad-item";
+  const incomplete = JSON.stringify({kind:"attempt",order:1,time:42,answers:[miss("var-q1"),null]});
+  a.write({kind:"attempt",answers:[miss("var-q1")]});
+  storage.setItem(bad1,"{");
+  storage.setItem(bad2,incomplete);
+  assert.equal(b.read().stats["var-q1"].w,1);
+  assert.equal(b.damagedStorage,true);
+  b.write({kind:"attempt",answers:[miss("var-q1")]});
+  assert.equal(a.read().wrong["var-q1"].wrong,2);
+  assert.equal(a.recoveryArchive().records[bad1],"{");
+  assert.equal(a.recoveryArchive().records[bad2],incomplete);
+});
+
+test("an intact independent checkpoint recovers all compacted answers and subsequent events", async () => {
+  const locks = {request:(_,options,cb)=>Promise.resolve().then(()=>cb({}))};
+  const {a,b,storage,Records} = setup(locks);
+  for (let i=0;i<64;i++) a.write({kind:"attempt",answers:[miss("var-q1")]});
+  await new Promise(resolve=>setImmediate(resolve));
+  const cp = storage.getItem(Records.checkpoint);
+  assert.ok(cp);
+  assert.equal(cp,storage.getItem(Records.recovery));
+  assert.equal(Object.keys(storage).filter(k=>k.startsWith(Records.prefix)).length,0);
+  const changed = JSON.parse(cp);
+  changed.state.stats["var-q1"].w=99; // syntactically valid data, mismatched checksum
+  const bad = JSON.stringify(changed);
+  storage.setItem(Records.checkpoint,bad);
+  b.write({kind:"attempt",answers:[miss("var-q1")]});
+  assert.equal(a.read().stats["var-q1"].w,65);
+  assert.equal(a.damagedStorage,true);
+  await a.compact();
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(storage.getItem(Records.checkpoint),bad);
+  assert.equal(a.recoveryArchive().records[Records.checkpoint],bad);
+});
+
+test("partial checkpoints without coverage metadata preserve identifiable counts without counting overlapping events twice", () => {
+  const {a,storage,Records} = setup();
+  a.write({kind:"attempt",answers:[miss("var-q1")]});
+  const partial = JSON.stringify({state:{stats:{"var-q1":{r:0,w:1},"var-q2":{r:4,w:6}},
+    wrong:{"var-q2":{t:"var",wrong:6},bad:null}}});
+  storage.setItem(Records.checkpoint,partial);
+  assert.equal(a.read().stats["var-q1"].w,1);
+  assert.equal(a.state.stats["var-q2"].w,6);
+  a.write({kind:"attempt",answers:[miss("var-q2")]});
+  assert.equal(a.read().stats["var-q2"].w,7);
+  assert.equal(a.read().wrong["var-q2"].wrong,7);
+  assert.equal(a.recoveryArchive().records[Records.checkpoint],partial);
+});
+
+test("unreadable storage cannot acknowledge a retry; confirmation after compaction does not replay the draft twice", async () => {
+  const locks = {request:(_,options,cb)=>Promise.resolve().then(()=>cb({}))};
+  const {a,b,storage} = setup(locks);
+  Object.defineProperty(storage,"setItem",{configurable:true,value() {throw Error("quota");}});
+  a.write({kind:"attempt",answers:[miss("var-q1")]});
+  delete storage.setItem;
+  const blockRead = () => Object.defineProperty(storage,"getItem",{configurable:true,value() {throw Error("read blocked");}});
+  blockRead();
+  assert.equal(a.retry(),false);
+  assert.equal(a.pending.size,1);
+  assert.equal(a.read().stats["var-q1"].w,1);
+  assert.equal(a.recoveryArchive().pending[Array.from(a.pending.keys())[0]].kind,"attempt");
+  delete storage.getItem;
+  Object.defineProperty(storage,"setItem",{configurable:true,value(key,value) {
+    delete this.setItem; this.setItem(key,value); blockRead();
+  }});
+  assert.equal(a.retry(),false);
+  assert.equal(a.pending.size,1);
+  delete storage.getItem;
+  for(let i=0;i<64;i++) b.write({kind:"attempt",answers:[miss("var-q1")]});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(a.retry(),true);
+  assert.equal(a.pending.size,0);
+  assert.equal(a.read().stats["var-q1"].w,65);
+});
+
+test("insufficient quota for redundant checkpoints preserves all events and reclaims the temporary copy", async () => {
+  const locks = {request:(_,options,cb)=>Promise.resolve().then(()=>cb({}))};
+  const {a,storage,Records} = setup(locks);
+  Object.defineProperty(storage,"setItem",{configurable:true,value(key,value) {
+    if(key===Records.checkpoint) throw Error("quota");
+    StorageMock.prototype.setItem.call(this,key,value);
+  }});
+  for(let i=0;i<64;i++) a.write({kind:"attempt",answers:[miss("var-q1")]});
+  await new Promise(resolve=>setImmediate(resolve));
+  assert.equal(storage.getItem(Records.recovery),null);
+  assert.equal(Object.keys(storage).filter(k=>k.startsWith(Records.prefix)).length,64);
+  assert.equal(a.read().stats["var-q1"].w,64);
+});

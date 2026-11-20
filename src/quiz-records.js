@@ -3,12 +3,15 @@
 class QuizRecords {
   static prefix = "cfa.quiz.v2.event.";
   static checkpoint = "cfa.quiz.v2.checkpoint";
+  static recovery = "cfa.quiz.v2.recovery";
   static intervals = [0, 1, 3, 7, 14, 30];
 
   constructor(storage) {
     try { this.storage = storage ?? globalThis.localStorage; }
     catch (_) { /* Browser storage is disabled. Keep new attempts in memory. */ }
     this.pending = new Map();
+    this.savedPending = new Set();
+    this.checked = new Map();
     this.state = this.empty();
     this.read();
   }
@@ -16,11 +19,12 @@ class QuizRecords {
     return {wrong:Object.create(null), stats:Object.create(null), history:[], order:0, damaged:0};
   }
   static readWrong() {
-    try { return new QuizRecords(localStorage).state.wrong; }
-    catch (_) { return {}; }
+    if (!this.portalReader) this.portalReader = new QuizRecords();
+    else this.portalReader.read();
+    return this.portalReader.state.wrong;
   }
   static related(key) {
-    return key === null || key.startsWith(this.prefix) || key === this.checkpoint ||
+    return key === null || key.startsWith(this.prefix) || key === this.checkpoint || key === this.recovery ||
       ["cfa.quiz.wrong", "cfa.quiz.stats", "cfa.quiz.history"].includes(key);
   }
   static object(value) {
@@ -72,49 +76,105 @@ class QuizRecords {
     }
     return rows;
   }
-  legacy() {
+  static validResult(row) {
+    return this.object(row) && [row.got,row.max,row.n].every(this.count) && row.got <= row.max;
+  }
+  static validEvent(event) {
+    if (!this.object(event) || !this.count(event.order) || !event.order || !this.count(event.time)) return false;
+    const id = value => typeof value === "string" && value.length > 0;
+    switch (event.kind) {
+    case "attempt":
+      return Array.isArray(event.answers) && event.answers.length > 0 && event.answers.every(item => {
+        if (!this.object(item) || !id(item.id)) return false;
+        if ("miss" in item) item.miss = this.wrongEntry(item.miss);
+        return true;
+      }) && (!("exam" in event) || this.validResult(event.exam));
+    case "star": return id(event.id) && typeof event.value === "boolean";
+    case "remove": return Array.isArray(event.ids) && event.ids.every(id);
+    case "import":
+      if (!this.object(event.rows)) return false;
+      for (const [key,row] of Object.entries(event.rows)) {
+        if (!id(key)) return false;
+        event.rows[key] = this.wrongEntry(row);
+      }
+      return true;
+    default: return false;
+    }
+  }
+  cleanState(raw) {
     const state = this.empty();
-    const load = (name, fallback) => {
-      const raw = this.storage.getItem(name);
-      if (raw === null) return fallback;
-      try {
-        const result = JSON.parse(raw);
-        if (Array.isArray(fallback) ? Array.isArray(result) : QuizRecords.object(result)) return result;
-      } catch (_) { /* Report the unreadable key while retaining the original bytes. */ }
-      state.damaged++;
-      return fallback;
-    };
-    for (const [id, row] of Object.entries(load("cfa.quiz.wrong", {}))) {
+    if (!QuizRecords.object(raw.wrong)) state.damaged++;
+    else for (const [id,row] of Object.entries(raw.wrong)) {
       try { state.wrong[id] = QuizRecords.wrongEntry(row); }
       catch (_) { state.damaged++; }
     }
-    for (const [id, row] of Object.entries(load("cfa.quiz.stats", {}))) {
-      if (QuizRecords.object(row) && QuizRecords.count(row.r) && QuizRecords.count(row.w)) state.stats[id] = row;
+    if (!QuizRecords.object(raw.stats)) state.damaged++;
+    else for (const [id,row] of Object.entries(raw.stats)) {
+      if (QuizRecords.object(row) && QuizRecords.count(row.r) && QuizRecords.count(row.w)) state.stats[id] = {r:row.r,w:row.w};
       else state.damaged++;
     }
-    for (const h of load("cfa.quiz.history", [])) {
-      if (QuizRecords.object(h) && [h.t,h.got,h.max,h.n].every(QuizRecords.count)) state.history.push(h);
+    if (!Array.isArray(raw.history)) state.damaged++;
+    else for (const h of raw.history) {
+      if (QuizRecords.validResult(h) && QuizRecords.count(h.t)) state.history.push(h);
       else state.damaged++;
     }
     state.history = state.history.slice(0,20);
     return state;
   }
+  legacy() {
+    const load = (key,fallback) => {
+      const raw = this.storage.getItem(key);
+      if (raw === null) return fallback;
+      try { return JSON.parse(raw); } catch (_) { return null; }
+    };
+    return this.cleanState({wrong:load("cfa.quiz.wrong",{}),stats:load("cfa.quiz.stats",{}),history:load("cfa.quiz.history",[])});
+  }
+  static checksum(state, covered) {
+    const bytes = JSON.stringify([state,covered]);
+    let hash = 2166136261;
+    for (let i=0; i<bytes.length; i++) hash = Math.imul(hash ^ bytes.charCodeAt(i),16777619);
+    return (hash >>> 0).toString(16);
+  }
+  decodeCheckpoint(raw) {
+    if (this.checked.has(raw)) return this.checked.get(raw);
+    let candidate = null;
+    try {
+      const parsed = JSON.parse(raw);
+      if (QuizRecords.object(parsed?.state)) {
+        const state = this.cleanState(parsed.state);
+        const validOrder = QuizRecords.count(parsed.state.order);
+        const validCovered = QuizRecords.strings(parsed.covered) && parsed.covered.every(key=>key.startsWith(QuizRecords.prefix));
+        const intact = parsed.checksum === undefined || parsed.checksum === QuizRecords.checksum(parsed.state,parsed.covered);
+        const complete = validOrder && validCovered && intact && !state.damaged;
+        state.order = validOrder ? parsed.state.order : 0;
+        state.damaged += QuizRecords.count(parsed.state.damaged) ? parsed.state.damaged : 0;
+        candidate = {state,complete,covered:validCovered ? new Set(parsed.covered) : null};
+      }
+    } catch (_) { /* The other copy or surviving original events may still be readable. */ }
+    this.checked.set(raw,candidate);
+    return candidate;
+  }
+  cloneState(state) {
+    // Replay replaces individual records, so copying only the maps and the history list
+    // keeps the cached, validated checkpoint immutable.
+    return {...state,wrong:Object.assign(Object.create(null),state.wrong),
+      stats:Object.assign(Object.create(null),state.stats),history:state.history.slice()};
+  }
   static apply(state, event) {
     state.order = Math.max(state.order,event.order);
     if (event.kind === "attempt") {
       for (const item of event.answers) {
-        const stat = state.stats[item.id] ??= {r:0,w:0};
+        const stat = state.stats[item.id] || {r:0,w:0};
         const entry = state.wrong[item.id];
         if (item.miss) {
-          stat.w++;
+          state.stats[item.id] = {r:stat.r,w:stat.w+1};
           state.wrong[item.id] = {...item.miss, star:entry?.star || false, wrong:(entry?.wrong || 0)+1,
             stage:0, done:false, last:event.time, due:event.time};
         } else {
-          stat.r++;
+          state.stats[item.id] = {r:stat.r+1,w:stat.w};
           if (entry) {
-            entry.stage = Math.min((entry.stage || 0)+1, this.intervals.length-1);
-            entry.due = event.time + this.intervals[entry.stage]*86400000;
-            entry.done = entry.stage === this.intervals.length-1;
+            const stage = Math.min((entry.stage || 0)+1, this.intervals.length-1);
+            state.wrong[item.id] = {...entry,stage,due:event.time + this.intervals[stage]*86400000,done:stage === this.intervals.length-1};
           }
         }
       }
@@ -123,7 +183,7 @@ class QuizRecords {
         state.history.length = Math.min(state.history.length,20);
       }
     } else if (event.kind === "star") {
-      if (state.wrong[event.id]) state.wrong[event.id].star = event.value;
+      if (state.wrong[event.id]) state.wrong[event.id] = {...state.wrong[event.id],star:event.value};
     } else if (event.kind === "remove") {
       for (const id of event.ids) delete state.wrong[id];
     } else if (event.kind === "import") {
@@ -133,25 +193,82 @@ class QuizRecords {
       }
     }
   }
-  capture() {
-    // The checkpoint is published before its included keys are removed. Retry if
-    // a compactor published a different checkpoint while this tab read the keys.
-    let raw, state, entries, covered;
-    do {
-      raw = this.storage.getItem(QuizRecords.checkpoint);
-      const cp = raw === null ? null : JSON.parse(raw);
-      state = cp ? cp.state : this.legacy();
-      state.wrong = Object.assign(Object.create(null), state.wrong);
-      state.stats = Object.assign(Object.create(null), state.stats);
-      covered = new Set(cp?.covered);
-      entries = [];
-      for (const key of Object.keys(this.storage)) {
-        if (!key.startsWith(QuizRecords.prefix) || covered.has(key)) continue;
-        const value = this.storage.getItem(key);
-        if (value !== null) entries.push([key,JSON.parse(value)]);
+  mergeFragment(state, fragment) {
+    // Without usable checkpoint metadata a surviving row and an old event may describe
+    // the same attempt. Keep the larger verifiable count; never add them together.
+    for (const [id,stat] of Object.entries(fragment.stats)) {
+      const other = state.stats[id] || {r:0,w:0};
+      state.stats[id] = {r:Math.max(stat.r,other.r),w:Math.max(stat.w,other.w)};
+    }
+    for (const [id,row] of Object.entries(fragment.wrong)) {
+      const other = state.wrong[id];
+      if (!other) state.wrong[id] = row;
+      else {
+        const latest = (row.last || 0) >= (other.last || 0) ? row : other;
+        state.wrong[id] = {...latest,wrong:Math.max(row.wrong || 0,other.wrong || 0)};
       }
-    } while (raw !== this.storage.getItem(QuizRecords.checkpoint));
-    return {state,entries,covered};
+    }
+    // Preserve genuine identical exams within a single source, including timestamp ties.
+    const counts = new Map();
+    const identity = h => [h.t,h.got,h.max,h.n].join("/");
+    for (const h of state.history) counts.set(identity(h),(counts.get(identity(h)) || 0)+1);
+    for (const h of fragment.history) {
+      const key = identity(h), n = counts.get(key) || 0;
+      if (n) counts.set(key,n-1);
+      else state.history.push(h);
+    }
+    state.history.sort((a,b)=>b.t-a.t);
+    state.history = state.history.slice(0,20);
+    state.order = Math.max(state.order,fragment.order);
+  }
+  scan(primary, recovery) {
+    const snapshots = [...new Set([primary,recovery].filter(raw=>raw !== null))];
+    for (const key of this.checked.keys()) if (!snapshots.includes(key)) this.checked.delete(key);
+    const candidates = snapshots.map(raw=>this.decodeCheckpoint(raw));
+    const damagedSnapshot = candidates.some(cp=>!cp?.complete);
+    const sorted = candidates.filter(Boolean).sort((a,b)=>Number(b.complete)-Number(a.complete) || b.state.order-a.state.order);
+    const chosen = sorted[0];
+    let state = chosen?.complete ? this.cloneState(chosen.state) : this.legacy();
+    const covered = chosen?.covered || new Set();
+    const entries = [], uncertain = [];
+    const observed = new Map();
+    let damaged = damagedSnapshot, size = 0;
+    for (const key of Object.keys(this.storage)) {
+      if (!key.startsWith(QuizRecords.prefix)) continue;
+      const raw = this.storage.getItem(key);
+      if (raw === null) continue;
+      let event;
+      try {
+        event = JSON.parse(raw);
+        if (!QuizRecords.validEvent(event)) throw Error("无效操作");
+      } catch (_) { damaged = true; continue; }
+      observed.set(key,raw);
+      if (covered.has(key)) {
+        if (chosen && !chosen.complete) uncertain.push([key,event]);
+      } else if (chosen && !chosen.complete && !chosen.covered && !event.afterRecovery &&
+          (!chosen.state.order || event.order <= chosen.state.order)) {
+        uncertain.push([key,event]);
+      } else {
+        entries.push([key,event]);
+        size += raw.length;
+      }
+    }
+    if (chosen && !chosen.complete) {
+      this.replay(state,uncertain);
+      this.mergeFragment(state,chosen.state);
+    }
+    return {state,entries,observed,size,damaged,damagedSnapshot};
+  }
+  capture() {
+    // A compactor publishes both copies before removing the events they contain.
+    // A reader overlapping publication retries from the new pair.
+    let primary, recovery, result;
+    do {
+      primary = this.storage.getItem(QuizRecords.checkpoint);
+      recovery = this.storage.getItem(QuizRecords.recovery);
+      result = this.scan(primary,recovery);
+    } while (primary !== this.storage.getItem(QuizRecords.checkpoint) || recovery !== this.storage.getItem(QuizRecords.recovery));
+    return result;
   }
   replay(state, entries) {
     entries.sort(([a,x],[b,y]) => x.order-y.order || (a < b ? -1 : a > b ? 1 : 0));
@@ -160,11 +277,17 @@ class QuizRecords {
   }
   read() {
     try {
-      const {state,entries} = this.capture();
+      if (!this.storage) this.storage = globalThis.localStorage;
+      const {state,entries,size,damaged,damagedSnapshot} = this.capture();
       this.eventCount = entries.length;
+      this.eventSize = size;
+      this.damagedStorage = damaged;
+      this.damagedSnapshot = damagedSnapshot;
       const combined = new Map(entries);
-      for (const [key,event] of this.pending) combined.set(key,event);
+      for (const [key,event] of this.pending) if (!this.savedPending.has(key)) combined.set(key,event);
       this.state = this.replay(state,[...combined]);
+      for (const key of this.savedPending) this.pending.delete(key);
+      this.savedPending.clear();
       this.unavailable = false;
     } catch (_) { this.unavailable = true; }
     return this.state;
@@ -172,11 +295,13 @@ class QuizRecords {
   write(change, keepDraft = true) {
     const state = this.read();
     const event = {...change,order:state.order+1,time:Date.now()};
+    if (this.damagedStorage) event.afterRecovery = true;
+    const serialized = JSON.stringify(event);
     const token = Array.from(crypto.getRandomValues(new Uint32Array(3)),n=>n.toString(36)).join("-");
     const key = QuizRecords.prefix + token;
     try {
       if (this.unavailable) throw Error("记录暂时不可读取");
-      this.storage.setItem(key,JSON.stringify(event));
+      this.storage.setItem(key,serialized);
     } catch (_) {
       if (!keepDraft) throw Error("浏览器存储不可写，现有记录已保留");
       this.pending.set(key,event);
@@ -184,17 +309,34 @@ class QuizRecords {
       return false;
     }
     QuizRecords.apply(this.state,event);
-    if (this.eventCount >= 64) this.compact();
+    if (!this.damagedSnapshot && (this.eventCount+1 >= 64 || this.eventSize+serialized.length >= 65536)) this.compact();
     return true;
   }
   retry() {
+    // A successful setItem need not still have a key: another tab may already
+    // have compacted it. Never write that operation again while confirming it.
+    this.read();
+    if (this.unavailable) return false;
     for (const [key,event] of this.pending) {
       try { this.storage.setItem(key,JSON.stringify(event)); }
       catch (_) { break; }
-      this.pending.delete(key);
+      this.savedPending.add(key);
     }
     this.read();
-    return !this.pending.size;
+    return !this.unavailable && !this.pending.size;
+  }
+  recoveryArchive() {
+    const records = Object.create(null);
+    let complete = true;
+    try {
+      for (const key of Object.keys(this.storage)) {
+        if (!QuizRecords.related(key)) continue;
+        const raw = this.storage.getItem(key);
+        if (raw !== null) records[key] = raw;
+      }
+    } catch (_) { complete = false; }
+    return {app:"cfa-quiz-records-recovery",exported:new Date().toISOString(),
+      complete,records,pending:Object.fromEntries(this.pending)};
   }
   compact() {
     // Writes never depend on this optional optimization. Only one compactor can
@@ -204,14 +346,24 @@ class QuizRecords {
     this.compacting = true;
     locks.request(QuizRecords.checkpoint, {ifAvailable:true}, lock => {
       if (!lock) return;
-      const {state,entries,covered:previous} = this.capture();
-      if (entries.length < 64) return;
-      // Finish cleanup of an interrupted compaction before forgetting its covered IDs.
-      for (const key of previous) this.storage.removeItem(key);
-      const covered = entries.map(([key])=>key);
+      const {state,entries,size,damagedSnapshot,observed} = this.capture();
+      if (damagedSnapshot || (entries.length < 64 && size < 65536)) return;
       this.replay(state,entries);
-      this.storage.setItem(QuizRecords.checkpoint,JSON.stringify({state,covered}));
-      for (const key of covered) this.storage.removeItem(key);
+      const covered = [...observed.keys()];
+      const raw = JSON.stringify({state,covered,checksum:QuizRecords.checksum(state,covered)});
+      // If either write fails, the original events stay intact and replay is idempotent.
+      const previousRecovery = this.storage.getItem(QuizRecords.recovery);
+      this.storage.setItem(QuizRecords.recovery,raw);
+      try { this.storage.setItem(QuizRecords.checkpoint,raw); }
+      catch (_) {
+        // Free the extra space if quota allowed only one of the two writes.
+        if (previousRecovery === null) this.storage.removeItem(QuizRecords.recovery);
+        else this.storage.setItem(QuizRecords.recovery,previousRecovery);
+        return;
+      }
+      for (const [key,value] of observed) {
+        if (this.storage.getItem(key) === value) this.storage.removeItem(key);
+      }
     }).catch(()=>{}).finally(()=>{ this.compacting = false; });
   }
 }

@@ -93,6 +93,25 @@ async (startPage) => {
       await page.locator("#btnWb").click();
       check(await page.locator("#wbList .wbitem").count()===1,"有效旧记录未保留");
       check(await page.evaluate(()=>localStorage.getItem("cfa.quiz.wrong"))===raw,"恢复时覆盖了旧记录");
+      await page.evaluate(()=>localStorage.setItem(QuizRecords.prefix+"damaged","{"));
+      await page.reload();
+      check((await page.locator("#recordStatus").innerText()).includes("部分本机记录损坏"),"损坏事件缺少提示");
+      const archive = await page.evaluate(async()=>{
+        const original = URL.createObjectURL;
+        let blob;
+        URL.createObjectURL = value => {blob=value;return original.call(URL,value);};
+        try {
+          document.getElementById("recordRecovery").click();
+          return JSON.parse(await blob.text());
+        } finally { URL.createObjectURL = original; }
+      });
+      check(archive.complete && archive.records["cfa.quiz.wrong"]===raw &&
+        archive.records["cfa.quiz.v2.event.damaged"]==="{" && archive.app==="cfa-quiz-records-recovery",
+        "专用本机恢复资料未逐键保存原始字符串");
+      await answer(page,first,"practice",false);
+      await page.reload();
+      check(await page.evaluate(id=>new QuizRecords().state.wrong[id].wrong,first)===2,
+        "有损坏事件时无法继续学习，或已有次数被重复计算");
     } finally {await legacy.close();}
     const access = await browser.newContext({viewport:{width:390,height:844}});
     try {

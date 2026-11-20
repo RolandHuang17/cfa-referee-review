@@ -375,7 +375,7 @@ body{overflow:hidden}
 .qvideo .vkey-tip{right:calc(50% - 400px)}
 @media (max-width:880px){.qvideo .vkey-tip{right:10px}}
 /* 数字角标（键盘选答提示）与快捷键说明 */
-#recordRetry[hidden]{display:none}
+#recordRetry[hidden],#recordRecovery[hidden]{display:none}
 .opt .okn{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
   margin-right:6px;border:1px solid var(--line2);border-radius:4px;font-size:10.5px;
   color:var(--muted);flex:none;font-weight:400}
@@ -483,7 +483,7 @@ __TOPBAR__
 
 <div class="layout"><div class="scroll" id="scroll"><div class="wrap">
 
-<div><span id="recordStatus" role="status"></span> <button id="recordRetry" type="button" class="btn" hidden>重试保存</button></div>
+<div><span id="recordStatus" role="status"></span> <button id="recordRetry" type="button" class="btn" hidden>重试保存</button> <button id="recordRecovery" type="button" class="btn" hidden>导出本机恢复资料</button></div>
 
 <!-- 开始屏 -->
 <section id="scrStart">
@@ -646,8 +646,11 @@ function syncRecordViews(){
   ({wrong,stats:qstats,history:qhist} = quizRecords.state);
   const status = document.getElementById("recordStatus"), retry = document.getElementById("recordRetry");
   retry.hidden = !quizRecords.pending.size;
-  status.textContent = quizRecords.pending.size ? "作答尚未写入浏览器。请在离开前重试；错题也可导出备份。" :
-    quizRecords.unavailable ? "暂时无法读取浏览器记录。" :
+  const damaged = quizRecords.state.damaged || quizRecords.damagedStorage;
+  document.getElementById("recordRecovery").hidden = !(damaged || quizRecords.pending.size || quizRecords.unavailable);
+  status.textContent = quizRecords.pending.size ? "作答尚未写入浏览器。请重试保存，或先导出本机恢复资料。" :
+    quizRecords.unavailable ? "暂时无法读取浏览器记录，保留了此页可读取的作答。" :
+    quizRecords.damagedStorage ? "部分本机记录损坏。已恢复可核实的作答，统计可能不完整。可导出恢复资料保留原始内容。" :
     quizRecords.state.damaged ? "已跳过 " + quizRecords.state.damaged + " 条无法读取的旧记录，其余学习记录可继续使用。原始数据仍保留在本机。" : "";
 }
 syncRecordViews();
@@ -1130,6 +1133,13 @@ function toggleStar(k){
   renderWbStats(); updatePoolTip(); updateFeedbackStar(k);
 }
 
+document.getElementById("recordRecovery").onclick = () => {
+  const backup = quizRecords.recoveryArchive();
+  const blob = new Blob([JSON.stringify(backup,null,1)],{type:"application/json"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "考题记录-本机恢复资料.json";
+  a.click(); setTimeout(()=>URL.revokeObjectURL(a.href),0);
+};
 document.getElementById("recordRetry").onclick = () => { quizRecords.retry(); refreshRecords(); };
 window.addEventListener("beforeunload", e => {
   if (quizRecords.pending.size) { e.preventDefault(); e.returnValue = ""; }

@@ -114,6 +114,7 @@ html[data-rfef-es] p.es,html[data-rfef-es] h4.es{display:block}
 .gnav b{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
 .gnav:hover{background:var(--card2);border-color:var(--brand);color:var(--ink)}
 .gcontent{min-width:0;scroll-margin-top:calc(var(--top-h) + 8px)}
+.gsec[id],.hcard[id]{scroll-margin-block-start:calc(var(--top-h) + 12px)}
 .gsec{margin-bottom:40px}
 .gsec>h2{font-family:var(--font-display);font-size:20px;margin:0 0 10px;letter-spacing:.4px}
 .gsec>h2 small{font-size:13px;color:var(--muted);font-weight:400;margin-left:6px}

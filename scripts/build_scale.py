@@ -447,6 +447,7 @@ HTML = r"""<!DOCTYPE html>
 .gnav b{margin-left:auto;font-size:11px;color:var(--muted);font-weight:600}
 .gnav:hover{background:var(--card2);border-color:var(--brand);color:var(--ink)}
 .gcontent{min-width:0}
+.gsec[id],.hcard[id]{scroll-margin-block-start:calc(var(--top-h) + 12px)}
 .gsec{margin-bottom:34px}
 .gsec h2{font-family:var(--font-display);font-size:19px;margin:0 0 12px;letter-spacing:.4px}
 .gsec h2 b{font-size:13px;color:var(--brand);font-weight:600;margin-left:6px}

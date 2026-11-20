@@ -20,6 +20,7 @@ import sys
 import time
 
 from lib.atomic_json import write_json
+from lib.pro_series import SERIES_NAMES
 from lib.source_cache import SourceCache
 
 from lib.paths import PRO_CACHE, PRO_JSON
@@ -28,8 +29,8 @@ CACHE_READER = SourceCache()
 
 BASE = "https://proreferees.com"
 CATEGORIES = [
-    ("inside-video-review", "Inside Video Review（VAR 评析·英）", "ivr"),
-    ("the-definitive-angle", "The Definitive Angle（文字判例）", "angle"),
+    ("inside-video-review", "ivr"),
+    ("the-definitive-angle", "angle"),
 ]
 DELAY = (1.5, 3.0)
 MAX_PAGES = 30  # 每个分类最多翻页数（防御）
@@ -111,6 +112,7 @@ def classify(title: str) -> dict:
         roundno = rm.group(1) + ("+" + rm.group(2) if rm.group(2) else "")
     return {
         "kind": kind,
+        "series_name": SERIES_NAMES[kind],
         "league": league,
         "round": roundno,
         "lang": "es" if kind == "vaf" else "en",
@@ -122,7 +124,7 @@ def parse_all():
     articles = list(old.get("articles", []))
     checked = []
 
-    for slug, name_cn, kind in CATEGORIES:
+    for slug, category in CATEGORIES:
         for pageno in range(1, MAX_PAGES + 1):
             url = (
                 f"{BASE}/category/{slug}/"
@@ -140,9 +142,7 @@ def parse_all():
                 dm = re.search(r"/(20\d\d)/(\d\d)/(\d\d)/", it["url"])
                 date = f"{dm.group(1)}-{dm.group(2)}-{dm.group(3)}" if dm else ""
                 meta = classify(it["title"])
-                articles.append(
-                    {**it, "date": date, "series": kind, "series_name": name_cn, **meta}
-                )
+                articles.append({**it, "date": date, "series": category, **meta})
                 new += 1
             print(f"{slug} p{pageno}: +{new}", flush=True)
             if new == 0:

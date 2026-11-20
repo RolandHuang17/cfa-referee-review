@@ -23,13 +23,9 @@ from lib.pagelib import (
     searchbar,
 )
 from lib.paths import PRO_JSON, SITE
+from lib.pro_series import series_name
 
-SERIES_LABEL = {
-    "ivr": ("IVR · VAR 评析（英）", "info"),
-    "vaf": ("VAR a Fondo（西）", "pending"),
-    "angle": ("The Definitive Angle（文字判例）", "correct"),
-    "other": ("PRO 文章", "info"),
-}
+SERIES_BADGE = {"vaf": "pending", "angle": "correct"}
 
 HTML = r"""<!DOCTYPE html>
 <html lang="zh-CN">
@@ -116,9 +112,8 @@ def build_page(data):
     for y, yarts in group_by_year(arts, fallback="其他"):
         rows = ""
         for a in yarts:
-            label, badge = SERIES_LABEL.get(
-                a.get("kind", "other"), SERIES_LABEL["other"]
-            )
+            label = series_name(a)
+            badge = SERIES_BADGE.get(a.get("kind"), "info")
             kinds = " ".join(filter(None, [a.get("kind"), a.get("league")]))
             tags = f'<span class="badge {badge}">{esc(label)}</span>'
             if a.get("league"):

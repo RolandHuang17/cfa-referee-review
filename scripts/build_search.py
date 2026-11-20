@@ -15,6 +15,7 @@
 import json
 import re
 from lib.law_blocks import anchored_section
+from lib.pro_series import series_name
 
 from lib.paths import (
     CONMEBOL_JSON,
@@ -267,7 +268,7 @@ def build_docs():
         add(
             "intl",
             "PRO",
-            f"{a.get('series_name', '')} · {a.get('title', '')[:90]}",
+            f"{series_name(a)} · {a.get('title', '')[:90]}",
             a.get("url", ""),
             f"{a.get('title', '')} {a.get('league', '')}",
         )

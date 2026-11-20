@@ -1047,9 +1047,9 @@ function applyLite(){  // 模式切换后原地重渲染（无需刷新页面）
   if (state.sel) select(state.sel, false); else clearDetail();
 }
 function goLite(){
-  document.documentElement.dataset.lite = "1";
-  try { localStorage.setItem("cfa.lite", "1"); } catch(_) {}
-  applyLite();
+  const toggle = document.getElementById("btnLite");
+  if (!LITE) toggle.click();
+  toggle.focus({preventScroll:true});
 }
 document.addEventListener("cfa:lite", applyLite);  // theme.py 顶栏 #btnLite 切换时派发
 

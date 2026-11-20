@@ -1,7 +1,9 @@
 // Run from either the local preview or a double-clicked HTML page.
 async (startPage) => {
   const base = new URL("./", startPage.url());
-  const context = await startPage.context().browser().newContext({viewport:{width:390,height:844}});
+  const context = await startPage.context().browser().newContext({viewport:{width:390,height:844},serviceWorkers:"block"});
+  await context.route(/^https?:/, route => new URL(route.request().url()).origin === base.origin
+    ? route.continue() : route.abort());
   const page = await context.newPage();
   const errors = [];
   page.on("pageerror", err => errors.push(err.message));
@@ -9,7 +11,7 @@ async (startPage) => {
   const button = page.locator("#citationCopy");
   const field = page.locator("#citationText");
   const status = page.locator("#citationStatus");
-  const goto = path => page.goto(new URL(path, base).href);
+  const goto = path => page.goto(new URL(path, base).href, {waitUntil:"domcontentloaded"});
   const deny = () => page.evaluate(() => {
     Object.defineProperty(navigator, "clipboard", {configurable:true, value:{
       writeText() { return Promise.reject(new Error("permission denied")); }

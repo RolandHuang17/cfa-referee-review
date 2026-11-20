@@ -16,7 +16,8 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: ubuntu-latest
+          # setup-python's last Linux x64 builds of 3.9 target Ubuntu 24.04.
+          - os: ubuntu-24.04
             python: "3.9"
           - os: ubuntu-latest
             python: "3.11"
@@ -70,7 +71,7 @@ jobs:
           python tests/browser_server.py 8765 > /tmp/cfa-browser.log 2>&1 &
           python tests/browser_server.py 8876 > /tmp/cfa-offline.log 2>&1 &
           trap 'playwright-cli -s=ci close' EXIT
-          playwright-cli -s=ci open http://127.0.0.1:8765/quiz.html --browser=chrome
+          playwright-cli -s=ci open http://127.0.0.1:8765/quiz.html --browser=chrome --config=tests/browser-cli.json
           for scenario in tests/browser_*.js; do
             echo "::group::$scenario"
             playwright-cli -s=ci run-code --filename "$scenario"

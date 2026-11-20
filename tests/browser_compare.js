@@ -200,8 +200,17 @@ async (startPage) => {
       await page.locator("#panel-b").isVisible(), "页签 End 键未切换到 B 案");
     await page.locator("#swap-pair").click();
     await page.waitForURL(u => u.hash === "#pair-2026-28~2026-1");
-    check(await page.locator('#panel-a a[href="season-2026.html#case-28"]').count() === 1 &&
-      await page.locator('#panel-b a[href="season-2026.html#case-1"]').count() === 1, "交换后两案面板顺序错误");
+    // The URL changes before hashchange renders the two new panels.
+    for (const [side, seq, match] of [["a",28,"青岛海牛 对 青岛西海岸"],["b",1,"山东泰山 对 北京国安"]]) {
+      const panel = page.locator("#panel-" + side);
+      const fullCase = panel.locator('a[href="season-2026.html#case-' + seq + '"]');
+      await fullCase.waitFor({state:"attached"});
+      await page.locator("#side-" + side).click();
+      check(await panel.isVisible() && await panel.getByRole("heading",{level:2}).innerText() === match,
+        "交换后 " + side.toUpperCase() + " 面板未显示 " + match);
+      check(await fullCase.count() === 1 && await fullCase.innerText() === "完整判例",
+        "交换后 " + side.toUpperCase() + " 面板的完整判例链接错误");
+    }
     await page.evaluate(() => Object.defineProperty(navigator,"clipboard",{configurable:true,
       value:{writeText:async () => {throw new DOMException("clipboard unavailable","NotAllowedError");}}}));
     await page.locator("#copy-pair").click();

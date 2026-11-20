@@ -112,5 +112,95 @@ async (startPage) => {
         file + " 继续写入后覆盖了异常原件或新笔记");
     } finally { await context.close(); }
   }
-  return "PASS 赛季和规则笔记快速切换、离开前写失败保留草稿、异常隔离及原件恢复、多设备备份合并与去重";
+  // Save two separate occurrences of a common word, then a selection spanning blocks.
+  const context = await browser.newContext({serviceWorkers:"block"});
+  context.setDefaultTimeout(10000);
+  const rules = await context.newPage();
+  const file = id => new URL("rules.html#" + id, base).href;
+  async function selectText(test, color) {
+    const quote = await rules.evaluate(test => {
+      const body = document.getElementById("secHtml");
+      const walk = document.createTreeWalker(body, NodeFilter.SHOW_TEXT), nodes = [];
+      while (walk.nextNode()) nodes.push(walk.currentNode);
+      const range = document.createRange();
+      if (test === "cross") {
+        const i = nodes.findIndex((n,i) => n.length > 100 && nodes.slice(i+1).some(v => v.length > 5));
+        const first = nodes[i], last = nodes.slice(i+1).find(n => n.length > 5 && n.parentElement.closest("[id]") !== first.parentElement.closest("[id]"));
+        range.setStart(first, 2);
+        range.setEnd(last, 4);
+      } else {
+        const hits = [];
+        for (const node of nodes) {
+          let offset = node.data.indexOf("队员");
+          while (offset >= 0) { hits.push([node,offset]); offset = node.data.indexOf("队员", offset+2); }
+        }
+        const [node, offset] = hits[test];
+        range.setStart(node,offset); range.setEnd(node,offset+2);
+      }
+      range.startContainer.parentElement.scrollIntoView({block:"center"});
+      const selection = getSelection();
+      selection.removeAllRanges(); selection.addRange(range);
+      body.dispatchEvent(new MouseEvent("mouseup", {bubbles:true}));
+      return range.toString();
+    }, test);
+    await rules.locator('#hlBar button[data-c="' + color + '"]').click();
+    return quote;
+  }
+  async function marks(tab) {
+    return tab.locator("#secHtml mark.hl").evaluateAll(items => items.map(mark => {
+      const prefix = document.createRange();
+      prefix.selectNodeContents(document.querySelector("#secHtml"));
+      prefix.setEndBefore(mark);
+      return [prefix.toString().length,mark.className,mark.textContent];
+    }));
+  }
+  async function importRules(tab, data) {
+    const notified = tab.waitForEvent("dialog");
+    await tab.locator("#importFileN").setInputFiles({name:"规则备份.json",mimeType:"application/json",buffer:Buffer.from(JSON.stringify(data))});
+    const dialog = await notified, message = dialog.message();
+    await dialog.accept();
+    return message;
+  }
+  try {
+    await rules.goto(file("law-12"));
+    await selectText(3,"y"); await selectText(8,"g");
+    const selected = await marks(rules);
+    check(selected.length === 2 && selected[0][0] !== selected[1][0], "新高亮展开为全章匹配");
+    await rules.reload();
+    check(JSON.stringify(await marks(rules)) === JSON.stringify(selected), "重复词的选中位置或颜色在刷新后改变");
+    const backed = await download(rules,"#btnExportN");
+    const other = await browser.newContext({serviceWorkers:"block"});
+    try {
+      other.setDefaultTimeout(10000);
+      const second = await other.newPage();
+      await second.goto(file("law-12"));
+      check((await importRules(second,backed)).includes("合并了 2 条") &&
+        JSON.stringify(await marks(second)) === JSON.stringify(selected), "导入时合并了本来位于不同位置的高亮");
+      check((await importRules(second,backed)).includes("合并了 0 条"), "重复导入高亮未正确去重");
+      const shifted = structuredClone(backed); shifted.highlights = [{...backed.highlights[0],
+        anchor:{block:"已经修订的段落",offset:0}}];
+      await importRules(second,shifted);
+      check(await second.locator("#hlMissing").isVisible() && (await marks(second)).length === 2,
+        "正文变动后精确高亮被错误地套到其他段落");
+      // Legacy records have no positions. Keep their historical whole-chapter display.
+      await importRules(second,{app:"cfa-rules-2026",highlights:[{sec:"law-12",quote:"队员",color:"r",ts:10}]});
+      check((await marks(second)).filter(m=>m[1].includes("hr")).length > 2, "旧备份失去历史全章匹配方式");
+      const deletion = second.waitForEvent("dialog");
+      const click = second.locator("mark.hl.hy").first().click();
+      await (await deletion).accept();
+      await click;
+      const kept = (await download(second,"#btnExportN")).highlights;
+      check(kept.length === 3 && kept.some(h=>h.color === "g"), "删除单处精确高亮影响了另一处");
+    } finally { await other.close(); }
+
+    // Use a clean section for the long sample to avoid overlap with the two selections above.
+    await rules.goto(file("law-1"));
+    const quote = await selectText("cross","r");
+    const before = await marks(rules);
+    check(quote.length > 80 && before.length > 1 && before.map(m=>m[2]).join("") === quote,
+      "跨段长选区未完整上色");
+    await rules.reload();
+    check(JSON.stringify(await marks(rules)) === JSON.stringify(before), "长选区刷新后被截断或跨段消失");
+  } finally { await context.close(); }
+  return "PASS 赛季和规则笔记快速切换、离开前写失败保留草稿、异常隔离及原件恢复、多设备备份合并、跨段完整高亮和旧备份匹配";
 }

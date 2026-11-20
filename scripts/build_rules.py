@@ -804,7 +804,7 @@ sb.addEventListener("click", e=>{
 });
 function clearMarks(){
   document.querySelectorAll("#secHtml mark[data-h]").forEach(m=>{
-    const p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
+    const p = m.parentNode; m.replaceWith(...m.childNodes); p.normalize();
   });
 }
 function highlight(q){
@@ -840,14 +840,20 @@ document.addEventListener("click", e=>{
 
 // ---------- 划词高亮（localStorage: cfa2026rules.hl） ----------
 const HL_KEY = "cfa2026rules.hl";
-const highKey = h => JSON.stringify([h.sec, h.ts, h.quote]);
+function highlightKey(h, includeTime) {
+  const key = [h.sec];
+  if (includeTime) key.push(h.ts);
+  key.push(h.quote);
+  if (h.anchor !== undefined) key.push(h.anchor?.block, h.anchor?.offset);
+  return JSON.stringify(key);
+}
+const highKey = h => highlightKey(h, true);
+const highlightOf = new WeakMap();
 const hlStore = new LearningRecords(HL_KEY, false, highKey);
-let hlData = Object.values(hlStore.read());
 function writeHighlight(h, value) {
   const id = highKey(h);
   hlStore.read();
   hlStore.put(id, value, hlStore.base(id));
-  hlData = Object.values(hlStore.read());
   showWriteStatus();
 }
 const secHtmlEl = document.getElementById("secHtml");
@@ -879,90 +885,107 @@ function addHighlight(color){
   if(!sel || sel.isCollapsed || !sel.rangeCount) return;
   const range = sel.getRangeAt(0);
   if(!secHtmlEl.contains(range.commonAncestorContainer)) return;
-  const quote = sel.toString();
+  const quote = range.toString();
   if(quote.replace(/\s+/g,"").length < 2) return;
-  const ts = Date.now();
-  const highlight = {sec: cur, quote, color, ts};
+  const start = range.startContainer;
+  const block = (start.nodeType === Node.ELEMENT_NODE ? start : start.parentElement).closest("[id]");
+  const prefix = document.createRange();
+  prefix.selectNodeContents(block);
+  prefix.setEnd(start, range.startOffset);
+  const anchor = {block:block === secHtmlEl ? "" : block.id, offset:prefix.toString().length};
+  const highlight = {sec:cur, quote, color, ts:Date.now(), anchor};
   writeHighlight(highlight, highlight);
-  const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT);
-  const nodes = []; let n;
-  while((n = walker.nextNode())){
-    if(range.intersectsNode(n) && n.textContent.trim()) nodes.push(n);
-  }
-  for (const node of nodes){
-    const t = node.textContent;
-    let start = 0, end = t.length;
-    if(node === range.startContainer && node.nodeType === 3) start = range.startOffset;
-    if(node === range.endContainer && node.nodeType === 3) end = range.endOffset;
-    if(end <= start) continue;
-    const frag = document.createDocumentFragment();
-    if(start > 0) frag.appendChild(document.createTextNode(t.slice(0, start)));
-    const mk = document.createElement("mark");
-    mk.className = "hl h" + color; mk.dataset.ts = ts;
-    mk.textContent = t.slice(start, end);
-    frag.appendChild(mk);
-    if(end < t.length) frag.appendChild(document.createTextNode(t.slice(end)));
-    node.parentNode.replaceChild(frag, node);
-  }
   hlBar.style.display = "none";
   sel.removeAllRanges();
+  applyHl();
+}
+function anchoredHighlight(h, sectionText) {
+  const {block, offset} = h.anchor || {};
+  if (typeof block !== "string" || !Number.isSafeInteger(offset) || offset < 0) return null;
+  const element = block ? document.getElementById(block) : secHtmlEl;
+  if (!element || !secHtmlEl.contains(element) || offset > element.textContent.length) return null;
+  let start = offset;
+  if (element !== secHtmlEl) {
+    const before = document.createRange();
+    before.selectNodeContents(secHtmlEl);
+    before.setEndBefore(element);
+    start += before.toString().length;
+  }
+  if (!sectionText.startsWith(h.quote, start)) return null;
+  return {start, end:start + h.quote.length, h};
+}
+// Historical backups store only the quote, so keep their chapter-wide, per-node matches.
+function legacyHighlights(text, legacy) {
+  const spans = [];
+  let cursor = 0;
+  while (cursor < text.length) {
+    let best = null;
+    for (const h of legacy) {
+      const quote = h.quote.slice(0, 80);
+      const start = text.indexOf(quote, cursor);
+      if (start >= 0 && (!best || start < best.start)) best = {start, end:start + quote.length, h};
+    }
+    if (!best) break;
+    spans.push(best);
+    cursor = best.end;
+  }
+  return spans;
+}
+function paintHighlights(node, spans) {
+  if (!spans.length) return;
+  const text = node.data, fragment = document.createDocumentFragment();
+  const cuts = [...new Set([0, text.length, ...spans.flatMap(s => [s.start, s.end])])].sort((a,b) => a-b);
+  for (let i = 1; i < cuts.length; i++) {
+    const start = cuts[i-1], end = cuts[i], part = text.slice(start, end);
+    // The newer selection shows on top. Deleting it reveals the older one.
+    const span = spans.find(s => s.start <= start && s.end >= end);
+    if (!span) { fragment.append(part); continue; }
+    const mark = document.createElement("mark");
+    mark.className = "hl h" + span.h.color;
+    mark.textContent = part;
+    highlightOf.set(mark, span.h);
+    fragment.append(mark);
+  }
+  node.replaceWith(fragment);
 }
 function applyHl(){
-  const list = hlData.filter(h=>h.sec===cur);
+  for (const mark of secHtmlEl.querySelectorAll("mark.hl")) mark.replaceWith(...mark.childNodes);
+  secHtmlEl.normalize();
   const missing = document.getElementById("hlMissing");
   missing.style.display = "none";
-  // 导入后重新渲染，避免对已有高亮再套一层 mark。
-  for (const mark of secHtmlEl.querySelectorAll("mark.hl"))
-    mark.replaceWith(document.createTextNode(mark.textContent));
-  secHtmlEl.normalize();
-  if(!list.length) return;
-  const matched = new Set();
-  const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT);
-  const nodes = []; let n;
-  while((n = walker.nextNode())) nodes.push(n);
-  for (const node of nodes){
-    let rest = node.textContent;
-    if(!rest.trim()) continue;
-    let frag = null;
-    while(rest.length){
-      let best = null;
-      for (const h of list){
-        const q = h.quote.length > 80 ? h.quote.slice(0, 80) : h.quote;
-        const i = rest.indexOf(q);
-        if(i >= 0 && (!best || i < best.i)) best = {h, i, q};
-      }
-      if(!best){
-        (frag = frag || document.createDocumentFragment())
-          .appendChild(document.createTextNode(rest));
-        break;
-      }
-      (frag = frag || document.createDocumentFragment())
-        .appendChild(document.createTextNode(rest.slice(0, best.i)));
-      const mk = document.createElement("mark");
-      matched.add(best.h);
-      mk.className = "hl h" + best.h.color; mk.dataset.ts = best.h.ts;
-      mk.textContent = rest.slice(best.i, best.i + best.q.length);
-      frag.appendChild(mk);
-      rest = rest.slice(best.i + best.q.length);
+  const list = Object.values(hlStore.read()).filter(h => h.sec === cur && typeof h.quote === "string" && h.quote);
+  if (!list.length) return;
+  const legacy = list.filter(h => h.anchor === undefined), sectionText = secHtmlEl.textContent;
+  const exact = list.filter(h => h.anchor !== undefined).map(h => anchoredHighlight(h, sectionText))
+    .filter(Boolean).sort((a,b) => b.h.ts - a.h.ts);
+  const matched = new Set(exact.map(s => s.h));
+  const walker = document.createTreeWalker(secHtmlEl, NodeFilter.SHOW_TEXT), nodes = [];
+  while (walker.nextNode()) nodes.push(walker.currentNode);
+  let offset = 0;
+  for (const node of nodes) {
+    const end = offset + node.length;
+    const spans = exact.filter(s => s.start < end && s.end > offset).map(s => ({
+      start:Math.max(0, s.start - offset), end:Math.min(node.length, s.end - offset), h:s.h
+    }));
+    for (const span of legacyHighlights(node.data, legacy)) {
+      spans.push(span);
+      matched.add(span.h);
     }
-    if(frag) node.parentNode.replaceChild(frag, node);
+    paintHighlights(node, spans);
+    offset = end;
   }
-  const unmatched = list.filter(h=>!matched.has(h));
-  if (unmatched.length){
-    document.getElementById("hlMissingTitle").textContent = `未定位的旧高亮（${unmatched.length}）`;
-    document.getElementById("hlMissingQuotes").innerHTML = unmatched.map(h=>`<blockquote>${esc(h.quote)}</blockquote>`).join("");
+  const unresolved = list.filter(h => !matched.has(h));
+  if (unresolved.length) {
+    document.getElementById("hlMissingTitle").textContent = `未定位的高亮（${unresolved.length}）`;
+    document.getElementById("hlMissingQuotes").innerHTML = unresolved.map(h => `<blockquote>${esc(h.quote)}</blockquote>`).join("");
     missing.style.display = "";
   }
 }
 secHtmlEl.addEventListener("click", e=>{
-  const mk = e.target.closest("mark.hl"); if(!mk) return;
-  const ts = mk.dataset.ts;
-  if(confirm("删除这条高亮？")){
-    const item = hlData.find(h=>h.sec===cur && String(h.ts)===String(ts));
-    if (item) writeHighlight(item, null);
-    document.querySelectorAll(`#secHtml mark.hl[data-ts="${CSS.escape(ts)}"]`).forEach(m=>{
-      const p = m.parentNode; p.replaceChild(document.createTextNode(m.textContent), m); p.normalize();
-    });
+  const item = highlightOf.get(e.target.closest("mark.hl"));
+  if (item && confirm("删除这条高亮？")) {
+    writeHighlight(item, null);
+    applyHl();
   }
 });
 
@@ -983,7 +1006,8 @@ function flushNote(){ noteEditor.flush(); }
 function loadNote(){ if (cur) noteEditor.open(cur); }
 document.getElementById("btnExportN").onclick = ()=>{
   flushNote();
-  secNotes = noteStore.read(); hlData = Object.values(hlStore.read());
+  secNotes = noteStore.read();
+  const hlData = Object.values(hlStore.read());
   const blob = new Blob(
     [JSON.stringify({highlights: hlData, notes: secNotes, exported: new Date().toISOString(), app:"cfa-rules-2026"}, null, 1)],
     {type:"application/json"});
@@ -1003,7 +1027,7 @@ document.getElementById("importFileN").addEventListener("change", e=>{
       const d = JSON.parse(rd.result);
       if (d.app !== "cfa-rules-2026") throw Error("规则笔记文件标识不匹配");
       let n = 0;
-      const identity = h => JSON.stringify([h.sec, h.quote]);
+      const identity = h => highlightKey(h, false);
       const seen = new Set(Object.values(hlStore.read()).map(identity));
       for (const h of (d.highlights || [])) {
         if (!h || !byId[h.sec] || typeof h.quote !== "string" || !h.quote || seen.has(identity(h))) continue;

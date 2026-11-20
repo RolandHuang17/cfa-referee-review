@@ -362,6 +362,17 @@ body{overflow:hidden}
   font-weight:600;cursor:pointer;text-align:left;animation:fadeUp .4s var(--ease)}
 .resume:hover{background:var(--card)}
 .resume .ic{flex:none}
+.filter-summary{padding:5px 0;min-width:0}
+.filter-items,.filter-actions{display:flex;flex-wrap:wrap;gap:5px;align-items:center}
+.filter-items{max-height:18vh;overflow:auto;padding:2px}
+.filter-chip{max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;padding:3px 8px;border:1px solid var(--line);
+  border-radius:6px;background:var(--card2);color:var(--ink);font:inherit;font-size:12px;cursor:pointer}
+.filter-chip:hover{border-color:var(--brand)}
+.filter-actions{margin:3px 0 0;gap:0 14px}
+.filter-actions button{border:0;padding:5px 0;background:none;font:inherit;font-size:12.5px;color:var(--brand);cursor:pointer}
+.filter-actions button:hover{text-decoration:underline}
+.filter-summary p{margin:2px 0;font-size:12px;color:var(--muted)}
+#filterCopyText{width:100%;font-size:13px}
 .plist-empty{padding:48px 16px;text-align:center;color:var(--muted)}
 
 /* ---- 详情区 ---- */
@@ -610,8 +621,17 @@ __TOPBAR__
     <div class="plist-head">
       <div class="iss" id="issueTitle"></div>
       <button class="resume" id="resumeBtn" style="display:none"></button>
-      <button class="resume" id="pathBar" style="display:none"></button>
-      <div class="cnt">显示 <b id="shownCount">0</b> 例 · 已学 <b id="seenCount">0</b>/<span id="totalCount">0</span> · 点击行查看详情 · <span class="kbd">↑</span><span class="kbd">↓</span> 切换 · <span class="kbd">/</span> 搜索</div>
+      <div class="filter-summary" id="filterSummary" hidden>
+        <div class="filter-items" id="activeFilters" role="group" aria-label="当前筛选条件，可逐项移除"></div>
+        <p id="localFilterHint" hidden></p>
+        <div class="filter-actions">
+          <button type="button" id="clearFilters">清空筛选</button>
+          <button type="button" id="copyFilters">复制筛选链接</button>
+        </div>
+        <p id="filterCopyStatus" role="status"></p>
+        <input id="filterCopyText" type="text" aria-label="可手动复制的公开筛选链接" readonly hidden>
+      </div>
+      <div class="cnt"><span role="status">显示 <b id="shownCount">0</b> 例</span> · 已学 <b id="seenCount">0</b>/<span id="totalCount">0</span> · 点击行查看详情 · <span class="kbd">↑</span><span class="kbd">↓</span> 切换 · <span class="kbd">/</span> 搜索</div>
     </div>
     <div class="plist-rows" id="plistRows"></div>
   </section>
@@ -712,6 +732,7 @@ __TOPBAR__
 __RECORDS_JS__
 __CALENDAR_JS__
 __CITATION_JS__
+__SEASON_FILTERS_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const CATS = DATA.categories;
@@ -719,8 +740,6 @@ const VN = {wrong:"错漏判", correct:"支持原判", pending:"不予认定"};
 const VCLS = {wrong:"wrong", correct:"correct", pending:"pending"};
 const bySeq = {};
 DATA.cases.forEach(c => bySeq[c.seq] = c);
-// 必须在applyFilter的自动选中改写hash之前捕获初始锚点
-const initialHashSeq = (location.hash.match(/^#case-(\d+)$/)||[])[1];
 // 轻量版（cfa.lite，theme.py 首帧前设置 dataset.lite）：纯文字+官方链接笔记本模式，无视频窗口
 let LITE = document.documentElement.dataset.lite === "1";
 // 隐藏答案模式（cfa.hideans，theme.py 首帧前设置 dataset.hideans）：先思考后逐题揭示
@@ -795,12 +814,13 @@ const catSeen = {};
 for (const s of Object.keys(seen)) { const c = bySeq[s]; if (c) catSeen[c.category] = (catSeen[c.category]||0)+1; }
 function renderCats(){
   const cur = state.cat || "";
+  renderCats.category = cur;
   document.getElementById("catList").innerHTML =
-  `<button class="cat-item ${cur===""?"on":""}" data-cat=""><span class="nm">全部分类</span>` +
+  `<button class="cat-item ${cur===""?"on":""}" aria-pressed="${cur===''}" data-cat=""><span class="nm">全部分类</span>` +
   `<b>${Object.keys(seen).length}/${DATA.cases.length}</b></button>` +
-  CATS.filter(k=>catCount[k.id]).map(k=>
-    `<button class="cat-item ${cur===k.id?"on":""}" data-cat="${k.id}"><span class="nm">${k.name}</span>` +
-    `<b>${catSeen[k.id]||0}/${catCount[k.id]}</b><small>错${catWrong[k.id]||0}</small></button>`).join("");
+  CATS.filter(k=>catCount[k.id] || k.id===cur).map(k=>
+    `<button class="cat-item ${cur===k.id?"on":""}" aria-pressed="${cur===k.id}" data-cat="${k.id}"><span class="nm">${k.name}</span>` +
+    `<b>${catSeen[k.id]||0}/${catCount[k.id]||0}</b><small>错${catWrong[k.id]||0}</small></button>`).join("");
 }
 document.getElementById("verList").innerHTML =
   `<button class="ver-item on" data-v=""><span class="dot" style="background:var(--muted)"></span><span class="nm">全部</span><b>${verCount.all}</b></button>` +
@@ -822,12 +842,6 @@ function renderPaths(){
 document.getElementById("pathList").addEventListener("click", e=>{
   const b = e.target.closest("[data-path]"); if (!b) return;
   state.path = state.path === b.dataset.path ? null : b.dataset.path;
-  renderPaths();
-  applyFilter();
-});
-document.getElementById("pathBar").addEventListener("click", ()=>{
-  state.path = null;
-  renderPaths();
   applyFilter();
 });
 const fSearch = document.getElementById("fSearch");
@@ -898,8 +912,7 @@ function renderSidebar(){
     }).join("");
 }
 
-function renderList(){
-  const list = visibleCases();
+function renderList(list = visibleCases()){
   const issueTitle = document.getElementById("issueTitle");
   if (state.issue && DATA.issues[state.issue]) {
     const iss = DATA.issues[state.issue];
@@ -908,14 +921,6 @@ function renderList(){
     issueTitle.innerHTML = "";
   }
   document.getElementById("shownCount").textContent = list.length;
-  { // 学习路径横幅：显示当前路径并可一键清除
-    const pb = document.getElementById("pathBar");
-    const p = (DATA.paths||[]).find(x=>x.id===state.path);
-    if (p){
-      pb.innerHTML = `🗺 学习路径：${esc(p.name)}（本季 ${PATH_SETS[p.id].size} 例）<b style="margin-left:6px">✕ 清除</b>`;
-      pb.style.display = "";
-    } else pb.style.display = "none";
-  }
   const groups = {};
   list.forEach(c => (groups[c.category] = groups[c.category]||[]).push(c));
   let ri = 0;
@@ -941,17 +946,142 @@ function renderList(){
 }
 renderList.first = true;
 
-function applyFilter(){
+const allowedSeasonFilters = {
+  path:new Set((DATA.paths || []).map(p => p.id)),
+  cat:new Set(CATS.map(c => c.id)),
+  v:new Set(Object.keys(VN)),
+  comp:new Set(COMP_ORDER.map(([full]) => full)),
+  team:new Set(Object.keys(teamComps)),
+  issue:new Set(Object.keys(DATA.issues)),
+};
+
+function clearSeasonFilters() {
+  for (const key of publicSeasonFilterKeys) state[key] = "";
+  state.fav = null;
+  fSearch.value = "";
+}
+
+function setFilterAddress(selected) {
+  const hash = seasonFilterHash(state, state.fav ? null : selected);
+  if (location.hash === hash) return;
+  const url = new URL(location.href);
+  url.hash = hash;
+  history.replaceState(null, "", url.href);
+}
+
+const filterSummary = document.getElementById("filterSummary");
+const activeFilters = document.getElementById("activeFilters");
+const copyFilters = document.getElementById("copyFilters");
+const filterCopyText = document.getElementById("filterCopyText");
+const filterCopyStatus = document.getElementById("filterCopyStatus");
+
+function renderFilterSummary() {
+  const conditions = [
+    ["path", "学习路径", (DATA.paths || []).find(p => p.id === state.path)?.name],
+    ["cat", "分类", CATS.find(c => c.id === state.cat)?.name],
+    ["v", "判定", VN[state.v]],
+    ["comp", "赛事", COMP_SHORT[state.comp]],
+    ["team", "球队", state.team],
+    ["issue", "期数", state.issue && "第" + state.issue + "期"],
+    ["q", "搜索", state.q.trim()],
+    ["fav", "本机", state.fav === "all" ? "收藏" : state.fav === "note" ? "有笔记" : state.fav?.slice(4)],
+  ];
+  const chips = document.createDocumentFragment();
+  for (const [key, label, value] of conditions) {
+    if (!value) continue;
+    const button = document.createElement("button");
+    button.type = "button";
+    button.className = "filter-chip";
+    button.dataset.remove = key;
+    const description = label + "：" + value;
+    button.textContent = description + " ×";
+    button.title = "移除" + description;
+    button.setAttribute("aria-label", button.title);
+    chips.append(button);
+  }
+  filterSummary.hidden = !chips.childElementCount;
+  activeFilters.replaceChildren(chips);
+  copyFilters.hidden = !seasonFilterHash(state);
+  copyFilters.textContent = state.fav ? "复制公开筛选链接" : "复制筛选链接";
+  const hint = document.getElementById("localFilterHint");
+  hint.hidden = !state.fav;
+  hint.textContent = copyFilters.hidden ? "个人筛选仅在本机有效。" :
+    "个人筛选仅在本机有效。分享链接会显示符合公开条件的全部判例。";
+  filterCopyText.hidden = true;
+  filterCopyText.value = "";
+  filterCopyStatus.textContent = "";
+}
+function returnFilterFocus() {
+  const remaining = activeFilters.querySelector("button");
+  if (remaining) remaining.focus();
+  else focusCaseList();
+}
+activeFilters.addEventListener("click", e => {
+  const chip = e.target.closest("[data-remove]");
+  if (!chip) return;
+  const key = chip.dataset.remove;
+  state[key] = key === "fav" ? null : "";
+  if (key === "q") fSearch.value = "";
+  applyFilter();
+  returnFilterFocus();
+});
+document.getElementById("clearFilters").onclick = () => {
+  clearSeasonFilters();
+  applyFilter();
+  returnFilterFocus();
+};
+function shareFilterAddress() {
+  const hash = seasonFilterHash(state);
+  if (!hash) return "";
+  const canonical = document.querySelector('link[rel="canonical"]')?.href;
+  const page = seasonSharePage(location.href, canonical, CFG.season);
+  return page + (HIDE ? "?hideans=1" : "") + hash;
+}
+copyFilters.onclick = async () => {
+  const link = shareFilterAddress();
+  if (!link) return;
+  try {
+    await navigator.clipboard.writeText(link);
+    if (link === shareFilterAddress()) filterCopyStatus.textContent = "已复制公开筛选链接。";
+  } catch (_) {
+    if (link !== shareFilterAddress()) return;
+    filterCopyText.value = link;
+    filterCopyText.hidden = false;
+    filterCopyText.focus();
+    filterCopyText.select();
+    filterCopyStatus.textContent = "请选择并复制下方链接。";
+  }
+};
+
+function applyFilter(updateAddress = true){
+  const list = visibleCases();
+  if (renderCats.category !== state.cat) renderCats();
   renderSidebar();
   renderFavList();
-  renderList();
-  const list = visibleCases();
+  renderList(list);
+  renderFilterSummary();
+  for (const key of ["cat", "v", "path"]) {
+    for (const button of document.querySelectorAll("#sidebar [data-" + key + "]")) {
+      button.classList.toggle("on", button.dataset[key] === (state[key] || ""));
+    }
+  }
+  for (const button of document.querySelectorAll("#sidebar .cat-item, #sidebar .ver-item")) {
+    button.setAttribute("aria-pressed", String(button.classList.contains("on")));
+  }
   if (!list.some(c=>c.seq===state.sel)) {
     if (list.length) select(list[0].seq, false, false); else clearDetail();
+  }
+  if (narrowSeason.matches && (!list.length || document.body.classList.contains("sb-open") || document.activeElement === fSearch)) {
+    document.body.classList.remove("detail-open");
+  }
+  if (updateAddress) {
+    const current = readSeasonFilterHash(location.hash, allowedSeasonFilters);
+    setFilterAddress(current.selected === state.sel ? state.sel : null);
   }
 }
 
 function clearDetail(){
+  flushNote();
   state.sel = null;
   resetCitation();
   document.getElementById("dcard").style.display = "none";
@@ -1254,7 +1384,7 @@ function select(seq, scrollRow=true, openDetail=true){
     row.setAttribute("aria-current", "true");
     if (scrollRow) row.scrollIntoView({block:"nearest"});
   }
-  history.replaceState(null, "", "#case-"+seq);
+  if (scrollRow) setFilterAddress(seq);
   // 学习足迹：仅用户主动选择才记（scrollRow=false = applyFilter/init 的自动选中，
   // 打开页面不算「学过」）；上次学习入口同理
   if (scrollRow !== false){
@@ -1570,13 +1700,11 @@ caseRows.addEventListener("keydown", e=>{
 document.getElementById("catList").addEventListener("click", e=>{
   const b = e.target.closest(".cat-item"); if(!b) return;
   state.cat = b.dataset.cat;
-  document.querySelectorAll(".cat-item").forEach(x=>x.classList.toggle("on", x===b));
   applyFilter();
 });
 document.getElementById("verList").addEventListener("click", e=>{
   const b = e.target.closest(".ver-item"); if(!b) return;
   state.v = b.dataset.v;
-  document.querySelectorAll(".ver-item").forEach(x=>x.classList.toggle("on", x===b));
   applyFilter();
 });
 fSearch.addEventListener("input", ()=>{
@@ -1653,7 +1781,7 @@ document.addEventListener("keydown", e=>{
 });
 document.getElementById("sidebar").addEventListener("click", e=>{
   // A filter can rebuild its own button. Keep keyboard focus on its replacement.
-  const old = e.target.closest("button[data-path],button[data-comp],button[data-team],button[data-issue],button[data-fav]");
+  const old = e.target.closest("button[data-cat],button[data-path],button[data-comp],button[data-team],button[data-issue],button[data-fav]");
   if (!old || old.isConnected || document.activeElement!==document.body) return;
   const key = Object.keys(old.dataset)[0];
   const replacement = document.querySelector(`#sidebar button[data-${key}="${CSS.escape(old.dataset[key])}"]`);
@@ -1859,15 +1987,10 @@ touchStudyDay();
 renderPaths();
 document.getElementById("totalCount").textContent = DATA.cases.length;
 document.getElementById("seenCount").textContent = Object.keys(seen).length;
-{ // 挑战模式 ?case=N 与锚点 #case-N 同为深链目标
-  const up = new URLSearchParams(location.search);
-  const chCase = up.get("case");
-  if (chCase && bySeq[+chCase] && !initialHashSeq) window.initialTargetSeq = +chCase;
-}
 { // 继续上次学习（无锚点深链时显示；从 localStorage 上次选中恢复）
   try {
     const last = JSON.parse(localStorage.getItem(LAST_KEY) || "null");
-    if (last && bySeq[last.seq] && !initialHashSeq && !location.hash){
+    if (last && bySeq[last.seq] && !location.hash && !new URLSearchParams(location.search).has("case")){
       const c = bySeq[last.seq];
       const days = last.ts ? Math.floor((Date.now()-last.ts)/86400000) : 0;
       const when = days===0 ? "今天" : days===1 ? "昨天" : `${days} 天前`;
@@ -1878,43 +2001,27 @@ document.getElementById("seenCount").textContent = Object.keys(seen).length;
     }
   } catch(_) {}
 }
-{ // 支持 #cat-<分类id> 深链（来自 rules 页「相关判例」反链 / 全站搜索页）
-  const cm = location.hash.match(/^#cat-([\w-]+)$/);
-  if (cm && CATS.some(k=>k.id===cm[1])){
-    state.cat = cm[1];
-    document.querySelectorAll(".cat-item").forEach(x=>
-      x.classList.toggle("on", x.dataset.cat===cm[1]));
-  }
-}
-applyFilter();
-{ // 支持 #case-N 锚点与 ?case=N 挑战深链（来自 stats.html / 挑战链接）
-  const targetSeq = initialHashSeq || window.initialTargetSeq || null;
-  const target = targetSeq ? bySeq[+targetSeq] : null;
-  if (target && !visibleCases().some(x=>x.seq===target.seq)) {
-    // 目标判例被当前筛选挡住时，清空各筛选（锚点跳转优先）
-    state.cat = target.category; state.v = ""; state.issue = ""; state.q = "";
-    state.comp = ""; state.team = ""; state.path = null;
-    fSearch.value = "";
-    renderPaths();
-    document.querySelectorAll(".cat-item").forEach(x=>
-      x.classList.toggle("on", x.dataset.cat===target.category));
-    document.querySelectorAll(".ver-item").forEach(x=>
-      x.classList.toggle("on", x.dataset.v===""));
-    applyFilter();
-  }
-  const list = visibleCases();
-  if (target && bySeq[target.seq]) {
+function restoreSeasonLocation() {
+  const route = readSeasonFilterHash(location.hash, allowedSeasonFilters);
+  clearSeasonFilters();
+  Object.assign(state, route.filters);
+  fSearch.value = state.q;
+  const filtered = !!seasonFilterHash(state);
+  const queryCase = new URLSearchParams(location.search).get("case");
+  const target = bySeq[route.selected || (!filtered && queryCase)];
+  applyFilter(false);
+  if (target && baseMatch(target)) {
     select(target.seq);
-    const row = document.querySelector(`.prow[data-seq="${target.seq}"]`);
-    if (row) row.scrollIntoView({block:"center"});
-  } else if (list.length) {
-    select(list[0].seq, false);
+    document.querySelector(".prow.sel")?.scrollIntoView({block:"center"});
+  } else if (filtered) {
+    document.body.classList.remove("detail-open");
+  } else if (state.sel) {
+    select(state.sel, false);
   }
 }
-// 同文档hash变化（如页面内跳转/前进后退）时同步选中
+restoreSeasonLocation();
 window.addEventListener("hashchange", () => {
-  const m = location.hash.match(/^#case-(\d+)$/);
-  if (m && bySeq[+m[1]] && state.sel !== +m[1]) select(+m[1]);
+  if (!location.hash || /^#(?:filters\?|cat-|case-)/.test(location.hash)) restoreSeasonLocation();
 });
 </script>
 </body>
@@ -1965,6 +2072,10 @@ def build_season(season):
         )
         .replace(
             "__CITATION_JS__", (SRC / "case-citation.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__SEASON_FILTERS_JS__",
+            (SRC / "season-filters.js").read_text(encoding="utf-8"),
         )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)

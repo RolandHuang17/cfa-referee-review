@@ -7,6 +7,7 @@
 
 import json
 import re
+import struct
 
 from lib.seo import meta_tags
 from lib.theme import inject_theme, icon, js_icons, topbar
@@ -526,7 +527,7 @@ main{overflow-y:auto;padding:22px 28px 60px;min-height:0}
 .content .fn{font-size:12.5px;color:var(--muted);margin:4px 0;text-indent:0}
 .content p.rev{font-size:12px;font-weight:700;color:var(--brand);letter-spacing:1.5px;margin:14px 0 4px;text-indent:0}
 .content .pg{margin:16px 0;text-align:center}
-.content .pg img{max-width:100%;border:1px solid var(--line);border-radius:var(--r-sm)}
+.content .pg img{max-width:100%;height:auto;border:1px solid var(--line);border-radius:var(--r-sm)}
 .content mark{background:var(--mark);padding:0 2px;border-radius:3px}
 /* —— 划词高亮 —— */
 mark.hl{padding:0 1px;border-radius:3px;cursor:pointer}
@@ -895,8 +896,9 @@ document.addEventListener("mouseup", e=>{
        secHtmlEl.contains(sel.getRangeAt(0).commonAncestorContainer)){
       const r = sel.getRangeAt(0).getBoundingClientRect();
       hlBar.style.display = "flex";
-      hlBar.style.left = Math.max(8, Math.min(r.left, window.innerWidth - 260)) + "px";
-      hlBar.style.top = Math.max(8, r.top - 46) + "px";
+      const width = hlBar.offsetWidth, height = hlBar.offsetHeight;
+      hlBar.style.left = Math.max(8, Math.min(r.left, innerWidth - width - 8)) + "px";
+      hlBar.style.top = Math.max(8, Math.min(r.top - height - 4, innerHeight - height - 8)) + "px";
     } else if (!e.target.closest("#hlBar")) {
       hlBar.style.display = "none";
     }
@@ -1097,6 +1099,14 @@ syncReadUI();
 """
 
 
+def diagram_dimensions(match):
+    # PNG's IHDR stores the intrinsic width and height before the image payload.
+    with (RULES_IMG_DIR / match.group(1)).open("rb") as image:
+        image.seek(16)
+        width, height = struct.unpack(">II", image.read(8))
+    return f'{match.group(0)} width="{width}" height="{height}"'
+
+
 def build_html_page(sections):
     sections = deepcopy(sections)
     annotations_path = LAWS_JSON.parent / "law-annotations.json"
@@ -1107,6 +1117,11 @@ def build_html_page(sections):
     )
     for section in sections:
         section["html"], _ = anchored_section(section)
+        section["html"] = re.sub(
+            r'<img src="assets/rules/(p[0-9]+\.png)"',
+            diagram_dimensions,
+            section["html"],
+        )
         for item in annotations:
             if item["law"] == section["id"]:
                 section["html"] += (

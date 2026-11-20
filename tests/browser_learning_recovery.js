@@ -181,8 +181,8 @@ async (startPage) => {
   context.setDefaultTimeout(10000);
   const rules = await context.newPage();
   const file = id => new URL("rules.html#" + id, base).href;
-  async function selectText(test, color) {
-    const quote = await rules.evaluate(test => {
+  async function selectText(test, color, finishImages) {
+    const points = await rules.evaluate(test => {
       const body = document.getElementById("secHtml");
       const walk = document.createTreeWalker(body, NodeFilter.SHOW_TEXT), nodes = [];
       while (walk.nextNode()) nodes.push(walk.currentNode);
@@ -202,13 +202,28 @@ async (startPage) => {
         range.setStart(node,offset); range.setEnd(node,offset+2);
       }
       range.startContainer.parentElement.scrollIntoView({block:"center"});
-      const selection = getSelection();
-      selection.removeAllRanges(); selection.addRange(range);
-      body.dispatchEvent(new MouseEvent("mouseup", {bubbles:true}));
-      return range.toString();
+      const boxes = Array.from(range.getClientRects()).filter(rect => rect.width && rect.height);
+      const first = boxes[0], last = boxes[boxes.length-1];
+      return {start:{x:first.left+1, y:first.top+first.height/2},
+        end:{x:last.right-1, y:last.top+last.height/2}, quote:range.toString()};
     }, test);
+    await rules.mouse.move(points.start.x, points.start.y);
+    await rules.mouse.down();
+    await rules.mouse.move(points.end.x, points.end.y, {steps:12});
+    await rules.mouse.up();
+    if (finishImages) {
+      await finishImages();
+      check(await rules.evaluate(y => {
+        const top = getSelection().getRangeAt(0).getClientRects()[0];
+        return Math.abs(top.top + top.height/2 - y) < 16;
+      }, points.start.y), "图示载入后拖选的跨段正文移出了原阅读位置");
+    }
+    check(await rules.evaluate(() => {
+      const selection = getSelection();
+      return selection.rangeCount ? selection.getRangeAt(0).toString() : "";
+    }) === points.quote, "鼠标未选中预期的规则原文 " + test);
     await rules.locator('#hlBar button[data-c="' + color + '"]').click();
-    return quote;
+    return points.quote;
   }
   async function marks(tab) {
     return tab.locator("#secHtml mark.hl").evaluateAll(items => items.map(mark => {
@@ -257,9 +272,26 @@ async (startPage) => {
       check(kept.length === 3 && kept.some(h=>h.color === "g"), "删除单处精确高亮影响了另一处");
     } finally { await other.close(); }
 
-    // Use a clean section for the long sample to avoid overlap with the two selections above.
-    await rules.goto(file("law-1"));
-    const quote = await selectText("cross","r");
+    // Release the pitch diagrams when a reader has just dragged across two paragraphs.
+    let releaseImages, heldImages = 0;
+    const pendingImages = new Promise(resolve => { releaseImages = resolve; });
+    if (/^https?:$/.test(base.protocol)) {
+      await rules.route("**/assets/rules/*.png", async route => {
+        heldImages++;
+        await pendingImages;
+        await route.continue();
+      });
+    }
+    await rules.locator('.toc-item[data-id="law-1"]').click();
+    let quote;
+    try {
+      quote = await selectText("cross", "r", async () => {
+        releaseImages();
+        await rules.waitForFunction(() => [...document.querySelectorAll("#secHtml .pg img")]
+          .some(img => img.complete && img.naturalWidth > 0));
+      });
+    } finally { releaseImages(); }
+    if (/^https?:$/.test(base.protocol)) check(heldImages > 0, "慢图用例未覆盖规则图示请求");
     const before = await marks(rules);
     check(quote.length > 80 && before.length > 1 && before.map(m=>m[2]).join("") === quote,
       "跨段长选区未完整上色");

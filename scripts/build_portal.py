@@ -7,6 +7,7 @@ import shutil
 from html import escape
 
 from lib.seo import jsonld_dataset, jsonld_website, meta_tags
+from lib.scale_quiz_ids import LEGACY_SCALE_IDS
 from lib.site_stats import cheatsheet_count, counts
 from lib.theme import inject_theme, icon, topbar
 
@@ -332,7 +333,9 @@ def main():
             encoding="utf-8"
         ),
         "__QUIZ_RECORDS__": (SRC / "quiz-records.js").read_text(encoding="utf-8"),
-        "__PORTAL_JS__": (SRC / "portal.js").read_text(encoding="utf-8"),
+        "__PORTAL_JS__": (SRC / "portal.js")
+        .read_text(encoding="utf-8")
+        .replace("__LEGACY_SCALE_IDS__", json.dumps(list(LEGACY_SCALE_IDS))),
         "__STUDY_INDEX__": js_value(build_study_index()),
         "__SAMPLE_REVIEW__": js_value(sample["conclusion"]),
         "__PORTAL_EFFECT__": (SRC / "portal-liquid.js").read_text(encoding="utf-8"),

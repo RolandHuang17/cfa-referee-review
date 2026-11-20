@@ -18,6 +18,20 @@ function setup(locks) {
   return {storage,Records,a:new Records(storage),b:new Records(storage)};
 }
 
+test("legacy scale stats keep the local aggregate through imports and reloads", () => {
+  const {a,b,storage,Records} = setup();
+  Records.legacyScaleIds = new Set(["sc-2025-1","sc-2025-7"]);
+  storage.setItem("cfa.quiz.stats",JSON.stringify({"sc-2025-1":{r:1,w:2}}));
+  const change = {kind:"import",rows:{},legacyScaleStats:{"sc-2025-1":{r:5,w:6},"sc-2025-7":{r:2,w:1}}};
+  a.write(change);
+  b.write(change);
+  assert.equal(JSON.stringify(a.read().stats),JSON.stringify({"sc-2025-1":{r:1,w:2},"sc-2025-7":{r:2,w:1}}));
+  assert.equal(Object.keys(a.state.wrong).length,0);
+  for (const legacyScaleStats of [null, {"sc-2025-1":{r:-1,w:2}}, {"var-1":{r:0,w:1}}, {"sc-2025-6":{r:1,w:1}}])
+    assert.equal(Records.validEvent({...change,legacyScaleStats,time:1,order:1}),false);
+  assert.equal(Records.validEvent({kind:"import",rows:{},time:1,order:1}),true);
+});
+
 test("simultaneous attempts retain both results, star and history on the same question without Web Locks", () => {
   const {a,b,storage,Records} = setup();
   const exam = {got:0,max:1,n:1};

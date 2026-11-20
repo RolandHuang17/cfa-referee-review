@@ -857,6 +857,7 @@ class QuizRecords {
   static checkpoint = "cfa.quiz.v2.checkpoint";
   static recovery = "cfa.quiz.v2.recovery";
   static intervals = [0, 1, 3, 7, 14, 30];
+  static legacyScaleIds = new Set();
 
   constructor(storage) {
     try { this.storage = storage ?? globalThis.localStorage; }
@@ -949,6 +950,9 @@ class QuizRecords {
         if (!id(key)) return false;
         event.rows[key] = this.wrongEntry(row);
       }
+      if ("legacyScaleStats" in event && (!this.object(event.legacyScaleStats) ||
+        !Object.entries(event.legacyScaleStats).every(([key,row]) => this.legacyScaleIds.has(key)
+          && this.object(row) && this.count(row.r) && this.count(row.w)))) return false;
       return true;
     default: return false;
     }
@@ -1043,6 +1047,9 @@ class QuizRecords {
         if (!state.wrong[id] || (row.last || 0) > (state.wrong[id].last || 0))
           state.wrong[id] = {...row};
       }
+      // An imported aggregate may overlap a local one. Retain the local counts.
+      for (const [id,row] of Object.entries(event.legacyScaleStats || {}))
+        if (!state.stats[id]) state.stats[id] = {r:row.r,w:row.w};
     }
   }
   mergeFragment(state, fragment) {
@@ -1323,10 +1330,12 @@ class QuizRecords {
   full.addEventListener("click", () => setMode(false));
   light.addEventListener("click", () => setMode(true));
   displayMode(read("cfa.lite", 0) === 1);
+  QuizRecords.legacyScaleIds = new Set(["sc-2025-1", "sc-2025-2", "sc-2025-3", "sc-2025-4", "sc-2025-5", "sc-2025-7", "sc-2025-8", "sc-2025-9"]);
   function refreshStats() {
     const seen = seasons.reduce((total, year) => total + Object.keys(read("cfa" + year + ".seen", {})).length, 0);
     const fav = seasons.reduce((total, year) => total + Object.keys(new LearningRecords("cfa" + year + ".fav").read()).length, 0);
-    const due = Object.values(QuizRecords.readWrong()).filter(row => !row.done && (row.due || 0) <= Date.now()).length;
+    const due = Object.entries(QuizRecords.readWrong()).filter(([id,row]) =>
+      !QuizRecords.legacyScaleIds.has(id) && !row.done && (row.due || 0) <= Date.now()).length;
     byId("msFoot").querySelector("b").textContent = seen;
     byId("msDue").querySelector("b").textContent = due;
     byId("msStreak").textContent = currentStudyStreak(read("cfa.streak", {}));

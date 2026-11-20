@@ -5,6 +5,7 @@ class QuizRecords {
   static checkpoint = "cfa.quiz.v2.checkpoint";
   static recovery = "cfa.quiz.v2.recovery";
   static intervals = [0, 1, 3, 7, 14, 30];
+  static legacyScaleIds = new Set();
 
   constructor(storage) {
     try { this.storage = storage ?? globalThis.localStorage; }
@@ -97,6 +98,9 @@ class QuizRecords {
         if (!id(key)) return false;
         event.rows[key] = this.wrongEntry(row);
       }
+      if ("legacyScaleStats" in event && (!this.object(event.legacyScaleStats) ||
+        !Object.entries(event.legacyScaleStats).every(([key,row]) => this.legacyScaleIds.has(key)
+          && this.object(row) && this.count(row.r) && this.count(row.w)))) return false;
       return true;
     default: return false;
     }
@@ -191,6 +195,9 @@ class QuizRecords {
         if (!state.wrong[id] || (row.last || 0) > (state.wrong[id].last || 0))
           state.wrong[id] = {...row};
       }
+      // An imported aggregate may overlap a local one. Retain the local counts.
+      for (const [id,row] of Object.entries(event.legacyScaleStats || {}))
+        if (!state.stats[id]) state.stats[id] = {r:row.r,w:row.w};
     }
   }
   mergeFragment(state, fragment) {

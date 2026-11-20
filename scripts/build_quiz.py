@@ -20,6 +20,7 @@ from datetime import date
 
 from lib.crest_catalog import load_catalog, normalize_team
 from lib.paths import DATA, IFAB_JSON, IFAB_ZH_JSON, SCALE_JSON, SITE, SRC
+from lib.scale_quiz_ids import LEGACY_SCALE_IDS, assign_scale_quiz_ids
 from lib.seo import meta_tags
 from lib.site_stats import is_quiz_case, is_quiz_scale
 from lib.theme import icon, inject_theme, js_icons, topbar
@@ -255,7 +256,6 @@ def build_bank():
                             continue
                         bank.append(
                             {
-                                "k": f"sc-{year}-{it['id']}",
                                 "t": "scale",
                                 "s": year,
                                 "id": it["id"],
@@ -325,6 +325,7 @@ def build_bank():
                 }
             )
             n_theory += 1
+    assign_scale_quiz_ids(bank)
     return bank, teams, n_scale, n_var, n_theory
 
 
@@ -334,6 +335,7 @@ def build_data():
     return {
         "cfg": {"wrongKey": WRONG_KEY, "built": date.today().isoformat()},
         "bank": bank,
+        "legacyScaleIds": LEGACY_SCALE_IDS,
         "teams": teams,
         "opts": {"r": R_OPTIONS, "c": C_OPTIONS, "v": V_OPTIONS},
         "meta": {"case": n_case, "scale": n_scale, "var": n_var, "theory": n_theory},
@@ -470,6 +472,8 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 .wbitem{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--line2);font-size:13px}
 .wbitem .wbm{flex:1;min-width:0}
 .wbitem .wbyour{color:var(--red);font-size:12px}
+#legacyScaleBox>p,#legacyScaleList p{margin:6px 0;color:var(--muted);line-height:1.65}
+#legacyScaleList h4{margin:0;font-size:inherit}
 .wbbtn{flex:none}
 .topbtn{position:fixed;right:20px;bottom:22px;display:none;align-items:center;gap:6px;
   background:var(--brand-strong);color:var(--on-brand);border:none;border-radius:999px;
@@ -540,7 +544,7 @@ __TOPBAR__
     </div>
     <div class="frow">
       <button class="btn primary" id="btnStart">开始答题</button>
-      <button class="btn" id="btnWb">错题本管理</button>
+      <button class="btn" id="btnWb" aria-expanded="false" aria-controls="wbBox">错题本管理</button>
       <button class="btn" id="btnExport">导出</button>
       <button class="btn" id="btnImport">导入</button>
       <input type="file" id="importFile" accept=".json,application/json" style="display:none">
@@ -555,6 +559,11 @@ __TOPBAR__
         </span>
       </div>
       <div id="wbList"></div>
+      <section id="legacyScaleBox" hidden aria-labelledby="legacyScaleHeading">
+        <h3 id="legacyScaleHeading">旧版尺度题记录</h3>
+        <p>旧版曾把同号场景合并记分。以下次数、收藏和复习进度按旧编号保留。复练将为具体场景单独记分。</p>
+        <div id="legacyScaleList"></div>
+      </section>
     </div>
     <details class="anbox" id="anaBox" style="display:none">
       <summary>🎯 我的分析 · 分类正确率雷达（判例题作答历史）</summary>
@@ -616,14 +625,17 @@ __TOPBAR__
 <script>
 __CALENDAR_JS__
 __QUIZ_RECORDS_JS__
+__SCALE_HISTORY_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
 const R_OPTS = DATA.opts.r, C_OPTS = DATA.opts.c, V_OPTS = DATA.opts.v;
 const VNAME = Object.fromEntries(V_OPTS);
 const RNAME = Object.fromEntries(R_OPTS);
 const CNAME = Object.fromEntries(C_OPTS);
-const BANK = {};
+const BANK = Object.create(null);
 DATA.bank.forEach(q => BANK[q.k] = q);
+const scaleHistory = new ScaleQuizHistory(DATA.legacyScaleIds, BANK);
+QuizRecords.legacyScaleIds = new Set(Object.keys(DATA.legacyScaleIds));
 let LITE = document.documentElement.dataset.lite === "1";
 
 function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")
@@ -672,7 +684,7 @@ function attemptAnswer(q, your, score){
 }
 function dueCount(){
   const now = Date.now();
-  return Object.values(wrong).filter(e => !e.done && (e.due||0) <= now).length;
+  return Object.entries(wrong).filter(([key,e]) => BANK[key] && !e.done && (e.due||0) <= now).length;
 }
 function qTitle(q){
   if (q.t === "case")
@@ -684,10 +696,9 @@ function qTitle(q){
   return `尺度场景 ${esc(q.id)} · ${esc(q.title)}（${q.s}）`;
 }
 function qLink(q){
-  if (q.t === "var") return q.link;
+  if (q.t === "var" || q.t === "scale") return q.link;
   if (q.t === "theory") return `rules.html#${q.law}`;
-  return q.t === "case" ? `season-${q.s}.html#case-${q.seq}`
-                        : `scale.html#h${q.s}-${q.series}-${q.id}`;
+  return `season-${q.s}.html#case-${q.seq}`;
 }
 
 // ---------- 考试计时（倒计时结束自动交卷；练习模式不启用） ----------
@@ -850,19 +861,24 @@ function updatePoolTip(){
   document.getElementById("btnStart").disabled = !n;
 }
 function renderWbStats(){
-  const n = Object.keys(wrong).length;
-  const st = Object.values(wrong).filter(e=>e.star).length;
+  const active = Object.entries(wrong).filter(([id]) => BANK[id]);
+  const n = active.length;
+  const st = active.filter(([,e])=>e.star).length;
   document.getElementById("nWrong").textContent = n;
   document.getElementById("nStar").textContent = st;
   document.getElementById("wbCount").textContent = n;
+  document.getElementById("btnWbClear").disabled = !n;
+  const archived = scaleHistory.entries(wrong, qstats).length;
+  document.getElementById("btnWb").textContent = archived ? "错题本管理 · 旧记录 " + archived + " 组" : "错题本管理";
   const bd = document.getElementById("btnDue");
   if (bd){ const d = dueCount(); bd.textContent = d ? `复习到期 ${d}` : "复习到期"; }
 }
 function renderWbList(){
-  const entries = Object.entries(wrong);
+  const entries = Object.entries(wrong).filter(([id]) => BANK[id]);
+  renderLegacyScale();
   const now = Date.now();
   document.getElementById("wbList").innerHTML = entries.length ? entries.map(([k,e])=>{
-    const q = BANK[k]; if (!q) return "";
+    const q = BANK[k];
     const yourTxt = e.t==="case" ? axisText(e.your) : (e.t==="var"||e.t==="theory") ? (e.your!=null && e.your!=="" && q.opts && q.opts[+e.your] || "（未作答）") : (e.your||[]).join("、") || "（未作答）";
     const corrTxt = e.t==="case" ? (e.correct||"") : (e.correct&&e.correct.join ? e.correct.join("、") : (e.correct||""));
     const dueTxt = e.done ? "已掌握" : (e.due||0)<=now ? "⏰ 复习到期" :
@@ -876,6 +892,39 @@ function renderWbList(){
     </div>`;
   }).join("") : `<p style="color:var(--muted);font-size:13px">错题本为空——完成一轮答题后，未得满分的题会自动记入。</p>`;
 }
+function renderLegacyScale(){
+  const ids = scaleHistory.entries(wrong, qstats);
+  document.getElementById("legacyScaleBox").hidden = !ids.length;
+  document.getElementById("legacyScaleList").innerHTML = ids.map(id=>{
+    const row = wrong[id], stat = qstats[id], match = scaleHistory.lastQuestion(id,row);
+    const name = legacyScaleTitle(id);
+    const counts = stat ? `旧编号合计：答对 ${stat.r} 次，答错 ${stat.w} 次。` : "无累计作答成绩。";
+    const details = [];
+    if (row) {
+      if (row.wrong != null) details.push("错题本记录 " + row.wrong + " 次");
+      if (row.star) details.push("已收藏");
+      if (row.done) details.push("已掌握");
+      if (row.stage != null) details.push("复习档位 " + row.stage);
+      if (row.last) details.push("上次错答 " + new Date(row.last).toLocaleDateString());
+      if (row.due) details.push("原到期日 " + new Date(row.due).toLocaleDateString());
+      if (row.t !== "scale") details.push("旧记录的题型与此编号不符");
+      else details.push("上次错选：" + ((row.your || []).join("、") || "未作答"));
+      if (row.correct) details.push("当时记录的答案：" + row.correct);
+    }
+    const sources = scaleHistory.candidates(id).map(q=>`<a href="${esc(q.link)}">${qTitle(q)}</a>`);
+    const status = match ? `上次错题可对应到${qTitle(match)}。` : row ? "上次错题的场景待核对。" : "只保存了合计成绩。";
+    const replay = match ? `<button class="btn wbbtn" data-legacy-redo="${esc(match.k)}">复练上次错题</button>` : "";
+    return `<article class="wbitem" data-legacy-id="${esc(id)}"><div class="wbm">
+      <h4>${esc(name)}</h4><p>${counts} ${status}</p>
+      ${details.length ? `<p>${details.map(esc).join(" · ")}</p>` : ""}
+      <p>候选来源：${sources.join(" · ") || "现有题库暂未收录这些场景。"}</p>${replay}
+      </div></article>`;
+  }).join("");
+}
+function legacyScaleTitle(id){
+  const [,year,number] = id.split("-");
+  return `${year} 赛季尺度场景 ${number} · 旧编号`;
+}
 function axisText(y){
   if (!y) return "（未作答）";
   const parts = [];
@@ -888,12 +937,12 @@ function axisText(y){
 // ---------- 出题 ----------
 let round = null;
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
-function startRound(list){
+function startRound(list, mode = sel.mode){
   let qs = shuffle(list.slice());
   if (sel.count > 0) qs = qs.slice(0, sel.count);
   if (!qs.length) return;
   stopTimer();
-  round = {qs, i:0, mode:sel.mode, answers:qs.map(()=>null), scores:qs.map(()=>null), locked:false};
+  round = {qs, i:0, mode, answers:qs.map(()=>null), scores:qs.map(()=>null), locked:false};
   touchStudyDay();
   if (round.mode === "exam" && sel.timer !== "off")
     startTimer(qs.length * (sel.timer === "relaxed" ? 120 : 75));
@@ -967,7 +1016,7 @@ function renderQuestion(){
   } else {
     const links = q.t==="case"
       ? (q.vurls||[]).map((u,i)=>`<a class="srcbtn" href="${esc(u)}" target="_blank" rel="noopener noreferrer" referrerpolicy="no-referrer">${IC.play} 官方视频${i+1}</a>`).join("")
-      : `<a class="srcbtn" href="scale.html#h${q.s}-${q.series}-${q.id}" target="_blank">前往统一尺度页查看该场景</a>`;
+      : `<a class="srcbtn" href="${esc(q.link)}" target="_blank">前往统一尺度页查看该场景</a>`;
     vidHtml = `<div class="src-actions" style="display:flex">${links}<span class="srcsub">轻量版：请在线观看视频后作答</span></div>`;
   }
   // 题面
@@ -1319,13 +1368,18 @@ document.getElementById("btnStart").onclick = ()=>startRound(pool());
 document.getElementById("btnWb").onclick = ()=>{
   const box = document.getElementById("wbBox");
   box.style.display = box.style.display==="none" ? "" : "none";
+  document.getElementById("btnWb").setAttribute("aria-expanded",String(box.style.display !== "none"));
   renderWbList();
 };
 document.getElementById("btnWbClear").onclick = ()=>{
-  if (!Object.keys(wrong).length) return;
-  const ids = Object.keys(wrong);
-  if (confirm("确定清空整个错题本？此操作不可恢复。")){ writeRecords({kind:"remove",ids}); refreshRecords(); }
+  const ids = Object.keys(wrong).filter(id=>BANK[id]);
+  if (!ids.length) return;
+  if (confirm("确定清空当前题库中的错题？此操作不可恢复。")){ writeRecords({kind:"remove",ids}); refreshRecords(); }
 };
+document.getElementById("legacyScaleList").addEventListener("click", event=>{
+  const button = event.target.closest("[data-legacy-redo]");
+  if (button) startRound([BANK[button.dataset.legacyRedo]], "practice");
+});
 document.getElementById("wbList").addEventListener("click", e=>{
   const st = e.target.closest("[data-star]");
   if (st){ toggleStar(st.dataset.star); renderWbList(); return; }
@@ -1334,7 +1388,8 @@ document.getElementById("wbList").addEventListener("click", e=>{
 });
 document.getElementById("btnExport").onclick = ()=>{
   quizRecords.read(); syncRecordViews();
-  const blob = new Blob([JSON.stringify({wrong, exported:new Date().toISOString(), app:"cfa-referee-quiz"}, null, 1)],
+  const blob = new Blob([JSON.stringify({wrong, legacyScaleStats:scaleHistory.exportStats(qstats),
+    exported:new Date().toISOString(), app:"cfa-referee-quiz"}, null, 1)],
     {type:"application/json"});
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob);
@@ -1349,7 +1404,15 @@ document.getElementById("btnAnki").onclick = ()=>{
   const clean = s => (s||"").replace(/\t/g," ").replace(/\r?\n/g,"<br>").trim();
   const rows = [];
   Object.entries(wrong).forEach(([k,e])=>{
-    const q = BANK[k]; if (!q) return;
+    const legacy = Object.hasOwn(DATA.legacyScaleIds,k);
+    const q = legacy ? scaleHistory.lastQuestion(k,e) : BANK[k];
+    if (legacy && !q) {
+      const candidates = scaleHistory.candidates(k).map(item=>
+        `<a href="${esc(SITE_BASE + item.link)}">${qTitle(item)}</a>`);
+      rows.push([clean(legacyScaleTitle(k)), clean("上次场景待核对。记录的答案：" + esc(e.correct || "无")), candidates.join("<br>")].join("\t"));
+      return;
+    }
+    if (!q) return;
     let front = "", back = "";
     if (q.t === "case"){
       front = `${qTitle(q)}<br><br>${esc((q.desc||"").replace(/^判例[一二三四五六七八九十百]+[：:]/,"").trim())}`;
@@ -1367,8 +1430,9 @@ document.getElementById("btnAnki").onclick = ()=>{
       back = `<b>判罚决定：</b>${esc(active||"（无）")}`;
       if (q.reason) back += `<br><br>${esc(q.reason)}`;
     }
+    if (legacy && e.correct) back += "<br><br>当时记录的答案：" + esc(e.correct);
     const link = SITE_BASE + qLink(q);
-    rows.push([clean(front), clean(back), link].join("\t"));
+    rows.push([clean(legacy ? legacyScaleTitle(k) + "<br>" + front : front), clean(back), link].join("\t"));
   });
   if (!rows.length){ alert("错题本为空，先答一轮题再导出。"); return; }
   const head = "#separator:tab\n#html:true\n";  // Anki 2.1.55+ 文件头直读设置（# 行自动忽略）
@@ -1385,14 +1449,18 @@ document.getElementById("importFile").addEventListener("change", e=>{
   const rd = new FileReader();
   rd.onload = ()=>{
     try {
-      const rows = QuizRecords.importRows(JSON.parse(rd.result), BANK);
-      const current = quizRecords.read().wrong;
+      const backup = JSON.parse(rd.result);
+      const rows = QuizRecords.importRows(backup, scaleHistory.importBank);
+      const {wrong:current, stats} = quizRecords.read();
+      const legacy = scaleHistory.importStats(backup, stats);
       const fresh = Object.fromEntries(Object.entries(rows).filter(([id,row]) =>
         !current[id] || (row.last||0) > (current[id].last||0)));
       const n = Object.keys(fresh).length;
-      if (n) quizRecords.write({kind:"import",rows:fresh}, false);
+      const ns = Object.keys(legacy.rows).length;
+      if (n || ns) quizRecords.write({kind:"import",rows:fresh,legacyScaleStats:legacy.rows}, false);
       refreshRecords();
-      alert("导入完成：合并了 " + n + " 条错题记录");
+      alert("导入完成：合并了 " + n + " 条错题记录" + (ns ? "，补回 " + ns + " 组旧尺度题成绩" : "")
+        + (legacy.conflicts ? "。有 " + legacy.conflicts + " 组旧成绩与本机不同，已保留本机数值。" : ""));
     } catch(err){ alert("导入失败：" + err.message); }
   };
   rd.onerror = () => alert("导入失败：无法读取所选文件");
@@ -1569,6 +1637,10 @@ def main():
         )
         .replace(
             "__QUIZ_RECORDS_JS__", (SRC / "quiz-records.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__SCALE_HISTORY_JS__",
+            (SRC / "scale-quiz-history.js").read_text(encoding="utf-8"),
         )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)

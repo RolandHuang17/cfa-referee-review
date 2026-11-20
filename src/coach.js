@@ -67,8 +67,12 @@ function createCoachWorkspace(api) {
     const failed = active && pending.has(active.id);
     const retry = byId("coach-retry");
     if (retry) retry.hidden = !failed;
+    const recovery = byId("coach-recovery");
+    const count = model.unreadable.size;
+    if (recovery) recovery.hidden = count === 0;
+    const notice = count ? `有 ${count} 条本机记录暂时无法读取，可在「讲义与备份」导出原件。` : "";
     say([message,conflictMessage,failed ? "本页保留草稿，可重试保存或导出教练备份。" :
-      active?.revision ? "已保存到本机" : ""].filter(Boolean).join("　"));
+      active?.revision ? "已保存到本机" : "",notice].filter(Boolean).join("　"));
   }
   function persist() {
     const old = active.id;
@@ -319,6 +323,12 @@ function createCoachWorkspace(api) {
     byId("coach-backup").onclick = act(() => {
       download(model.backup(active),"application/json",safeName(titleOf(active))+"-教练备份.json");
       syncStatus("已生成包含私人备注的教练备份。");
+    });
+    byId("coach-recovery").onclick = act(() => {
+      const entries = Array.from(model.unreadable, ([key,value]) => ({key,value}));
+      const archive = {format:"cfa.coach.recovery",version:1,entries};
+      download(JSON.stringify(archive,null,2),"application/json","课单异常记录原件.json");
+      syncStatus("已导出异常记录原件，供修复时使用。");
     });
     byId("coach-import").onchange = act(async e => {
       const input=e.target, file=input.files[0]; input.value="";

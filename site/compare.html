@@ -875,6 +875,7 @@ html[data-hideans] #btnHideAns{background:var(--top-chip-on);color:var(--brand);
       <label id="coach-share-label" class="coach-field" hidden>学员链接<input id="coach-share-text" type="text" readonly></label></section>
     <section class="coach-backups"><h3>教练备份</h3><p>备份包含私人备注，可在另一台设备上继续备课。</p>
       <div class="coach-actions"><button type="button" class="coach-secondary" id="coach-backup">下载备份</button>
+        <button type="button" class="coach-secondary" id="coach-recovery" hidden>导出异常记录原件</button>
         <label class="coach-field">导入备份副本<input type="file" id="coach-import" accept=".json,application/json"></label></div></section>
     <p id="coach-dialog-status" role="status"></p>
   </div></dialog>
@@ -1241,6 +1242,7 @@ class CoachModel {
     this.prompts = new Map(lessons.flatMap(lesson => lesson.cases.map(item => [item.id, item.prompt])));
     this.prefix = "cfa.coach.lessons.v1.entry.";
     this.storageError = "";
+    this.unreadable = new Map();
   }
 
   create(title="未命名课单") {
@@ -1279,26 +1281,36 @@ class CoachModel {
     return {title,items};
   }
 
+  readRecord(key, raw) {
+    const row = JSON.parse(raw);
+    if (!row || !/^[0-9a-f]{32}$/.test(row.id) || !/^[0-9a-f]{32}$/.test(row.revision) ||
+        key !== this.prefix + row.revision || !Number.isFinite(row.updated)) throw Error("课单存储记录不完整。");
+    const parents = row.parents || (row.parent ? [row.parent] : []);
+    const anchors = row.anchors || [];
+    if (!Array.isArray(parents) || !parents.every(p => /^[0-9a-f]{32}$/.test(p)) ||
+        !Array.isArray(anchors) || !anchors.every(a => /^\d{16}-[0-9a-f]{32}$/.test(a))) {
+      throw Error("课单版本索引不完整。");
+    }
+    return {...this.content(row, true), id:row.id, revision:row.revision, updated:row.updated, parents, anchors};
+  }
+
   // Each write gets its own key. Even two tabs committing the same parent at once
   // leave two distinct children. Only the observed ancestor can be compacted.
   readRecords() {
     const store = localStorage;
     const entries = [];
+    const unreadable = new Map();
     for (const key of Object.keys(store)) {
       if (!key.startsWith(this.prefix)) continue;
       const raw = store.getItem(key);
       if (raw === null) continue;
-      const row = JSON.parse(raw);
-      if (!row || !/^[0-9a-f]{32}$/.test(row.id) || !/^[0-9a-f]{32}$/.test(row.revision) ||
-          key !== this.prefix + row.revision || !Number.isFinite(row.updated)) throw Error("课单存储记录不完整。");
-      const parents = row.parents || (row.parent ? [row.parent] : []);
-      const anchors = row.anchors || [];
-      if (!Array.isArray(parents) || !parents.every(p => /^[0-9a-f]{32}$/.test(p)) ||
-          !Array.isArray(anchors) || !anchors.every(a => /^\d{16}-[0-9a-f]{32}$/.test(a))) {
-        throw Error("课单版本索引不完整。");
+      try {
+        entries.push(this.readRecord(key, raw));
+      } catch (_) {
+        unreadable.set(key, raw);
       }
-      entries.push({...this.content(row, true), id:row.id, revision:row.revision, updated:row.updated, parents, anchors});
     }
+    this.unreadable = unreadable;
     const superseded = new Set(entries.flatMap(entry => entry.parents));
     const groups = new Map();
     for (const row of entries.filter(entry => !superseded.has(entry.revision))) {
@@ -1354,7 +1366,8 @@ class CoachModel {
       conflict = !base && (lesson.revision !== null || live.some(row => row.id === lesson.id));
       const id = base ? base.id : conflict ? this.newId() : lesson.id;
       saved = {...content, id, revision:this.newId(), updated:Date.now()};
-      const parents = base ? [base.revision, ...base.parents.filter(p => localStorage.getItem(this.prefix + p) !== null)] : [];
+      const parents = base ? [base.revision, ...base.parents.filter(p =>
+        !this.unreadable.has(this.prefix + p) && localStorage.getItem(this.prefix + p) !== null)] : [];
       localStorage.setItem(this.prefix + saved.revision, JSON.stringify({...saved, parents, anchors:base?.anchors || []}));
       for (const parent of parents) {
         // Each child remembers surviving ancestors until cleanup actually succeeds.
@@ -1525,8 +1538,12 @@ function createCoachWorkspace(api) {
     const failed = active && pending.has(active.id);
     const retry = byId("coach-retry");
     if (retry) retry.hidden = !failed;
+    const recovery = byId("coach-recovery");
+    const count = model.unreadable.size;
+    if (recovery) recovery.hidden = count === 0;
+    const notice = count ? `有 ${count} 条本机记录暂时无法读取，可在「讲义与备份」导出原件。` : "";
     say([message,conflictMessage,failed ? "本页保留草稿，可重试保存或导出教练备份。" :
-      active?.revision ? "已保存到本机" : ""].filter(Boolean).join("　"));
+      active?.revision ? "已保存到本机" : "",notice].filter(Boolean).join("　"));
   }
   function persist() {
     const old = active.id;
@@ -1777,6 +1794,12 @@ function createCoachWorkspace(api) {
     byId("coach-backup").onclick = act(() => {
       download(model.backup(active),"application/json",safeName(titleOf(active))+"-教练备份.json");
       syncStatus("已生成包含私人备注的教练备份。");
+    });
+    byId("coach-recovery").onclick = act(() => {
+      const entries = Array.from(model.unreadable, ([key,value]) => ({key,value}));
+      const archive = {format:"cfa.coach.recovery",version:1,entries};
+      download(JSON.stringify(archive,null,2),"application/json","课单异常记录原件.json");
+      syncStatus("已导出异常记录原件，供修复时使用。");
     });
     byId("coach-import").onchange = act(async e => {
       const input=e.target, file=input.files[0]; input.value="";

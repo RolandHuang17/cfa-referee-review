@@ -11,6 +11,7 @@ class CoachModel {
     this.prompts = new Map(lessons.flatMap(lesson => lesson.cases.map(item => [item.id, item.prompt])));
     this.prefix = "cfa.coach.lessons.v1.entry.";
     this.storageError = "";
+    this.unreadable = new Map();
   }
 
   create(title="未命名课单") {
@@ -49,26 +50,36 @@ class CoachModel {
     return {title,items};
   }
 
+  readRecord(key, raw) {
+    const row = JSON.parse(raw);
+    if (!row || !/^[0-9a-f]{32}$/.test(row.id) || !/^[0-9a-f]{32}$/.test(row.revision) ||
+        key !== this.prefix + row.revision || !Number.isFinite(row.updated)) throw Error("课单存储记录不完整。");
+    const parents = row.parents || (row.parent ? [row.parent] : []);
+    const anchors = row.anchors || [];
+    if (!Array.isArray(parents) || !parents.every(p => /^[0-9a-f]{32}$/.test(p)) ||
+        !Array.isArray(anchors) || !anchors.every(a => /^\d{16}-[0-9a-f]{32}$/.test(a))) {
+      throw Error("课单版本索引不完整。");
+    }
+    return {...this.content(row, true), id:row.id, revision:row.revision, updated:row.updated, parents, anchors};
+  }
+
   // Each write gets its own key. Even two tabs committing the same parent at once
   // leave two distinct children. Only the observed ancestor can be compacted.
   readRecords() {
     const store = localStorage;
     const entries = [];
+    const unreadable = new Map();
     for (const key of Object.keys(store)) {
       if (!key.startsWith(this.prefix)) continue;
       const raw = store.getItem(key);
       if (raw === null) continue;
-      const row = JSON.parse(raw);
-      if (!row || !/^[0-9a-f]{32}$/.test(row.id) || !/^[0-9a-f]{32}$/.test(row.revision) ||
-          key !== this.prefix + row.revision || !Number.isFinite(row.updated)) throw Error("课单存储记录不完整。");
-      const parents = row.parents || (row.parent ? [row.parent] : []);
-      const anchors = row.anchors || [];
-      if (!Array.isArray(parents) || !parents.every(p => /^[0-9a-f]{32}$/.test(p)) ||
-          !Array.isArray(anchors) || !anchors.every(a => /^\d{16}-[0-9a-f]{32}$/.test(a))) {
-        throw Error("课单版本索引不完整。");
+      try {
+        entries.push(this.readRecord(key, raw));
+      } catch (_) {
+        unreadable.set(key, raw);
       }
-      entries.push({...this.content(row, true), id:row.id, revision:row.revision, updated:row.updated, parents, anchors});
     }
+    this.unreadable = unreadable;
     const superseded = new Set(entries.flatMap(entry => entry.parents));
     const groups = new Map();
     for (const row of entries.filter(entry => !superseded.has(entry.revision))) {
@@ -124,7 +135,8 @@ class CoachModel {
       conflict = !base && (lesson.revision !== null || live.some(row => row.id === lesson.id));
       const id = base ? base.id : conflict ? this.newId() : lesson.id;
       saved = {...content, id, revision:this.newId(), updated:Date.now()};
-      const parents = base ? [base.revision, ...base.parents.filter(p => localStorage.getItem(this.prefix + p) !== null)] : [];
+      const parents = base ? [base.revision, ...base.parents.filter(p =>
+        !this.unreadable.has(this.prefix + p) && localStorage.getItem(this.prefix + p) !== null)] : [];
       localStorage.setItem(this.prefix + saved.revision, JSON.stringify({...saved, parents, anchors:base?.anchors || []}));
       for (const parent of parents) {
         // Each child remembers surviving ancestors until cleanup actually succeeds.

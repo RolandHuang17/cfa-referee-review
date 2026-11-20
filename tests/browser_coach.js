@@ -295,6 +295,20 @@ async (startPage) => {
     await page.locator("#coach-retry").click();
     await page.reload();
     check(await field(page,"2026-1","note").inputValue() === draft, "重试未保存草稿");
+    const damagedKey = "cfa.coach.lessons.v1.entry." + "0".repeat(32);
+    await page.evaluate(key=>localStorage.setItem(key,"{"),damagedKey);
+    await page.reload();
+    await selectLesson(page,first);
+    check(await page.locator("#coach-status").textContent().then(t=>t.includes("1 条本机记录")),
+      "课单列表没有提示部分记录不可读");
+    const recovery = JSON.parse((await download(page,"#coach-recovery")).text);
+    check(recovery.entries.length === 1 && recovery.entries[0].key === damagedKey && recovery.entries[0].value === "{",
+      "异常课单的原件导出不完整");
+    await closePanel(page);
+    await edit(page.locator("#coach-title"),"修复前继续备课");
+    await page.reload();
+    check(await page.locator("#coach-title").inputValue() === "修复前继续备课" &&
+      await page.evaluate(key=>localStorage.getItem(key),damagedKey) === "{", "有效课单未能保存或异常原件被覆盖");
     await page.evaluate(() => navigator.serviceWorker.ready.then(() => true));
     await page.waitForFunction(() => !!navigator.serviceWorker.controller);
     await page.reload();  // Cache this document before disconnecting the browser.

@@ -154,6 +154,27 @@ test("quota failure preserves the saved version and all unsaved text for backup 
   assert.equal(model.list()[0].items[0].note,"未保存草稿");
 });
 
+test("an unreadable revision stays recoverable alongside healthy lessons and a valid ancestor", () => {
+  const {model,storage} = environment();
+  const first = model.save(example(model)).lesson;
+  const second = model.save({...example(model),title:"第二堂课"}).lesson;
+  const damagedKey = model.prefix + model.newId();
+  const oldKey = model.prefix + model.newId();
+  storage.setItem(damagedKey, "{");
+  const oldRecord = {...first,revision:oldKey.slice(model.prefix.length),parents:[first.revision]};
+  oldRecord.items = [{...first.items[0],caseId:"unknown-case"}];
+  const raw = JSON.stringify(oldRecord);
+  storage.setItem(oldKey,raw);
+  assert.equal(model.list().length,2);
+  assert.equal(model.unreadable.get(oldKey),raw);
+  assert.equal(model.unreadable.get(damagedKey),"{");
+  const saved = model.save({...first,title:"修订标题"});
+  assert.ok(saved.ok);
+  assert.ok(model.list().some(x=>x.id===second.id));
+  assert.equal(storage.getItem(oldKey),raw);
+  assert.equal(storage.getItem(damagedKey),"{");
+});
+
 test("same-base simultaneous edits and later branch edits keep each presentation ID attached to its own class", () => {
   const {model,hooks} = environment();
   const original = model.save(example(model)).lesson;

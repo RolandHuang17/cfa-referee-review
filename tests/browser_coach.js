@@ -138,8 +138,19 @@ async (startPage) => {
     await page.locator("#coach-present").click();
     await page.waitForURL(u => u.hash.startsWith("#present-"));
     const stage = page.locator("#workspace");
-    check((await stage.innerText()).includes(question) && !(await stage.innerText()).includes(secret) &&
-      !(await stage.innerText()).includes(official), "投屏初次显示了答案、私人笔记，或问题缺失");
+    // The hash changes before the hashchange handler mounts the presentation.
+    const heading = stage.locator(".coach-stage .coach-content h2");
+    await heading.waitFor({state:"visible"});
+    const initial = await stage.evaluate(el => ({
+      question: el.querySelector(".coach-stage .coach-content h2").innerText,
+      content: el.textContent,
+      answerPanel: !!el.querySelector(".coach-answer"),
+      revealState: el.querySelector("#stage-reveal")?.getAttribute("aria-pressed")
+    }));
+    check(initial.question === question, "投屏首题问题不符，实际为 " + JSON.stringify(initial.question));
+    check(!initial.content.includes(secret), "投屏初始 DOM 包含私人笔记");
+    check(!initial.content.includes(official), "投屏初始 DOM 包含足协认定原文");
+    check(!initial.answerPanel && initial.revealState === "false", "投屏初始认定面板或揭晓开关状态异常");
     check(!await page.locator("#stage-prev").isEnabled() &&
       !(await stage.innerText()).includes("浙江队"), "首案混入第二案或可越界回退");
     if (!await page.evaluate(() => !!document.fullscreenElement)) await page.locator("#stage-fullscreen").click();

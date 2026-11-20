@@ -72,8 +72,16 @@ jobs:
           python tests/browser_server.py 8876 > /tmp/cfa-offline.log 2>&1 &
           trap 'playwright-cli -s=ci close' EXIT
           playwright-cli -s=ci open http://127.0.0.1:8765/quiz.html --browser=chrome --config=tests/browser-cli.json
+          failures=()
           for scenario in tests/browser_*.js; do
             echo "::group::$scenario"
-            playwright-cli -s=ci run-code --filename "$scenario"
+            if ! playwright-cli -s=ci run-code --filename "$scenario"; then
+              failures+=("$scenario")
+              echo "::error file=$scenario::Browser scenario failed"
+            fi
             echo "::endgroup::"
           done
+          if (( ${#failures[@]} )); then
+            printf 'Failed browser scenario: %s\n' "${failures[@]}"
+            exit 1
+          fi

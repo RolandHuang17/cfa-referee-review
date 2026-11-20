@@ -18,16 +18,18 @@ import random
 import re
 import sys
 import time
+from html.parser import HTMLParser
 
 from lib.atomic_json import write_json
+from lib.official_urls import official_url
 from lib.pro_series import SERIES_NAMES
+from lib.pro_sources import BASE, HOST, SOURCE, USSF, article_url, video_url
 from lib.source_cache import SourceCache
 
 from lib.paths import PRO_CACHE, PRO_JSON
 
 CACHE_READER = SourceCache()
 
-BASE = "https://proreferees.com"
 CATEGORIES = [
     ("inside-video-review", "ivr"),
     ("the-definitive-angle", "angle"),
@@ -45,6 +47,8 @@ def clean(text: str) -> str:
 
 
 def fetch_page(url: str) -> str:
+    if official_url(url, {HOST}) is None:
+        return ""
     slug = (
         re.sub(r"[^a-z0-9-]", "_", url.split("proreferees.com/")[-1].strip("/"))
         or "home"
@@ -61,8 +65,11 @@ def parse_listing(page: str) -> list:
         r'<h([1-3])[^>]*class="[^"]*(?:entry-title|post-title)[^"]*"[^>]*>\s*<a[^>]+href="([^"]+)"[^>]*>([\s\S]*?)</a>',
         page,
     ):
-        url, title = m.group(2), clean(m.group(3))
-        if url in seen or "/category/" in url or "/page/" in url:
+        url, title = (
+            article_url(htmllib.unescape(m.group(2)), dated=True),
+            clean(m.group(3)),
+        )
+        if not url or url in seen or not title:
             continue
         seen.add(url)
         out.append({"title": title, "url": url})
@@ -71,8 +78,11 @@ def parse_listing(page: str) -> list:
             r'<a[^>]+href="(https://proreferees\.com/20\d\d/\d\d/\d\d/[^"]+)"[^>]*>([\s\S]*?)</a>',
             page,
         ):
-            url, title = m.group(1), clean(m.group(2))
-            if url in seen or not title or len(title) < 8:
+            url, title = (
+                article_url(htmllib.unescape(m.group(1)), dated=True),
+                clean(m.group(2)),
+            )
+            if not url or url in seen or not title or len(title) < 8:
                 continue
             seen.add(url)
             out.append({"title": title, "url": url})
@@ -83,16 +93,32 @@ SERIES_RE = re.compile(
     r"(?i)^\s*(Inside Video Review|VAR a Fondo|The Definitive Angle)\s*[:：]?\s*(.*)$"
 )
 LEAGUE_RE = re.compile(r"\b(MLS|NWSL|USL)\b")
-YT_EMBED_RE = re.compile(r"youtube(?:-nocookie)?\.com/embed/([-\w]{11})", re.I)
+
+
+class VideoFrames(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.urls = {}
+
+    def handle_starttag(self, tag, attrs):
+        if tag != "iframe":
+            return
+        url = video_url(dict(attrs).get("src"), embed=True)
+        if url:
+            self.urls[url] = None
 
 
 def article_videos(url: str) -> list:
     """文章页内嵌 YouTube 视频 → 官方观看直链（v2：2026-10 实测 IVR/VAF 文章均嵌 YouTube iframe）"""
+    url = article_url(url)
+    if not url:
+        return []
     page = fetch_page(url)
     if not page:
         return []
-    ids = list(dict.fromkeys(YT_EMBED_RE.findall(page)))
-    return [f"https://www.youtube.com/watch?v={i}" for i in ids]
+    frames = VideoFrames()
+    frames.feed(page)
+    return list(frames.urls)
 
 
 def classify(title: str) -> dict:
@@ -154,18 +180,24 @@ def parse_all():
     # 去重（IVR 分类与官网首页可能重复；VAR a Fondo 归入 IVR 分类）
     merged = {}
     for item in articles:
-        previous = merged.get(item["url"], {})
-        merged[item["url"]] = dict(previous)
+        key_url = article_url(item["url"]) or item["url"]
+        previous = merged.get(key_url, {})
+        merged[key_url] = dict(previous)
         for key, value in item.items():
-            if value not in ("", None, []) or key not in merged[item["url"]]:
-                merged[item["url"]][key] = value
+            if key == "url" and key in previous:
+                continue  # Keep the original local search/bookmark anchor.
+            if value not in ("", None, []) or key not in merged[key_url]:
+                merged[key_url][key] = value
     uniq = sorted(merged.values(), key=lambda x: x["date"], reverse=True)
     # 空列表可能来自暂时抓取失败，下次重试；--refresh 同时重查已有链接。
     n_vid = 0
     for a in uniq:
+        url = article_url(a["url"])
+        if not url:
+            continue
         if a.get("videos") and not CACHE_READER.refresh:
             continue
-        vids = article_videos(a["url"])
+        vids = article_videos(url)
         a["videos"] = vids or a.get("videos", [])
         if vids:
             n_vid += 1
@@ -176,16 +208,12 @@ def parse_all():
         if not CACHE_READER.offline:
             time.sleep(random.uniform(*DELAY))
     data = {
-        "source": BASE + "/category/inside-video-review/",
+        "source": SOURCE,
         "source_name": "美国 PRO 裁判评议（Inside Video Review / VAR a Fondo / The Definitive Angle）",
         "fetched": time.strftime("%Y-%m-%d")
         if len(checked) == len(CATEGORIES) and not CACHE_READER.failed
         else old.get("fetched", ""),
-        "ussf": {
-            "videos": "https://www.ussoccer.com/refereeing/videos",
-            "learning": "https://learning.ussoccer.com/referee",
-            "refereeing": "https://www.ussoccer.com/refereeing",
-        },
+        "ussf": USSF,
         "articles": uniq,
     }
     data["latest_content"] = max((a["date"] for a in uniq), default="")

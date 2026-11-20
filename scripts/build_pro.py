@@ -25,6 +25,7 @@ from lib.pagelib import (
 )
 from lib.paths import PRO_JSON, SITE
 from lib.pro_series import series_name
+from lib.pro_sources import SOURCE, USSF, article_url, video_url
 
 SERIES_BADGE = {"vaf": "pending", "angle": "correct"}
 
@@ -113,16 +114,23 @@ def build_page(data):
     for y, yarts in group_by_year(arts, fallback="其他"):
         rows = ""
         for a in yarts:
+            url = article_url(a.get("url"))
             label = series_name(a)
             badge = SERIES_BADGE.get(a.get("kind"), "info")
             kinds = " ".join(filter(None, [a.get("kind"), a.get("league")]))
             tags = f'<span class="badge {badge}">{esc(label)}</span>'
             if a.get("league"):
-                tags += f'<span class="badge info">{esc(a["league"])}{(" #" + a["round"]) if a.get("round") else ""}</span>'
-            vids = "".join(
-                f'<a class="go" href="{esc(v)}" target="_blank" rel="noopener noreferrer">{icon("play", 11)} 官方视频</a>'
-                for v in (a.get("videos") or [])[:1]
-            )
+                round_no = " #" + esc(str(a["round"])) if a.get("round") else ""
+                tags += f'<span class="badge info">{esc(a["league"])}{round_no}</span>'
+            vids = ""
+            source = "<small>文章来源待核对</small>"
+            if url:
+                source = f'<a class="go" href="{esc(url)}" target="_blank" rel="noopener noreferrer">{icon("external", 11)} 官方页</a>'
+                for raw_video in a.get("videos") or []:
+                    verified_video = video_url(raw_video)
+                    if verified_video:
+                        vids = f'<a class="go" href="{esc(verified_video)}" target="_blank" rel="noopener noreferrer">{icon("play", 11)} 官方视频</a>'
+                        break
             blob = search_blob(
                 a["title"],
                 a.get("date"),
@@ -134,7 +142,7 @@ def build_page(data):
   <div class="t"><b>{esc(a["title"])}</b><small>{esc(a.get("date", ""))}</small></div>
   {tags}
   {vids}
-  <a class="go" href="{esc(a["url"])}" target="_blank" rel="noopener noreferrer">{icon("external", 11)} 官方页</a>
+  {source}
 </article>"""
         secs += (
             f'<h3 class="year-h" data-year="{esc(y)}">{esc(y)} <small>{len(yarts)} 篇</small></h3>'
@@ -147,10 +155,9 @@ def build_page(data):
         seasons=("2026", "2025", "2024"),
     )
     src_link = (
-        f'<a href="{esc(data.get("source", ""))}" target="_blank" '
+        f'<a href="{esc(SOURCE)}" target="_blank" '
         f'rel="noopener noreferrer">proreferees.com 官方分类页</a>'
     )
-    u = data.get("ussf", {})
     html = inject_theme(
         HTML.replace("__TOPBAR__", tb)
         .replace("__SOURCE_LINK__", src_link)
@@ -175,9 +182,9 @@ def build_page(data):
         .replace("__N_ANGLE__", str(n["angle"]))
         .replace("__N_MLS__", str(n["MLS"]))
         .replace("__N_NWSL__", str(n["NWSL"]))
-        .replace("__U_VIDEOS__", esc(u.get("videos", "")))
-        .replace("__U_LEARNING__", esc(u.get("learning", "")))
-        .replace("__U_REFEREEING__", esc(u.get("refereeing", "")))
+        .replace("__U_VIDEOS__", esc(USSF["videos"]))
+        .replace("__U_LEARNING__", esc(USSF["learning"]))
+        .replace("__U_REFEREEING__", esc(USSF["refereeing"]))
         .replace("__CHECKED__", esc(data.get("fetched", "")))
         .replace("__SECTIONS__", secs),
         meta=meta_tags("pro.html"),

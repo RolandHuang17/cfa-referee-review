@@ -375,6 +375,7 @@ body{overflow:hidden}
 .qvideo .vkey-tip{right:calc(50% - 400px)}
 @media (max-width:880px){.qvideo .vkey-tip{right:10px}}
 /* 数字角标（键盘选答提示）与快捷键说明 */
+#recordRetry[hidden]{display:none}
 .opt .okn{display:inline-flex;align-items:center;justify-content:center;min-width:16px;height:16px;
   margin-right:6px;border:1px solid var(--line2);border-radius:4px;font-size:10.5px;
   color:var(--muted);flex:none;font-weight:400}
@@ -477,6 +478,8 @@ details.qappeal summary{cursor:pointer;color:var(--brand);font-size:13px}
 __TOPBAR__
 
 <div class="layout"><div class="scroll" id="scroll"><div class="wrap">
+
+<div><span id="recordStatus" role="status"></span> <button id="recordRetry" type="button" class="btn" hidden>重试保存</button></div>
 
 <!-- 开始屏 -->
 <section id="scrStart">
@@ -608,9 +611,9 @@ __TOPBAR__
 
 <script>
 __CALENDAR_JS__
+__QUIZ_RECORDS_JS__
 const DATA = __DATA__;
 const IC = __ICONS__;
-const CFG = DATA.cfg;
 const R_OPTS = DATA.opts.r, C_OPTS = DATA.opts.c, V_OPTS = DATA.opts.v;
 const VNAME = Object.fromEntries(V_OPTS);
 const RNAME = Object.fromEntries(R_OPTS);
@@ -632,32 +635,37 @@ function crest(team, h, mark){
   return `<span class="team-badge" style="width:${scale}px;height:${scale}px;--badge-fg:${item.fg};--badge-bg:${item.bg}" title="${esc(team)}：文字徽章（队徽待核验）">${esc(item.initials)}</span>`;
 }
 
-// ---------- 错题本 ----------
-let wrong = {};
-try { wrong = JSON.parse(localStorage.getItem(CFG.wrongKey) || "{}") || {}; } catch(_) { wrong = {}; }
-function persistWrong(){ try { localStorage.setItem(CFG.wrongKey, JSON.stringify(wrong)); } catch(_) {} }
-// ---------- 间隔复习（Leitner 六档：0/1/3/7/14/30 天；答错归零、答对晋级） ----------
-// 旧条目无 stage/due 字段 → (e.due||0)<=now 恒真 = 立即可复习，向后兼容
-const SRS_DAYS = [0, 1, 3, 7, 14, 30];
+// 汇总结果同时驱动训练筛选、错题管理和历史成绩。
+const quizRecords = new QuizRecords();
+let wrong, qstats, qhist;
+function syncRecordViews(){
+  ({wrong,stats:qstats,history:qhist} = quizRecords.state);
+  const status = document.getElementById("recordStatus"), retry = document.getElementById("recordRetry");
+  retry.hidden = !quizRecords.pending.size;
+  status.textContent = quizRecords.pending.size ? "作答尚未写入浏览器。请在离开前重试；错题也可导出备份。" :
+    quizRecords.unavailable ? "暂时无法读取浏览器记录。" :
+    quizRecords.state.damaged ? "已跳过 " + quizRecords.state.damaged + " 条无法读取的旧记录，其余学习记录可继续使用。原始数据仍保留在本机。" : "";
+}
+syncRecordViews();
+function refreshRecords(){
+  quizRecords.read();
+  syncRecordViews();
+  renderWbStats(); renderAnalysis(); renderHistory(); updatePoolTip();
+  if (document.getElementById("wbBox").style.display !== "none") renderWbList();
+  if (document.getElementById("scrQuiz").style.display !== "none" && round) updateFeedbackStar(round.qs[round.i].k);
+}
+function writeRecords(change){
+  quizRecords.write(change);
+  syncRecordViews();
+}
+function attemptAnswer(q, your, score){
+  if (score.got === score.max) return {id:q.k};
+  const correct = score.detail.map(d=>d.right).join(q.t === "case" ? " + " : "、");
+  return {id:q.k, miss:{t:q.t,s:q.s,your,correct}};
+}
 function dueCount(){
   const now = Date.now();
   return Object.values(wrong).filter(e => !e.done && (e.due||0) <= now).length;
-}
-function srsAdvance(k){
-  const e = wrong[k]; if (!e) return;
-  e.stage = Math.min((e.stage||0) + 1, SRS_DAYS.length - 1);
-  e.due = Date.now() + SRS_DAYS[e.stage] * 86400000;
-  e.done = e.stage >= SRS_DAYS.length - 1;  // 毕业档标记已掌握，退出到期池
-}
-function recordWrong(q, your, score){
-  const e = wrong[q.k] || {t:q.t, s:q.s, star:false, wrong:0};
-  // 记下正确答案文本，错题本才能对照复盘（旧版本条目无此字段，渲染时兼容）
-  e.correct = score && score.detail
-    ? score.detail.map(d=>d.right).join(q.t==="case" ? " + " : "、") : "";
-  e.t = q.t; e.s = q.s; e.your = your;
-  e.wrong = (e.wrong||0) + 1; e.last = Date.now(); e.done = false;
-  e.stage = 0; e.due = Date.now();  // 答错归零，立即可再复习
-  wrong[q.k] = e; persistWrong();
 }
 function qTitle(q){
   if (q.t === "case")
@@ -675,16 +683,6 @@ function qLink(q){
                         : `scale.html#h${q.s}-${q.series}-${q.id}`;
 }
 
-// ---------- 逐题作答历史（cfa.quiz.stats：不只记错题，雷达/薄弱点分析用） ----------
-const STATS_KEY = "cfa.quiz.stats";
-let qstats = {};
-try { qstats = JSON.parse(localStorage.getItem(STATS_KEY) || "{}") || {}; } catch(_) { qstats = {}; }
-function recordStat(k, ok){
-  const e = qstats[k] || {r:0, w:0};
-  ok ? e.r++ : e.w++;
-  qstats[k] = e;
-  try { localStorage.setItem(STATS_KEY, JSON.stringify(qstats)); } catch(_) {}
-}
 // ---------- 考试计时（倒计时结束自动交卷；练习模式不启用） ----------
 let examTimer = null;
 function fmtMS(sec){
@@ -795,16 +793,7 @@ function renderAnalysis(){
     (hint ? `<p class="rd-hint">⚠ 最薄弱：<b>${hint.name}</b></p><button type="button" class="btn" data-practice-cat="${esc(hint.id)}">复练此分类</button>` : "");
 }
 
-// ---------- 历史成绩（考试模式，保留最近 20 次） ----------
-const HIST_KEY = "cfa.quiz.history";
-let qhist = [];
-try { qhist = JSON.parse(localStorage.getItem(HIST_KEY) || "[]") || []; } catch(_) { qhist = []; }
-function recordHistory(got, max, n){
-  qhist.unshift({ t: Date.now(), got, max, n });
-  qhist = qhist.slice(0, 20);
-  try { localStorage.setItem(HIST_KEY, JSON.stringify(qhist)); } catch(_) {}
-  renderHistory();
-}
+// ---------- 历史成绩（考试模式，最多 20 次） ----------
 function examPassed(got, max){ return max > 0 && got * 100 >= max * 90; }
 function scorePercent(got, max){
   if (!max) return "0";
@@ -1129,13 +1118,31 @@ function renderFeedback(q, a){
   fb.innerHTML = h;
   fb.classList.add("on", s.got===s.max ? "fb-ok" : s.got>0 ? "fb-part" : "fb-miss");
   document.getElementById("fbStar").onclick = ()=>toggleStar(q.k);
+  updateFeedbackStar(q.k);
+}
+function updateFeedbackStar(k){
+  const btn = document.getElementById("fbStar");
+  if (!btn) return;
+  btn.disabled = !wrong[k];
+  btn.innerHTML = wrong[k]?.star ? IC["star-f"]+" 已收藏" : IC.star+" 收藏错题";
 }
 function toggleStar(k){
   if (!wrong[k]) return;
-  wrong[k].star = !wrong[k].star; persistWrong(); renderWbStats();
-  const btn = document.getElementById("fbStar");
-  if (btn) btn.innerHTML = wrong[k].star ? IC["star-f"]+" 已收藏" : IC.star+" 收藏错题";
+  writeRecords({kind:"star",id:k,value:!wrong[k].star});
+  renderWbStats(); updatePoolTip(); updateFeedbackStar(k);
 }
+
+document.getElementById("recordRetry").onclick = () => { quizRecords.retry(); refreshRecords(); };
+window.addEventListener("beforeunload", e => {
+  if (quizRecords.pending.size) { e.preventDefault(); e.returnValue = ""; }
+});
+let recordRefreshTimer;
+window.addEventListener("storage", e => {
+  if (!QuizRecords.related(e.key)) return;
+  clearTimeout(recordRefreshTimer);
+  recordRefreshTimer = setTimeout(refreshRecords, 0);
+});
+window.addEventListener("pageshow", e => { if (e.persisted) refreshRecords(); });
 
 // ---------- 提交与导航 ----------
 function submitAnswer(){
@@ -1146,9 +1153,7 @@ function submitAnswer(){
       const a = currentAnswer();
       const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : q.t==="theory" ? scoreTheory(q, a) : scoreScale(q, a);
       round.answers[round.i] = a; round.scores[round.i] = s;
-      recordStat(q.k, s.got === s.max);
-      if (s.got < s.max) recordWrong(q, a, s);
-      else if (wrong[q.k]){ srsAdvance(q.k); persistWrong(); }
+      writeRecords({kind:"attempt", answers:[attemptAnswer(q, a, s)]});
       round.locked = true;
       renderFeedback(q, a);
       syncButtons();
@@ -1172,17 +1177,16 @@ function finishExam(captureCurrent=true){
   if (captureCurrent && round.qs[round.i] && round.scores[round.i] == null)
     round.answers[round.i] = currentAnswer();
   let totalGot = 0, totalMax = 0;
+  const answers = [];
   round.qs.forEach((q,i)=>{
     const a = round.answers[i] ?? (q.t==="case" ? {v:null,r:null,c:null} : (q.t==="var"||q.t==="theory") ? null : []);
     const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : q.t==="theory" ? scoreTheory(q, a) : scoreScale(q, a);
     round.scores[i] = s;
     totalGot += s.got; totalMax += s.max;
-    recordStat(q.k, s.got === s.max);
-    if (s.got < s.max) recordWrong(q, a, s);
-    else if (wrong[q.k]){ srsAdvance(q.k); }
+    answers.push(attemptAnswer(q, a, s));
   });
-  persistWrong();
-  recordHistory(totalGot, totalMax, round.qs.length);
+  writeRecords({kind:"attempt", answers, exam:{got:totalGot,max:totalMax,n:round.qs.length}});
+  renderHistory();
   showResult();
 }
 function gotoPrev(){
@@ -1200,8 +1204,7 @@ function skipQuestion(){
   if (round.mode === "practice"){
     const s = q.t==="case" ? scoreCase(q, a) : q.t==="var" ? scoreVar(q, a) : q.t==="theory" ? scoreTheory(q, a) : scoreScale(q, a);
     round.scores[round.i] = s;
-    recordStat(q.k, false);
-    recordWrong(q, a, s);
+    writeRecords({kind:"attempt", answers:[attemptAnswer(q, a, s)]});
   }
   if (round.i < round.qs.length-1){ round.i++; renderQuestion(); }
   else if (round.mode === "exam") finishExam(false);
@@ -1312,15 +1315,17 @@ document.getElementById("btnWb").onclick = ()=>{
 };
 document.getElementById("btnWbClear").onclick = ()=>{
   if (!Object.keys(wrong).length) return;
-  if (confirm("确定清空整个错题本？此操作不可恢复。")){ wrong = {}; persistWrong(); renderWbStats(); renderWbList(); }
+  const ids = Object.keys(wrong);
+  if (confirm("确定清空整个错题本？此操作不可恢复。")){ writeRecords({kind:"remove",ids}); refreshRecords(); }
 };
 document.getElementById("wbList").addEventListener("click", e=>{
   const st = e.target.closest("[data-star]");
-  if (st){ const k = st.dataset.star; wrong[k].star = !wrong[k].star; persistWrong(); renderWbStats(); renderWbList(); return; }
+  if (st){ toggleStar(st.dataset.star); renderWbList(); return; }
   const del = e.target.closest("[data-del]");
-  if (del){ delete wrong[del.dataset.del]; persistWrong(); renderWbStats(); renderWbList(); }
+  if (del){ writeRecords({kind:"remove",ids:[del.dataset.del]}); refreshRecords(); }
 });
 document.getElementById("btnExport").onclick = ()=>{
+  quizRecords.read(); syncRecordViews();
   const blob = new Blob([JSON.stringify({wrong, exported:new Date().toISOString(), app:"cfa-referee-quiz"}, null, 1)],
     {type:"application/json"});
   const a = document.createElement("a");
@@ -1331,6 +1336,7 @@ document.getElementById("btnExport").onclick = ()=>{
 // ---------- Anki 导出（TSV：题面 / 答案与认定 / 来源链接） ----------
 // Anki 导入设置：字段分隔符 Tab、勾选「允许在字段中使用 HTML」；# 开头行会被 Anki 当注释忽略
 document.getElementById("btnAnki").onclick = ()=>{
+  quizRecords.read(); syncRecordViews();
   const SITE_BASE = "https://rolandhuang17.github.io/cfa-referee-review/";
   const clean = s => (s||"").replace(/\t/g," ").replace(/\r?\n/g,"<br>").trim();
   const rows = [];
@@ -1371,17 +1377,17 @@ document.getElementById("importFile").addEventListener("change", e=>{
   const rd = new FileReader();
   rd.onload = ()=>{
     try {
-      const d = JSON.parse(rd.result);
-      let n = 0;
-      for (const [k, v] of Object.entries(d.wrong||{})){
-        if (!BANK[k]) continue;
-        if (!wrong[k] || (v.last||0) > (wrong[k].last||0)){ wrong[k] = v; n++; }
-      }
-      persistWrong(); renderWbStats();
-      if (document.getElementById("wbBox").style.display !== "none") renderWbList();
-      alert(`导入完成：合并了 ${n} 条错题记录`);
-    } catch(err){ alert("导入失败：文件不是有效的错题本 JSON"); }
+      const rows = QuizRecords.importRows(JSON.parse(rd.result), BANK);
+      const current = quizRecords.read().wrong;
+      const fresh = Object.fromEntries(Object.entries(rows).filter(([id,row]) =>
+        !current[id] || (row.last||0) > (current[id].last||0)));
+      const n = Object.keys(fresh).length;
+      if (n) quizRecords.write({kind:"import",rows:fresh}, false);
+      refreshRecords();
+      alert("导入完成：合并了 " + n + " 条错题记录");
+    } catch(err){ alert("导入失败：" + err.message); }
   };
+  rd.onerror = () => alert("导入失败：无法读取所选文件");
   rd.readAsText(f, "utf-8");
   e.target.value = "";
 });
@@ -1554,6 +1560,9 @@ def main():
         HTML.replace("__DATA__", data_js)
         .replace(
             "__CALENDAR_JS__", (SRC / "study-calendar.js").read_text(encoding="utf-8")
+        )
+        .replace(
+            "__QUIZ_RECORDS_JS__", (SRC / "quiz-records.js").read_text(encoding="utf-8")
         )
         .replace("__ICONS__", js_icons())
         .replace("__TOPBAR__", tb)

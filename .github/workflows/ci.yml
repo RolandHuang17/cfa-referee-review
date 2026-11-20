@@ -59,8 +59,8 @@ jobs:
           node-version: "22"
       - name: Build offline site
         run: python scripts/build_all.py
-      - name: Verify coach lesson storage and handouts
-        run: node --test tests/test_coach_model.cjs
+      - name: Verify learning records and coach handouts
+        run: node --test tests/test_coach_model.cjs tests/quiz-records.cjs
       - name: Verify browser learning flow and offline upgrade
         run: |
           python tests/browser_server.py 8765 > /tmp/cfa-browser.log 2>&1 &
@@ -68,6 +68,7 @@ jobs:
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci open http://127.0.0.1:8765/quiz.html --browser=chrome
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_smoke.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_learning_audit.js
+          npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_quiz_records.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_interface.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_offline.js
           npx --yes --package @playwright/cli@0.1.24 playwright-cli -s=ci run-code --filename tests/browser_compare.js

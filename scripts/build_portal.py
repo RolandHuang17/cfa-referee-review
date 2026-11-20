@@ -331,6 +331,7 @@ def main():
         "__LEARNING_RECORDS__": (SRC / "learning-records.js").read_text(
             encoding="utf-8"
         ),
+        "__QUIZ_RECORDS__": (SRC / "quiz-records.js").read_text(encoding="utf-8"),
         "__PORTAL_JS__": (SRC / "portal.js").read_text(encoding="utf-8"),
         "__STUDY_INDEX__": js_value(build_study_index()),
         "__SAMPLE_REVIEW__": js_value(sample["conclusion"]),

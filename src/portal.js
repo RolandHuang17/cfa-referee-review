@@ -103,7 +103,7 @@
   function refreshStats() {
     const seen = seasons.reduce((total, year) => total + Object.keys(read("cfa" + year + ".seen", {})).length, 0);
     const fav = seasons.reduce((total, year) => total + Object.keys(new LearningRecords("cfa" + year + ".fav").read()).length, 0);
-    const due = Object.values(read("cfa.quiz.wrong", {})).filter(row => row && !row.done && (row.due || 0) <= Date.now()).length;
+    const due = Object.values(QuizRecords.readWrong()).filter(row => !row.done && (row.due || 0) <= Date.now()).length;
     byId("msFoot").querySelector("b").textContent = seen;
     byId("msDue").querySelector("b").textContent = due;
     byId("msStreak").textContent = currentStudyStreak(read("cfa.streak", {}));
@@ -111,7 +111,8 @@
   }
   window.addEventListener("storage", event => {
     if (event.key === "cfa.lite" || event.key === null) displayMode(read("cfa.lite", 0) === 1);
-    refreshStats();
+    if (QuizRecords.related(event.key) || event.key === "cfa.streak" ||
+        /^cfa\d{4}\.(seen|fav)(\.|$)/.test(event.key)) refreshStats();
   });
   refreshStats();
 })();

@@ -8,6 +8,9 @@ cfa.ifab-en）；译文按 section id / block 英文标题 / FAQ id 平铺匹配
 """
 
 import json
+from html import escape
+
+from lib.ifab_content import documents
 
 from lib.seo import meta_tags
 from lib.theme import inject_theme, topbar, icon
@@ -52,6 +55,10 @@ HTML = r"""<!DOCTYPE html>
 .xfaq{margin-top:10px;background:var(--bg2);border-radius:var(--r-sm);padding:8px 12px}
 .toc .sub{padding-left:16px;font-size:12.5px}
 .doc .sec{margin-bottom:34px}
+.doc [id]{scroll-margin-top:calc(var(--top-h,56px) + 16px)}
+.doc :is(p,li,summary):target{outline:2px solid var(--brand);outline-offset:3px}
+.previous{margin:8px 0;padding:8px 12px;border-left:2px solid var(--line)}
+@media print{.page-ifab .toc,.page-ifab .en-toggle{display:none}.page-ifab .panel{break-inside:auto}}
 .doc h2{font-family:var(--font-display);font-size:20px;margin:0 0 12px;padding-bottom:8px;
   border-bottom:1px solid var(--line);letter-spacing:.4px}
 .doc h3{font-family:var(--font-display);font-size:16px;margin:20px 0 8px;color:var(--brand)}
@@ -87,7 +94,7 @@ __TOPBAR__
     <div class="toprow">
       <div>
         <h1>IFAB · VAR 协议与统一尺度</h1>
-        <div class="sub">《Laws of the Game》Video Assistant Referee (VAR) protocol 官方全文中文译制：四原则章节 + 12 条官方 FAQ 判例 · 与本站《竞赛规则》2026-27 译本同源 · 默认中文，右上角切换英文原文</div>
+        <div class="sub">主协议 __SECS_N__ 节、官方 FAQ __FAQ_N__ 则、配套指南 __EXTRAS_N__ 篇。可按段查阅中文译文或切换 IFAB 英文原文。</div>
       </div>
       <button id="btnEn" class="en-toggle" aria-pressed="false">__I_LANG__ 英文原文：关</button>
     </div>
@@ -129,6 +136,23 @@ __TOPBAR__
     paint();
   });
   paint();
+  function revealFaq(){
+    var target=document.getElementById(location.hash.slice(1));
+    var details=target && target.closest("details");
+    if(details){details.open=true;target.scrollIntoView();}
+  }
+  revealFaq();
+  window.addEventListener("hashchange",revealFaq);
+  var printClosed=null;
+  window.addEventListener("beforeprint",function(){
+    if(printClosed!==null)return;
+    printClosed=Array.from(document.querySelectorAll(".faq > details:not([open]), details.xfaq:not([open])"));
+    printClosed.forEach(function(d){d.open=true;});
+  });
+  window.addEventListener("afterprint",function(){
+    if(printClosed!==null)printClosed.forEach(function(d){d.open=false;});
+    printClosed=null;
+  });
 })();
 </script>
 </body>
@@ -136,144 +160,90 @@ __TOPBAR__
 """
 
 
-def esc(s):
-    return (
-        (s or "")
-        .replace("&", "&amp;")
-        .replace("<", "&lt;")
-        .replace(">", "&gt;")
-        .replace('"', "&quot;")
-        .replace("'", "&#39;")
-    )
+def esc(text):
+    return escape(text or "", quote=True)
 
 
 def pair(zh, en, tag="span"):
-    """双语成对输出：默认中文，英文原文开关打开后互换。"""
-    if en:
-        return f'<{tag} class="zhv">{zh}</{tag}><{tag} class="en">{esc(en)}</{tag}>'
-    return f'<{tag} class="zhv">{zh}</{tag}>'
+    """有译文时切换语言；单语的原文在两种模式下都可读。"""
+    if zh and en:
+        return f'<{tag} class="zhv">{esc(zh)}</{tag}><{tag} class="en" lang="en">{esc(en)}</{tag}>'
+    lang = ' lang="en"' if en else ""
+    return f"<{tag}{lang}>{esc(en or zh)}</{tag}>"
 
 
-def warn_unmatched(msg):
-    print(f"⚠ {msg}")
+def previous_translation(lines):
+    paragraphs = "".join(f"<p>{esc(line)}</p>" for line in lines if line)
+    if not paragraphs:
+        return ""
+    return f'<details class="previous"><summary>旧版译文（待核对）</summary>{paragraphs}</details>'
 
 
-def render_doc_body(blocks, zsec, where):
-    """渲染 blocks（英文层）+ 译制层配对；zsec 为该文档的 zh 层 dict（可空）。"""
-    zblocks_all = (zsec or {}).get("blocks", {})
-    body = ""
-    for b in blocks:
-        bh_en = b.get("h", "")
-        key = bh_en or "_head"  # 译制层：节首无子节内容存于 '_head'（裸列表）
-        zb = zblocks_all.get(key)
-        zh_bh, zitems = None, []
-        if zb is not None:
-            if isinstance(zb, list):
-                zitems = zb
-            else:
-                zh_bh = zb.get("h", bh_en)
-                zitems = zb.get("items", [])
-        else:
-            warn_unmatched(
-                f"ifab-zh 缺少{'子节' if bh_en else '节首'} {where}/{key}，回退英文"
+def render_doc_body(blocks):
+    parts = []
+    for block in blocks:
+        if block["h"]:
+            parts.append(f"<h3>{pair(block['zh'], block['h'])}</h3>")
+        in_list = False
+        for item in block["items"]:
+            listed = item["k"] == "li"
+            if in_list != listed:
+                parts.append("<ul>" if listed else "</ul>")
+                in_list = listed
+            tag = "li" if listed else "p"
+            parts.append(
+                f'<{tag} id="{esc(item["id"])}">{pair(item["zh"], item["en"])}</{tag}>'
             )
-        if bh_en:
-            body += f"<h3>{pair(esc(zh_bh or bh_en), esc(bh_en), 'span')}</h3>"
-        en_items = b.get("items", [])
-        if zitems and len(zitems) == len(en_items):
-            ul_open = False
-            for zi, ei in zip(zitems, en_items):
-                if zi["k"] == "li" and not ul_open:
-                    body += "<ul>"
-                    ul_open = True
-                if zi["k"] != "li" and ul_open:
-                    body += "</ul>"
-                    ul_open = False
-                if zi["k"] == "li":
-                    body += (
-                        f'<li><span class="zhv">{esc(zi["t"])}</span>'
-                        f'<span class="en">{esc(ei["t"])}</span></li>'
-                    )
-                else:
-                    body += (
-                        f'<p><span class="zhv">{esc(zi["t"])}</span>'
-                        f'<span class="en">{esc(ei["t"])}</span></p>'
-                    )
-            if ul_open:
-                body += "</ul>"
-        else:
-            for ei in en_items:
-                if ei["k"] == "li":
-                    body += f'<ul><li class="en">{esc(ei["t"])}</li></ul>'
-                else:
-                    body += f'<p class="en">{esc(ei["t"])}</p>'
-    return body
+        if in_list:
+            parts.append("</ul>")
+        parts.append(previous_translation(block["previous"]))
+    return "".join(parts)
+
+
+def render_faq(q):
+    alias = f' id="{esc(q["old_id"])}"' if q["old_id"] else ' class="xfaq"'
+    return (
+        f'<details{alias}><summary id="{esc(q["id"])}">{pair(q["zq"], q["q"])}</summary>'
+        f'<div class="a">{pair(q["za"], q["a"], "div")}</div>'
+        + previous_translation(q["previous"])
+        + "</details>"
+    )
 
 
 def build_page(data, zh):
-    sections = data.get("sections", [])
-    faq = data.get("faq", [])
     links = data.get("links", [])
-    zh_sections = (zh or {}).get("sections", {})
-    zh_faq = (zh or {}).get("faq", {})
-
-    toc, secs = "", ""
-    for s in sections:
-        zsec = zh_sections.get(s["id"], {})
-        zh_h = zsec.get("h", "")
-        title = pair(
-            f"{esc(s.get('num', ''))}. {esc(zh_h or s['h'])}",
-            f"{s.get('num', '')}. {s['h']}",
+    docs = documents(data, zh or {}, lambda msg: print("⚠ " + msg))
+    toc, secs, faq_html = "", "", ""
+    extras_started = False
+    for doc in docs:
+        if doc["group"] == "faq":
+            faq_html = "".join(
+                render_faq(q) for q in doc["faq"]
+            ) + previous_translation(doc["previous"])
+            continue
+        if doc["group"] == "extras" and not extras_started:
+            toc += '<span class="toc-g">配套协议与指南</span>'
+            extras_started = True
+        heading = doc["zh"] or doc["h"]
+        toc += f'<a href="#{esc(doc["id"])}">{esc(heading)}</a>'
+        title = pair(doc["zh"], doc["h"])
+        if doc["num"]:
+            title = esc(str(doc["num"])) + ". " + title
+        body = (
+            previous_translation(doc["previous"])
+            + render_doc_body(doc["blocks"])
+            + "".join(render_faq(q) for q in doc["faq"])
         )
-        if not zh_h:
-            warn_unmatched(f"ifab-zh 缺少大节 {s['id']}（{s['h']}），回退英文")
-        toc += f'<a href="#{s["id"]}">{esc(zh_h or s["h"])}</a>'
-        body = render_doc_body(s.get("blocks", []), zsec, s["id"])
-        secs += f'<section class="sec" id="{s["id"]}"><h2>{title}</h2><div class="panel">{body}</div></section>'
-    # 配套协议与指南（extras：页名即章节标题，无编号；译制层走同款 blocks 匹配）
-    zh_extras = (zh or {}).get("extras", {})
-    if data.get("extras"):
-        toc += '<span class="toc-g">配套协议与指南</span>'
-    for ex in data.get("extras", []):
-        zex = zh_extras.get(ex["id"], {})
-        zh_h = zex.get("h", "")
-        if not zh_h:
-            warn_unmatched(f"ifab-zh 缺少配套页 {ex['id']}，回退英文")
-        toc += f'<a href="#{ex["id"]}">{esc(zh_h or ex["h"])}</a>'
-        body = render_doc_body(ex.get("blocks", []), zex, ex["id"])
-        for q in ex.get("faq", []):
-            zq = zex.get("faq", {}).get(q["id"])
-            if zq:
-                qh = pair(esc(zq["q"]), esc(q["q"]), "span")
-                ah = pair(esc(zq["a"]), esc(q["a"]), "div")
-            else:
-                warn_unmatched(f"ifab-zh 缺少配套页 FAQ {ex['id']}/{q['id']}")
-                qh = f'<span class="en">{esc(q["q"])}</span>'
-                ah = f'<div class="en">{esc(q["a"])}</div>'
-            body += f'<details class="xfaq"><summary>{qh}</summary><div class="a">{ah}</div></details>'
-        secs += (
-            f'<section class="sec" id="{ex["id"]}">'
-            f"<h2>{pair(esc(zh_h or ex['h']), esc(ex['h']), 'span')}</h2>"
-            f'<div class="panel">{body}</div></section>'
+        source = (
+            (
+                f'<p><a href="{esc(doc["url"])}" target="_blank" rel="noopener noreferrer">'
+                f"IFAB 官方原文 · {esc(heading)}</a></p>"
+            )
+            if doc["url"]
+            else ""
         )
+        secs += f'<section class="sec" id="{esc(doc["id"])}"><h2>{title}</h2>{source}<div class="panel">{body}</div></section>'
     toc += '<a href="#faq">官方 FAQ 判例</a><a href="#links">配套材料与站内关联</a>'
-
-    faq_html = ""
-    zh_used = set()
-    for q in faq:
-        zq = zh_faq.get(q["id"])
-        if zq:
-            zh_used.add(q["id"])
-            q_html = pair(esc(zq["q"]), esc(q["q"]), "span")
-            a_html = pair(esc(zq["a"]), esc(q["a"]), "div")
-        else:
-            warn_unmatched(f"ifab-zh 缺少 FAQ {q['id']}，回退英文")
-            q_html = f'<span class="en">{esc(q["q"])}</span>'
-            a_html = f'<div class="en">{esc(q["a"])}</div>'
-        faq_html += f'<details id="faq-{q["id"]}"><summary>{q_html}</summary><div class="a">{a_html}</div></details>'
-    for k in zh_faq:
-        if k not in zh_used:
-            warn_unmatched(f"ifab-zh.faq 多余键 {k}（ifab.json 无此 id）")
 
     links_html = ""
     for link in links:
@@ -305,6 +275,9 @@ def build_page(data, zh):
         .replace("__TOC__", toc)
         .replace("__SECTIONS__", secs)
         .replace("__FAQ__", faq_html)
+        .replace("__SECS_N__", str(len(data.get("sections", []))))
+        .replace("__FAQ_N__", str(len(data.get("faq", []))))
+        .replace("__EXTRAS_N__", str(len(data.get("extras", []))))
         .replace("__LINKS__", links_html)
         .replace("__CHECKED__", esc(data.get("fetched", "")))
         .replace("__TRANSLATED__", esc((zh or {}).get("translated", ""))),
@@ -313,7 +286,7 @@ def build_page(data, zh):
     SITE.mkdir(parents=True, exist_ok=True)
     (SITE / "ifab.html").write_text(html, encoding="utf-8")
     print(
-        f"生成 {SITE / 'ifab.html'}（{len(sections)} 节 / FAQ {len(faq)} 条 / 链接 {len(links)}）"
+        f"生成 {SITE / 'ifab.html'}（{len(data.get('sections', []))} 节 / FAQ {len(data.get('faq', []))} 条 / 链接 {len(links)}）"
     )
 
 

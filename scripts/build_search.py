@@ -14,6 +14,7 @@
 
 import json
 import re
+from lib.ifab_content import search_rows as ifab_search_rows
 from lib.law_blocks import anchored_section
 from lib.pagelib import article_anchor
 from lib.pro_series import series_name
@@ -175,34 +176,9 @@ def build_docs():
                 f"uefa.html#u-{gi}c{i}",
                 f"{it.get('title', '')} {zh_title} {grp.get('name_cn', '')} {it.get('caption', '')}",
             )
-    # IFAB FAQ + 条款（中文层全文）
-    ifab, izh = _read(IFAB_JSON), _read(IFAB_ZH_JSON)
-    for q in ifab.get("faq", []):
-        zq = izh.get("faq", {}).get(q["id"], {})
-        add(
-            "intl",
-            "IFAB",
-            f"IFAB FAQ {q['id'].upper()} · {zq.get('q', q.get('q', ''))[:60]}",
-            f"ifab.html#faq-{q['id']}",
-            f"{zq.get('q', '')} {zq.get('a', '')}",
-        )
-    for sec in ifab.get("sections", []):
-        blocks = izh.get("sections", {}).get(sec["id"], {}).get("blocks", {})
-        parts = []
-        for b in sec.get("blocks", []):
-            zb = blocks.get(b.get("h") or "_head")
-            # _head 的值是裸 items 列表，命名子节是 {h, items}
-            items = zb if isinstance(zb, list) else (zb or {}).get("items", [])
-            for item in items or b.get("items", []):
-                parts.append(item.get("t", ""))
-        if parts:
-            add(
-                "intl",
-                "IFAB",
-                f"IFAB 协议 · {sec.get('h', '')}",
-                f"ifab.html#{sec['id']}",
-                " ".join(parts),
-            )
+    # 主协议与配套指南使用详情页相同的双语配对及条款锚点。
+    for title, anchor, text in ifab_search_rows(_read(IFAB_JSON), _read(IFAB_ZH_JSON)):
+        add("intl", "IFAB", "IFAB · " + title, f"ifab.html#{anchor}", text)
     # weekly 期目（题名、译注和当前入库的完整说明）
     weekly, wzh = _read(WEEKLY_JSON), _read(WEEKLY_ZH_JSON)
     shows = weekly.get("shows", {})

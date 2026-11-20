@@ -11,6 +11,7 @@
 """
 
 import json
+import re
 import sys
 from datetime import date
 
@@ -57,6 +58,7 @@ SEASONS = {
 
 # type -> (本队进球修正, 对方进球修正)
 GOAL_DELTA = {"denied_goal": (1, 0), "opp_goal_should_disallow": (0, -1)}
+RESULT_POINTS = {"win": 3, "draw": 1, "loss": 0}
 
 TYPE_LABEL = {
     "denied_goal": "漏判进球（应有效）",
@@ -126,6 +128,24 @@ def result_of(h, a):
     return "win" if h > a else ("loss" if h < a else "draw")
 
 
+def round_label(league, stored_round, cases):
+    if "足协杯" in league:
+        # 比赛标题中的赛事字段，避免把正文提到的其他轮次当成本场阶段。
+        for case in cases:
+            prefix = re.split(r"[，,。]", case.get("match_info", ""), maxsplit=1)[0]
+            stage = re.search(
+                r"足协杯(?:赛)?\s*((?:半决赛|四分之一决赛|八分之一决赛|1/[48]决赛|"
+                r"决赛|资格赛|第[一二三四五六七八九十\d]+轮)(?:首回合|次回合|第[一二12]回合)?)\s*$",
+                prefix,
+            )
+            if stage:
+                return stage[1]
+    label = str(stored_round or "").strip()
+    if not label or label in {"0", "第0轮"}:
+        return "轮次待核"
+    return f"第{label}轮" if label.isdigit() else label
+
+
 def build_matches(impact, scores, cmap):
     """按场聚合 -> 每场: cases, items, actual, corrected, 每支受影响球队的结果判定"""
     matches = {}
@@ -155,6 +175,9 @@ def build_matches(impact, scores, cmap):
         m["cases"].append(f"期{imp['issue']:02d}判例{imp['case_no']}")
 
     for key, m in matches.items():
+        m["round_label"] = round_label(
+            m["league"], m["round"], (cmap[seq] for seq in m["seqs"])
+        )
         sc = scores.get(key)
         if sc and (
             (sc.get("source") or "").strip() == "待补" or "h" not in sc or "a" not in sc
@@ -188,8 +211,11 @@ def build_matches(impact, scores, cmap):
         if min(h_c, a_c) < 0:
             raise ValueError(f"{key} 修正后比分为负数，请复核比分及进球影响标注")
         m["corrected_score"] = (h_c, a_c)
-        act_res = result_of(m["score"]["h"], m["score"]["a"])
-        cor_res = result_of(h_c, a_c)
+        h, a = m["score"]["h"], m["score"]["a"]
+        m["team_results"] = {
+            m["home"]: (result_of(h, a), result_of(h_c, a_c)),
+            m["away"]: (result_of(a, h), result_of(a_c, h_c)),
+        }
         has_opp_factor = any(
             i["type"]
             in (
@@ -207,27 +233,13 @@ def build_matches(impact, scores, cmap):
             for i in m["items"]
         )
         for t in {i["team"] for i in m["items"]}:
-            act_pts = {"win": 3, "draw": 1, "loss": 0}[
-                "win"
-                if (act_res == "win" and t == m["home"])
-                or (act_res == "loss" and t == m["away"])
-                else "loss"
-                if (act_res == "loss" and t == m["home"])
-                or (act_res == "win" and t == m["away"])
-                else "draw"
-            ]
-            cor_pts = {"win": 3, "draw": 1, "loss": 0}[
-                "win"
-                if (cor_res == "win" and t == m["home"])
-                or (cor_res == "loss" and t == m["away"])
-                else "loss"
-                if (cor_res == "loss" and t == m["home"])
-                or (cor_res == "win" and t == m["away"])
-                else "draw"
-            ]
+            actual, corrected = m["team_results"][t]
+            act_pts, cor_pts = RESULT_POINTS[actual], RESULT_POINTS[corrected]
             own = [i for i in m["items"] if i["team"] == t]
             if cor_pts > act_pts:
                 st = "changed"
+            elif cor_pts < act_pts:
+                st = "worsened"  # 全场多项错误一起修正，本项受损方也可能赛果变差。
             elif cor_pts == act_pts and act_pts == 3:
                 st = "no_change_win"  # 本队仍获胜
             elif cor_pts == act_pts and has_opp_factor and abs(h_c - a_c) <= 1:
@@ -256,6 +268,7 @@ def team_stats(matches, view):
                     "types": {},
                     "result": {
                         "changed": 0,
+                        "worsened": 0,
                         "possible": 0,
                         "no_change": 0,
                         "no_change_win": 0,
@@ -273,17 +286,25 @@ def team_stats(matches, view):
             if it["type"] in GOAL_DELTA:
                 t["swing"] += 1
             st = m["status"].get(victim, "pending")
+            if view == "benefit":
+                st = {
+                    "changed": "worsened",
+                    "worsened": "changed",
+                    "no_change_win": "no_change",
+                }.get(st, st)
             t["match_status"][key] = st  # 按场次去重计数
             t["detail"].append(
                 {
                     "seq": it["seq"],
                     "league": LEAGUE_SHORT[m["league"]],
                     "round": m["round"],
+                    "round_label": m["round_label"],
                     "home": m["home"],
                     "away": m["away"],
                     "opp": benefit if view == "victim" else victim,
                     "score": m["score"],
                     "corrected": m.get("corrected_score"),
+                    "team_result": m.get("team_results", {}).get(team),
                     "corrected_for": m.get("corrected_for", {}).get(victim),
                     "status": st,
                     "type": it["type"],
@@ -768,12 +789,7 @@ const TC = {
   "missed_red_opponent":"tc-red","wrong_red_self":"tc-red",
   "missed_yellow_opponent":"tc-yellow","wrong_yellow_self":"tc-yellow",
   "wrong_foul_called_self":"tc-foul","missed_foul_called":"tc-foul","wrong_offside_self":"tc-foul","missed_offside_opponent":"tc-foul"};
-const RS = {
-  changed:['r-changed','结果或被改变'],
-  possible:['r-possible','存在影响可能'],
-  no_change:['r-nochange','未改变结果'],
-  no_change_win:['r-nochange','未改变结果（本队仍获胜）'],
-  pending:['r-pending','比分待补']};
+const RESULT_NAME = {win:"胜", draw:"平", loss:"负"};
 
 let curView = 'victims', curLg = '';
 let openTeams = new Set();  // 切视角重建列表时保留已展开球队
@@ -791,21 +807,24 @@ function renderTeam(name, t, idx){
   const chips = ORDER.map(k=>chip(k, t.types[k]||0, curView==='benefits')).join("");
   const r = t.result;
   const rbadges = [
-    r.changed?`<span class="rbadge r-changed">结果或被改变 ×${r.changed}</span>`:"",
+    r.changed?`<span class="rbadge r-changed">修正后本队赛果改善 ×${r.changed}</span>`:"",
+    r.worsened?`<span class="rbadge r-changed">修正后本队赛果变差 ×${r.worsened}</span>`:"",
     r.possible?`<span class="rbadge r-possible">存在影响可能 ×${r.possible}</span>`:"",
     (r.no_change+r.no_change_win)?`<span class="rbadge r-nochange">未改变结果 ×${r.no_change+r.no_change_win}</span>`:"",
     r.pending?`<span class="rbadge r-pending">比分待补 ×${r.pending}</span>`:""
   ].join("");
   const rows = t.detail.map(d=>{
     let corrLine = "";
-    if(d.score && (d.status==='changed'||d.status==='no_change')
+    if(d.score && d.corrected
        && (d.corrected[0]!==d.score.h || d.corrected[1]!==d.score.a)){
       const c = d.corrected;
-      corrLine = ` <span class="corr">修正比分 ${c[0]}:${c[1]}</span>`;
+      const [before, after] = d.team_result.map(result => RESULT_NAME[result]);
+      const outcome = before === after ? `本队仍${after}` : `本队由${before}转${after}`;
+      corrLine = `<span class="corr">整场修正比分 ${c[0]}:${c[1]}</span><span class="badge">${outcome}</span>`;
     }
     const label = (curView==='benefits'?TLB:TL)[d.type];
     return `<div class="drow" data-lg="${esc(d.league)}">
-      <span class="badge">${d.league}${typeof d.round==="number" ? "第"+d.round+"轮" : "·"+d.round}</span>
+      <span class="badge">${esc(d.league)} · ${esc(d.round_label)}</span>
       <span class="mt">${esc(d.home)} ${d.score?d.score.h+" : "+d.score.a:"—"} ${esc(d.away)}</span>
       ${d.match_note?`<span class="badge">${esc(d.match_note)}</span>`:""}
       ${corrLine}
